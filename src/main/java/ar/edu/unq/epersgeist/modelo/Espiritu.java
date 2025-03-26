@@ -23,9 +23,8 @@ public class Espiritu implements Serializable {
         this.nombre = nombre;
     }
 
-    public Medium aumentarConexion(Medium medium) {
-        // TODO completar
-        return null;
+    public void aumentarConexion(Medium medium) {
+        nivelDeConexion = nivelDeConexion + 10;
     }
 
     public Long getId() {

@@ -13,17 +13,22 @@ import java.util.List;
 public record JDBCEspirituDAO() implements EspirituDAO {
 
     public Espiritu crear(Espiritu espiritu) {
-        return JDBCConnector.getInstance().execute( conn -> {
+        return JDBCConnector.getInstance().execute(conn -> {
             try {
-                var ps = conn.prepareStatement("INSERT INTO espiritu (tipo, nivel_de_conexion, nombre) VALUES (?,?,?)");
+                var ps = conn.prepareStatement("INSERT INTO espiritu (tipo, nivel_de_conexion, nombre) VALUES (?,?,?) RETURNING id");
+
                 ps.setString(1, espiritu.getTipo());
                 ps.setInt(2, espiritu.getNivelDeConexion());
                 ps.setString(3, espiritu.getNombre());
 
                 ResultSet rs = ps.executeQuery();
-                Long id = rs.getLong("id");
-                return new Espiritu(id, espiritu.getTipo(), espiritu.getNivelDeConexion(), espiritu.getNombre());
+                if (rs.next()) {
+                    Long id = rs.getLong("id");
 
+                    return new Espiritu(id, espiritu.getTipo(), espiritu.getNivelDeConexion(), espiritu.getNombre());
+                } else {
+                    throw new SQLException("Error al insertar el espíritu, no se generó ID.");
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -45,6 +50,7 @@ public record JDBCEspirituDAO() implements EspirituDAO {
                             resultSet.getString("nombre")
                     );
                 } return null;
+                //throw new SQLException("No hay un espíritu con ID " + idDelEspiritu);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

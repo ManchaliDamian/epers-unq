@@ -2,43 +2,53 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.persistencia.dao.jdbc.JDBCEspirituDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 
 import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
+    private final JDBCEspirituDAO jDBCEspirituDAO;
+
+    public EspirituServiceImpl(JDBCEspirituDAO jDBCEspirituDAO) {
+        this.jDBCEspirituDAO = jDBCEspirituDAO;
+    }
+
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        // TODO completar
-        return null;
+        return jDBCEspirituDAO.crear(espiritu);
     }
 
     @Override
     public Espiritu recuperar(Long espirituId) {
-        // TODO completar
-        return null;
+        return jDBCEspirituDAO.recuperar(espirituId);
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        // TODO completar
-        return null;
+        return jDBCEspirituDAO.recuperarTodos();
     }
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        // TODO completar
+        jDBCEspirituDAO.actualizar(espiritu);
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        // TODO completar
+        jDBCEspirituDAO.eliminar(espirituId);
     }
 
     @Override
     public Medium conectar(Long espirituId, Medium medium) {
-        // TODO completar
-        return null;
+        Espiritu currentEspiritu = jDBCEspirituDAO.recuperar(espirituId);
+        medium.conectarseAEspiritu(currentEspiritu);
+        currentEspiritu.aumentarConexion(medium);
+
+        jDBCEspirituDAO.actualizar(currentEspiritu);
+
+        return medium;
     }
+
 }
