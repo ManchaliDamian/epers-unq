@@ -59,7 +59,6 @@ class JDBCEspirituDAOTest {
         assertEquals("Fantasma", creado.getTipo());
         assertEquals(1L, creado.getId());
     }
-
     @Test
     void recuperarEspiritu() {
         Espiritu espiritu = new Espiritu("Espectro", 5, "Warmi");
@@ -70,6 +69,13 @@ class JDBCEspirituDAOTest {
         assertNotNull(recuperado);
         assertEquals(creado.getId(), recuperado.getId());
         assertEquals("Warmi", recuperado.getNombre());
+    }
+    @Test
+    void errorRecuperarEspiritu() {
+
+        Espiritu recuperado = espirituDAO.recuperar(1L);
+
+        assertNull(recuperado);
     }
 
     @Test
@@ -117,5 +123,13 @@ class JDBCEspirituDAOTest {
         espirituDAO.eliminar(espiritu.getId());
 
         assertNull(espirituDAO.recuperar(espiritu.getId()));
+    }
+    @Test
+    void errorEliminarEspiritu() {
+        Espiritu espiritu = espirituDAO.crear(new Espiritu("Fantasma", 5, "Espiritu a Eliminar"));
+
+        espirituDAO.eliminar(2L); //siguiente al id inicial
+
+        assertNotNull(espirituDAO.recuperar(espiritu.getId()));
     }
 }
