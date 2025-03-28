@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.dao.jdbc;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Medium;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
@@ -12,11 +13,25 @@ class JDBCEspirituDAOTest {
 
     private JDBCEspirituDAO espirituDAO;
 
+    int getNivelDeEspirituEnBDD(Long unaId){
+        return JDBCConnector.getInstance().execute(conn -> {
+            try {
+                var ps = conn.prepareStatement("SELECT * FROM espiritu WHERE id = ?");
+                ps.setLong(1, unaId);
+                var rs = ps.executeQuery();
+                rs.next();
+                return rs.getInt("nivel_de_conexion");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     @BeforeEach
     void setUp() throws SQLException {
         JDBCConnector.getInstance().execute(conn -> {
             try {
-                return conn.prepareStatement("CREATE TABLE espiritu").executeQuery();
+                return conn.prepareStatement("CREATE TABLE espiritu(id SERIAL, tipo VARCHAR(128), nivel_de_conexion INT, nombre VARCHAR(128))").execute();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -28,7 +43,7 @@ class JDBCEspirituDAOTest {
     void tearDown() throws SQLException {
         JDBCConnector.getInstance().execute(conn -> {
             try {
-                return conn.prepareStatement("DROP TABLE espiritu").executeQuery();
+                return conn.prepareStatement("DROP TABLE espiritu").execute();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -69,12 +84,30 @@ class JDBCEspirituDAOTest {
 
     @Test
     void actualizarEspiritu() {
-        Espiritu espiritu = espirituDAO.crear(new Espiritu("Jantu", 5, "Fidel Viejo"));
+        Espiritu espiritu = espirituDAO.crear(new Espiritu("Jantu", 5, "Fidel"));
+        Medium unMedium = new Medium("Roberto", 100, 20);
 
-        espirituDAO.actualizar(new Espiritu("Jantu", 5, "Fidel Nuevo"));
+        //verificacion estado inicial
+        assertEquals(5, espiritu.getNivelDeConexion());
+        int lvlEnBDD = this.getNivelDeEspirituEnBDD(espiritu.getId());
+        assertEquals(5, lvlEnBDD);
+
+        //exercise
+        espiritu.aumentarConexion(unMedium);
+        espirituDAO.actualizar(espiritu);
+        //
+
+        //verificacion estado final
+        assertEquals(15, espiritu.getNivelDeConexion());
+        lvlEnBDD = this.getNivelDeEspirituEnBDD(espiritu.getId());
+        assertEquals(15, lvlEnBDD);
 
         Espiritu actualizado = espirituDAO.recuperar(espiritu.getId());
-        assertEquals("Fidel Nuevo", actualizado.getNombre());
+        assertEquals(espiritu.getNombre(), actualizado.getNombre());
+        assertEquals(espiritu.getTipo(), actualizado.getTipo());
+        assertEquals(espiritu.getId(), actualizado.getId());
+        assertEquals(espiritu.getNivelDeConexion(), actualizado.getNivelDeConexion());
+        assertNotEquals(espiritu, actualizado);
     }
 
     @Test
