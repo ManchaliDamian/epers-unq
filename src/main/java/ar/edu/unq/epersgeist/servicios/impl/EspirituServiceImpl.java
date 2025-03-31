@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.jdbc.JDBCEspirituDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 
@@ -9,44 +10,44 @@ import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
-    private final JDBCEspirituDAO jDBCEspirituDAO;
+    private final EspirituDAO espirituDAO;
 
-    public EspirituServiceImpl(JDBCEspirituDAO jDBCEspirituDAO) {
-        this.jDBCEspirituDAO = jDBCEspirituDAO;
+    public EspirituServiceImpl(EspirituDAO unEspirituDAO) {
+        this.espirituDAO = unEspirituDAO;
     }
 
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        return jDBCEspirituDAO.crear(espiritu);
+        return espirituDAO.crear(espiritu);
     }
 
     @Override
     public Espiritu recuperar(Long espirituId) {
-        return jDBCEspirituDAO.recuperar(espirituId);
+        return espirituDAO.recuperar(espirituId);
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return jDBCEspirituDAO.recuperarTodos();
+        return espirituDAO.recuperarTodos();
     }
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        jDBCEspirituDAO.actualizar(espiritu);
+        espirituDAO.actualizar(espiritu);
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        jDBCEspirituDAO.eliminar(espirituId);
+        espirituDAO.eliminar(espirituId);
     }
 
     @Override
     public Medium conectar(Long espirituId, Medium medium) {
-        Espiritu currentEspiritu = jDBCEspirituDAO.recuperar(espirituId);
+        Espiritu currentEspiritu = espirituDAO.recuperar(espirituId);
         medium.conectarseAEspiritu(currentEspiritu);
         currentEspiritu.aumentarConexion(medium);
 
-        jDBCEspirituDAO.actualizar(currentEspiritu);
+        espirituDAO.actualizar(currentEspiritu);
 
         return medium;
     }

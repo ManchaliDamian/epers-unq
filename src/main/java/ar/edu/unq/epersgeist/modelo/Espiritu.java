@@ -9,7 +9,14 @@ public class Espiritu implements Serializable {
     private Integer nivelDeConexion;
     private String nombre;
 
+    private static void validarNivelDeConexion(Integer nivelDeConexion) {
+        if (nivelDeConexion < 0 || nivelDeConexion > 100) {
+            throw new IllegalArgumentException("El nivel de conexión debe ser entre 0 y 100.");
+        }
+    }
+
     public Espiritu(String tipo, Integer nivelDeConexion, String nombre) {
+        validarNivelDeConexion(nivelDeConexion);
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
@@ -17,6 +24,7 @@ public class Espiritu implements Serializable {
 
     // CONSULTAR POR ESTA SOLUCION
     public Espiritu(Long id, String tipo, Integer nivelDeConexion, String nombre) {
+        validarNivelDeConexion(nivelDeConexion);
         this.id = id;
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
@@ -24,7 +32,10 @@ public class Espiritu implements Serializable {
     }
 
     public void aumentarConexion(Medium medium) {
-        nivelDeConexion = nivelDeConexion + 10;
+        int nivelDeConexionActual = this.getNivelDeConexion();
+        if (nivelDeConexionActual <= 90){
+            this.nivelDeConexion = nivelDeConexionActual + 10;
+        }
     }
 
     public Long getId() {
