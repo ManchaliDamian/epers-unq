@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.dao.jdbc;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.jdbc.Exception.InsertarException;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -44,10 +45,11 @@ public record JDBCEspirituDAO() implements EspirituDAO {
 
                     return new Espiritu(id, espiritu.getTipo(), espiritu.getNivelDeConexion(), espiritu.getNombre());
                 } else {
-                    throw new SQLException("Error al insertar el espíritu, no se generó ID.");
+                    throw new SQLException("No se pudo obtener el ID del espíritu insertado.");
                 }
+
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new InsertarException(espiritu);
             }
         });
     }
