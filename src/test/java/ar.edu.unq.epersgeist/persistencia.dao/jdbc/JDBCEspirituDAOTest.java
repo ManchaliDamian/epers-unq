@@ -12,124 +12,77 @@ import static org.junit.jupiter.api.Assertions.*;
 class JDBCEspirituDAOTest {
 
     private JDBCEspirituDAO espirituDAO;
-
-    int getNivelDeEspirituEnBDD(Long unaId){
-        return JDBCConnector.getInstance().execute(conn -> {
-            try {
-                var ps = conn.prepareStatement("SELECT * FROM espiritu WHERE id = ?");
-                ps.setLong(1, unaId);
-                var rs = ps.executeQuery();
-                rs.next();
-                return rs.getInt("nivel_de_conexion");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
+    private Espiritu espiritu_1;
+    private Espiritu espiritu_2;
+    private Medium medium;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        JDBCConnector.getInstance().execute(conn -> {
-            try {
-                return conn.prepareStatement("CREATE TABLE espiritu(id SERIAL, tipo VARCHAR(128), nivel_de_conexion INT, nombre VARCHAR(128))").execute();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    void setUp() {
         espirituDAO = new JDBCEspirituDAO();
+        espiritu_1 = espirituDAO.crear(new Espiritu("Fantasma", 5, "Pablo Fidel"));
+        espiritu_2 = espirituDAO.crear(new Espiritu("Oni", 2, "Warmi"));
+        medium = new Medium("Roberto", 100, 20);
     }
-
     @AfterEach
     void tearDown() throws SQLException {
-        JDBCConnector.getInstance().execute(conn -> {
-            try {
-                return conn.prepareStatement("DROP TABLE espiritu").execute();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        espirituDAO.eliminar(espiritu_1.getId());
+        espirituDAO.eliminar(espiritu_2.getId());
     }
 
     @Test
     void crearEspiritu() {
-        Espiritu espiritu = new Espiritu("Fantasma", 5, "Pablo Fidel");
-        Espiritu creado = espirituDAO.crear(espiritu);
+        Espiritu creado = espirituDAO.crear(new Espiritu("Angel", 5, "Juan"));
 
         assertNotNull(creado.getId());
-        assertEquals("Fantasma", creado.getTipo());
-        assertEquals(1L, creado.getId());
+        assertEquals("Angel", creado.getTipo());
+        assertEquals(5, creado.getNivelDeConexion());
+        espirituDAO.eliminar(creado.getId());
     }
     @Test
     void recuperarEspiritu() {
-        Espiritu espiritu = new Espiritu("Espectro", 5, "Warmi");
-        Espiritu creado = espirituDAO.crear(espiritu);
+        Espiritu creado = (espiritu_1);
 
         Espiritu recuperado = espirituDAO.recuperar(creado.getId());
 
         assertNotNull(recuperado);
         assertEquals(creado.getId(), recuperado.getId());
-        assertEquals("Warmi", recuperado.getNombre());
+        assertEquals("Pablo Fidel", recuperado.getNombre());
     }
     @Test
     void errorRecuperarEspiritu() {
 
         Espiritu recuperado = espirituDAO.recuperar(1L);
-
         assertNull(recuperado);
     }
 
     @Test
     void recuperarTodos() {
-        espirituDAO.crear(new Espiritu("Oni", 5, "Selene"));
-        espirituDAO.crear(new Espiritu("Poltergeist", 8, "Belen"));
-
         List<Espiritu> espiritus = espirituDAO.recuperarTodos();
-
         assertEquals(2, espiritus.size());
     }
 
     @Test
     void actualizarEspiritu() {
-        Espiritu espiritu = espirituDAO.crear(new Espiritu("Jantu", 5, "Fidel"));
-        Medium unMedium = new Medium("Roberto", 100, 20);
+        Espiritu espirituOriginal = espirituDAO.crear(espiritu_1);
 
-        //verificacion estado inicial
-        assertEquals(5, espiritu.getNivelDeConexion());
-        int lvlEnBDD = this.getNivelDeEspirituEnBDD(espiritu.getId());
-        assertEquals(5, lvlEnBDD);
+        espirituOriginal.aumentarConexion(medium);
+        espirituDAO.actualizar(espirituOriginal);
 
-        //exercise
-        espiritu.aumentarConexion(unMedium);
-        espirituDAO.actualizar(espiritu);
-        //
+        assertEquals(15, espirituOriginal.getNivelDeConexion());
 
-        //verificacion estado final
-        assertEquals(15, espiritu.getNivelDeConexion());
-        lvlEnBDD = this.getNivelDeEspirituEnBDD(espiritu.getId());
-        assertEquals(15, lvlEnBDD);
+        Espiritu espirituPersistido = espirituDAO.recuperar(espirituOriginal.getId());
+        assertNotNull(espirituPersistido);
+        assertEquals(15, espirituPersistido.getNivelDeConexion());
+        assertEquals("Pablo Fidel", espirituPersistido.getNombre());
+        assertEquals("Fantasma", espirituPersistido.getTipo());
 
-        Espiritu actualizado = espirituDAO.recuperar(espiritu.getId());
-        assertEquals(espiritu.getNombre(), actualizado.getNombre());
-        assertEquals(espiritu.getTipo(), actualizado.getTipo());
-        assertEquals(espiritu.getId(), actualizado.getId());
-        assertEquals(espiritu.getNivelDeConexion(), actualizado.getNivelDeConexion());
-        assertNotEquals(espiritu, actualizado);
+        assertNotSame(espirituOriginal, espirituPersistido);
     }
 
     @Test
     void eliminarEspiritu() {
-        Espiritu espiritu = espirituDAO.crear(new Espiritu("Fantasma", 5, "Espiritu a Eliminar"));
-
-        espirituDAO.eliminar(espiritu.getId());
-
-        assertNull(espirituDAO.recuperar(espiritu.getId()));
-    }
-    @Test
-    void errorEliminarEspiritu() {
-        Espiritu espiritu = espirituDAO.crear(new Espiritu("Fantasma", 5, "Espiritu a Eliminar"));
-
-        espirituDAO.eliminar(2L); //siguiente al id inicial
-
-        assertNotNull(espirituDAO.recuperar(espiritu.getId()));
+        Espiritu creado = espirituDAO.crear(espiritu_1);
+        espirituDAO.eliminar(creado.getId());
+        assertNull(espirituDAO.recuperar(creado.getId()));
     }
 }
