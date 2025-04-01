@@ -1,5 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
+
 import java.io.Serializable;
 
 public class Espiritu implements Serializable {
@@ -32,10 +34,7 @@ public class Espiritu implements Serializable {
     }
 
     public void aumentarConexion(Medium medium) {
-        int nivelDeConexionActual = this.getNivelDeConexion();
-        if (nivelDeConexionActual <= 90){
-            this.nivelDeConexion = nivelDeConexionActual + 10;
-        }
+        nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
     }
 
     public Long getId() {

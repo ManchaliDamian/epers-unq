@@ -12,8 +12,8 @@ public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
 
-    public EspirituServiceImpl(EspirituDAO unEspirituDAO) {
-        this.espirituDAO = unEspirituDAO;
+    public EspirituServiceImpl(EspirituDAO espirituDAO) {
+        this.espirituDAO = espirituDAO;
     }
 
     @Override
@@ -51,5 +51,4 @@ public class EspirituServiceImpl implements EspirituService {
 
         return medium;
     }
-
 }
