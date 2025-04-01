@@ -12,6 +12,23 @@ import java.util.List;
 
 public record JDBCEspirituDAO() implements EspirituDAO {
 
+    public JDBCEspirituDAO() {
+        try {
+            var uri = getClass().getClassLoader().getResource("createAll.sql").toURI();
+            var initializeScript = Files.readString(Paths.get(uri));
+            JDBCConnector.getInstance().execute(conn -> {
+                try {
+                    var ps = conn.prepareStatement(initializeScript);
+                    return ps.execute();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Espiritu crear(Espiritu espiritu) {
         return JDBCConnector.getInstance().execute(conn -> {
             try {
@@ -56,7 +73,6 @@ public record JDBCEspirituDAO() implements EspirituDAO {
             }
         });
     }
-
 
     public List<Espiritu> recuperarTodos() {
         return JDBCConnector.getInstance().execute(conn -> {
@@ -107,20 +123,4 @@ public record JDBCEspirituDAO() implements EspirituDAO {
         });
     }
 
-    public JDBCEspirituDAO() {
-        try {
-            var uri = getClass().getClassLoader().getResource("createAll.sql").toURI();
-            var initializeScript = Files.readString(Paths.get(uri));
-            JDBCConnector.getInstance().execute(conn -> {
-                try {
-                    var ps = conn.prepareStatement(initializeScript);
-                    return ps.execute();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
