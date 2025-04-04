@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.*;
 
 import java.io.Serializable;
 
@@ -13,8 +14,18 @@ public class Espiritu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String tipo;
+
+    @Column(nullable = false) @ColumnDefault("0")
+    @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
+    //No me funciono ninguna de las dos. Estas serian a nivel Java y la de arriba a nivel BD
+    // @Range(min = 0, max = 100)
+    // @Min(0) @Max(100)
     private Integer nivelDeConexion;
+
+    @Column(nullable = false)
     private String nombre;
 
 
