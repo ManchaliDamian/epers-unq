@@ -14,7 +14,7 @@ public class HibernateTransactionRunner {
     }
 
     public static <T> T runTrx(TransactionBlock<T> bloque) {
-        Session session = ar.edu.unq.epersgeist.servicios.runner.HibernateSessionFactoryProvider.getInstance().createSession();
+        Session session = HibernateSessionFactoryProvider.getInstance().createSession();
         sessionThreadLocal.set(session);
         var tx = session.beginTransaction();
         try {
