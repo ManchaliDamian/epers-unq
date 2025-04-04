@@ -1,15 +1,27 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
-
+import jakarta.persistence.*;
+import lombok.*;
 import java.io.Serializable;
+import static java.lang.Math.max;
 
-public class Espiritu implements Serializable {
+    @Getter @Setter
 
-    private Long id;
-    private String tipo;
+public abstract class Espiritu implements Serializable {
+
     private Integer nivelDeConexion;
+
+    @id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String tipo;
     private String nombre;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Medium mediumConectado;
+
 
     private static void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
@@ -33,6 +45,27 @@ public class Espiritu implements Serializable {
         this.nombre = nombre;
     }
 
+    public void validarConexion(Medium medium){
+        this.validarDisponibilidad();
+    }
+
+    public void validarDisponibilidad(){
+        if(!this.estaLibre()){
+            throw new ExceptionEspirituOcupado(this);
+        }
+    }
+
+    public boolean estaLibre() {
+        return this.mediumConectado == null;
+    }
+
+    public void perderNivelDeConexion(int cantidad){
+       this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
+    }
+
+    //Dudas
+    public abstract boolean puedeExorcizar();
+
     public void aumentarConexion(Medium medium) {
         nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
     }
@@ -52,4 +85,6 @@ public class Espiritu implements Serializable {
     public String getNombre() {
         return nombre;
     }
+
+
 }
