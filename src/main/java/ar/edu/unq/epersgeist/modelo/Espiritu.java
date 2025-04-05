@@ -1,22 +1,20 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
-import java.io.Serializable;
-
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public class Espiritu implements Serializable {
+public final class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String tipo;
+    private TipoEspiritu tipo;
 
     @Column(nullable = false) @ColumnDefault("0")
     @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
@@ -29,7 +27,7 @@ public class Espiritu implements Serializable {
     private String nombre;
 
 
-    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    public Espiritu(@NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
@@ -37,13 +35,13 @@ public class Espiritu implements Serializable {
     }
 
     // CONSULTAR POR ESTA SOLUCION
-    public Espiritu(@NonNull Long id, @NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    /*public Espiritu(@NonNull Long id, @NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
         this.id = id;
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
-    }
+    }*/
 
     public void aumentarConexion(Medium medium) {
         nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
@@ -59,7 +57,7 @@ public class Espiritu implements Serializable {
         return id;
     }
 
-    public String getTipo() {
+    public TipoEspiritu getTipo() {
         return tipo;
     }
 

@@ -1,14 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.dao.jdbc;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import org.junit.jupiter.api.*;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class JDBCEspirituDAOTest {
 /*
     private JDBCEspirituDAO espirituDAO;

@@ -3,7 +3,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.jdbc.JDBCEspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.OrderBy;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -45,7 +45,8 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public void eliminar(Long espirituId) {
         HibernateTransactionRunner.runTrx(() -> {
-            espirituDAO.eliminar(espirituId);
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            espirituDAO.eliminar(espiritu);
             return null;
         });
     }
@@ -60,6 +61,12 @@ public class EspirituServiceImpl implements EspirituService {
             espirituDAO.actualizar(currentEspiritu);
 
             return medium;
+        });
+    }
+    @Override
+    public List<Espiritu> espiritusDemoniacos(){
+        return HibernateTransactionRunner.runTrx(() -> {
+            return espirituDAO.getEspiritusDemoniacos(OrderBy.ASC);
         });
     }
 }
