@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.dao.jdbc.Exception;
+package ar.edu.unq.epersgeist.persistencia.dao.Exception;
 
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;

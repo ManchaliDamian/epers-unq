@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.jdbc.JDBCEspirituDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
+import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
 import java.util.List;
 
@@ -18,12 +19,14 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        return espirituDAO.crear(espiritu);
+        return HibernateTransactionRunner.runTrx(() ->
+            espirituDAO.crear(espiritu));
     }
 
     @Override
     public Espiritu recuperar(Long espirituId) {
-        return espirituDAO.recuperar(espirituId);
+        return HibernateTransactionRunner.runTrx(() ->
+                espirituDAO.recuperar(espirituId));
     }
 
     @Override
@@ -33,22 +36,30 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        espirituDAO.actualizar(espiritu);
+        HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.actualizar(espiritu);
+            return null;
+        });
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        espirituDAO.eliminar(espirituId);
+        HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.eliminar(espirituId);
+            return null;
+        });
     }
 
     @Override
     public Medium conectar(Long espirituId, Medium medium) {
-        Espiritu currentEspiritu = espirituDAO.recuperar(espirituId);
-        medium.conectarseAEspiritu(currentEspiritu);
-        currentEspiritu.aumentarConexion(medium);
+        return HibernateTransactionRunner.runTrx(() -> {
+            Espiritu currentEspiritu = espirituDAO.recuperar(espirituId);
+            medium.conectarseAEspiritu(currentEspiritu);
+            currentEspiritu.aumentarConexion(medium);
 
-        espirituDAO.actualizar(currentEspiritu);
+            espirituDAO.actualizar(currentEspiritu);
 
-        return medium;
+            return medium;
+        });
     }
 }

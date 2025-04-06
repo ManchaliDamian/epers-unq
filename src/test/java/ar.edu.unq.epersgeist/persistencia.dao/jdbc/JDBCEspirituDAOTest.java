@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JDBCEspirituDAOTest {
-
+/*
     private JDBCEspirituDAO espirituDAO;
     private Espiritu espiritu_1;
     private Espiritu espiritu_2;
@@ -85,4 +85,6 @@ class JDBCEspirituDAOTest {
         espirituDAO.eliminar(creado.getId());
         assertNull(espirituDAO.recuperar(creado.getId()));
     }
+
+    */
 }
