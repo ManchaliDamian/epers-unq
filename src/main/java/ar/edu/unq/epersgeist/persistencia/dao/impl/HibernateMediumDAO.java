@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
+import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
@@ -15,10 +16,10 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     }
 
     @Override
-    public Medium crear(Medium unMedium) {
+    public Medium crear(Medium medium) {
         Session session = HibernateTransactionRunner.getCurrentSession();
-        session.persist(unMedium);
-        return unMedium;
+        session.persist(medium);
+        return medium;
     }
 
     @Override
@@ -30,14 +31,14 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     }
 
     @Override
-    public void actualizar(Medium unMedium) {
+    public void actualizar(Medium medium) {
         Session session = HibernateTransactionRunner.getCurrentSession();
         String hql = "UPDATE Medium m SET m.nombre = :nombre, m.mana = :mana, m.manaMax = :manaMax WHERE m.id = :id";
         Query<?> query = session.createQuery(hql);
-        query.setParameter("nombre", unMedium.getNombre());
-        query.setParameter("mana", unMedium.getMana());
-        query.setParameter("manaMax", unMedium.getManaMax());
-        query.setParameter("id", unMedium.getId());
+        query.setParameter("nombre", medium.getNombre());
+        query.setParameter("mana", medium.getMana());
+        query.setParameter("manaMax", medium.getManaMax());
+        query.setParameter("id", medium.getId());
         query.executeUpdate();
     }
 
@@ -48,5 +49,14 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         Query<?> query = session.createQuery(hql);
         query.setParameter("mediumId", mediumId);
         query.executeUpdate();
+    }
+
+    @Override
+    public List<Espiritu> espiritus(Long mediumId) {
+        Session session = HibernateTransactionRunner.getCurrentSession();
+        String hql = "SELECT e FROM Espiritu e WHERE e.medium.id = :id";
+        Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
+        query.setParameter("id", mediumId);
+        return query.getResultList();
     }
 }

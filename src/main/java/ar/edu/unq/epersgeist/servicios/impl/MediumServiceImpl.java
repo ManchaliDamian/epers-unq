@@ -63,7 +63,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        return null;
+        return mediumDAO.espiritus(mediumId);
     }
 
     @Override
