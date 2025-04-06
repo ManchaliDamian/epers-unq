@@ -1,9 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
+import static java.lang.Math.max;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
@@ -13,22 +16,21 @@ public final class Espiritu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoEspiritu tipo;
+    private String tipo;
 
-    @Column(nullable = false) @ColumnDefault("0")
+    @Column(nullable = false)
+    @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
-    //No me funciono ninguna de las dos. Estas serian a nivel Java y la de arriba a nivel BD
-    // @Range(min = 0, max = 100)
-    // @Min(0) @Max(100)
+
     private Integer nivelDeConexion;
 
     @Column(nullable = false)
     private String nombre;
 
+    private Medium mediumConectado;
 
-    public Espiritu(@NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
@@ -44,6 +46,27 @@ public final class Espiritu {
         this.nombre = nombre;
     }*/
 
+    public void validarConexion(Medium medium){
+        this.validarDisponibilidad();
+    }
+
+    public void validarDisponibilidad(){
+        if(!this.estaLibre()){
+            throw new ExceptionEspirituOcupado(this);
+        }
+    }
+
+    public boolean estaLibre() {
+        return this.mediumConectado == null;
+    }
+
+    public void perderNivelDeConexion(int cantidad){
+       this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
+    }
+
+    //Dudas
+    //public abstract boolean puedeExorcizar();
+
     public void aumentarConexion(Medium medium) {
         nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
     }
@@ -53,4 +76,5 @@ public final class Espiritu {
             throw new NivelDeConexionException();
         }
     }
+
 }
