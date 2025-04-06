@@ -11,15 +11,18 @@ import java.util.List;
 
 public class UbicacionServiceImpl implements UbicacionService {
 
+    private UbicacionDAO ubicacionDAO;
     @Override
-    public Ubicacion crear(Ubicacion ubicacion) {
-        return null;
-
+    public void crear(Ubicacion ubicacion) {
+        HibernateTransactionRunner.runTrx(() -> {
+            ubicacionDAO.guardar(ubicacion);
+            return null;
+        });
     }
 
     @Override
     public Ubicacion recuperar(Long ubicacionId) {
-        return null;
+        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperar(ubicacionId));
     }
 
     @Override
@@ -28,13 +31,19 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void actualizar(Ubicacion ubicacion) {
-
+    public void actualizar(Long ubicacionId, String nombreNuevo) {
+        HibernateTransactionRunner.runTrx(() -> {
+            ubicacionDAO.actualizar(ubicacionId, nombreNuevo);
+            return null;
+        });
     }
 
     @Override
-    public void eliminar(Long ubicacionId) {
-
+    public void eliminar(Ubicacion ubicacion) {
+        HibernateTransactionRunner.runTrx(() -> {
+            ubicacionDAO.eliminar(ubicacion);
+            return null;
+        });
     }
 
     @Override

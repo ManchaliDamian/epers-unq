@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 public interface UbicacionDAO {
     // continuar
-    void crear(Ubicacion ubicacion);
-
+    void guardar(Ubicacion ubicacion);
+    Ubicacion recuperar(Long ubicacionId);
+    void eliminar(Ubicacion ubicacion);
+    void actualizar(Long ubicacionId, String nombreNuevo);
 }
