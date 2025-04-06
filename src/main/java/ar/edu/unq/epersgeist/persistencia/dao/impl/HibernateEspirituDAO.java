@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.persistencia.dao.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.TipoEspiritu;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.OrderBy;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -17,10 +16,10 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
     }
 
     @Override
-    public List<Espiritu> getEspiritusDemoniacos(OrderBy orderBy){
+    public List<Espiritu> getEspiritusDemoniacos(){
         Session session = HibernateTransactionRunner.getCurrentSession();
         String hql = "from Espiritu e where e.tipo = :tipo " +
-                "order by e.nivel_de_csionexion desc";
+                "order by e.nivelDeConexion desc";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         query.setParameter("tipo", TipoEspiritu.DEMONIACO);
         return query.getResultList();

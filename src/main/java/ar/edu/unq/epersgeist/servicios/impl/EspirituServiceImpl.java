@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.OrderBy;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -18,9 +17,11 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Espiritu crear(Espiritu espiritu) {
-        return HibernateTransactionRunner.runTrx(() ->
-            espirituDAO.crear(espiritu));
+    public void guardar(Espiritu espiritu) {
+        HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.guardar(espiritu);
+            return null;
+        });
     }
 
     @Override
@@ -66,7 +67,7 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public List<Espiritu> espiritusDemoniacos(){
         return HibernateTransactionRunner.runTrx(() -> {
-            return espirituDAO.getEspiritusDemoniacos(OrderBy.ASC);
+            return espirituDAO.getEspiritusDemoniacos();
         });
     }
 }

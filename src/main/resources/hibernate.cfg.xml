@@ -7,9 +7,6 @@
 		<!-- Database connection settings -->
 		<property name="connection.driver_class">org.postgresql.Driver</property>
 
-		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/epers_ejemplo_jdbc</property>
-		<property name="hibernate.connection.username">postgres</property>
-		<property name="hibernate.connection.password">root</property>
 		<!-- SQL dialect -->
 				<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
@@ -20,6 +17,8 @@
 		<property name="show_sql">true</property>
 
 		<property name="hibernate.hbm2ddl.auto">create-drop</property>
+
+		<mapping class="ar.edu.unq.epersgeist.modelo.Espiritu" />
 
 	</session-factory>
 </hibernate-configuration>

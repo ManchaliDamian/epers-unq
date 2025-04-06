@@ -10,5 +10,5 @@ public interface EspirituDAO {
     List<Espiritu> recuperarTodos();
     void actualizar(Espiritu espiritu);
     void eliminar(Espiritu espiritu);
-    List<Espiritu> getEspiritusDemoniacos(OrderBy orderBy);
+    List<Espiritu> getEspiritusDemoniacos();
 }

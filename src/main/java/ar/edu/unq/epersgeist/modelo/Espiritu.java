@@ -17,7 +17,7 @@ public final class Espiritu {
     private TipoEspiritu tipo;
 
     @Column(nullable = false) @ColumnDefault("0")
-    @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
+    @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
     //No me funciono ninguna de las dos. Estas serian a nivel Java y la de arriba a nivel BD
     // @Range(min = 0, max = 100)
     // @Min(0) @Max(100)
@@ -51,21 +51,5 @@ public final class Espiritu {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
             throw new IllegalArgumentException("El nivel de conexión debe ser entre 0 y 100.");
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public TipoEspiritu getTipo() {
-        return tipo;
-    }
-
-    public Integer getNivelDeConexion() {
-        return nivelDeConexion;
-    }
-
-    public String getNombre() {
-        return nombre;
     }
 }
