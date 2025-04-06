@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -49,7 +50,7 @@ public final class Espiritu {
 
     private static void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
-            throw new IllegalArgumentException("El nivel de conexión debe ser entre 0 y 100.");
+            throw new NivelDeConexionException();
         }
     }
 }
