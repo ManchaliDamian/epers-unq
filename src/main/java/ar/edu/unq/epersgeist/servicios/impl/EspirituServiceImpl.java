@@ -11,6 +11,7 @@ import java.util.List;
 public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
+    //private final MediumDAO mediumDAO;
 
     public EspirituServiceImpl(EspirituDAO espirituDAO) {
         this.espirituDAO = espirituDAO;
@@ -55,11 +56,13 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public Medium conectar(Long espirituId, Medium medium) {
         return HibernateTransactionRunner.runTrx(() -> {
-            Espiritu currentEspiritu = espirituDAO.recuperar(espirituId);
-            medium.conectarseAEspiritu(currentEspiritu);
-            currentEspiritu.aumentarConexion(medium);
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            //Medium managedMedium = mediumDAO.recuperar(medium.getId());
 
-            espirituDAO.actualizar(currentEspiritu);
+            medium.conectarseAEspiritu(espiritu);
+            espiritu.aumentarConexion(medium);
+
+            espirituDAO.actualizar(espiritu);
 
             return medium;
         });
