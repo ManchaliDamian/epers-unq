@@ -1,19 +1,17 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
-
-import java.io.Serializable;
 import static java.lang.Math.max;
 
-
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public class Espiritu implements Serializable {
+public class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,16 +19,16 @@ public class Espiritu implements Serializable {
     @Column(nullable = false)
     private String tipo;
 
-    @Column(nullable = false) @ColumnDefault("0")
-    @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
-    //No me funciono ninguna de las dos. Estas serian a nivel Java y la de arriba a nivel BD
-    // @Range(min = 0, max = 100)
-    // @Min(0) @Max(100)
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
+
     private Integer nivelDeConexion;
 
     @Column(nullable = false)
     private String nombre;
 
+    private Medium mediumConectado;
 
     public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
@@ -40,13 +38,13 @@ public class Espiritu implements Serializable {
     }
 
     // CONSULTAR POR ESTA SOLUCION
-    public Espiritu(@NonNull Long id, @NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    /*public Espiritu(@NonNull Long id, @NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
         this.id = id;
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
-    }
+    }*/
 
     public void validarConexion(Medium medium){
         this.validarDisponibilidad();
@@ -67,7 +65,7 @@ public class Espiritu implements Serializable {
     }
 
     //Dudas
-    public abstract boolean puedeExorcizar();
+    //public abstract boolean puedeExorcizar();
 
     public void aumentarConexion(Medium medium) {
         nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
@@ -75,24 +73,8 @@ public class Espiritu implements Serializable {
 
     private static void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
-            throw new IllegalArgumentException("El nivel de conexión debe ser entre 0 y 100.");
+            throw new NivelDeConexionException();
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public Integer getNivelDeConexion() {
-        return nivelDeConexion;
-    }
-
-    public String getNombre() {
-        return nombre;
     }
 
 }
