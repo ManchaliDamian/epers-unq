@@ -26,10 +26,8 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        angel = new Espiritu("angel",10,"damian");
-        demonio = new Espiritu("angel",15,"Roberto");
-        angel.setUbicacion(quilmes);
-        demonio.setUbicacion(quilmes);
+
+
         ubicacionDao = new HibernateUbicacionDAO();
         this.service = new UbicacionServiceImpl(ubicacionDao);
 
@@ -37,6 +35,8 @@ public class UbicacionServiceTest {
         bernal = new Ubicacion("Bernal");
         service.crear(quilmes);
         service.crear(bernal);
+        angel = new Espiritu("angel",10,"damian",quilmes);
+        demonio = new Espiritu("angel",15,"Roberto", quilmes);
     }
 //    @Test
 //    void espiritusEnUnaUbicacion() {
