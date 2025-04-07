@@ -12,6 +12,9 @@ import java.util.List;
 public class UbicacionServiceImpl implements UbicacionService {
 
     private UbicacionDAO ubicacionDAO;
+    public UbicacionServiceImpl(UbicacionDAO ubiDao) {
+        this.ubicacionDAO = ubiDao;
+    }
     @Override
     public void crear(Ubicacion ubicacion) {
         HibernateTransactionRunner.runTrx(() -> {
@@ -54,5 +57,12 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.mediumsSinEspiritusEn(ubicacionId));
+    }
+
+    public void eliminarTodo() {
+        HibernateTransactionRunner.runTrx(() -> {
+            ubicacionDAO.eliminarTodo();
+            return null;
+        });
     }
 }
