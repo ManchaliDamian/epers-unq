@@ -2,21 +2,23 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
+import static java.lang.Math.max;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public final class Espiritu {
+public class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoEspiritu tipo;
+    private String tipo;
 
     @Column(nullable = false) @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
@@ -32,7 +34,7 @@ public final class Espiritu {
     @ManyToOne(fetch = FetchType.LAZY)
     private Medium mediumConectado;
 
-    public Espiritu(@NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
@@ -51,7 +53,7 @@ public final class Espiritu {
 
     public void aumentarConexion(Medium medium) {
         if (this.mediumConectado != medium){
-            throw new ConectarException(this);
+            throw new ConectarException(this, medium);
         }
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
@@ -63,6 +65,23 @@ public final class Espiritu {
             throw new NivelDeConexionException();
         }
     }
+
+    public void validarConexion(Medium medium){
+        this.validarDisponibilidad();
+    }
+
+    public void validarDisponibilidad(){
+        if(!this.estaLibre()){
+            throw new ExceptionEspirituOcupado(this);
+        }
+    }
+
+    public void perderNivelDeConexion(int cantidad){
+        this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
+    }
+
+    //Dudas
+    //public abstract boolean puedeExorcizar();
 
     public boolean estaLibre() {
         return this.mediumConectado == null;

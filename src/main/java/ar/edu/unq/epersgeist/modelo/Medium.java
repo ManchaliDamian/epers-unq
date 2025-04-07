@@ -50,7 +50,7 @@ public class Medium implements Serializable {
 
     public void conectarseAEspiritu(Espiritu espiritu) {
         if ((!this.ubicacion.equals(espiritu.getUbicacion())) || !espiritu.estaLibre()){
-            throw new ConectarException(espiritu);
+            throw new ConectarException(espiritu, this);
         }
         espiritus.add(espiritu);
         espiritu.setMediumConectado(this);
