@@ -22,6 +22,10 @@ public class Medium implements Serializable {
     @Column(nullable = false)
     private String nombre;
 
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
     @Column(nullable = false)
     private Integer manaMax;
 
