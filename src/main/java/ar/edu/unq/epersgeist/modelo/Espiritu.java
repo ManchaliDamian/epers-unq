@@ -46,7 +46,9 @@ public class Espiritu implements Serializable {
     }
 
     public void aumentarConexion(Medium medium) {
-        nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + 10, 100)
+        );
     }
 
     private static void validarNivelDeConexion(Integer nivelDeConexion) {
@@ -55,19 +57,9 @@ public class Espiritu implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public Integer getNivelDeConexion() {
-        return nivelDeConexion;
-    }
-
-    public String getNombre() {
-        return nombre;
+    public void descansar() {
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + 5, 100)
+        );
     }
 }
