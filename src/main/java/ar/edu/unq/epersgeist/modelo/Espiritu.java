@@ -11,7 +11,7 @@ import static java.lang.Math.max;
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public final class Espiritu {
+public class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

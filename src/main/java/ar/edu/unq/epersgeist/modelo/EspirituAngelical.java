@@ -31,7 +31,7 @@ public class EspirituAngelical extends Espiritu{
         return min(cantAtaque,100);
     }
 
-    @Override
-    public boolean puedeExorcizar(){return true;}
+    //@Override
+    //public boolean puedeExorcizar(){return true;}
 
 }

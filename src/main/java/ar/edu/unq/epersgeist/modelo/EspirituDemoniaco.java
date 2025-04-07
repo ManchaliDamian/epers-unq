@@ -22,6 +22,6 @@ public class EspirituDemoniaco extends Espiritu{
         this.setMediumConectado(null);
     }
 
-    @Override
-    public boolean puedeExorcizar(){return false;}
+    //@Override
+    //public boolean puedeExorcizar(){return false;}
 }
