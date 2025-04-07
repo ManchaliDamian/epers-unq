@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter @Setter @NoArgsConstructor @ToString
 
 @Entity
-public class Medium implements Serializable {
+public class Medium {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

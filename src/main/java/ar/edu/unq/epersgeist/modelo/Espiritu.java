@@ -12,7 +12,7 @@ import static java.lang.Math.max;
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public abstract class Espiritu {
+public class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,8 +32,11 @@ public abstract class Espiritu {
 
     private Medium mediumConectado;
 
-    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    private TipoEspiritu tipo;
+
+    public Espiritu(@NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
+        this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;

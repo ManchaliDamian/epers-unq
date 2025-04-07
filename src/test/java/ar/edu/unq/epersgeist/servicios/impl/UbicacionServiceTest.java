@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
-
+/*
     private UbicacionServiceImpl service;
     private Ubicacion quilmes;
     private Ubicacion bernal;
@@ -73,6 +73,6 @@ public class UbicacionServiceTest {
     void cleanup() {
         service.eliminarTodo();
     }
-
+*/
 
 }

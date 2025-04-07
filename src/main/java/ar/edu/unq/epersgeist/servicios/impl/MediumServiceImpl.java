@@ -45,6 +45,14 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
+    public void eliminarTodo() {
+        HibernateTransactionRunner.runTrx(() -> {
+            mediumDAO.eliminarTodo();
+            return null;
+        });
+    }
+
+    @Override
     public List<Medium> recuperarTodos() {
         return mediumDAO.recuperarTodos();
     }
