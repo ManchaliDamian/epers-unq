@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -11,9 +12,11 @@ import java.util.List;
 public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
+    private final MediumDAO mediumDAO;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO) {
+    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
         this.espirituDAO = espirituDAO;
+        this.mediumDAO = mediumDAO;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return espirituDAO.recuperarTodos();
+        return HibernateTransactionRunner.runTrx(() -> espirituDAO.recuperarTodos());
     }
 
     @Override
@@ -53,21 +56,22 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Medium conectar(Long espirituId, Medium medium) {
+    public Medium conectar(Long espirituId, Long mediumId) {
         return HibernateTransactionRunner.runTrx(() -> {
-            Espiritu currentEspiritu = espirituDAO.recuperar(espirituId);
-            medium.conectarseAEspiritu(currentEspiritu);
-            currentEspiritu.aumentarConexion(medium);
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            Medium medium = mediumDAO.recuperar(mediumId);
 
-            espirituDAO.actualizar(currentEspiritu);
+            medium.conectarseAEspiritu(espiritu);
+            espiritu.aumentarConexion(medium);
+
+            espirituDAO.actualizar(espiritu);
+            mediumDAO.actualizar(medium);
 
             return medium;
         });
     }
     @Override
     public List<Espiritu> espiritusDemoniacos(){
-        return HibernateTransactionRunner.runTrx(() -> {
-            return espirituDAO.getEspiritusDemoniacos();
-        });
+        return HibernateTransactionRunner.runTrx(() -> espirituDAO.getEspiritusDemoniacos());
     }
 }

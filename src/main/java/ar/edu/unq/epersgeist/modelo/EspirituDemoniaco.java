@@ -2,15 +2,15 @@ package ar.edu.unq.epersgeist.modelo;
 
 public class EspirituDemoniaco extends Espiritu{
 
-    public EspirituDemoniaco(String tipo, Integer nivelDeConexion, String nombre){
-        super(tipo,nivelDeConexion,nombre);
+    public EspirituDemoniaco(String tipo, Integer nivelDeConexion, String nombre, Ubicacion ubicacion){
+        super(tipo,nivelDeConexion,nombre, ubicacion);
     }
 
     public void recibirAtaque(int cantidad){
         this.setNivelDeConexion(cantidad);
     }
 
-    public void evaluarDesconecarDemoniaco(){
+    public void evaluarDesconectarDemoniaco(){
         if(this.getNivelDeConexion() <= 0){
             this.desconectarDelMedium();
         }

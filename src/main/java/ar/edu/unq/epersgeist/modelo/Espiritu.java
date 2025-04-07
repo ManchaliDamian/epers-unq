@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
@@ -34,11 +35,12 @@ public class Espiritu {
 
     private Medium mediumConectado;
 
-    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
+        this.ubicacion = ubicacion;
     }
 
     // CONSULTAR POR ESTA SOLUCION
@@ -50,6 +52,21 @@ public class Espiritu {
         this.nombre = nombre;
     }*/
 
+    public void aumentarConexion(Medium medium) {
+        if (this.mediumConectado != medium){
+            throw new ConectarException(this, medium);
+        }
+        int aumento = (int) Math.round(medium.getMana() * 0.20);
+
+        nivelDeConexion = Math.min(nivelDeConexion + aumento, 100);
+    }
+
+    private static void validarNivelDeConexion(Integer nivelDeConexion) {
+        if (nivelDeConexion < 0 || nivelDeConexion > 100) {
+            throw new NivelDeConexionException();
+        }
+    }
+
     public void validarConexion(Medium medium){
         this.validarDisponibilidad();
     }
@@ -59,26 +76,13 @@ public class Espiritu {
             throw new ExceptionEspirituOcupado(this);
         }
     }
-
-    public boolean estaLibre() {
-        return this.mediumConectado == null;
-    }
-
     public void perderNivelDeConexion(int cantidad){
-       this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
+        this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
     }
 
     //Dudas
     //public abstract boolean puedeExorcizar();
-
-    public void aumentarConexion(Medium medium) {
-        nivelDeConexion = Math.min(nivelDeConexion + 10, 100);
+    public boolean estaLibre() {
+        return this.mediumConectado == null;
     }
-
-    private static void validarNivelDeConexion(Integer nivelDeConexion) {
-        if (nivelDeConexion < 0 || nivelDeConexion > 100) {
-            throw new NivelDeConexionException();
-        }
-    }
-
 }
