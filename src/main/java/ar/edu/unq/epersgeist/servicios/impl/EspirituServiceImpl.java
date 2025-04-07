@@ -59,6 +59,7 @@ public class EspirituServiceImpl implements EspirituService {
     public void eliminarTodo() {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.eliminarTodo();
+            mediumDAO.eliminarTodo();
             return null;
         });
     }

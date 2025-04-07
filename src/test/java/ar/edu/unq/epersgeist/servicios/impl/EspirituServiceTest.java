@@ -44,7 +44,7 @@ public class EspirituServiceTest {
     @BeforeEach
     void setUp() {
         ubicacionDao = new HibernateUbicacionDAO();
-        this.serviceU = new UbicacionServiceImpl(ubicacionDao);
+        serviceU = new UbicacionServiceImpl(ubicacionDao);
 
         mediumDAO = new HibernateMediumDAO();
         serviceM = new MediumServiceImpl(mediumDAO);

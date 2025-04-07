@@ -24,6 +24,7 @@ public class Medium {
     @Column(nullable = false)
     private String nombre;
 
+
     @ManyToOne
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
@@ -35,7 +36,8 @@ public class Medium {
     @Check(constraints = "mana BETWEEN 0 AND manaMax")
     private Integer mana;
 
-    @OneToMany
+
+    @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {

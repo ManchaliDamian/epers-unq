@@ -30,6 +30,9 @@ public class Espiritu {
     @Column(nullable = false)
     private String nombre;
 
+
+    @ManyToOne
+    @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
     private TipoEspiritu tipo;
