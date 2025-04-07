@@ -53,7 +53,12 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
-        // terminar cuando esté medium
-        return List.of();
+        Session session = HibernateTransactionRunner.getCurrentSession();
+
+        String hql = "FROM Medium m WHERE m.ubicacion.id = :idUbicacion and size(m.espiritus) = 0";
+        List<Medium> mediums = session.createQuery(hql, Medium.class)
+                .setParameter("idUbicacion", ubicacionId)
+                .getResultList();
+        return mediums;
     }
 }
