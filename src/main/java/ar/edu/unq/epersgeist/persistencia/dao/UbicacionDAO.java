@@ -16,4 +16,5 @@ public interface UbicacionDAO {
     List<Ubicacion> recuperarTodos();
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
+    void eliminarTodo();
 }
