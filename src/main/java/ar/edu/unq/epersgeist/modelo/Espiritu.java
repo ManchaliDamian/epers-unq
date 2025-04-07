@@ -20,7 +20,12 @@ public class Espiritu {
     @Column(nullable = false)
     private String tipo;
 
-    @Column(nullable = false) @ColumnDefault("0")
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
 
     private Integer nivelDeConexion;
@@ -28,10 +33,6 @@ public class Espiritu {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
-    private Ubicacion ubicacion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     private Medium mediumConectado;
 
     public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
@@ -75,14 +76,12 @@ public class Espiritu {
             throw new ExceptionEspirituOcupado(this);
         }
     }
-
     public void perderNivelDeConexion(int cantidad){
         this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
     }
 
     //Dudas
     //public abstract boolean puedeExorcizar();
-
     public boolean estaLibre() {
         return this.mediumConectado == null;
     }

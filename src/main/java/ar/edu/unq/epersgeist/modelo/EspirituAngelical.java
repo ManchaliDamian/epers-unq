@@ -6,8 +6,8 @@ import static java.lang.Math.min;
 
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical(String tipo, Integer nivelDeConexion, String nombre){
-        super(tipo,nivelDeConexion,nombre);
+    public EspirituAngelical(String tipo, Integer nivelDeConexion, String nombre, Ubicacion ubicacion){
+        super(tipo,nivelDeConexion,nombre, ubicacion);
     }
 
     public void atacar(EspirituDemoniaco objetivo){

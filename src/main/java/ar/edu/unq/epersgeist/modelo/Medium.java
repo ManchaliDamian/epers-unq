@@ -24,6 +24,10 @@ public class Medium implements Serializable {
     @Column(nullable = false)
     private String nombre;
 
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
     @Column(nullable = false)
     private Integer manaMax;
 
@@ -33,7 +37,6 @@ public class Medium implements Serializable {
 
     @OneToMany
     private final Set<Espiritu> espiritus = new HashSet<>();
-    private Ubicacion ubicacion;
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         if (manaMax < 0) {

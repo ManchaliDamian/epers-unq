@@ -27,12 +27,14 @@ public class Ubicacion {
     public Ubicacion(@NonNull String nombre) {
         this.nombre = nombre;
     }
+
+
     public void agregarEspirituUbicado(Espiritu espiritu) {
         espiritu.setUbicacion(this); //para que guarde su ubicacion
         this.espiritusUbicados.add(espiritu);
     }
     public void agregarMediumUbicado(Medium medium) {
-//        medium.setUbicacion(this);
+        medium.setUbicacion(this);
         this.mediumsUbicados.add(medium);
     }
 
