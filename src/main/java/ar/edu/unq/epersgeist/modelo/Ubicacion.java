@@ -28,7 +28,7 @@ public class Ubicacion {
         this.nombre = nombre;
     }
     public void agregarEspirituUbicado(Espiritu espiritu) {
-//        espiritu.setUbicacion(this); para que guarde su ubicacion
+        espiritu.setUbicacion(this); //para que guarde su ubicacion
         this.espiritusUbicados.add(espiritu);
     }
     public void agregarMediumUbicado(Medium medium) {

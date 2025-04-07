@@ -18,6 +18,10 @@ public class Espiritu implements Serializable {
     @Column(nullable = false)
     private String tipo;
 
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
     @Column(nullable = false) @ColumnDefault("0")
     @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
     //No me funciono ninguna de las dos. Estas serian a nivel Java y la de arriba a nivel BD
