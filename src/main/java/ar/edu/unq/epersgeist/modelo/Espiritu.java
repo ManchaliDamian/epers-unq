@@ -19,6 +19,10 @@ public class Espiritu {
     @Column(nullable = false)
     private String tipo;
 
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
     @Column(nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
