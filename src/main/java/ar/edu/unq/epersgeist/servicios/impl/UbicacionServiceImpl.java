@@ -27,7 +27,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public List<Ubicacion> recuperarTodos() {
-        return List.of();
+        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperarTodos());
     }
 
     @Override

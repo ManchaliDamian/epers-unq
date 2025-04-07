@@ -6,6 +6,7 @@ import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.util.List;
 
 
 public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements UbicacionDAO {
@@ -25,5 +26,15 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
         query.setParameter("ubicacionId", ubicacionId);
 
         query.executeUpdate();
+    }
+
+    @Override
+    public List<Ubicacion> recuperarTodos() {
+        Session session = HibernateTransactionRunner.getCurrentSession();
+
+        String hql = "FROM Ubicacion";
+        List<Ubicacion> lista = session.createQuery(hql, Ubicacion.class).getResultList();
+
+        return lista;
     }
 }
