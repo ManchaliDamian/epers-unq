@@ -28,4 +28,10 @@ public class HibernateDAO<T> {
         Session session = HibernateTransactionRunner.getCurrentSession();
         session.createQuery("delete from " + entityType.getSimpleName()).executeUpdate();
     }
+
+    public void actualizar(T entity) {
+        Session session = HibernateTransactionRunner.getCurrentSession();
+        session.update(entity);
+    }
+
 }
