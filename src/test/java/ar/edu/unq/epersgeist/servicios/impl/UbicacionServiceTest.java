@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
@@ -35,8 +36,8 @@ public class UbicacionServiceTest {
         bernal = new Ubicacion("Bernal");
         service.crear(quilmes);
         service.crear(bernal);
-        angel = new Espiritu("angel",10,"damian",quilmes);
-        demonio = new Espiritu("angel",15,"Roberto", quilmes);
+        angel = new EspirituAngelical(10,"damian",quilmes);
+        demonio = new EspirituAngelical(15,"Roberto", quilmes);
     }
 //    @Test
 //    void espiritusEnUnaUbicacion() {

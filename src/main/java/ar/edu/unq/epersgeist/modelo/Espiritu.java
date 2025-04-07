@@ -12,13 +12,10 @@ import static java.lang.Math.max;
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 
 @Entity
-public class Espiritu {
+public abstract class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String tipo;
 
     @ManyToOne
     @JoinColumn(name = "ubicacion_id")
@@ -35,19 +32,17 @@ public class Espiritu {
 
     private Medium mediumConectado;
 
-    public Espiritu(@NonNull String tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
-        this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
     }
 
     // CONSULTAR POR ESTA SOLUCION
-    /*public Espiritu(@NonNull Long id, @NonNull TipoEspiritu tipo, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    /*public Espiritu(@NonNull Long id, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
         validarNivelDeConexion(nivelDeConexion);
         this.id = id;
-        this.tipo = tipo;
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
     }*/
