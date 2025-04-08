@@ -1,7 +1,10 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import lombok.NonNull;
+import jakarta.persistence.Entity;
+import lombok.*;
 
+@Getter @Setter @NoArgsConstructor @ToString
+@Entity
 public class EspirituDemoniaco extends Espiritu{
 
     public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {

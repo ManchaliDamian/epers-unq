@@ -12,6 +12,7 @@ import static java.lang.Math.max;
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
+@Entity
 public abstract class Espiritu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

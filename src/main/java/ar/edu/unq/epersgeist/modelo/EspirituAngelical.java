@@ -1,11 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
-import lombok.NonNull;
 
+import jakarta.persistence.Entity;
+import lombok.*;
 import java.util.Random;
-
 import static java.lang.Math.min;
 
-
+@Getter @Setter @NoArgsConstructor @ToString
+@Entity
 public class EspirituAngelical extends Espiritu{
     public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
