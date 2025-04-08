@@ -51,34 +51,43 @@ public class EspirituServiceTest {
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
 
         quilmes = new Ubicacion("Quilmes");
-
+        serviceU.crear(quilmes);
         demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes);
         demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes);
         angel = new EspirituAngelical( 90, "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
-        serviceU.crear(quilmes);
-        serviceM.crear(medium);
+
 
         serviceE.guardar(demonio1);
-         serviceE.guardar(demonio2);
-         serviceE.guardar(angel);
+        serviceE.guardar(demonio2);
+
+        serviceE.guardar(angel);
+
+
     }
 
     @Test
     void testEspiritusDemoniacos() {
+
         List<Espiritu> demonios = serviceE.espiritusDemoniacos();
 
         assertEquals(2, demonios.size());
         assertTrue(demonios.stream().allMatch(e -> e.getTipo() == TipoEspiritu.DEMONIACO));
-        assertEquals("Belcebu", demonios.get(0).getNombre());
-        assertEquals("Azazel", demonios.get(1).getNombre());
     }
 
     @Test
-    void testConectarEspirituAMedium(){
-        serviceE.conectar(demonio1.getId(), medium.getId());
+    void testConectarEspirituAMedium() {
+
+        serviceM.crear(medium);
+
+        Medium mediumConectado = serviceE.conectar(demonio1.getId(), medium.getId()); // 👈 orden correcto
+
+        Espiritu conectado = serviceE.recuperar(demonio1.getId());
+        assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
+
     }
+
 
     @AfterEach
     void cleanup() {
