@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Check;
 
+import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +24,10 @@ public class Medium implements Serializable {
     @Column(nullable = false)
     private String nombre;
 
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
     @Column(nullable = false)
     private Integer manaMax;
 
@@ -32,7 +38,7 @@ public class Medium implements Serializable {
     @OneToMany
     private final Set<Espiritu> espiritus = new HashSet<>();
 
-    public Medium(String nombre, Integer manaMax, Integer mana) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         if (manaMax < 0) {
             throw new IllegalArgumentException("manaMax no puede ser negativo.");
         }
@@ -42,10 +48,15 @@ public class Medium implements Serializable {
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;
+        this.ubicacion = ubicacion;
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
+        if ((!this.ubicacion.equals(espiritu.getUbicacion())) || !espiritu.estaLibre()){
+            throw new ConectarException(espiritu, this);
+        }
         espiritus.add(espiritu);
+        espiritu.setMediumConectado(this);
     }
 
     public void descansar() {
