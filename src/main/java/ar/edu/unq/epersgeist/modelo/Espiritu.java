@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
+import jakarta.persistence.CascadeType;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -20,7 +21,7 @@ public class Espiritu {
     @Column(nullable = false)
     private String tipo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
 
@@ -41,6 +42,7 @@ public class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        ubicacion.agregarEspirituUbicado(this);
     }
 
     // CONSULTAR POR ESTA SOLUCION

@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,12 +26,13 @@ public class Ubicacion {
     private List<Medium> mediumsUbicados;
 
     public Ubicacion(@NonNull String nombre) {
+        this.espiritusUbicados = new ArrayList<Espiritu>();
+        this.mediumsUbicados = new ArrayList<Medium>();
         this.nombre = nombre;
     }
 
 
     public void agregarEspirituUbicado(Espiritu espiritu) {
-        espiritu.setUbicacion(this); //para que guarde su ubicacion
         this.espiritusUbicados.add(espiritu);
     }
     public void agregarMediumUbicado(Medium medium) {
