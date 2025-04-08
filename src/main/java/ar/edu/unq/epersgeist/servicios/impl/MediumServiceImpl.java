@@ -68,6 +68,6 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        return null;
+        return HibernateTransactionRunner.runTrx(() -> mediumDAO.invocar(mediumId, espirituId));
     }
 }
