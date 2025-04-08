@@ -35,7 +35,7 @@ public class Medium implements Serializable {
     @Check(constraints = "mana BETWEEN 0 AND manaMax")
     private Integer mana;
 
-    @OneToMany
+    @OneToMany(mappedBy = "medium", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
@@ -63,5 +63,18 @@ public class Medium implements Serializable {
         this.setMana(
                 Math.min(this.getMana() + 15, this.getManaMax())
         );
+
+        this.getEspiritus().forEach(Espiritu::descansar);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
