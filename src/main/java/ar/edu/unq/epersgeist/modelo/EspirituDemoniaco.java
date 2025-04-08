@@ -1,6 +1,13 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import lombok.NonNull;
+
 public class EspirituDemoniaco extends Espiritu{
+
+    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
+        this.setTipo(TipoEspiritu.DEMONIACO);
+    }
 
     public void recibirAtaque(int cantidad){
         this.setNivelDeConexion(cantidad);

@@ -1,10 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -52,11 +49,11 @@ public class EspirituServiceTest {
         espirituDAO = new HibernateEspirituDAO();
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
 
-        quilmes = new Ubicacion("Q");
+        quilmes = new Ubicacion("Quilmes");
 
-        demonio1 = new Espiritu(TipoEspiritu.DEMONIACO, 80, "Azazel", quilmes);
-        demonio2 = new Espiritu(TipoEspiritu.DEMONIACO, 100, "Belcebu", quilmes);
-        angel = new Espiritu(TipoEspiritu.ANGELICAL, 90, "Gabriel", quilmes);
+        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes);
+        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes);
+        angel = new EspirituAngelical( 90, "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
         serviceU.crear(quilmes);

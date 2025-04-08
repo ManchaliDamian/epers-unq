@@ -1,11 +1,16 @@
 package ar.edu.unq.epersgeist.modelo;
+import lombok.NonNull;
+
 import java.util.Random;
 
 import static java.lang.Math.min;
 
 
 public class EspirituAngelical extends Espiritu{
-
+    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
+        this.setTipo(TipoEspiritu.ANGELICAL);
+    }
     public void atacar(EspirituDemoniaco objetivo){
         int cantidadAtaqueExitoso = this.calcularAtaque();
 
