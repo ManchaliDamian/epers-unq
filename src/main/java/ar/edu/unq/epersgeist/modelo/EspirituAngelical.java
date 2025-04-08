@@ -1,13 +1,19 @@
 package ar.edu.unq.epersgeist.modelo;
-
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
-import java.util.Random;
-import static java.lang.Math.min;
 
-@Getter @Setter @NoArgsConstructor @ToString
+import java.util.Random;
+
+import static java.lang.Math.min;
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 @Entity
+@DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
+
+    private Long id;
     public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
         this.setTipo(TipoEspiritu.ANGELICAL);
