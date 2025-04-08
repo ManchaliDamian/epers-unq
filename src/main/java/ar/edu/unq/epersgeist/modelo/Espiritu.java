@@ -21,7 +21,7 @@ public class Espiritu {
     @Column(nullable = false)
     private String tipo;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
 
