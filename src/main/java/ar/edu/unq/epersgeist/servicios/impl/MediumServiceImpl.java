@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -11,9 +12,11 @@ import java.util.List;
 public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
+    private final EspirituDAO espirituDAO;
 
-    public MediumServiceImpl(MediumDAO unMediumDAO) {
+    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO) {
         this.mediumDAO = unMediumDAO;
+        this.espirituDAO = espirituDAO;
     }
 
     @Override
@@ -53,7 +56,20 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void descansar(Long mediumId) {
+        HibernateTransactionRunner.runTrx(() -> {
+            Medium medium = mediumDAO.recuperar(mediumId);
 
+            medium.descansar();
+
+            List<Espiritu> espiritus = mediumDAO.espiritus(mediumId);
+            for (Espiritu espiritu : espiritus) {
+                espiritu.descansar();
+                espirituDAO.actualizar(espiritu);
+            }
+
+            mediumDAO.actualizar(medium);
+            return null;
+        });
     }
 
     @Override

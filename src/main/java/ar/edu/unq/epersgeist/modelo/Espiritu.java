@@ -30,6 +30,8 @@ public abstract class Espiritu {
     @Column(nullable = false)
     private String nombre;
 
+    @ManyToOne
+    @JoinColumn(name = "medium_conectado_id")
     private Medium mediumConectado;
 
     public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
@@ -48,12 +50,14 @@ public abstract class Espiritu {
     }*/
 
     public void aumentarConexion(Medium medium) {
-        if (this.mediumConectado != medium){
+        if (this.getMediumConectado() != medium){
             throw new ConectarException(this, medium);
         }
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
-        nivelDeConexion = Math.min(nivelDeConexion + aumento, 100);
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + aumento, 100)
+        );
     }
 
     private static void validarNivelDeConexion(Integer nivelDeConexion) {
@@ -62,22 +66,26 @@ public abstract class Espiritu {
         }
     }
 
-    public void validarConexion(Medium medium){
-        this.validarDisponibilidad();
-    }
-
     public void validarDisponibilidad(){
         if(!this.estaLibre()){
             throw new ExceptionEspirituOcupado(this);
         }
     }
     public void perderNivelDeConexion(int cantidad){
-        this.nivelDeConexion = max(this.getNivelDeConexion() - cantidad, 0);
+        this.setNivelDeConexion(
+                Math.max(this.getNivelDeConexion() - cantidad, 0)
+        );
     }
 
     //Dudas
     //public abstract boolean puedeExorcizar();
     public boolean estaLibre() {
-        return this.mediumConectado == null;
+        return this.getMediumConectado() == null;
+    }
+
+    public void descansar() {
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + 5, 100)
+        );
     }
 }

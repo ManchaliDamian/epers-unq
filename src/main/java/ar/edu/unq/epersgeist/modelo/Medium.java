@@ -58,4 +58,10 @@ public class Medium implements Serializable {
         espiritus.add(espiritu);
         espiritu.setMediumConectado(this);
     }
+
+    public void descansar() {
+        this.setMana(
+                Math.min(this.getMana() + 15, this.getManaMax())
+        );
+    }
 }
