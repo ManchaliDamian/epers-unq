@@ -12,7 +12,7 @@ public interface UbicacionService {
     List<Ubicacion> recuperarTodos();
     void actualizar(Long ubicacionId, String nombreNuevo);
     void eliminar(Ubicacion ubicacion);
-
+    void eliminarTodo();
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
 }

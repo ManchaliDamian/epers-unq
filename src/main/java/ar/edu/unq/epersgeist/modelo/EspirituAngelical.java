@@ -1,19 +1,29 @@
 package ar.edu.unq.epersgeist.modelo;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Random;
 
 import static java.lang.Math.min;
-
-
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Entity
+@DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion){
-        super(nivelDeConexion,nombre, ubicacion);
+    private Long id;
+    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
+        this.setTipo(TipoEspiritu.ANGELICAL);
     }
-
     public void atacar(EspirituDemoniaco objetivo){
-        int cantidadAtaqueExitoso = this.calcularAtaque();
+        Random random = new Random();
+        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
+        int defensaDemonio = random.nextInt(1,100);
 
-        if(cantidadAtaqueExitoso > objetivo.getNivelDeConexion()){
+        if(probAtaqueExitoso > defensaDemonio){
             //Ataque exitoso.
             int cantidad = this.getNivelDeConexion() / 2;
             //El demoniaco pierde nivelDeConexion.
@@ -24,15 +34,12 @@ public class EspirituAngelical extends Espiritu{
         }
     }
 
-    protected int calcularAtaque(){
+    protected int probabilidadDeAtaqueExitoso(){
         Random random = new Random();
         //random.nextInt tira un rango entre 0 a 9 por eso el + 1, para que sea 1 a 10.
         int cantidad = random.nextInt(10) + 1;
         int cantAtaque = cantidad + this.getNivelDeConexion();
         return min(cantAtaque,100);
     }
-
-    //@Override
-    //public boolean puedeExorcizar(){return true;}
 
 }

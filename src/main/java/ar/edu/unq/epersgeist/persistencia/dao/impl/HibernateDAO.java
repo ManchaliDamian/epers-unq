@@ -34,5 +34,4 @@ public class HibernateDAO<T> {
         session.update(entity);
     }
 
-
 }
