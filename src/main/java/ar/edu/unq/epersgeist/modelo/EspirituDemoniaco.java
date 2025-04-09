@@ -18,7 +18,9 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     public void recibirAtaque(int cantidad){
-        this.setNivelDeConexion(cantidad);
+        int cantidadPerdida = this.getNivelDeConexion() - cantidad;
+        this.setNivelDeConexion(cantidadPerdida);
+        this.evaluarDesconectarDemoniaco();
     }
 
     public void evaluarDesconectarDemoniaco(){
@@ -28,7 +30,7 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     public void desconectarDelMedium(){
-        // this.getMediumConectado().desconectarEspiritu(this);
+        this.getMediumConectado().desconectarEspiritu(this);
         this.setNivelDeConexion(0);
         this.setMediumConectado(null);
     }
