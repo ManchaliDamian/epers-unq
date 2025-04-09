@@ -13,7 +13,6 @@ import static java.lang.Math.min;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    private Long id;
     public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
         this.setTipo(TipoEspiritu.ANGELICAL);
