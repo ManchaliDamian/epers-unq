@@ -76,7 +76,16 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
+        HibernateTransactionRunner.runTrx(() -> {
+            Medium mediumExorcista = mediumDAO.recuperar(idMediumExorcista);
+            Medium mediumAExorcizar = mediumDAO.recuperar(idMediumAExorcizar);
 
+            mediumExorcista.exorcizarA(mediumAExorcizar);
+
+            mediumDAO.actualizar(mediumExorcista);
+            mediumDAO.actualizar(mediumAExorcizar);
+            return null;
+        });
     }
 
     @Override
