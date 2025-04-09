@@ -52,7 +52,6 @@ public class Medium {
         this.manaMax = manaMax;
         this.mana = mana;
         this.ubicacion = ubicacion;
-        ubicacion.agregarMediumUbicado(this);
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
