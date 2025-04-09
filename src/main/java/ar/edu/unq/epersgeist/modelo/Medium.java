@@ -64,4 +64,8 @@ public class Medium implements Serializable {
                 Math.min(this.getMana() + 15, this.getManaMax())
         );
     }
+
+    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
+        this.espiritus.remove(espirituDemoniaco);
+    }
 }
