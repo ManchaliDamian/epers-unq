@@ -10,6 +10,7 @@ public interface EspirituDAO {
     List<Espiritu> recuperarTodos();
     void actualizar(Espiritu espiritu);
     void eliminar(Espiritu espiritu);
+    void eliminarTodo();
     List<Espiritu> getEspiritusDemoniacos();
     void eliminarTodo();
 }

@@ -1,13 +1,26 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Entity
+@DiscriminatorValue("DEMONIACO")
 public class EspirituDemoniaco extends Espiritu{
 
-    public EspirituDemoniaco(String tipo, Integer nivelDeConexion, String nombre, Ubicacion ubicacion){
-        super(tipo,nivelDeConexion,nombre, ubicacion);
+
+    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
+        this.setTipo(TipoEspiritu.DEMONIACO);
     }
 
     public void recibirAtaque(int cantidad){
-        this.setNivelDeConexion(cantidad);
+        int cantidadPerdida = this.getNivelDeConexion() - cantidad;
+        this.setNivelDeConexion(cantidadPerdida);
+        this.evaluarDesconectarDemoniaco();
     }
 
     public void evaluarDesconectarDemoniaco(){
@@ -17,7 +30,7 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     public void desconectarDelMedium(){
-        // this.getMediumConectado().desconectarEspiritu(this);
+        this.getMediumConectado().desconectarEspiritu(this);
         this.setNivelDeConexion(0);
         this.setMediumConectado(null);
     }

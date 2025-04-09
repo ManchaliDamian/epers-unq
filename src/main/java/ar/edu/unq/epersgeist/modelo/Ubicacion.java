@@ -33,6 +33,7 @@ public class Ubicacion {
 
 
     public void agregarEspirituUbicado(Espiritu espiritu) {
+        espiritu.setUbicacion(this);
         this.espiritusUbicados.add(espiritu);
     }
     public void agregarMediumUbicado(Medium medium) {
