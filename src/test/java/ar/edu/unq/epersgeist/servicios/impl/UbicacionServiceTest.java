@@ -1,8 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -43,15 +41,15 @@ public class UbicacionServiceTest {
 
         service = new UbicacionServiceImpl(ubicacionDao);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-        serviceM = new MediumServiceImpl(mediumDAO);
+        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
         service.crear(quilmes);
         service.crear(bernal);
 
-        angel = new Espiritu("angel",10,"damian",quilmes);
-        demonio = new Espiritu("angel",15,"Roberto", quilmes);
+        angel = new EspirituAngelical(10,"damian",quilmes);
+        demonio = new EspirituDemoniaco(15,"Roberto", quilmes);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);
