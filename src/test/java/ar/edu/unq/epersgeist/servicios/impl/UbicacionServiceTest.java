@@ -1,9 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,34 +20,59 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
-/*
+
     private UbicacionServiceImpl service;
     private Ubicacion quilmes;
     private Ubicacion bernal;
     private UbicacionDAO ubicacionDao;
 
+    private EspirituServiceImpl serviceE;
+    private EspirituDAO espirituDAO;
+
+    private MediumServiceImpl serviceM;
+    private MediumDAO mediumDAO;
+    private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
 
     @BeforeEach
     void prepare() {
-
-
         ubicacionDao = new HibernateUbicacionDAO();
-        this.service = new UbicacionServiceImpl(ubicacionDao);
+        espirituDAO = new HibernateEspirituDAO();
+        mediumDAO = new HibernateMediumDAO();
+
+        service = new UbicacionServiceImpl(ubicacionDao);
+        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
+        serviceM = new MediumServiceImpl(mediumDAO);
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
         service.crear(quilmes);
         service.crear(bernal);
-        angel = new EspirituAngelical(10,"damian",quilmes);
-        demonio = new EspirituAngelical(15,"Roberto", quilmes);
+
+        angel = new Espiritu("angel",10,"damian",quilmes);
+        demonio = new Espiritu("angel",15,"Roberto", quilmes);
+
+
+        medium = new Medium("roberto", 200, 150, quilmes);
+
+
+
     }
-//    @Test
-//    void espiritusEnUnaUbicacion() {
-//        List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
-//        assertEquals([], espiritusEn);
-//    }
+    @Test
+    void espiritusEnUnaUbicacion() {
+
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+        List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
+        assertEquals(2, espiritusEn.size());
+    }
+    @Test
+    void mediumsSinEspiritusEnUbicacion() {
+        serviceM.crear(medium);
+        List<Medium> mediums = service.mediumsSinEspiritusEn(quilmes.getId());
+        assertEquals(1, mediums.size());
+    }
     @Test
     void recuperarUbicacionDada() {
         Ubicacion q = service.recuperar(quilmes.getId());
@@ -71,8 +100,10 @@ public class UbicacionServiceTest {
 
     @AfterEach
     void cleanup() {
+        serviceE.eliminarTodo();
+        serviceM.eliminarTodo();
         service.eliminarTodo();
     }
-*/
+
 
 }

@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionEx
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
+import jakarta.persistence.CascadeType;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -46,6 +47,7 @@ public abstract class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        ubicacion.agregarEspirituUbicado(this);
     }
 
     // CONSULTAR POR ESTA SOLUCION
