@@ -44,9 +44,9 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         Session session = HibernateTransactionRunner.getCurrentSession();
 
-        String hql = "FROM Espiritu e WHERE e.ubicacion.id = :ubicacionId";
+        String hql = "FROM Espiritu e WHERE e.ubicacion.id = :idUbicacion";
         List<Espiritu> espiritus = session.createQuery(hql, Espiritu.class)
-                .setParameter("ubicacionId", ubicacionId)
+                .setParameter("idUbicacion", 1L)
                 .getResultList();
         return espiritus;
     }
@@ -55,9 +55,9 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         Session session = HibernateTransactionRunner.getCurrentSession();
 
-        String hql = "FROM Medium m WHERE m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0";
+        String hql = "FROM Medium m WHERE m.ubicacion.id = :idUbicacion and size(m.espiritus) = 0";
         List<Medium> mediums = session.createQuery(hql, Medium.class)
-                .setParameter("ubicacionId", ubicacionId)
+                .setParameter("idUbicacion", ubicacionId)
                 .getResultList();
         return mediums;
     }
