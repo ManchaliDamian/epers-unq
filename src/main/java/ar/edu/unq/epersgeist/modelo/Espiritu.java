@@ -73,25 +73,34 @@ public abstract class Espiritu {
     }
 
     public void validarDisponibilidad(){
-        if(!this.estaLibre()){
+        if(estaConectado()){
             throw new ExceptionEspirituOcupado(this);
         }
     }
-    public void perderNivelDeConexion(int cantidad){
-        this.setNivelDeConexion(
-                Math.max(this.getNivelDeConexion() - cantidad, 0)
-        );
+
+    protected void perderNivelDeConexion(int cantidad){
+        int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
+        if (nivelDeConexionResultante <= 0){
+            this.getMediumConectado().desvincularseDe(this);
+        }
+        else{
+            this.setNivelDeConexion(nivelDeConexionResultante);
+        }
     }
 
     //Dudas
     //public abstract boolean puedeExorcizar();
-    public boolean estaLibre() {
-        return this.getMediumConectado() == null;
+    public boolean estaConectado() {
+        return this.getMediumConectado() != null;
     }
 
     public void descansar() {
         this.setNivelDeConexion(
                 Math.min(this.getNivelDeConexion() + 5, 100)
         );
+    }
+
+    public void desvincularse() {
+        this.setMediumConectado(null);
     }
 }

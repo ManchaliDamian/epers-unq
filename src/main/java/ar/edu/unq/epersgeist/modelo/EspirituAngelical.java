@@ -19,9 +19,11 @@ public class EspirituAngelical extends Espiritu{
         this.setTipo(TipoEspiritu.ANGELICAL);
     }
     public void atacar(EspirituDemoniaco objetivo){
-        int cantidadAtaqueExitoso = this.calcularAtaque();
+        Random random = new Random();
+        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
+        int defensaDemonio = random.nextInt(1,100);
 
-        if(cantidadAtaqueExitoso > objetivo.getNivelDeConexion()){
+        if(probAtaqueExitoso > defensaDemonio){
             //Ataque exitoso.
             int cantidad = this.getNivelDeConexion() / 2;
             //El demoniaco pierde nivelDeConexion.
@@ -32,14 +34,11 @@ public class EspirituAngelical extends Espiritu{
         }
     }
 
-    protected int calcularAtaque(){
+    protected int probabilidadDeAtaqueExitoso(){
         Random random = new Random();
         int cantidad = random.nextInt(10) + 1;
         int cantAtaque = cantidad + this.getNivelDeConexion();
         return min(cantAtaque,100);
     }
-
-    //@Override
-    //public boolean puedeExorcizar(){return true;}
 
 }
