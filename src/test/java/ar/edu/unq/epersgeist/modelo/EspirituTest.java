@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ public class EspirituTest {
     void elEspirituTieneUnMediumConectado(){
         espiritu.setMediumConectado(mediumConectado);
         //Es falso porque no está libre.
-        assertFalse(espiritu.estaLibre());
+        assertTrue(espiritu.estaConectado());
     }
 
     @Test
@@ -92,6 +93,14 @@ public class EspirituTest {
         mediumConectado.setUbicacion(otraUbicacion);
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             espiritu.estaEnLaMismaUbicacion(mediumConectado);
+        });
+    }
+
+    @Test
+    void validarDisponibilidadDelEspirituTest(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+        assertThrows(ExceptionEspirituOcupado.class, () -> {
+            espiritu.validarDisponibilidad();
         });
     }
 }
