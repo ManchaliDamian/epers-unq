@@ -24,7 +24,6 @@ public class Medium {
     @Column(nullable = false)
     private String nombre;
 
-
     @ManyToOne
     @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
@@ -65,5 +64,7 @@ public class Medium {
         this.setMana(
                 Math.min(this.getMana() + 15, this.getManaMax())
         );
+
+        this.getEspiritus().forEach(Espiritu::descansar);
     }
 }

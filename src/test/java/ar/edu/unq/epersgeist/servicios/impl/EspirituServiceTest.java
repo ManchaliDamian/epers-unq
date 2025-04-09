@@ -45,7 +45,7 @@ public class EspirituServiceTest {
         serviceU = new UbicacionServiceImpl(ubicacionDao);
 
         mediumDAO = new HibernateMediumDAO();
-        serviceM = new MediumServiceImpl(mediumDAO);
+        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
 
         espirituDAO = new HibernateEspirituDAO();
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
