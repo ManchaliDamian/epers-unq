@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
@@ -15,6 +16,8 @@ public class MediumServiceImpl implements MediumService {
     public MediumServiceImpl(MediumDAO unMediumDAO) {
         this.mediumDAO = unMediumDAO;
     }
+
+    private EspirituServiceImpl espirituService;
 
     @Override
     public Medium crear(Medium unMedium) {
@@ -68,6 +71,16 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        return HibernateTransactionRunner.runTrx(() -> mediumDAO.invocar(mediumId, espirituId));
+        Espiritu espiritu = espirituService.recuperar(espirituId);
+        Medium medium = mediumDAO.recuperar(mediumId);
+
+        if (!espiritu.estaLibre()) throw new ExceptionEspirituOcupado(espiritu);
+        if (medium.getMana() < 10) return espiritu;
+
+        espiritu.setUbicacion(medium.getUbicacion());
+        medium.setMana(medium.getMana() - 10);
+
+        return espiritu;
+
     }
 }

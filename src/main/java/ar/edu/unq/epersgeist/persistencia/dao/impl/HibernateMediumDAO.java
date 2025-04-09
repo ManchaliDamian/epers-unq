@@ -63,25 +63,11 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     }
 
     @Override
-    public Espiritu invocar(Long mediumId, Long espirituId){
-        // Dado un médium y un espíritu, el médium deberá invocar al espíritu
-        // a su ubicación generandole un costo de 10 puntos de mana.
-        // Si el médium no tiene mana suficiente no hace nada.
-        // Si el espíritu no esta libre, lanzar una excepción.
+    public Medium recuperar(Long mediumId){
         Session session = HibernateTransactionRunner.getCurrentSession();
-
-        Medium medium = session.get(Medium.class, mediumId);
-        Espiritu espiritu = session.get(Espiritu.class, espirituId);
-
-        if (medium.getMana() < 10) return espiritu;
-        if (!espiritu.estaLibre()) throw new ExceptionEspirituOcupado(espiritu);
-
-        espiritu.setUbicacion(medium.getUbicacion());
-        medium.setMana(medium.getMana() - 10);
-
-        session.persist(medium);
-        session.persist(espiritu);
-
-        return espiritu;
+        String hql = "SELECT m FROM Espiritu m WHERE m.id = :id";
+        Query<Medium> query = session.createQuery(hql, Medium.class);
+        query.setParameter("id", mediumId);
+        return query.getSingleResult();
     }
 }
