@@ -61,12 +61,6 @@ public class MediumServiceImpl implements MediumService {
 
             medium.descansar();
 
-            List<Espiritu> espiritus = mediumDAO.espiritus(mediumId);
-            for (Espiritu espiritu : espiritus) {
-                espiritu.descansar();
-                espirituDAO.actualizar(espiritu);
-            }
-
             mediumDAO.actualizar(medium);
             return null;
         });
