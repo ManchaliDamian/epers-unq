@@ -10,6 +10,7 @@ import org.hibernate.annotations.*;
 import static java.lang.Math.max;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 @Entity
 public abstract class Espiritu {
@@ -30,11 +31,16 @@ public abstract class Espiritu {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
+    private TipoEspiritu tipo;
+
     @ManyToOne
-    @JoinColumn(name = "medium_conectado_id")
+    @JoinColumn(name = "medium_id")
+
+    //@JoinColumn(name = "medium_conectado_id")
     private Medium mediumConectado;
 
-    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;

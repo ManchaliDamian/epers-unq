@@ -1,9 +1,20 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Entity
+@DiscriminatorValue("DEMONIACO")
 public class EspirituDemoniaco extends Espiritu{
 
-    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion){
-        super(nivelDeConexion,nombre, ubicacion);
+
+    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
+        this.setTipo(TipoEspiritu.DEMONIACO);
     }
 
     public void recibirAtaque(int cantidad){

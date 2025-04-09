@@ -11,6 +11,7 @@ public interface MediumService {
     List<Medium> recuperarTodos();
     void actualizar(Medium unMedium);
     void eliminar(Long mediumId);
+    void eliminarTodo();
     void descansar(Long mediumId);
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
     List<Espiritu> espiritus(Long mediumId);

@@ -11,4 +11,5 @@ public interface MediumDAO {
     List<Medium> recuperarTodos();
     void actualizar(Medium unMedium);
     void eliminar(Long mediumId);
+    void eliminarTodo();
 }

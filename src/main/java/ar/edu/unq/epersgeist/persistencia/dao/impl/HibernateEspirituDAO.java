@@ -33,4 +33,5 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
         return query.getResultList();
     }
 
+
 }
