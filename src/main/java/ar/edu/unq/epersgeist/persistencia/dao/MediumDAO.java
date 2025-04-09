@@ -12,4 +12,5 @@ public interface MediumDAO {
     void actualizar(Medium unMedium);
     void eliminar(Long mediumId);
     List<Espiritu> espiritus(Long mediumId);
+    void eliminarTodo();
 }

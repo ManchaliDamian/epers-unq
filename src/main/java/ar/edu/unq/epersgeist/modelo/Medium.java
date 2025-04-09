@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter @Setter @NoArgsConstructor @ToString
 
 @Entity
-public class Medium implements Serializable {
+public class Medium {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,8 @@ public class Medium implements Serializable {
     @Check(constraints = "mana BETWEEN 0 AND manaMax")
     private Integer mana;
 
-    @OneToMany
+
+    @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
@@ -57,5 +58,13 @@ public class Medium implements Serializable {
         }
         espiritus.add(espiritu);
         espiritu.setMediumConectado(this);
+    }
+
+    public void descansar() {
+        this.setMana(
+                Math.min(this.getMana() + 15, this.getManaMax())
+        );
+
+        this.getEspiritus().forEach(Espiritu::descansar);
     }
 }

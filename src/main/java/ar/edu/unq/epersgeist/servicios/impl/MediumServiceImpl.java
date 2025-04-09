@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -12,9 +13,11 @@ import java.util.List;
 public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
+    private final EspirituDAO espirituDAO;
 
-    public MediumServiceImpl(MediumDAO unMediumDAO) {
+    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO) {
         this.mediumDAO = unMediumDAO;
+        this.espirituDAO = espirituDAO;
     }
 
     private EspirituServiceImpl espirituService;
@@ -48,6 +51,14 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
+    public void eliminarTodo() {
+        HibernateTransactionRunner.runTrx(() -> {
+            mediumDAO.eliminarTodo();
+            return null;
+        });
+    }
+
+    @Override
     public List<Medium> recuperarTodos() {
         return mediumDAO.recuperarTodos();
     }
@@ -56,7 +67,14 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void descansar(Long mediumId) {
+        HibernateTransactionRunner.runTrx(() -> {
+            Medium medium = mediumDAO.recuperar(mediumId);
 
+            medium.descansar();
+
+            mediumDAO.actualizar(medium);
+            return null;
+        });
     }
 
     @Override
