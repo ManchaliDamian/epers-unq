@@ -35,6 +35,7 @@ public class EspirituAngelical extends Espiritu{
 
     protected int probabilidadDeAtaqueExitoso(){
         Random random = new Random();
+        //random.nextInt tira un rango entre 0 a 9 por eso el + 1, para que sea 1 a 10.
         int cantidad = random.nextInt(10) + 1;
         int cantAtaque = cantidad + this.getNivelDeConexion();
         return min(cantAtaque,100);

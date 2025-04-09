@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
@@ -55,6 +56,21 @@ public abstract class Espiritu {
         this.nombre = nombre;
     }*/
 
+    public void conexionEnAumento(Medium medium){
+        this.estaEnLaMismaUbicacion(medium);
+        this.aumentarConexion(medium);
+    }
+
+    public void estaEnLaMismaUbicacion(Medium medium){
+        if(!this.esMismaUbicacion(medium)){
+            throw new EspirituNoEstaEnLaMismaUbicacionException(this,medium);
+        }
+    }
+
+    public boolean esMismaUbicacion(Medium medium) {
+        return this.getUbicacion().equals(medium.getUbicacion());
+    }
+
     public void aumentarConexion(Medium medium) {
         if (this.getMediumConectado() != medium){
             throw new ConectarException(this, medium);
@@ -66,7 +82,7 @@ public abstract class Espiritu {
         );
     }
 
-    private static void validarNivelDeConexion(Integer nivelDeConexion) {
+    public void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
             throw new NivelDeConexionException();
         }

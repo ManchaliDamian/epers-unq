@@ -100,4 +100,8 @@ public class Medium {
             }
         }
     }
+
+    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
+        this.espiritus.remove(espirituDemoniaco);
+    }
 }
