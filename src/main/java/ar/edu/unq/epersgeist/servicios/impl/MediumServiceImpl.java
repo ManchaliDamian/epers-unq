@@ -92,7 +92,7 @@ public class MediumServiceImpl implements MediumService {
         Espiritu espiritu = espirituService.recuperar(espirituId);
         Medium medium = mediumDAO.recuperar(mediumId);
 
-        if (!espiritu.estaLibre()) throw new ExceptionEspirituOcupado(espiritu);
+        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
         if (medium.getMana() < 10) return espiritu;
 
         espiritu.setUbicacion(medium.getUbicacion());
