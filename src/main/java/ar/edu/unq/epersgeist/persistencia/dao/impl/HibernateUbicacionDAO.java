@@ -46,7 +46,7 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
 
         String hql = "FROM Espiritu e WHERE e.ubicacion.id = :idUbicacion";
         List<Espiritu> espiritus = session.createQuery(hql, Espiritu.class)
-                .setParameter("idUbicacion", 1L)
+                .setParameter("idUbicacion", ubicacionId)
                 .getResultList();
         return espiritus;
     }
