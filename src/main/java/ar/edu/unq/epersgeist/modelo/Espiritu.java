@@ -5,17 +5,16 @@ import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionEx
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
+import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
-
-import java.util.Objects;
-
 import static java.lang.Math.max;
 
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
 @Entity
 public abstract class Espiritu {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +26,7 @@ public abstract class Espiritu {
     @Column(nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
+
     private Integer nivelDeConexion;
 
     @Column(nullable = false)
@@ -37,75 +37,25 @@ public abstract class Espiritu {
 
     @ManyToOne
     @JoinColumn(name = "medium_id")
+
+    //@JoinColumn(name = "medium_conectado_id")
     private Medium mediumConectado;
 
-    public Espiritu() {
-        // Constructor vacío requerido por JPA
-    }
-
-    public Espiritu(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public Integer getNivelDeConexion() {
-        return nivelDeConexion;
-    }
-
-    public void setNivelDeConexion(Integer nivelDeConexion) {
-        this.nivelDeConexion = nivelDeConexion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public TipoEspiritu getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoEspiritu tipo) {
-        this.tipo = tipo;
-    }
-
-    public Medium getMediumConectado() {
-        return mediumConectado;
-    }
-
-    public void setMediumConectado(Medium mediumConectado) {
-        this.mediumConectado = mediumConectado;
-    }
-
-    public void conexionEnAumento(Medium medium) {
+    public void conexionEnAumento(Medium medium){
         this.estaEnLaMismaUbicacion(medium);
         this.aumentarConexion(medium);
     }
 
-    public void estaEnLaMismaUbicacion(Medium medium) {
-        if (!this.esMismaUbicacion(medium)) {
-            throw new EspirituNoEstaEnLaMismaUbicacionException(this, medium);
+    public void estaEnLaMismaUbicacion(Medium medium){
+        if(!this.esMismaUbicacion(medium)){
+            throw new EspirituNoEstaEnLaMismaUbicacionException(this,medium);
         }
     }
 
@@ -114,10 +64,11 @@ public abstract class Espiritu {
     }
 
     public void aumentarConexion(Medium medium) {
-        if (this.getMediumConectado() != medium) {
+        if (this.getMediumConectado() != medium){
             throw new ConectarException(this, medium);
         }
         int aumento = (int) Math.round(medium.getMana() * 0.20);
+
         this.setNivelDeConexion(
                 Math.min(this.getNivelDeConexion() + aumento, 100)
         );
@@ -129,21 +80,24 @@ public abstract class Espiritu {
         }
     }
 
-    public void validarDisponibilidad() {
-        if (estaConectado()) {
+    public void validarDisponibilidad(){
+        if(estaConectado()){
             throw new ExceptionEspirituOcupado(this);
         }
     }
 
-    protected void perderNivelDeConexion(int cantidad) {
+    protected void perderNivelDeConexion(int cantidad){
         int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
-        if (nivelDeConexionResultante <= 0) {
+        if (nivelDeConexionResultante <= 0){
             this.getMediumConectado().desvincularseDe(this);
-        } else {
+        }
+        else{
             this.setNivelDeConexion(nivelDeConexionResultante);
         }
     }
 
+    //Dudas
+    //public abstract boolean puedeExorcizar();
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }
@@ -156,29 +110,5 @@ public abstract class Espiritu {
 
     public void desvincularse() {
         this.setMediumConectado(null);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Espiritu)) return false;
-        Espiritu espiritu = (Espiritu) o;
-        return Objects.equals(id, espiritu.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Espiritu{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", tipo=" + tipo +
-                ", nivelDeConexion=" + nivelDeConexion +
-                ", ubicacion=" + ubicacion +
-                '}';
     }
 }

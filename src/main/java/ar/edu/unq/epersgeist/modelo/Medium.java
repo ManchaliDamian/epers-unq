@@ -1,16 +1,19 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Check;
+
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 
 import java.util.*;
 
+@Getter @Setter @NoArgsConstructor @ToString
+
 @Entity
-@NoArgsConstructor
-@ToString
 public class Medium {
 
     @Id
@@ -31,6 +34,7 @@ public class Medium {
     @Check(constraints = "mana BETWEEN 0 AND manaMax")
     private Integer mana;
 
+
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
@@ -45,50 +49,6 @@ public class Medium {
         this.manaMax = manaMax;
         this.mana = mana;
         this.ubicacion = ubicacion;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public Integer getManaMax() {
-        return manaMax;
-    }
-
-    public void setManaMax(Integer manaMax) {
-        this.manaMax = manaMax;
-    }
-
-    public Integer getMana() {
-        return mana;
-    }
-
-    public void setMana(Integer mana) {
-        this.mana = mana;
-    }
-
-    public Set<Espiritu> getEspiritus() {
-        return espiritus;
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
@@ -127,10 +87,12 @@ public class Medium {
 
         for (EspirituAngelical angel : angelesAliados) {
             if (angel.estaConectado()) {
+                // busca el primer demonio que esté conectado
                 Optional<EspirituDemoniaco> demonioObjetivo = demoniosRivales.stream()
                         .filter(Espiritu::estaConectado)
                         .findFirst();
 
+                // si hay un demonio, lo ataca
                 demonioObjetivo.ifPresent(angel::atacar);
             }
         }
