@@ -48,8 +48,7 @@ public class UbicacionServiceTest {
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-        service.crear(quilmes);
-        service.crear(bernal);
+
 
         angel = new EspirituAngelical(10,"damian",quilmes);
         demonio = new EspirituDemoniaco(15,"Roberto", quilmes);
@@ -57,14 +56,17 @@ public class UbicacionServiceTest {
 
         medium = new Medium("roberto", 200, 150, quilmes);
 
+        service.crear(quilmes);
+        service.crear(bernal);
 
 
     }
+
     @Test
     void espiritusEnUnaUbicacion() {
-
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
+
         List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
         assertEquals(2, espiritusEn.size());
     }
