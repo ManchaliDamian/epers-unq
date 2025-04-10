@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface EspirituService {
     void eliminarTodo();
     Medium conectar(Long espirituId, Long mediumId);
     List<Espiritu> espiritusDemoniacos();
+    List<Espiritu> recuperarPaginados(int page, int pageSize);
 }
