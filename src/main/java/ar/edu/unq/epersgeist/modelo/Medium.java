@@ -9,10 +9,7 @@ import org.hibernate.annotations.Check;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 
-import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter @Setter @NoArgsConstructor @ToString
 

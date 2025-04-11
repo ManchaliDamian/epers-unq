@@ -18,6 +18,7 @@ import org.junit.jupiter.api.TestInstance;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
@@ -35,6 +36,7 @@ public class UbicacionServiceTest {
     private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
+    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void prepare() {
@@ -49,9 +51,10 @@ public class UbicacionServiceTest {
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 
+        generadorMock = mock(GeneradorDeNumeros.class);
 
-        angel = new EspirituAngelical(10,"damian",quilmes);
-        demonio = new EspirituDemoniaco(15,"Roberto", quilmes);
+        angel = new EspirituAngelical(10,"damian",quilmes, generadorMock);
+        demonio = new EspirituDemoniaco(15,"Roberto", quilmes, generadorMock);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);
@@ -70,22 +73,26 @@ public class UbicacionServiceTest {
         List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
         assertEquals(2, espiritusEn.size());
     }
+
     @Test
     void mediumsSinEspiritusEnUbicacion() {
         serviceM.crear(medium);
         List<Medium> mediums = service.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
     }
+
     @Test
     void recuperarUbicacionDada() {
         Ubicacion q = service.recuperar(quilmes.getId());
         assertEquals("Quilmes", q.getNombre());
     }
+
     @Test
     void recuperarTodasLasUbicaciones() {
         List<Ubicacion> ubicaciones = service.recuperarTodos();
         assertEquals(2, ubicaciones.size());
     }
+
     @Test
     void actualizarUnaUbicacion(){
         Ubicacion q = service.recuperar(quilmes.getId());
@@ -94,6 +101,7 @@ public class UbicacionServiceTest {
 
         assertEquals("Avellaneda", nombreNuevo.getNombre());
     }
+
     @Test
     void eliminarUbicacion() {
         service.eliminar(quilmes);
@@ -107,6 +115,5 @@ public class UbicacionServiceTest {
         serviceM.eliminarTodo();
         service.eliminarTodo();
     }
-
 
 }
