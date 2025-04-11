@@ -1,0 +1,244 @@
+{
+  "Contributions-per-user": [
+    {
+      "👤 Contributor": "Axel García",
+      "📊 Stats": {
+        "📨 commits": 6,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into feature/ataqueMedium"
+      ]
+    },
+    {
+      "👤 Contributor": "Damian Manchali",
+      "📊 Stats": {
+        "📨 commits": 36,
+        "✅ added": 752,
+        "⛔ deleted": 677
+      },
+      "💬 Messages": [
+        "errores solucionados",
+        "Revert \"Pginator\"",
+        "preparando entrega...",
+        "Merge branch 'dev' into feature/exorcizar-test",
+        "testInvocar",
+        "Merge remote-tracking branch 'origin/dev' into feature/exorcizar-test",
+        "test exorcizarA",
+        "invocarEspirituService test",
+        "Merge remote-tracking branch 'origin/feature/medium-tests' into feature/mendium-service-invocar",
+        " invocarEspirituService",
+        "test 100%",
+        "conflictos test ubicacion",
+        "test corriendo",
+        "Revert \"Feature/test ubicacion\"",
+        "solucionando conflictos",
+        "solucionando conflictos",
+        "test conectar y lista de espiritus",
+        "solucionando errores",
+        "test mediumSinEspiritusEnUbicacion()",
+        "solucionando errores de ubicacion en espiritu",
+        "crud ubicacion completo",
+        "mediumsSinEspiritusEn completo",
+        "agregando ubicacion a espiritu y medium",
+        "arreglando conflictos",
+        "agregando espiritusEn y ubicacion en Espiritu",
+        "agregando al modelo las listas de espiritu y medium",
+        "ubicacionService,DAO y modelo",
+        "solucionando conflicto de configuracion",
+        "ubicacion estructura"
+      ]
+    },
+    {
+      "👤 Contributor": "Francisco Sebastian Raffin",
+      "📊 Stats": {
+        "📨 commits": 5,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into tests"
+      ]
+    },
+    {
+      "👤 Contributor": "FranciscoSRaffin",
+      "📊 Stats": {
+        "📨 commits": 9,
+        "✅ added": 371,
+        "⛔ deleted": 239
+      },
+      "💬 Messages": [
+        "Pginator",
+        "sacados getters y setters",
+        "Fallan los tests :)",
+        "sync with dev",
+        "Merge remote-tracking branch 'origin/dev' into feature/medium-retirnar-todos-los-espiritus",
+        "invocar",
+        "Hibernate mediumDAO Invocar function",
+        "Medium service - espiritus",
+        "ISSUE 10"
+      ]
+    },
+    {
+      "👤 Contributor": "Franco",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 178,
+        "⛔ deleted": 1
+      },
+      "💬 Messages": [
+        "enunciado-hibernate"
+      ]
+    },
+    {
+      "👤 Contributor": "Hernán F. Moreyra",
+      "📊 Stats": {
+        "📨 commits": 6,
+        "✅ added": 1,
+        "⛔ deleted": 1
+      },
+      "💬 Messages": [
+        "Update MediumServiceImpl.java"
+      ]
+    },
+    {
+      "👤 Contributor": "Hernán Moreyra",
+      "📊 Stats": {
+        "📨 commits": 9,
+        "✅ added": 541,
+        "⛔ deleted": 76
+      },
+      "💬 Messages": [
+        "medium modelo",
+        "service tests fix",
+        "metodo exorcizar",
+        "cascade merge fix",
+        "merge from dev",
+        "feat: metodo descansar",
+        "mediumCRUD inicial",
+        "Merge branch 'tests' of https://github.com/EPERS-UNQ/Codigo-Clandestino into tests",
+        "issues #7, #8, #9 fix"
+      ]
+    },
+    {
+      "👤 Contributor": "Lourdes de la Cerda",
+      "📊 Stats": {
+        "📨 commits": 34,
+        "✅ added": 919,
+        "⛔ deleted": 815
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into feature/random",
+        "inyecto GeneradorDeNumeros en espiritu",
+        "Merge branch 'dev' into feature/test-espirituService",
+        "test de espiritu service funcionando",
+        "Merge branch 'dev' of https://github.com/EPERS-UNQ/group-b-repo into dev",
+        "borro atributo repetido en EspirituAngelical",
+        "agrego EspirituAngelical y EspirituDemoniaco en .xml",
+        "Merge branch 'dev' into feature/TestEspiritu",
+        "agrego validarDisponibilidadDelEspirituTest",
+        "corrigo query de recuperar en HMD",
+        "Merge branch 'feature/espiritu-conectar' of https://github.com/EPERS-UNQ/group-b-repo into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "Merge branch 'feature/espiritu-conectar' of https://github.com/EPERS-UNQ/group-b-repo into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "se crea correctamente la herencia de espiritu en la bd",
+        "base estrategia dparamdodelo espiritu",
+        "test conectar espiritu service",
+        "test espiritu service",
+        "eliminamos el campo tipo de espiritu",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "comento puedeExorcizar",
+        "merge dev a espiritusDemonicos",
+        "conectar sin testear",
+        "mergeo con la base de medium",
+        "conectar sin persistir medium",
+        "Merge branch 'feature/ubicacion' into feature/espiritu-conectar",
+        "agrego vexception personalizada para nivel de conexion",
+        "metodo espiritud demonicos completo con test",
+        "primera version",
+        "agrego hibernateDAO, elimino carpeta jdbc",
+        "primeras anotaciones en modelo espiritu",
+        "espiritu service migrado a hibernate",
+        "error con vaciar la bd"
+      ]
+    },
+    {
+      "👤 Contributor": "axlg98",
+      "📊 Stats": {
+        "📨 commits": 12,
+        "✅ added": 402,
+        "⛔ deleted": 38
+      },
+      "💬 Messages": [
+        ".",
+        "arreglando conflictos",
+        "arreglando paginacion y subiendo test",
+        "arreglando conflico",
+        "Test modelo Espiritu y sus subclases + arreglos",
+        "Merge branch 'dev' into feature/ataqueMedium",
+        "avanzando Ataque de espiritu"
+      ]
+    },
+    {
+      "👤 Contributor": "lourdesdlc",
+      "📊 Stats": {
+        "📨 commits": 42,
+        "✅ added": 919,
+        "⛔ deleted": 815
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into feature/random",
+        "inyecto GeneradorDeNumeros en espiritu",
+        "Merge branch 'dev' into feature/test-espirituService",
+        "test de espiritu service funcionando",
+        "Merge branch 'dev' of https://github.com/EPERS-UNQ/group-b-repo into dev",
+        "borro atributo repetido en EspirituAngelical",
+        "agrego EspirituAngelical y EspirituDemoniaco en .xml",
+        "Merge branch 'dev' into feature/TestEspiritu",
+        "agrego validarDisponibilidadDelEspirituTest",
+        "corrigo query de recuperar en HMD",
+        "Merge branch 'feature/espiritu-conectar' of https://github.com/EPERS-UNQ/group-b-repo into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "Merge branch 'feature/espiritu-conectar' of https://github.com/EPERS-UNQ/group-b-repo into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "se crea correctamente la herencia de espiritu en la bd",
+        "base estrategia dparamdodelo espiritu",
+        "test conectar espiritu service",
+        "test espiritu service",
+        "eliminamos el campo tipo de espiritu",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "Merge branch 'dev' into feature/espiritu-conectar",
+        "comento puedeExorcizar",
+        "merge dev a espiritusDemonicos",
+        "conectar sin testear",
+        "mergeo con la base de medium",
+        "conectar sin persistir medium",
+        "Merge branch 'feature/ubicacion' into feature/espiritu-conectar",
+        "agrego vexception personalizada para nivel de conexion",
+        "metodo espiritud demonicos completo con test",
+        "primera version",
+        "agrego hibernateDAO, elimino carpeta jdbc",
+        "primeras anotaciones en modelo espiritu",
+        "espiritu service migrado a hibernate",
+        "error con vaciar la bd"
+      ]
+    }
+  ],
+  "❌ Commits directos a dev": [
+    {
+      "commit": "Merge branch 'dev' of https://github.com/EPERS-UNQ/group-b-repo into dev",
+      "author": "Lourdes de la Cerda"
+    },
+    {
+      "commit": "borro atributo repetido en EspirituAngelical",
+      "author": "Lourdes de la Cerda"
+    },
+    {
+      "commit": "corrigo query de recuperar en HMD",
+      "author": "Lourdes de la Cerda"
+    }
+  ]
+}
