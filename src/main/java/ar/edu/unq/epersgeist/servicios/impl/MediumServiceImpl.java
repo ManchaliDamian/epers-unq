@@ -98,16 +98,19 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        Espiritu espiritu = espirituService.recuperar(espirituId);
-        Medium medium = mediumDAO.recuperar(mediumId);
+        return HibernateTransactionRunner.runTrx(() -> {
+            Espiritu espiritu = espirituService.recuperar(espirituId);
+            Medium medium = mediumDAO.recuperar(mediumId);
 
-        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
-        if (medium.getMana() < 10) return espiritu;
+            medium.invocarA(espiritu);
 
-        espiritu.setUbicacion(medium.getUbicacion());
-        medium.setMana(medium.getMana() - 10);
+            mediumDAO.actualizar(medium);
+            espirituDAO.actualizar(espiritu);
 
-        return espiritu;
+
+            return espiritu;
+
+        });
 
     }
 }
