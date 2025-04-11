@@ -32,6 +32,7 @@ public class MediumServiceTest {
     private Medium medium2;
     private Espiritu espiritu;
     private Ubicacion ubicacion;
+    private Ubicacion plata;
 
     @BeforeEach
     void setUp() {
@@ -43,10 +44,12 @@ public class MediumServiceTest {
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
 
-        ubicacion = new Ubicacion("La Plata");
+        plata = new Ubicacion("La Plata");
+        ubicacion = new Ubicacion("Quilmes");
         serviceU.crear(ubicacion);
+        serviceU.crear(plata);
 
-        medium1 = new Medium("Pablo", 100, 50, ubicacion);
+        medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
         espiritu = new EspirituDemoniaco(80, "Jose", ubicacion);
 
@@ -54,7 +57,11 @@ public class MediumServiceTest {
         serviceM.crear(medium2);
         serviceE.guardar(espiritu);
     }
-
+    @Test
+    void testInvocar() {
+        Espiritu invocado = serviceM.invocar(medium1.getId(), espiritu.getId());
+        assertEquals("La Plata", invocado.getUbicacion().getNombre());
+    }
     @Test
     void testCrearYRecuperarMedium() {
         Medium recuperado = serviceM.recuperar(medium1.getId());

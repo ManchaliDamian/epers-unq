@@ -99,7 +99,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
         return HibernateTransactionRunner.runTrx(() -> {
-            Espiritu espiritu = espirituService.recuperar(espirituId);
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
             Medium medium = mediumDAO.recuperar(mediumId);
 
             medium.invocarA(espiritu);
