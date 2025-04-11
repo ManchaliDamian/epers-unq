@@ -12,4 +12,5 @@ public interface EspirituDAO {
     void eliminar(Espiritu espiritu);
     void eliminarTodo();
     List<Espiritu> getEspiritusDemoniacos();
+    List<Espiritu> recuperarPaginados(int page, int pageSize);
 }

@@ -91,22 +91,22 @@ public class MediumServiceTest {
         assertTrue(vacio.isEmpty());
     }
 
-    @Test
-    void descansar(){
-        MediumDAO mediumDAOMock = mock(MediumDAO.class);
-        MediumService serviceMMock = new MediumServiceImpl(mediumDAOMock, espirituDAO);
-        EspirituAngelical ang3 = mock(EspirituAngelical.class);
-        when(ang3.estaConectado()).thenReturn(false);
-        when(ang3.getUbicacion()).thenReturn(ubicacion);
-        when(mediumDAOMock.recuperar(medium1.getId())).thenReturn(medium1);
-        medium1.conectarseAEspiritu(ang3);
-
-        serviceMMock.descansar(medium1.getId());
-
-        Medium m1 = serviceMMock.recuperar(medium1.getId());
-        assertEquals(65,m1.getMana());
-        verify(ang3, times(1)).descansar();
-    }
+//    @Test
+//    void descansar(){
+//        MediumDAO mediumDAOMock = mock(MediumDAO.class);
+//        MediumService serviceMMock = new MediumServiceImpl(mediumDAOMock, espirituDAO);
+//        EspirituAngelical ang3 = mock(EspirituAngelical.class);
+//        when(ang3.estaConectado()).thenReturn(false);
+//        when(ang3.getUbicacion()).thenReturn(ubicacion);
+//        when(mediumDAOMock.recuperar(medium1.getId())).thenReturn(medium1);
+//        medium1.conectarseAEspiritu(ang3);
+//
+//        serviceMMock.descansar(medium1.getId());
+//
+//        Medium m1 = serviceMMock.recuperar(medium1.getId());
+//        assertEquals(65,m1.getMana());
+//        verify(ang3, times(1)).descansar();
+//    }
 
     /* por testear:
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);

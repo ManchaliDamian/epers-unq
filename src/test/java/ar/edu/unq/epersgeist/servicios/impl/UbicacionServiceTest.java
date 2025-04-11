@@ -109,6 +109,18 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
+    @Test
+    void paginacionDeUbicacionTest(){
+
+        //List<Ubicacion> espiritusEsperados = espirituDAO.recuperarPaginados(1,2);
+        List<Ubicacion> espiritusServices = service.recuperarPaginados(1,2);
+
+        assertEquals(2,espiritusServices.size());
+        //assertEquals(2,espiritusEsperados.size());
+        //assertEquals(espiritusEsperados,UbicacionServiceImpl);
+
+    }
+
     @AfterEach
     void cleanup() {
         serviceE.eliminarTodo();

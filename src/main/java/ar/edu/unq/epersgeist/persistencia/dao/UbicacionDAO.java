@@ -17,4 +17,5 @@ public interface UbicacionDAO {
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
     void eliminarTodo();
+    List<Ubicacion> recuperarPaginados(int page, int pageSize);
 }

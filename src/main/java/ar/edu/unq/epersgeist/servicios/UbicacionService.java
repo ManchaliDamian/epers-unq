@@ -15,4 +15,5 @@ public interface UbicacionService {
     void eliminarTodo();
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
+    List<Ubicacion> recuperarPaginados(int page, int pageSize);
 }
