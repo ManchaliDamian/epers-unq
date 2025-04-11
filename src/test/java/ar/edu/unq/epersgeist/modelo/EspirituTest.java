@@ -8,19 +8,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class EspirituTest {
     private Espiritu espiritu;
-    private Ubicacion ubicacion;
-    private Ubicacion otraUbicacion;
+    private Ubicacion quilmes;
+    private Ubicacion bernal;
     private Medium mediumConectado;
+    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp(){
-        otraUbicacion = new Ubicacion("Bernal");
-        ubicacion = new Ubicacion("Quilmes");
-        mediumConectado = new Medium("Mago",100,50,ubicacion);
-        espiritu = new EspirituAngelical(50,"Espiritu",ubicacion);
+        bernal = new Ubicacion("Bernal");
+        quilmes = new Ubicacion("Quilmes");
+        generadorMock = mock(GeneradorDeNumeros.class);
+
+        mediumConectado = new Medium("Mago",100,50,quilmes);
+        espiritu = new EspirituAngelical(50,"Espiritu",quilmes, generadorMock);
     }
 
     @Test
@@ -90,7 +94,7 @@ public class EspirituTest {
 
     @Test
     void elEspirituNoTieneMismaUbicacion(){
-        mediumConectado.setUbicacion(otraUbicacion);
+        mediumConectado.setUbicacion(bernal);
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             espiritu.estaEnLaMismaUbicacion(mediumConectado);
         });

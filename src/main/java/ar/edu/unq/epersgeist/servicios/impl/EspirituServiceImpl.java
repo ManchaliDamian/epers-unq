@@ -80,6 +80,7 @@ public class EspirituServiceImpl implements EspirituService {
             return medium;
         });
     }
+
     @Override
     public List<Espiritu> espiritusDemoniacos(){
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.getEspiritusDemoniacos());

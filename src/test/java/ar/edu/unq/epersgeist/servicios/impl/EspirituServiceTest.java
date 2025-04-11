@@ -37,10 +37,14 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private UbicacionDAO ubicacionDao;
 
+    private GeneradorDeNumeros generador;
+
 
 
     @BeforeEach
     void setUp() {
+        generador = new GeneradorRandom();
+
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
 
@@ -52,9 +56,9 @@ public class EspirituServiceTest {
 
         quilmes = new Ubicacion("Quilmes");
         serviceU.crear(quilmes);
-        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes);
-        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes);
-        angel = new EspirituAngelical( 90, "Gabriel", quilmes);
+        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes,generador);
+        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes,generador);
+        angel = new EspirituAngelical( 90, "Gabriel", quilmes,generador);
         medium = new Medium("nombre", 150, 30, quilmes);
 
 
