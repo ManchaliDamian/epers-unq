@@ -29,7 +29,7 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
     @Override
     public List<Espiritu> recuperarTodos() {
         Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "from Espiritu";
+        String hql = "FROM Espiritu";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         return query.getResultList();
     }
@@ -37,10 +37,13 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
     @Override
     public List<Espiritu> recuperarPaginados(int page, int pageSize){
         Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "SELECT m FROM Espiritu LIMIT :pageSize OFFSET (:page - 1) * :pageSize";
+        String hql = "from Espiritu";
+       // String hql = "SELECT m FROM Espiritu LIMIT :pageSize OFFSET (:page - 1) * :pageSize";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
-        query.setParameter("pageSize", pageSize);
-        query.setParameter("page", page);
+        query.setFirstResult(pageSize * (page - 1));
+        query.setMaxResults(pageSize);
+        //query.setParameter("pageSize", pageSize);
+        //query.setParameter("page", page);
         return query.getResultList();
     }
 

@@ -88,6 +88,18 @@ public class EspirituServiceTest {
 
     }
 
+    @Test
+    void paginacionDeEspirituTest(){
+
+        //List<Espiritu> espiritusEsperados = espirituDAO.recuperarPaginados(1,2);
+        List<Espiritu> espiritusServices = serviceE.recuperarPaginados(1,2);
+
+        assertEquals(2,espiritusServices.size());
+        //assertEquals(2,espiritusEsperados.size());
+        //assertEquals(espiritusEsperados,espiritusServices);
+
+    }
+
 
     @AfterEach
     void cleanup() {
