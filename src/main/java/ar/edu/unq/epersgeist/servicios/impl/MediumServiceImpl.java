@@ -60,7 +60,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Medium> recuperarTodos() {
-        return HibernateTransactionRunner.runTrx(mediumDAO::recuperarTodos);
+        return mediumDAO.recuperarTodos();
     }
 
 
@@ -98,19 +98,19 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        return HibernateTransactionRunner.runTrx(() -> {
-            Espiritu espiritu = espirituDAO.recuperar(espirituId);
-            Medium medium = mediumDAO.recuperar(mediumId);
+        Espiritu espiritu = espirituService.recuperar(espirituId);
+        Medium medium = mediumDAO.recuperar(mediumId);
 
-            medium.invocarA(espiritu);
+        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+        if (medium.getMana() < 10) return espiritu;
 
-            mediumDAO.actualizar(medium);
-            espirituDAO.actualizar(espiritu);
+        espiritu.setUbicacion(medium.getUbicacion());
+        medium.setMana(medium.getMana() - 10);
 
-
-            return espiritu;
-
-        });
-
+        return espiritu;
+    }
+    @Override
+    public List<Medium> recuperarPaginados(int page, int pageSize){
+        return HibernateTransactionRunner.runTrx(() -> mediumDAO.recuperarPaginados(page, pageSize));
     }
 }

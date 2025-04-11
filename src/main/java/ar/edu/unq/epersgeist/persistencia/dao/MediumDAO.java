@@ -13,4 +13,5 @@ public interface MediumDAO {
     void eliminar(Long mediumId);
     List<Espiritu> espiritus(Long mediumId);
     void eliminarTodo();
+    List<Medium> recuperarPaginados(int page, int pageSize);
 }

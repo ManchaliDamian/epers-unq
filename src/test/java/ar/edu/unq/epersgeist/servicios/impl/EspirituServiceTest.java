@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -10,12 +11,15 @@ import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class EspirituServiceTest {
 
@@ -33,11 +37,13 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private UbicacionDAO ubicacionDao;
 
-    private GeneradorDeNumeros generadorMock;
+    private GeneradorDeNumeros generador;
+
+
 
     @BeforeEach
     void setUp() {
-        generadorMock = mock(GeneradorDeNumeros.class);
+        generador = new GeneradorRandom();
 
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
@@ -50,16 +56,19 @@ public class EspirituServiceTest {
 
         quilmes = new Ubicacion("Quilmes");
         serviceU.crear(quilmes);
-
-        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes, generadorMock);
-        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes, generadorMock);
-        angel = new EspirituAngelical( 90, "Gabriel", quilmes, generadorMock);
+        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes,generador);
+        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes,generador);
+        angel = new EspirituAngelical( 90, "Gabriel", quilmes,generador);
         medium = new Medium("nombre", 150, 30, quilmes);
+
+
 
         serviceE.guardar(demonio1);
         serviceE.guardar(demonio2);
 
         serviceE.guardar(angel);
+
+
     }
 
     @Test
@@ -76,12 +85,25 @@ public class EspirituServiceTest {
 
         serviceM.crear(medium);
 
-        Medium mediumConectado = serviceE.conectar(demonio1.getId(), medium.getId());
+        Medium mediumConectado = serviceE.conectar(demonio1.getId(), medium.getId()); // 👈 orden correcto
 
         Espiritu conectado = serviceE.recuperar(demonio1.getId());
         assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
 
     }
+
+    @Test
+    void paginacionDeEspirituTest(){
+
+        //List<Espiritu> espiritusEsperados = espirituDAO.recuperarPaginados(1,2);
+        List<Espiritu> espiritusServices = serviceE.recuperarPaginados(1,2);
+
+        assertEquals(2,espiritusServices.size());
+        //assertEquals(2,espiritusEsperados.size());
+        //assertEquals(espiritusEsperados,espiritusServices);
+
+    }
+
 
     @AfterEach
     void cleanup() {
