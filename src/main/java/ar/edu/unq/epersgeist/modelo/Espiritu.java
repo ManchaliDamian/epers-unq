@@ -91,6 +91,7 @@ public abstract class Espiritu {
         int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
         if (nivelDeConexionResultante <= 0){
             this.getMediumConectado().desvincularseDe(this);
+            this.setNivelDeConexion(0);
         }
         else{
             this.setNivelDeConexion(nivelDeConexionResultante);
