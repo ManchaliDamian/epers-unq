@@ -61,25 +61,7 @@ public class MediumServiceTest {
         serviceE.guardar(espiritu);
         serviceE.guardar(angel);
     }
-//    @Test
-//    void testExorcizar(){
-//
-//
-//        when(generadorMock.entre(1, 100)).thenReturn(30); // ejemplo de número aleatorio
-//        medium2.conectarseAEspiritu(espiritu);
-//        medium1.conectarseAEspiritu(angel);
-//        serviceM.actualizar(medium2);
-//        serviceE.actualizar(espiritu);
-//        serviceM.actualizar(medium1);
-//        serviceE.actualizar(angel);
-//
-//        serviceM.exorcizar(medium1.getId(), medium2.getId());
-//        Medium recuperarM = serviceM.recuperar(medium1.getId());
-//        assertEquals(20, recuperarM.getEspiritus()
-//                    .stream()
-//                    .filter(e -> e.getId() == espiritu.getId())
-//                    .findFirst());
-//    }
+
     @Test
     void testInvocar() {
         Espiritu invocado = serviceM.invocar(medium1.getId(), espiritu.getId());
@@ -128,7 +110,25 @@ public class MediumServiceTest {
 //        assertEquals(65,m1.getMana());
 //        verify(ang3, times(1)).descansar();
 //    }
-
+//    @Test
+//    void testExorcizar(){
+//
+//
+//        when(generadorMock.entre(1, 100)).thenReturn(30); // ejemplo de número aleatorio
+//        medium2.conectarseAEspiritu(espiritu);
+//        medium1.conectarseAEspiritu(angel);
+//        serviceM.actualizar(medium2);
+//        serviceE.actualizar(espiritu);
+//        serviceM.actualizar(medium1);
+//        serviceE.actualizar(angel);
+//
+//        serviceM.exorcizar(medium1.getId(), medium2.getId());
+//        Medium recuperarM = serviceM.recuperar(medium1.getId());
+//        assertEquals(20, recuperarM.getEspiritus()
+//                    .stream()
+//                    .filter(e -> e.getId() == espiritu.getId())
+//                    .findFirst());
+//    }
 
 
 
