@@ -16,5 +16,4 @@ public interface MediumService {
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
     List<Espiritu> espiritus(Long mediumId);
     Espiritu invocar(Long mediumId, Long espirituId);
-    List<Medium> recuperarPaginados(int page, int pageSize);
 }

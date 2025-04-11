@@ -65,8 +65,4 @@ public class UbicacionServiceImpl implements UbicacionService {
             return null;
         });
     }
-    @Override
-    public List<Ubicacion> recuperarPaginados(int page, int pageSize){
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperarPaginados(page, pageSize));
-    }
 }

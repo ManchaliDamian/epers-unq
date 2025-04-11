@@ -61,14 +61,4 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
                 .getResultList();
         return mediums;
     }
-
-    @Override
-    public List<Ubicacion> recuperarPaginados(int page, int pageSize){
-        Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "from Ubicacion";
-        Query<Ubicacion> query = session.createQuery(hql, Ubicacion.class);
-        query.setFirstResult(pageSize * (page - 1));
-        query.setMaxResults(pageSize);
-        return query.getResultList();
-    }
 }
