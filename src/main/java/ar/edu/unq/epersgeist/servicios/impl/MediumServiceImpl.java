@@ -60,7 +60,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Medium> recuperarTodos() {
-        return mediumDAO.recuperarTodos();
+        return HibernateTransactionRunner.runTrx(mediumDAO::recuperarTodos);
     }
 
 

@@ -7,7 +7,7 @@
 		<!-- Database connection settings -->
 		<property name="connection.driver_class">org.postgresql.Driver</property>
 
-		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/epers_ejemplo_jdbc</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/tp_hibernate</property>
 		<property name="hibernate.connection.username">postgres</property>
 		<property name="hibernate.connection.password">root</property>
 		<!-- SQL dialect -->

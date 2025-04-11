@@ -48,14 +48,6 @@ public abstract class Espiritu {
         this.ubicacion = ubicacion;
     }
 
-    // CONSULTAR POR ESTA SOLUCION
-    /*public Espiritu(@NonNull Long id, @NonNull Integer nivelDeConexion, @NonNull String nombre) {
-        validarNivelDeConexion(nivelDeConexion);
-        this.id = id;
-        this.nivelDeConexion = nivelDeConexion;
-        this.nombre = nombre;
-    }*/
-
     public void conexionEnAumento(Medium medium){
         this.estaEnLaMismaUbicacion(medium);
         this.aumentarConexion(medium);
@@ -98,6 +90,7 @@ public abstract class Espiritu {
         int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
         if (nivelDeConexionResultante <= 0){
             this.getMediumConectado().desvincularseDe(this);
+            this.setNivelDeConexion(0);
         }
         else{
             this.setNivelDeConexion(nivelDeConexionResultante);
