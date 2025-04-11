@@ -2,9 +2,6 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Random;
-
-import static java.lang.Math.min;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,32 +10,28 @@ import static java.lang.Math.min;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
-        super(nivelDeConexion, nombre, ubicacion);
+    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
+        super(nivelDeConexion, nombre, ubicacion, generador);
         this.setTipo(TipoEspiritu.ANGELICAL);
-    }
-    public void atacar(EspirituDemoniaco objetivo){
-        Random random = new Random();
-        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
-        int defensaDemonio = random.nextInt(1,100);
 
-        if(probAtaqueExitoso > defensaDemonio){
-            //Ataque exitoso.
+    }
+
+    public void atacar(EspirituDemoniaco objetivo) {
+        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
+        int defensaDemonio = generador.entre(1, 100); // reemplaza Random
+
+        if (probAtaqueExitoso > defensaDemonio) {
             int cantidad = this.getNivelDeConexion() / 2;
-            //El demoniaco pierde nivelDeConexion.
             objetivo.recibirAtaque(cantidad);
-        }else{
-            //Ataque fallido, el angelical pierde 5 nivel de conexión
-           this.perderNivelDeConexion(5);
+        } else {
+            this.perderNivelDeConexion(5);
         }
     }
 
-    protected int probabilidadDeAtaqueExitoso(){
-        Random random = new Random();
-        //random.nextInt tira un rango entre 0 a 9 por eso el + 1, para que sea 1 a 10.
-        int cantidad = random.nextInt(10) + 1;
+    protected int probabilidadDeAtaqueExitoso() {
+        int cantidad = generador.entre(1, 10); // reemplaza Random
         int cantAtaque = cantidad + this.getNivelDeConexion();
-        return min(cantAtaque,100);
+        return Math.min(cantAtaque, 100);
     }
 
 }

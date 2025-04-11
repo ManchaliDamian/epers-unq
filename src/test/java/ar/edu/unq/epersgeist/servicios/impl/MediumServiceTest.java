@@ -34,6 +34,8 @@ public class MediumServiceTest {
     private Ubicacion ubicacion;
     private Ubicacion plata;
 
+    private GeneradorDeNumeros generadorMock;
+
     @BeforeEach
     void setUp() {
         ubicacionDAO = new HibernateUbicacionDAO();
@@ -51,7 +53,7 @@ public class MediumServiceTest {
 
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
-        espiritu = new EspirituDemoniaco(80, "Jose", ubicacion);
+        espiritu = new EspirituDemoniaco(80, "Jose", ubicacion, generadorMock);
 
         serviceM.crear(medium1);
         serviceM.crear(medium2);
