@@ -8,7 +8,6 @@ import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
-import static java.lang.Math.max;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -37,15 +36,17 @@ public abstract class Espiritu {
 
     @ManyToOne
     @JoinColumn(name = "medium_id")
-
-    //@JoinColumn(name = "medium_conectado_id")
     private Medium mediumConectado;
 
-    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    @Transient
+    protected GeneradorDeNumeros generador;
+
+    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion, GeneradorDeNumeros generador) {
         validarNivelDeConexion(nivelDeConexion);
         this.nivelDeConexion = nivelDeConexion;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        this.generador = generador;
     }
 
     public void conexionEnAumento(Medium medium){
@@ -97,8 +98,6 @@ public abstract class Espiritu {
         }
     }
 
-    //Dudas
-    //public abstract boolean puedeExorcizar();
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }
@@ -112,4 +111,5 @@ public abstract class Espiritu {
     public void desvincularse() {
         this.setMediumConectado(null);
     }
+
 }

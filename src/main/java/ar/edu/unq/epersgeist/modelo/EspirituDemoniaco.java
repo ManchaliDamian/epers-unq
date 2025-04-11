@@ -11,9 +11,8 @@ import lombok.*;
 @DiscriminatorValue("DEMONIACO")
 public class EspirituDemoniaco extends Espiritu{
 
-
-    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
-        super(nivelDeConexion, nombre, ubicacion);
+    public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
+        super(nivelDeConexion, nombre, ubicacion, generador);
         this.setTipo(TipoEspiritu.DEMONIACO);
     }
 
@@ -35,6 +34,4 @@ public class EspirituDemoniaco extends Espiritu{
         this.setMediumConectado(null);
     }
 
-    //@Override
-    //public boolean puedeExorcizar(){return false;}
 }

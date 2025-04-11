@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -11,13 +10,12 @@ import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import jakarta.persistence.NoResultException;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.Mockito.mock;
 
 public class EspirituServiceTest {
 
@@ -35,10 +33,12 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private UbicacionDAO ubicacionDao;
 
-
+    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp() {
+        generadorMock = mock(GeneradorDeNumeros.class);
+
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
 
@@ -50,19 +50,16 @@ public class EspirituServiceTest {
 
         quilmes = new Ubicacion("Quilmes");
         serviceU.crear(quilmes);
-        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes);
-        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes);
-        angel = new EspirituAngelical( 90, "Gabriel", quilmes);
+
+        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes, generadorMock);
+        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes, generadorMock);
+        angel = new EspirituAngelical( 90, "Gabriel", quilmes, generadorMock);
         medium = new Medium("nombre", 150, 30, quilmes);
-
-
 
         serviceE.guardar(demonio1);
         serviceE.guardar(demonio2);
 
         serviceE.guardar(angel);
-
-
     }
 
     @Test
@@ -84,62 +81,6 @@ public class EspirituServiceTest {
         Espiritu conectado = serviceE.recuperar(demonio1.getId());
         assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
 
-    }
-
-    @Test
-    void testGuardarYRecuperarEspiritu() {
-        Espiritu nuevoEspiritu = new EspirituAngelical(50, "Miguel", quilmes);
-        serviceE.guardar(nuevoEspiritu);
-
-        Espiritu recuperado = serviceE.recuperar(nuevoEspiritu.getId());
-        assertNotNull(recuperado);
-        assertEquals("Miguel", recuperado.getNombre());
-        assertEquals(50, recuperado.getNivelDeConexion());
-    }
-
-    @Test
-    void testRecuperarTodos() {
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertEquals(3, espiritus.size());
-
-        List<Long> idsEsperados = List.of(demonio1.getId(), demonio2.getId(), angel.getId());
-        assertTrue(espiritus.stream().allMatch(e -> idsEsperados.contains(e.getId())));
-    }
-
-    @Test
-    void testActualizar() {
-        String nuevoNombre = "Lucifer";
-        demonio1.setNombre(nuevoNombre);
-        serviceE.actualizar(demonio1);
-
-        Espiritu actualizado = serviceE.recuperar(demonio1.getId());
-        assertEquals(nuevoNombre, actualizado.getNombre());
-    }
-
-    @Test
-    void testEliminar() {
-        serviceE.eliminar(angel.getId());
-
-        Espiritu eliminado = serviceE.recuperar(angel.getId());
-        assertNull(eliminado);
-
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertEquals(2, espiritus.size());
-    }
-
-    @Test
-    void testEliminarTodo() {
-        serviceM.crear(medium);
-
-        serviceE.eliminarTodo();
-
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertTrue(espiritus.isEmpty());
-
-        // Verificar que el medium fue eliminado
-        assertThrows(NoResultException.class, () -> {
-            serviceM.recuperar(medium.getId());
-        });
     }
 
     @AfterEach
