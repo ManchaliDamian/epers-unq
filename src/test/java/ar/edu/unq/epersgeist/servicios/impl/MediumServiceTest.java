@@ -80,6 +80,13 @@ public class MediumServiceTest {
         assertTrue(vacio.isEmpty());
     }
 
+    /* por testear:
+    void descansar(Long mediumId);
+    void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
+    List<Espiritu> espiritus(Long mediumId);
+    Espiritu invocar(Long mediumId, Long espirituId);
+     */
+
     @AfterEach
     void cleanUp() {
         serviceE.eliminarTodo();
