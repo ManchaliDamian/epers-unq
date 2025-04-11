@@ -31,6 +31,7 @@ public class MediumServiceTest {
     private Medium medium1;
     private Medium medium2;
     private Espiritu espiritu;
+    private Espiritu angel;
     private Ubicacion ubicacion;
     private Ubicacion plata;
 
@@ -52,7 +53,7 @@ public class MediumServiceTest {
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
         espiritu = new EspirituDemoniaco(80, "Jose", ubicacion);
-
+        angel = new EspirituAngelical(100, "Fede", plata);
         serviceM.crear(medium1);
         serviceM.crear(medium2);
         serviceE.guardar(espiritu);
@@ -106,11 +107,24 @@ public class MediumServiceTest {
         verify(ang3, times(1)).descansar();
     }
 
-    /* por testear:
-    void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
-    List<Espiritu> espiritus(Long mediumId);
-    Espiritu invocar(Long mediumId, Long espirituId);
-     */
+    @Test
+    void testExorcizar(){
+        medium2.conectarseAEspiritu(espiritu);
+        medium1.conectarseAEspiritu(angel);
+
+
+
+        medium1.exorcizarA(medium2);
+
+        serviceM.actualizar(medium2);
+        serviceE.actualizar(espiritu);
+        serviceM.actualizar(medium1);
+        serviceE.actualizar(angel);
+
+        assertEquals();
+
+    }
+
 
     @AfterEach
     void cleanUp() {
