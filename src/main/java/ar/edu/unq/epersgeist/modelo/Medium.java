@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,7 @@ import org.hibernate.annotations.Check;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 
-import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter @Setter @NoArgsConstructor @ToString
 
@@ -99,6 +97,15 @@ public class Medium {
                 demonioObjetivo.ifPresent(angel::atacar);
             }
         }
+    }
+
+    public Espiritu invocarA(Espiritu espiritu) {
+        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+        if (this.getMana() < 10) return espiritu;
+
+        espiritu.setUbicacion(this.getUbicacion());
+        this.setMana(this.getMana() - 10);
+        return espiritu;
     }
 
     public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
