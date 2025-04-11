@@ -70,15 +70,4 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         query.setParameter("id", mediumId);
         return query.getSingleResult();
     }
-
-    @Override
-    public List<Medium> recuperarPaginados(int page, int pageSize){
-        Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "from Medium";
-        Query<Medium> query = session.createQuery(hql, Medium.class);
-        query.setFirstResult(pageSize * (page - 1));
-        query.setMaxResults(pageSize);
-        return query.getResultList();
-    }
-
 }
