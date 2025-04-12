@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -81,7 +82,13 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public List<Espiritu> espiritusDemoniacos(){
-        return HibernateTransactionRunner.runTrx(() -> espirituDAO.getEspiritusDemoniacos());
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, int pagina, int cantidadPorPagina){
+        return HibernateTransactionRunner.runTrx(() -> {
+            if (pagina < 0) {
+                throw new RuntimeException("El número de página " + pagina + " es menor a 0");
+            }
+            return espirituDAO.recuperarDemoniacosPaginados(direccion, pagina, cantidadPorPagina);
+        });
     }
+
 }
