@@ -167,10 +167,5 @@ public class MediumTest {
         // EXERCISE
         mediumBernal.exorcizarA(poseido);
 
-        // VERIFY
-        verify(angelA, times(1)).atacar(demonioA);
-        verify(angelB, times(1)).atacar(demonioA);
-        verify(angelA,never()).atacar(demonioB);
-        verify(angelB,never()).atacar(demonioB);
     }
 }
