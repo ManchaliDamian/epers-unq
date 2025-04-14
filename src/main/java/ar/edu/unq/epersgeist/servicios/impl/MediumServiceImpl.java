@@ -20,7 +20,7 @@ public class MediumServiceImpl implements MediumService {
         this.espirituDAO = espirituDAO;
     }
 
-    private EspirituServiceImpl espirituService;
+
 
     @Override
     public Medium crear(Medium unMedium) {
