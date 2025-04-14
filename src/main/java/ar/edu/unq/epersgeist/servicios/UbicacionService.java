@@ -10,7 +10,7 @@ public interface UbicacionService {
     void crear(Ubicacion ubicacion);
     Ubicacion recuperar(Long ubicacionId);
     List<Ubicacion> recuperarTodos();
-    void actualizar(Long ubicacionId, String nombreNuevo);
+    void actualizar(Ubicacion ubicacion);
     void eliminar(Ubicacion ubicacion);
     void eliminarTodo();
     List<Espiritu> espiritusEn(Long ubicacionId);

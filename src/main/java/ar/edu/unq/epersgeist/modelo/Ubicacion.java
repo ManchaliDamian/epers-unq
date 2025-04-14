@@ -28,7 +28,9 @@ public class Ubicacion {
         this.nombre = nombre;
     }
 
-
+    public void cambiarNombre(String nombre) {
+        this.setNombre(nombre);
+    }
     public void agregarEspirituUbicado(Espiritu espiritu) {
         espiritu.setUbicacion(this);
         this.espiritusUbicados.add(espiritu);

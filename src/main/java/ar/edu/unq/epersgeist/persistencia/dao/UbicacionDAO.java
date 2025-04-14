@@ -11,7 +11,7 @@ public interface UbicacionDAO {
     void guardar(Ubicacion ubicacion);
     Ubicacion recuperar(Long ubicacionId);
     void eliminar(Ubicacion ubicacion);
-    void actualizar(Long ubicacionId, String nombreNuevo);
+    void actualizar(Ubicacion ubicacion);
 
     List<Ubicacion> recuperarTodos();
     List<Espiritu> espiritusEn(Long ubicacionId);

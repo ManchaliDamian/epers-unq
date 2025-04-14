@@ -96,8 +96,9 @@ public class UbicacionServiceTest {
     @Test
     void actualizarUnaUbicacion(){
         Ubicacion q = service.recuperar(quilmes.getId());
-        service.actualizar(q.getId(), "Avellaneda");
-        Ubicacion nombreNuevo = service.recuperar(quilmes.getId());
+        q.cambiarNombre("Avellaneda");
+        service.actualizar(q);
+        Ubicacion nombreNuevo = service.recuperar(q.getId());
 
         assertEquals("Avellaneda", nombreNuevo.getNombre());
     }
