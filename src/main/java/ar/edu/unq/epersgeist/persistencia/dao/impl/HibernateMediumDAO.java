@@ -56,7 +56,7 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
         Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "SELECT e FROM Espiritu e WHERE e.medium.id = :id";
+        String hql = "SELECT m.espiritus FROM Medium m WHERE m.id = :id";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         query.setParameter("id", mediumId);
         return query.getResultList();
