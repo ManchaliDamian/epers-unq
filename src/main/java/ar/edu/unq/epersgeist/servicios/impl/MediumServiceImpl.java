@@ -93,7 +93,8 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        return mediumDAO.espiritus(mediumId);
+        return HibernateTransactionRunner.runTrx(() ->
+            mediumDAO.espiritus(mediumId));
     }
 
     @Override

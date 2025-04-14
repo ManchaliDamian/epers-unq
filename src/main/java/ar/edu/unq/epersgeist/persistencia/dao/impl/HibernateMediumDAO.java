@@ -33,18 +33,6 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     }
 
     @Override
-    public void actualizar(Medium medium) {
-        Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "UPDATE Medium m SET m.nombre = :nombre, m.mana = :mana, m.manaMax = :manaMax WHERE m.id = :id";
-        Query<?> query = session.createQuery(hql);
-        query.setParameter("nombre", medium.getNombre());
-        query.setParameter("mana", medium.getMana());
-        query.setParameter("manaMax", medium.getManaMax());
-        query.setParameter("id", medium.getId());
-        query.executeUpdate();
-    }
-
-    @Override
     public void eliminar(Long mediumId) {
         Session session = HibernateTransactionRunner.getCurrentSession();
         String hql = "DELETE FROM Medium m WHERE m.id = :mediumId";
@@ -56,7 +44,7 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
         Session session = HibernateTransactionRunner.getCurrentSession();
-        String hql = "SELECT e FROM Espiritu e WHERE e.medium.id = :id";
+        String hql = "SELECT m.espiritus FROM Medium m WHERE m.id = :id";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         query.setParameter("id", mediumId);
         return query.getResultList();
