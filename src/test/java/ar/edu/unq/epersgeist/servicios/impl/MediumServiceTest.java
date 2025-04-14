@@ -94,6 +94,17 @@ public class MediumServiceTest {
         assertTrue(vacio.isEmpty());
     }
 
+    @Test
+    void testEspiritusDeUnMedium() {
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+
+        List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
+
+        assertEquals(1, espiritusDelMedium.size());
+        assertTrue(espiritusDelMedium.stream().anyMatch(e -> e.getId().equals(angel.getId())));
+    }
+
 //    @Test
 //    void descansar(){
 //        MediumDAO mediumDAOMock = mock(MediumDAO.class);
