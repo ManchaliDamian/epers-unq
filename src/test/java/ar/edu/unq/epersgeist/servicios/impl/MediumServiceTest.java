@@ -36,7 +36,7 @@ public class MediumServiceTest {
     private Ubicacion plata;
 
     private GeneradorDeNumeros generadorMock;
-
+    private EliminarTodoServiceImpl eliminarTodo;
     @BeforeEach
     void setUp() {
         ubicacionDAO = new HibernateUbicacionDAO();
@@ -60,6 +60,7 @@ public class MediumServiceTest {
         serviceM.crear(medium2);
         serviceE.guardar(espiritu);
         serviceE.guardar(angel);
+        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
     }
 
     @Test
@@ -145,8 +146,6 @@ public class MediumServiceTest {
 
     @AfterEach
     void cleanUp() {
-        serviceE.eliminarTodo();
-        serviceM.eliminarTodo();
-        serviceU.eliminarTodo();
+        eliminarTodo.eliminarTodo();
     }
 }
