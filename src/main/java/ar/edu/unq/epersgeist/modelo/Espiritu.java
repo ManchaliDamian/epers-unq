@@ -9,11 +9,12 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 @Entity
 public abstract class Espiritu {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

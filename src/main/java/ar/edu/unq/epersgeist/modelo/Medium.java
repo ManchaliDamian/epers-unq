@@ -74,7 +74,7 @@ public class Medium {
     }
 
     public void desvincularseDe(Espiritu espiritu){
-        this.getEspiritus().remove(espiritu);
+        this.getEspiritus().remove(espiritu); // por el SET no elimina!
         espiritu.desvincularse();
     }
 
