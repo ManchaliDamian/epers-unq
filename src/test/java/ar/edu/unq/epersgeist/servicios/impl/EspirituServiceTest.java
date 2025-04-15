@@ -34,11 +34,9 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private UbicacionDAO ubicacionDao;
 
-    private GeneradorDeNumeros generadorMock;
     private EliminarTodoServiceImpl eliminarTodo;
     @BeforeEach
     void setUp() {
-        generadorMock = mock(GeneradorDeNumeros.class);
 
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
@@ -52,9 +50,9 @@ public class EspirituServiceTest {
         quilmes = new Ubicacion("Quilmes");
         serviceU.crear(quilmes);
 
-        demonio1 = new EspirituDemoniaco( "Azazel", quilmes, generadorMock);
-        demonio2 = new EspirituDemoniaco(  "Belcebu", quilmes, generadorMock);
-        angel = new EspirituAngelical( "Gabriel", quilmes, generadorMock);
+        demonio1 = new EspirituDemoniaco( "Azazel", quilmes);
+        demonio2 = new EspirituDemoniaco(  "Belcebu", quilmes);
+        angel = new EspirituAngelical( "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
         serviceE.guardar(demonio1);
@@ -117,7 +115,7 @@ public class EspirituServiceTest {
 
     @Test
     void testGuardarYRecuperarEspiritu() {
-        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes, generadorMock);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
 
         Espiritu recuperado = serviceE.recuperar(nuevoEspiritu.getId());

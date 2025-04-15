@@ -24,7 +24,7 @@ public class EspirituTest {
         generadorMock = mock(GeneradorDeNumeros.class);
 
         mediumConectado = new Medium("Mago",100,90,quilmes);
-        espiritu = new EspirituAngelical("Espiritu",quilmes, generadorMock);
+        espiritu = new EspirituAngelical("Espiritu",quilmes);
     }
 
     @Test

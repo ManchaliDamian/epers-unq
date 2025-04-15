@@ -19,8 +19,8 @@ public class EspirituAngelicalTest {
         bernal = new Ubicacion("Bernal");
         generadorMock = mock(GeneradorDeNumeros.class);
 
-        espirituAngelical = new EspirituAngelical("EspirituAngelical", quilmes, generadorMock);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal, generadorMock);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical", quilmes);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
         mediumConectado = new Medium("Mago",100,50,quilmes);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);

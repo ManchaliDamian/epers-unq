@@ -11,8 +11,8 @@ import lombok.*;
 @DiscriminatorValue("DEMONIACO")
 public class EspirituDemoniaco extends Espiritu{
 
-    public EspirituDemoniaco( String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
-        super(nombre, ubicacion, generador);
+    public EspirituDemoniaco( String nombre, Ubicacion ubicacion ) {
+        super(nombre, ubicacion);
         this.setTipo(TipoEspiritu.DEMONIACO);
     }
 

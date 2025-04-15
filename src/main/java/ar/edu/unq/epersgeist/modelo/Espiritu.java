@@ -38,15 +38,11 @@ public abstract class Espiritu {
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
-    @Transient
-    protected GeneradorDeNumeros generador;
-
-    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion, GeneradorDeNumeros generador) {
+    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion) {
 
         this.nivelDeConexion = 0;
         this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.generador = generador;
+        this.ubicacion = ubicacion;;
     }
 
     public void conectarA(Medium medium){
