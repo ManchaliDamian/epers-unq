@@ -77,10 +77,17 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void mediumsSinEspiritusEnUbicacion() {
+    void hayMediumsSinEspiritusEnQuilmes() {
         serviceM.crear(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
+    }
+
+    @Test
+    void noHayMediumsSinEspiritusEnBernal() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        assertEquals(0, mediums.size());
     }
 
     @Test
