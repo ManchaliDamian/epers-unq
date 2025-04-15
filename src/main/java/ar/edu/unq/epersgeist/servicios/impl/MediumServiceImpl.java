@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -83,7 +85,9 @@ public class MediumServiceImpl implements MediumService {
             Medium mediumExorcista = mediumDAO.recuperar(idMediumExorcista);
             Medium mediumAExorcizar = mediumDAO.recuperar(idMediumAExorcizar);
 
-            mediumExorcista.exorcizarA(mediumAExorcizar);
+            List<EspirituAngelical> angeles = espirituDAO.recuperarAngeles();
+            List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemonios();
+            mediumExorcista.exorcizarA(angeles, demonios);
 
             mediumDAO.actualizar(mediumExorcista);
             mediumDAO.actualizar(mediumAExorcizar);
