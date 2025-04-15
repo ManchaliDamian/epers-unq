@@ -41,16 +41,16 @@ public abstract class Espiritu {
     @Transient
     protected GeneradorDeNumeros generador;
 
-    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion, GeneradorDeNumeros generador) {
-        validarNivelDeConexion(nivelDeConexion);
-        this.nivelDeConexion = nivelDeConexion;
+    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion, GeneradorDeNumeros generador) {
+
+        this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.generador = generador;
     }
 
-    public void conexionEnAumento(Medium medium){
-        this.estaEnLaMismaUbicacion(medium);
+    public void conectarA(Medium medium){
+        this.setMediumConectado(medium);
         this.aumentarConexion(medium);
     }
 

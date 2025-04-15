@@ -11,7 +11,8 @@ public class EspirituDemoniacoTest {
     private EspirituAngelical espirituAngelical;
     private Ubicacion quilmes;
     private Ubicacion bernal;
-    private Medium mediumConectado;
+    private Medium mediumAngel;
+    private Medium mediumDemon;
     private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
@@ -20,36 +21,39 @@ public class EspirituDemoniacoTest {
         bernal = new Ubicacion("Bernal");
         generadorMock = mock(GeneradorDeNumeros.class);
 
-        espirituAngelical = new EspirituAngelical(30, "EspirituAngelical", quilmes, generadorMock);
-        espirituDemoniaco = new EspirituDemoniaco(25, "EspirituDemoniaco", bernal, generadorMock);
-        mediumConectado = new Medium("Mago", 100, 50, quilmes);
+        espirituAngelical = new EspirituAngelical( "EspirituAngelical", quilmes, generadorMock);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal, generadorMock);
+        mediumAngel= new Medium("Mago", 100, 50, quilmes);
+        mediumDemon = new Medium("Maguito",100, 10, bernal);
 
-        espirituDemoniaco.setMediumConectado(mediumConectado);
-        espirituAngelical.setMediumConectado(mediumConectado);
     }
 
     @Test
     void espirituDemoniacoRecibeAtaque() {
+        mediumAngel.conectarseAEspiritu(espirituAngelical);
+        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
         when(generadorMock.entre(1, 10)).thenReturn(5);
         when(generadorMock.entre(1, 100)).thenReturn(20);
 
         espirituAngelical.atacar(espirituDemoniaco);
 
-        assertEquals(10, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(2, espirituDemoniaco.getNivelDeConexion());
     }
 
     @Test
     void espirituDemoniacoSeDesconectaDelMediumPorFaltaDeNivelConexion() {
-        espirituDemoniaco.setNivelDeConexion(0);
+        mediumAngel.conectarseAEspiritu(espirituAngelical);
+        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
 
-        when(generadorMock.entre(1, 10)).thenReturn(5);
-        when(generadorMock.entre(1, 100)).thenReturn(20);
+
+        when(generadorMock.entre(1, 10)).thenReturn(2);
+        when(generadorMock.entre(1, 100)).thenReturn(1);
 
         espirituAngelical.atacar(espirituDemoniaco);
 
         assertNull(espirituDemoniaco.getMediumConectado());
         assertEquals(0, espirituDemoniaco.getNivelDeConexion());
-        assertEquals(0, mediumConectado.getEspiritus().size());
+        assertEquals(0, mediumDemon.getEspiritus().size());
     }
 }
 

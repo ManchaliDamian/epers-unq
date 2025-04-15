@@ -54,8 +54,8 @@ public class UbicacionServiceTest {
 
         generadorMock = mock(GeneradorDeNumeros.class);
 
-        angel = new EspirituAngelical(10,"damian",quilmes, generadorMock);
-        demonio = new EspirituDemoniaco(15,"Roberto", quilmes, generadorMock);
+        angel = new EspirituAngelical("damian",quilmes, generadorMock);
+        demonio = new EspirituDemoniaco("Roberto", quilmes, generadorMock);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);

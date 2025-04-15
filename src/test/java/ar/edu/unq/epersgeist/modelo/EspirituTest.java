@@ -23,15 +23,15 @@ public class EspirituTest {
         quilmes = new Ubicacion("Quilmes");
         generadorMock = mock(GeneradorDeNumeros.class);
 
-        mediumConectado = new Medium("Mago",100,50,quilmes);
-        espiritu = new EspirituAngelical(50,"Espiritu",quilmes, generadorMock);
+        mediumConectado = new Medium("Mago",100,90,quilmes);
+        espiritu = new EspirituAngelical("Espiritu",quilmes, generadorMock);
     }
 
     @Test
     void aumentaNivelDeConexionDelEspiritu(){
         mediumConectado.conectarseAEspiritu(espiritu);
-        espiritu.aumentarConexion(mediumConectado);
-        assertEquals(60,espiritu.getNivelDeConexion());
+
+        assertEquals(18,espiritu.getNivelDeConexion());
     }
 
     @Test
@@ -47,14 +47,16 @@ public class EspirituTest {
     @Test
     void puedeAumentarLaConexionDelEspiritu(){
         mediumConectado.conectarseAEspiritu(espiritu);
-        espiritu.conexionEnAumento(mediumConectado);
-        assertEquals(60,espiritu.getNivelDeConexion());
+
+        assertEquals(18,espiritu.getNivelDeConexion());
     }
 
     @Test
     void perderNivelDeConexionConCiertaCantidad(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+
         espiritu.perderNivelDeConexion(5);
-        assertEquals(45,espiritu.getNivelDeConexion());
+        assertEquals(13,espiritu.getNivelDeConexion());
     }
 
     @Test
@@ -72,7 +74,7 @@ public class EspirituTest {
     @Test
     void elEspirituDescansa(){
         espiritu.descansar();
-        assertEquals(55,espiritu.getNivelDeConexion());
+        assertEquals(5,espiritu.getNivelDeConexion());
     }
 
     @Test

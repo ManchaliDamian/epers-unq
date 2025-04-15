@@ -53,11 +53,16 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if ((!this.ubicacion.equals(espiritu.getUbicacion())) || espiritu.estaConectado()){
+        if (noEsMismaUbicacion(espiritu) || espiritu.estaConectado()){
             throw new ConectarException(espiritu, this);
         }
         espiritus.add(espiritu);
-        espiritu.setMediumConectado(this);
+        espiritu.conectarA(this);
+
+    }
+
+    private boolean noEsMismaUbicacion(Espiritu espiritu) {
+        return !this.ubicacion.equals(espiritu.getUbicacion());
     }
 
     public void descansar() {
@@ -69,8 +74,8 @@ public class Medium {
     }
 
     public void desvincularseDe(Espiritu espiritu){
-        espiritu.desvincularse();
         this.getEspiritus().remove(espiritu);
+        espiritu.desvincularse();
     }
 
     public void exorcizarA(Medium medium){

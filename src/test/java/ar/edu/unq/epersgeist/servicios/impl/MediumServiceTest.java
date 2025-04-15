@@ -54,8 +54,8 @@ public class MediumServiceTest {
 
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
-        espiritu = new EspirituDemoniaco(80, "Jose", ubicacion, generadorMock);
-        angel = new EspirituAngelical(100, "kici", plata, generadorMock);
+        espiritu = new EspirituDemoniaco("Jose", ubicacion, generadorMock);
+        angel = new EspirituAngelical( "kici", plata, generadorMock);
         serviceM.crear(medium1);
         serviceM.crear(medium2);
         serviceE.guardar(espiritu);

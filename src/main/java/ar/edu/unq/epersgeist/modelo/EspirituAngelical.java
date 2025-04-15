@@ -10,8 +10,8 @@ import lombok.*;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
-        super(nivelDeConexion, nombre, ubicacion, generador);
+    public EspirituAngelical( String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
+        super( nombre, ubicacion, generador);
         this.setTipo(TipoEspiritu.ANGELICAL);
 
     }
