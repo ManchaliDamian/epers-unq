@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -32,6 +33,7 @@ public class EspirituServiceTest {
 
     private UbicacionService serviceU;
     private Ubicacion quilmes;
+    private Ubicacion berazategui;
     private UbicacionDAO ubicacionDao;
 
     private GeneradorDeNumeros generadorMock;
@@ -50,6 +52,8 @@ public class EspirituServiceTest {
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
 
         quilmes = new Ubicacion("Quilmes");
+        berazategui = new Ubicacion("Berazategui");
+
         serviceU.crear(quilmes);
 
         demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes, generadorMock);
@@ -103,7 +107,7 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void testConectarEspirituAMedium() {
+    void testConectarEspirituAMediumSaleBien() {
 
         serviceM.crear(medium);
 
@@ -113,7 +117,25 @@ public class EspirituServiceTest {
         assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
 
     }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
+        serviceM.crear(medium);
+        demonio1.setUbicacion(berazategui);
 
+        assertThrows(ConectarException.class, () -> {
+            serviceE.conectar(demonio1.getId(), medium.getId());
+        });
+    }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
+
+        serviceM.crear(medium);
+        serviceE.conectar(demonio1.getId(), medium.getId());
+
+        assertThrows(ConectarException.class, () -> {
+            serviceE.conectar(demonio1.getId(), medium.getId());
+        });
+    }
     @Test
     void testGuardarYRecuperarEspiritu() {
         Espiritu nuevoEspiritu = new EspirituAngelical(50, "Miguel", quilmes, generadorMock);
