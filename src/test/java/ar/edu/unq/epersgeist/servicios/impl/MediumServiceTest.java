@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -63,9 +65,25 @@ public class MediumServiceTest {
     }
 
     @Test
-    void testInvocar() {
+    void testInvocarSaleBien() {
         Espiritu invocado = serviceM.invocar(medium1.getId(), espiritu.getId());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
+    }
+    @Test
+    void testInvocarFallaPorqueEspirituYaEstaConectado() {
+        espiritu.setMediumConectado(medium1);
+        serviceE.actualizar(espiritu);
+        assertThrows(ExceptionEspirituOcupado.class, () -> {
+            serviceM.invocar(medium1.getId(), espiritu.getId());
+        });
+    }
+    @Test
+    void testInvocarDevuelveAlMismoEspirituPorqueSeTieneSuficienteMana() {
+        medium1.setMana(7);
+        serviceM.actualizar(medium1);
+        assertThrows(ExceptionEspirituOcupado.class, () -> {
+            serviceM.invocar(medium1.getId(), espiritu.getId());
+        });
     }
     @Test
     void testCrearYRecuperarMedium() {

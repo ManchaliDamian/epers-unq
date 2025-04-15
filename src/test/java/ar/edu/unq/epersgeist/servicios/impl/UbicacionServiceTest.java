@@ -66,12 +66,21 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void espiritusEnUnaUbicacion() {
+    void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
         List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
         assertEquals(2, espiritusEn.size());
+    }
+
+    @Test
+    void espiritusEnUnaUbicacionInexistente() {
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+
+        List<Espiritu> espiritusEn = service.espiritusEn(bernal.getId());
+        assertEquals(0, espiritusEn.size());
     }
 
     @Test

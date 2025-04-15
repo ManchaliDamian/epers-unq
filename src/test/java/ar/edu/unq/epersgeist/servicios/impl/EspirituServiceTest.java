@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -55,6 +56,7 @@ public class EspirituServiceTest {
         berazategui = new Ubicacion("Berazategui");
 
         serviceU.crear(quilmes);
+        serviceU.crear(berazategui);
 
         demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes, generadorMock);
         demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes, generadorMock);
@@ -121,8 +123,9 @@ public class EspirituServiceTest {
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.crear(medium);
         demonio1.setUbicacion(berazategui);
+        serviceE.actualizar(demonio1);
 
-        assertThrows(ConectarException.class, () -> {
+        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(demonio1.getId(), medium.getId());
         });
     }

@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,8 +54,11 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if ((!this.ubicacion.equals(espiritu.getUbicacion())) || espiritu.estaConectado()){
+        if (espiritu.estaConectado()){
             throw new ConectarException(espiritu, this);
+        }
+        if (!this.ubicacion.equals(espiritu.getUbicacion())){
+            throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu, this);
         }
         espiritus.add(espiritu);
         espiritu.setMediumConectado(this);
