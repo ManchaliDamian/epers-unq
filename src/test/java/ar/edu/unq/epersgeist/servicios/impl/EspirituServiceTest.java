@@ -35,7 +35,7 @@ public class EspirituServiceTest {
     private UbicacionDAO ubicacionDao;
 
     private GeneradorDeNumeros generadorMock;
-    private EliminarTodoServiceImpl eliminarTodo;
+    private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
     void setUp() {
         generadorMock = mock(GeneradorDeNumeros.class);
@@ -61,7 +61,7 @@ public class EspirituServiceTest {
         serviceE.guardar(demonio2);
 
         serviceE.guardar(angel);
-        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class EspirituServiceTest {
     void testEliminarTodo() {
         serviceM.crear(medium);
 
-        serviceE.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
 
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
@@ -172,6 +172,6 @@ public class EspirituServiceTest {
 
     @AfterEach
     void cleanup() {
-        eliminarTodo.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
     }
 }

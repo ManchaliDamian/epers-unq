@@ -59,10 +59,4 @@ public class UbicacionServiceImpl implements UbicacionService {
         return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.mediumsSinEspiritusEn(ubicacionId));
     }
 
-    public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.eliminarTodo();
-            return null;
-        });
-    }
 }
