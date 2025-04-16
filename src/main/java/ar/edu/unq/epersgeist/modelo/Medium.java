@@ -74,14 +74,16 @@ public class Medium {
     }
 
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
-        for (EspirituAngelical angel : angeles) {
-            // busca el primer demonio que esté conectado
-            Optional<EspirituDemoniaco> demonioObjetivo = demonios.stream()
-                    .filter(EspirituDemoniaco::estaConectado)
-                    .findFirst(); // se filtra porque después de un ataque puede quedar algún demonio de la lista desconectado
-
-            // si hay un demonio, lo ataca
-            demonioObjetivo.ifPresent(angel::atacar);
+        int i = 0;
+        int cantAngeles = angeles.size();
+        while (i < cantAngeles && !demonios.isEmpty()) {
+            EspirituAngelical angel = angeles.get(i);
+            EspirituDemoniaco demonio = demonios.getFirst();
+            angel.atacar(demonio);
+            if(!demonio.estaConectado()){ // si se derrota un demonio, se lo saca de la lista
+                demonios.removeFirst();
+            }
+            i++;
         }
     }
 
