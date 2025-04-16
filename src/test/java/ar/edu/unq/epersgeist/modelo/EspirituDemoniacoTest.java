@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.modelo;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class EspirituDemoniacoTest {
 
@@ -13,13 +12,11 @@ public class EspirituDemoniacoTest {
     private Ubicacion bernal;
     private Medium mediumAngel;
     private Medium mediumDemon;
-    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp() {
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-        generadorMock = mock(GeneradorDeNumeros.class);
 
         espirituAngelical = new EspirituAngelical( "EspirituAngelical", quilmes);
         espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
@@ -32,12 +29,16 @@ public class EspirituDemoniacoTest {
     void espirituDemoniacoRecibeAtaque() {
         mediumAngel.conectarseAEspiritu(espirituAngelical);
         mediumDemon.conectarseAEspiritu(espirituDemoniaco);
-        when(generadorMock.entre(1, 10)).thenReturn(5);
-        when(generadorMock.entre(1, 100)).thenReturn(20);
+
+        espirituAngelical.setNivelDeConexion(20);
+        espirituDemoniaco.setNivelDeConexion(20);
+
+        // Ataca con éxito, baja 10 puntos
+        Generador.setEstrategia(new GeneradorFijo(10));
 
         espirituAngelical.atacar(espirituDemoniaco);
 
-        assertEquals(2, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(10, espirituDemoniaco.getNivelDeConexion());
     }
 
     @Test
@@ -45,9 +46,10 @@ public class EspirituDemoniacoTest {
         mediumAngel.conectarseAEspiritu(espirituAngelical);
         mediumDemon.conectarseAEspiritu(espirituDemoniaco);
 
+        espirituAngelical.setNivelDeConexion(20);
+        espirituDemoniaco.setNivelDeConexion(5);
 
-        when(generadorMock.entre(1, 10)).thenReturn(2);
-        when(generadorMock.entre(1, 100)).thenReturn(1);
+        Generador.setEstrategia(new GeneradorFijo(100));
 
         espirituAngelical.atacar(espirituDemoniaco);
 
@@ -56,4 +58,6 @@ public class EspirituDemoniacoTest {
         assertEquals(0, mediumDemon.getEspiritus().size());
     }
 }
+
+
 

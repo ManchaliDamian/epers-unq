@@ -15,13 +15,11 @@ public class EspirituTest {
     private Ubicacion quilmes;
     private Ubicacion bernal;
     private Medium mediumConectado;
-    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp(){
         bernal = new Ubicacion("Bernal");
         quilmes = new Ubicacion("Quilmes");
-        generadorMock = mock(GeneradorDeNumeros.class);
 
         mediumConectado = new Medium("Mago",100,90,quilmes);
         espiritu = new EspirituAngelical("Espiritu",quilmes);
