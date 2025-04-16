@@ -77,10 +77,33 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void mediumsSinEspiritusEnUbicacion() {
+    void hayMediumsSinEspiritusEnQuilmes() {
         serviceM.crear(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
+        assertEquals(medium.getId(),mediums.getFirst().getId());
+    }
+
+    @Test
+    void noHayMediumsEnBernal() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
+        serviceM.crear(medium);
+        serviceE.conectar(angel.getId(), medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void noHayMediumsSinEspiritusEnUbicacionInexistente() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
+        assertEquals(0, mediums.size());
     }
 
     @Test
