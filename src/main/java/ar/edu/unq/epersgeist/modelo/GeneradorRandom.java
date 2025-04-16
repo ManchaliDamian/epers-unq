@@ -23,4 +23,3 @@ public class GeneradorRandom implements GeneradorDeNumeros {
         return random.nextInt(max - min + 1) + min;
     }
 }
-
