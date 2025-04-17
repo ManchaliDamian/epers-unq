@@ -36,7 +36,6 @@ public class UbicacionServiceTest {
     private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
-    private GeneradorDeNumeros generadorMock;
 
     private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
@@ -52,10 +51,8 @@ public class UbicacionServiceTest {
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 
-        generadorMock = mock(GeneradorDeNumeros.class);
-
-        angel = new EspirituAngelical(10,"damian",quilmes, generadorMock);
-        demonio = new EspirituDemoniaco(15,"Roberto", quilmes, generadorMock);
+        angel = new EspirituAngelical("damian",quilmes);
+        demonio = new EspirituDemoniaco("Roberto", quilmes);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);
@@ -77,10 +74,34 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void mediumsSinEspiritusEnUbicacion() {
+    void hayMediumsSinEspiritusEnQuilmes() {
         serviceM.crear(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
+        assertEquals(medium.getId(),mediums.getFirst().getId());
+    }
+
+    @Test
+    void noHayMediumsEnBernal() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
+        serviceE.guardar(angel);
+        serviceM.crear(medium);
+        serviceE.conectar(angel.getId(), medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void noHayMediumsSinEspiritusEnUbicacionInexistente() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
+        assertEquals(0, mediums.size());
     }
 
     @Test

@@ -10,15 +10,15 @@ import lombok.*;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion, GeneradorDeNumeros generador) {
-        super(nivelDeConexion, nombre, ubicacion, generador);
+    public EspirituAngelical( String nombre, Ubicacion ubicacion) {
+        super( nombre, ubicacion);
         this.setTipo(TipoEspiritu.ANGELICAL);
 
     }
 
     public void atacar(EspirituDemoniaco objetivo) {
         int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
-        int defensaDemonio = generador.entre(1, 100); // reemplaza Random
+        int defensaDemonio = Generador.entre(1, 100);
 
         if (probAtaqueExitoso > defensaDemonio) {
             int cantidad = this.getNivelDeConexion() / 2;
@@ -29,7 +29,7 @@ public class EspirituAngelical extends Espiritu{
     }
 
     protected int probabilidadDeAtaqueExitoso() {
-        int cantidad = generador.entre(1, 10); // reemplaza Random
+        int cantidad = Generador.entre(1, 10);
         int cantAtaque = cantidad + this.getNivelDeConexion();
         return Math.min(cantAtaque, 100);
     }

@@ -11,16 +11,14 @@ public class EspirituAngelicalTest {
     private Ubicacion quilmes;
     private Ubicacion bernal;
     private Medium mediumConectado;
-    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp(){
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-        generadorMock = mock(GeneradorDeNumeros.class);
 
-        espirituAngelical = new EspirituAngelical(30, "EspirituAngelical", quilmes, generadorMock);
-        espirituDemoniaco = new EspirituDemoniaco(25, "EspirituDemoniaco", bernal, generadorMock);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical", quilmes);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
         mediumConectado = new Medium("Mago",100,50,quilmes);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
@@ -28,23 +26,26 @@ public class EspirituAngelicalTest {
 
     @Test
     void espirituAngelicalAtacaConExitoAlDemoniaco() {
-        when(generadorMock.entre(1, 10)).thenReturn(5);
-        when(generadorMock.entre(1, 100)).thenReturn(30);
+        espirituDemoniaco.setNivelDeConexion(20);
+        espirituAngelical.setNivelDeConexion(20);
+        Generador.setEstrategia(new GeneradorFijo(10));
 
         espirituAngelical.atacar(espirituDemoniaco);
 
         assertEquals(10, espirituDemoniaco.getNivelDeConexion());
+
     }
 
     @Test
     void espirituAngelicalFallaAlAtacarAlDemoniaco() {
-        when(generadorMock.entre(1, 10)).thenReturn(3);
-        when(generadorMock.entre(1, 100)).thenReturn(80);
-
         espirituAngelical.setNivelDeConexion(10);
+        espirituDemoniaco.setNivelDeConexion(20);
+
+        Generador.setEstrategia(new GeneradorFijo(100));
         espirituAngelical.atacar(espirituDemoniaco);
 
         assertEquals(5, espirituAngelical.getNivelDeConexion());
+        assertEquals(20, espirituDemoniaco.getNivelDeConexion());
     }
 
 
