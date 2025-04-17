@@ -90,6 +90,7 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
+        serviceE.guardar(angel);
         serviceM.crear(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
