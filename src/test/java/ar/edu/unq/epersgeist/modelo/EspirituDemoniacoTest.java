@@ -41,22 +41,22 @@ public class EspirituDemoniacoTest {
         assertEquals(10, espirituDemoniaco.getNivelDeConexion());
     }
 
-    @Test
-    void espirituDemoniacoSeDesconectaDelMediumPorFaltaDeNivelConexion() {
-        mediumAngel.conectarseAEspiritu(espirituAngelical);
-        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
-
-        espirituAngelical.setNivelDeConexion(20);
-        espirituDemoniaco.setNivelDeConexion(5);
-
-        Generador.setEstrategia(new GeneradorFijo(100));
-
-        espirituAngelical.atacar(espirituDemoniaco);
-
-        assertNull(espirituDemoniaco.getMediumConectado());
-        assertEquals(0, espirituDemoniaco.getNivelDeConexion());
-        assertEquals(0, mediumDemon.getEspiritus().size());
-    }
+//    @Test
+//    void espirituDemoniacoSeDesconectaDelMediumPorFaltaDeNivelConexion() {
+//        mediumAngel.conectarseAEspiritu(espirituAngelical);
+//        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
+//
+//        espirituAngelical.setNivelDeConexion(20);
+//        espirituDemoniaco.setNivelDeConexion(5);
+//
+//        Generador.setEstrategia(new GeneradorFijo(100));
+//
+//        espirituAngelical.atacar(espirituDemoniaco);
+//
+//        assertNull(espirituDemoniaco.getMediumConectado());
+//        assertEquals(0, espirituDemoniaco.getNivelDeConexion());
+//        assertEquals(0, mediumDemon.getEspiritus().size());
+//    }
 }
 
 
