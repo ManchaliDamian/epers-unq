@@ -16,7 +16,6 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class MediumServiceTest {
 
@@ -30,7 +29,7 @@ public class MediumServiceTest {
 
     private Medium medium1;
     private Medium medium2;
-    private Espiritu espiritu;
+    private Espiritu demonio;
     private Espiritu angel;
     private Ubicacion ubicacion;
     private Ubicacion plata;
@@ -44,6 +43,7 @@ public class MediumServiceTest {
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
+        Generador.setEstrategia(new GeneradorFijo(50));
 
         plata = new Ubicacion("La Plata");
         ubicacion = new Ubicacion("Quilmes");
@@ -52,18 +52,18 @@ public class MediumServiceTest {
 
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
-        espiritu = new EspirituDemoniaco("Jose", ubicacion);
+        demonio = new EspirituDemoniaco("Jose", ubicacion);
         angel = new EspirituAngelical( "kici", plata);
         serviceM.crear(medium1);
         serviceM.crear(medium2);
-        serviceE.guardar(espiritu);
+        serviceE.guardar(demonio);
         serviceE.guardar(angel);
         eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
     }
 
     @Test
     void testInvocar() {
-        Espiritu invocado = serviceM.invocar(medium1.getId(), espiritu.getId());
+        Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
     }
     @Test
@@ -120,25 +120,23 @@ public class MediumServiceTest {
 //        assertEquals(65,m1.getMana());
 //        verify(ang3, times(1)).descansar();
 //    }
-//    @Test
-//    void testExorcizar(){
-//
-//
-//        when(generadorMock.entre(1, 100)).thenReturn(30); // ejemplo de número aleatorio
-//        medium2.conectarseAEspiritu(espiritu);
-//        medium1.conectarseAEspiritu(angel);
-//        serviceM.actualizar(medium2);
-//        serviceE.actualizar(espiritu);
-//        serviceM.actualizar(medium1);
-//        serviceE.actualizar(angel);
-//
-//        serviceM.exorcizar(medium1.getId(), medium2.getId());
-//        Medium recuperarM = serviceM.recuperar(medium1.getId());
-//        assertEquals(20, recuperarM.getEspiritus()
-//                    .stream()
-//                    .filter(e -> e.getId() == espiritu.getId())
-//                    .findFirst());
-//    }
+
+    @Test
+    void testExorcizar(){
+        medium1.conectarseAEspiritu(angel);
+        medium2.conectarseAEspiritu(demonio);
+
+        serviceM.actualizar(medium1);
+        serviceM.actualizar(medium2);
+
+        serviceM.exorcizar(medium1.getId(), medium2.getId());
+        Medium mediumExorcista = serviceM.recuperar(medium1.getId());
+        Medium mediumExorcizado = serviceM.recuperar(medium2.getId());
+        Espiritu a = serviceE.recuperar(angel.getId());
+        Espiritu d = serviceE.recuperar(demonio.getId());
+
+        assertEquals(5, d.getNivelDeConexion());
+    }
 
 
 
