@@ -18,15 +18,14 @@ public class MediumTest {
     private EspirituDemoniaco espirituNoConectado;
     private EspirituAngelical espirituMock;
     private EspirituDemoniaco demonioMock;
-    private GeneradorDeNumeros generadorMock;
 
     @BeforeEach
     void setUp(){
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-        espirituAngelical = new EspirituAngelical(30,"EspirituAngelical",quilmes, generadorMock);
-        espirituDemoniaco = new EspirituDemoniaco(25,"EspirituDemoniaco",bernal, generadorMock);
-        espirituNoConectado = new EspirituDemoniaco(33,"Belcebú",bernal, generadorMock);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical",quilmes);
+        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",bernal);
+        espirituNoConectado = new EspirituDemoniaco("Belcebú",bernal);
         mediumConectado = new Medium("Mago",100,50,quilmes);
         mediumQuilmes = new Medium("Pepe",100,50,quilmes);
         mediumBernal = new Medium("Bernardo",100,90,bernal);

@@ -36,7 +36,6 @@ public class UbicacionServiceTest {
     private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
-    private GeneradorDeNumeros generadorMock;
 
     private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
@@ -52,10 +51,8 @@ public class UbicacionServiceTest {
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 
-        generadorMock = mock(GeneradorDeNumeros.class);
-
-        angel = new EspirituAngelical(10,"damian",quilmes, generadorMock);
-        demonio = new EspirituDemoniaco(15,"Roberto", quilmes, generadorMock);
+        angel = new EspirituAngelical("damian",quilmes);
+        demonio = new EspirituDemoniaco("Roberto", quilmes);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);
