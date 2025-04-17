@@ -34,9 +34,11 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private UbicacionDAO ubicacionDao;
 
-    private EliminarTodoServiceImpl eliminarTodo;
+    private GeneradorDeNumeros generadorMock;
+    private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
     void setUp() {
+        generadorMock = mock(GeneradorDeNumeros.class);
 
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
@@ -59,7 +61,7 @@ public class EspirituServiceTest {
         serviceE.guardar(demonio2);
 
         serviceE.guardar(angel);
-        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
     }
 
 //    @Test
@@ -158,7 +160,7 @@ public class EspirituServiceTest {
     void testEliminarTodo() {
         serviceM.crear(medium);
 
-        serviceE.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
 
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
@@ -170,6 +172,6 @@ public class EspirituServiceTest {
 
     @AfterEach
     void cleanup() {
-        eliminarTodo.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
     }
 }

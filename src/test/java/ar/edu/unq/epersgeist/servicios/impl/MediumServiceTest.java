@@ -88,7 +88,7 @@ public class MediumServiceTest {
 
     @Test
     void testEliminarTodosLosMediums() {
-        serviceM.eliminarTodo();
+        eliminarTodo.eliminarTodo();
         List<Medium> vacio = serviceM.recuperarTodos();
         assertTrue(vacio.isEmpty());
     }

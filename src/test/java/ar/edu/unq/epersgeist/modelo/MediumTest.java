@@ -164,7 +164,7 @@ public class MediumTest {
         mediumBernal.conectarseAEspiritu(angelB);
 
         // EXERCISE
-        mediumBernal.exorcizarA(poseido);
+        mediumBernal.exorcizarA(null, null);
 
     }
 }
