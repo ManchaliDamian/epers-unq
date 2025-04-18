@@ -85,14 +85,6 @@ public class EspirituTest {
     }
 
     @Test
-    void elEspirituNoPuedeAumentarElNivelDeConexion(){
-
-        assertThrows(ConectarException.class, () -> {
-            espiritu.aumentarConexion(mediumConectado);
-        });
-    }
-
-    @Test
     void elEspirituNoTieneMismaUbicacion(){
         mediumConectado.setUbicacion(bernal);
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {

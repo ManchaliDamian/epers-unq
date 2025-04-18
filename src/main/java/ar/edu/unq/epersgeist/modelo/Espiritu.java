@@ -46,28 +46,25 @@ public abstract class Espiritu {
         this.setMediumConectado(medium);
         this.aumentarConexion(medium);
     }
-
+    //DONDE SE USA ESTO?---------------------------------------------------------
     public void estaEnLaMismaUbicacion(Medium medium){
         if(!this.esMismaUbicacion(medium)){
             throw new EspirituNoEstaEnLaMismaUbicacionException(this,medium);
         }
     }
-
+    //--------------------------------------------------------------------------
     public boolean esMismaUbicacion(Medium medium) {
         return this.getUbicacion().equals(medium.getUbicacion());
     }
 
     public void aumentarConexion(Medium medium) {
-        if (this.getMediumConectado() != medium){
-            throw new ConectarException(this, medium);
-        }
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
         this.setNivelDeConexion(
                 Math.min(this.getNivelDeConexion() + aumento, 100)
         );
     }
-
+    //esto solo se usa en los test--------------------------------------------
     public void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < 0 || nivelDeConexion > 100) {
             throw new NivelDeConexionException();
@@ -79,15 +76,14 @@ public abstract class Espiritu {
             throw new ExceptionEspirituOcupado(this);
         }
     }
+    /// ----------------------------------------------------------------------
 
     protected void perderNivelDeConexion(int cantidad){
-        int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
-        if (nivelDeConexionResultante <= 0){
+        int nuevoNivel = this.getNivelDeConexion() - cantidad;
+        this.setNivelDeConexion(Math.max(nuevoNivel, 0));  // Asegura que no sea negativo
+
+        if (this.getNivelDeConexion() == 0 && this.estaConectado()) {  // Verifica estado actual
             this.getMediumConectado().desvincularseDe(this);
-            this.setNivelDeConexion(0);
-        }
-        else{
-            this.setNivelDeConexion(nivelDeConexionResultante);
         }
     }
 
@@ -99,10 +95,6 @@ public abstract class Espiritu {
         this.setNivelDeConexion(
                 Math.min(this.getNivelDeConexion() + 5, 100)
         );
-    }
-
-    public void desvincularse() {
-        this.setMediumConectado(null);
     }
 
 }

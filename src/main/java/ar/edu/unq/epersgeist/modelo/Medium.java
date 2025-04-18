@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,12 +54,13 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if (noEsMismaUbicacion(espiritu) || espiritu.estaConectado()){
-            throw new ConectarException(espiritu, this);
+        if (noEsMismaUbicacion(espiritu)) {
+            throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu,this);
+        } else if (espiritu.estaConectado()) {
+            throw new ConectarException(espiritu,this);
         }
         espiritus.add(espiritu);
         espiritu.conectarA(this);
-
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
@@ -73,20 +75,25 @@ public class Medium {
         this.getEspiritus().forEach(Espiritu::descansar);
     }
 
-    public void desvincularseDe(Espiritu espiritu){
-        this.getEspiritus().remove(espiritu); // por el SET no elimina!
-        espiritu.desvincularse();
+    public void desvincularseDe(Espiritu espiritu) {
+        if (espiritus.remove(espiritu)) {
+            espiritu.setMediumConectado(null);
+        }
     }
 
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
-        for (EspirituAngelical angel : angeles) {
-            // busca el primer demonio que esté conectado
-            Optional<EspirituDemoniaco> demonioObjetivo = demonios.stream()
-                    .filter(EspirituDemoniaco::estaConectado)
-                    .findFirst(); // se filtra porque después de un ataque puede quedar algún demonio de la lista desconectado
+        int i = 0;
+        while (i < angeles.size() && !demonios.isEmpty()) {
+            EspirituAngelical angel = angeles.get(i);
+            EspirituDemoniaco demonio = demonios.getFirst();
 
-            // si hay un demonio, lo ataca
-            demonioObjetivo.ifPresent(angel::atacar);
+            if (angel.estaConectado()) {
+                angel.atacar(demonio);
+                if (!demonio.estaConectado()) {
+                    demonios.removeFirst();
+                }
+            }
+            i++;
         }
     }
 
@@ -99,7 +106,4 @@ public class Medium {
         return espiritu;
     }
 
-    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
-        this.espiritus.remove(espirituDemoniaco);
-    }
 }
