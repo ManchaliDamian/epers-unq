@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -122,48 +123,80 @@ public class MediumServiceTest {
 //    }
 
     @Test
-    void testExorcizar(){
-        //SETUP
-        Generador.setEstrategia(new GeneradorSecuencial(
-                5, // ataca angel con 5+85 = 90
-                24, // defiende demonio con 24, se desconecta
-                7, // ataca rafael con 7 + 90 = 97
-                18 // defiende azazel con 18, se desconecta
-                ));
-        Espiritu azazel = new EspirituDemoniaco("azazel", quilmes);
-        Espiritu rafael = new EspirituAngelical( "rafael", plata);
-        serviceE.guardar(azazel);
-        serviceE.guardar(rafael);
+    void exorcizarA_AtaqueExitoso_DemonioDerrotado() {
+        Generador.setEstrategia(new GeneradorSecuencial(10, 1)); // 10 + nivel > 1
 
-        Medium mediumExorcista  = serviceE.conectar(angel.getId(),serviceE.conectar(rafael.getId(),medium1.getId()).getId());
-        Medium mediumExorcizado = serviceE.conectar(demonio.getId(),serviceE.conectar(azazel.getId(),medium2.getId()).getId());
-        angel.setNivelDeConexion(85); serviceE.actualizar(angel);
-        rafael.setNivelDeConexion(90); serviceE.actualizar(rafael);
-        demonio.setNivelDeConexion(30); serviceE.actualizar(demonio);
-        azazel.setNivelDeConexion(20); serviceE.actualizar(azazel);
+        angel.setNivelDeConexion(20);
+        demonio.setNivelDeConexion(5);
 
-        serviceM.exorcizar(mediumExorcista.getId(), mediumExorcizado.getId());
+        conectarEspirituAMedium(medium1, angel); // angel: 20 + 10 = 30 (daño = 15)
+        conectarEspirituAMedium(medium2, demonio); // demonio: 5 + 10 = 15
 
-        mediumExorcista  = serviceM.recuperar(medium1.getId());
-        mediumExorcizado = serviceM.recuperar(medium2.getId());
-        angel = serviceE.recuperar(angel.getId());
-        demonio = serviceE.recuperar(demonio.getId());
-        azazel = serviceE.recuperar(azazel.getId());
-        rafael = serviceE.recuperar(rafael.getId());
+        serviceM.exorcizar(medium1.getId(), medium2.getId());
 
-        //VERIFY
+        Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
+        assertFalse(demonioActualizado.estaConectado());
+        assertEquals(0, demonioActualizado.getNivelDeConexion());
 
-
-        assertEquals(85, angel.getNivelDeConexion());
-        assertEquals(30, demonio.getNivelDeConexion());
-        assertEquals(90, rafael.getNivelDeConexion());
-        assertEquals(20, azazel.getNivelDeConexion());
-
-        //assertTrue(mediumExorcizado.getEspiritus().isEmpty());
-
+        List<Espiritu> espiritusMedium2 = serviceM.espiritus(medium2.getId());
+        assertTrue(espiritusMedium2.isEmpty());
     }
 
+    @Test
+    void exorcizar_DosAngelesDerrotanUnDemonio() {
+        // Configurar
+        Generador.setEstrategia(new GeneradorSecuencial(10, 1)); // Ataques exitosos
 
+        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", plata);
+        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", plata);
+        angel1.setNivelDeConexion(20); // Daño: 10
+        angel2.setNivelDeConexion(30); // Daño: 15
+
+        demonio.setNivelDeConexion(25); // 25 + 10 (conexión) = 35
+
+        // Conectar
+        conectarEspirituAMedium(medium1, angel1);
+        conectarEspirituAMedium(medium1, angel2);
+        conectarEspirituAMedium(medium2, demonio);
+
+        // Ejecutar
+        serviceM.exorcizar(medium1.getId(), medium2.getId());
+
+        // Verificar
+        Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
+        assertEquals(0, demonioActualizado.getNivelDeConexion());
+        assertFalse(demonioActualizado.estaConectado());
+    }
+
+    @Test
+    void exorcizar_ExorcistaSinAngeles_LanzaExcepcion() {
+        // No conectar ángeles a medium1
+        conectarEspirituAMedium(medium2, demonio);
+
+        assertThrows(ExorcistaSinAngelesException.class, () -> {
+            serviceM.exorcizar(medium1.getId(), medium2.getId());
+        });
+    }
+
+    @Test
+    void exorcizar_DemonioYaDesconectado_NoHaceNada() {
+        // Configurar demonio desconectado
+        demonio.setNivelDeConexion(0);
+        demonio.setMediumConectado(null);
+        serviceE.actualizar(demonio);
+
+        conectarEspirituAMedium(medium1, angel);
+
+        assertDoesNotThrow(() -> {
+            serviceM.exorcizar(medium1.getId(), medium2.getId());
+        });
+    }
+
+    private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {
+        medium.conectarseAEspiritu(espiritu);
+        serviceM.actualizar(medium);
+        serviceE.actualizar(espiritu);
+    }
 
     @AfterEach
     void cleanUp() {

@@ -123,6 +123,7 @@ public class MediumTest {
         assertDoesNotThrow(() -> mediumBernal.desvincularseDe(espirituMock));
     }
 
+    //este test sirve solo para testear algo que no se usa en ningun lado
     @Test
     void desconectarEspiritu(){
         when(demonioMock.estaConectado()).thenReturn(false);
@@ -130,7 +131,6 @@ public class MediumTest {
         mediumBernal.conectarseAEspiritu(espirituNoConectado);
         mediumBernal.conectarseAEspiritu(demonioMock);
 
-        //este test sirve solo para testear algo que no se usar
         //mediumBernal.desconectarEspiritu(demonioMock);
         //--------------------------------------------------------
         assertEquals(1, mediumBernal.getEspiritus().size());

@@ -88,13 +88,11 @@ public abstract class Espiritu {
     /// ----------------------------------------------------------------------
 
     protected void perderNivelDeConexion(int cantidad){
-        int nivelDeConexionResultante = this.getNivelDeConexion() - cantidad;
-        if (nivelDeConexionResultante <= 0){
+        int nuevoNivel = this.getNivelDeConexion() - cantidad;
+        this.setNivelDeConexion(Math.max(nuevoNivel, 0));  // Asegura que no sea negativo
+
+        if (this.getNivelDeConexion() == 0 && this.estaConectado()) {  // Verifica estado actual
             this.getMediumConectado().desvincularseDe(this);
-            this.setNivelDeConexion(0);
-        }
-        else{
-            this.setNivelDeConexion(nivelDeConexionResultante);
         }
     }
 
