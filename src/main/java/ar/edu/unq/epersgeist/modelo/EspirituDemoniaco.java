@@ -13,7 +13,7 @@ public class EspirituDemoniaco extends Espiritu{
 
     public EspirituDemoniaco( String nombre, Ubicacion ubicacion ) {
         super(nombre, ubicacion);
-        this.setTipo(TipoEspiritu.DEMONIACO);
+
     }
 
     public void recibirAtaque(int cantidad){

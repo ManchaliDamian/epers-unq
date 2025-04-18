@@ -26,14 +26,10 @@ public abstract class Espiritu {
     @Column(nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
-
     private Integer nivelDeConexion;
 
     @Column(nullable = false)
     private String nombre;
-
-    @Column(nullable = false)
-    private TipoEspiritu tipo;
 
     @ManyToOne
     @JoinColumn(name = "medium_id")

@@ -142,10 +142,10 @@ public class MediumTest {
         when(angelB.getUbicacion()).thenReturn(bernal);
         when(demonioA.getUbicacion()).thenReturn(bernal);
         when(demonioB.getUbicacion()).thenReturn(bernal);
-        when(angelA.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
-        when(angelB.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
-        when(demonioA.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
-        when(demonioB.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
+//        when(angelA.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
+//        when(angelB.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
+//        when(demonioA.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
+//        when(demonioB.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
 
         poseido.conectarseAEspiritu(demonioA);
         poseido.conectarseAEspiritu(demonioB);
