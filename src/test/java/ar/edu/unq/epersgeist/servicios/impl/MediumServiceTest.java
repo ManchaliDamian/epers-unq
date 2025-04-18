@@ -144,14 +144,14 @@ public class MediumServiceTest {
 
     @Test
     void exorcizar_DosAngelesDerrotanUnDemonio() {
-        Generador.setEstrategia(new GeneradorSecuencial(10, 1)); // Ataques exitosos
+        Generador.setEstrategia(new GeneradorSecuencial(10, 1));
 
         EspirituAngelical angel1 = new EspirituAngelical("Ángel1", plata);
         EspirituAngelical angel2 = new EspirituAngelical("Ángel2", plata);
-        angel1.setNivelDeConexion(20); // Daño: 10
-        angel2.setNivelDeConexion(30); // Daño: 15
+        angel1.setNivelDeConexion(20);
+        angel2.setNivelDeConexion(30);
 
-        demonio.setNivelDeConexion(25); // 25 + 10 (conexión) = 35
+        demonio.setNivelDeConexion(25);
 
         conectarEspirituAMedium(medium1, angel1);
         conectarEspirituAMedium(medium1, angel2);
@@ -212,6 +212,38 @@ public class MediumServiceTest {
         Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
         assertEquals(20, demonioActualizado.getNivelDeConexion(),
                 "El demonio no debería haber sido afectado en un ataque fallido");
+    }
+
+    @Test
+    void exorcizar_MultiplesDemoniosYAngeles_ActualizaCorrectamente() {
+        Generador.setEstrategia(new GeneradorSecuencial(10, 1, 5, 100)); // Primer ataque exitoso, segundo falla
+
+        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", plata);
+        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", plata);
+        angel1.setNivelDeConexion(20);
+        angel2.setNivelDeConexion(10);
+
+        EspirituDemoniaco demonio1 = new EspirituDemoniaco("Demonio1", quilmes);
+        EspirituDemoniaco demonio2 = new EspirituDemoniaco("Demonio2", quilmes);
+        demonio1.setNivelDeConexion(15);
+        demonio2.setNivelDeConexion(20);
+
+        conectarEspirituAMedium(medium1, angel1);
+        assertEquals(30, angel1.getNivelDeConexion());
+        conectarEspirituAMedium(medium1, angel2);
+
+        conectarEspirituAMedium(medium2, demonio1);
+        assertEquals(25, demonio1.getNivelDeConexion());
+        conectarEspirituAMedium(medium2, demonio2);
+
+        serviceM.exorcizar(medium1.getId(), medium2.getId());
+
+        Espiritu demonio1Actualizado = serviceE.recuperar(demonio1.getId());
+        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
+
+        Espiritu angel2Actualizado = serviceE.recuperar(angel2.getId());
+        assertEquals(15, angel2Actualizado.getNivelDeConexion());
+
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {

@@ -76,24 +76,24 @@ public class Medium {
     }
 
     public void desvincularseDe(Espiritu espiritu) {
-        if (espiritus.remove(espiritu)) { // si existia y lo elimino devuelve true, sino false
-            espiritu.setMediumConectado(null); // Rompe la relación del lado del espíritu
+        if (espiritus.remove(espiritu)) {
+            espiritu.setMediumConectado(null);
         }
     }
 
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
         int i = 0;
-        while (i < angeles.size() && !demonios.isEmpty()) {  // Evalúa `size()` en cada iteración
-            EspirituAngelical angel = angeles.get(i);  // Obtiene el ángel en posición `i`
-            EspirituDemoniaco demonio = demonios.getFirst();  // Toma el primer demonio
+        while (i < angeles.size() && !demonios.isEmpty()) {
+            EspirituAngelical angel = angeles.get(i);
+            EspirituDemoniaco demonio = demonios.getFirst();
 
-            if (angel.estaConectado()) {  // Verifica si el ángel sigue conectado
-                angel.atacar(demonio);  // Realiza el ataque solo si está conectado
-                if (!demonio.estaConectado()) {  // Si el demonio es derrotado
-                    demonios.removeFirst();  // Lo elimina de la lista
+            if (angel.estaConectado()) {
+                angel.atacar(demonio);
+                if (!demonio.estaConectado()) {
+                    demonios.removeFirst();
                 }
             }
-            i++;  // Incrementa el contador
+            i++;
         }
     }
 
@@ -106,7 +106,4 @@ public class Medium {
         return espiritu;
     }
 
-//    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
-//        this.espiritus.remove(espirituDemoniaco);
-//    }
 }

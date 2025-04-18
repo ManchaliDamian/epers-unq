@@ -106,8 +106,4 @@ public abstract class Espiritu {
         );
     }
 
-//    public void desvincularse() {
-//        this.setMediumConectado(null);
-//    }
-
 }

@@ -17,8 +17,8 @@ public class EspirituAngelical extends Espiritu{
     }
 
     public void atacar(EspirituDemoniaco objetivo) {
-        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();//31
-        int defensaDemonio = Generador.entre(1, 100);//100
+        int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
+        int defensaDemonio = Generador.entre(1, 100);
 
         if (probAtaqueExitoso > defensaDemonio) {
             int cantidad = this.getNivelDeConexion() / 2;
@@ -30,7 +30,7 @@ public class EspirituAngelical extends Espiritu{
 
     protected int probabilidadDeAtaqueExitoso() {
         int cantidad = Generador.entre(1, 10);
-        int cantAtaque = cantidad + this.getNivelDeConexion(); //31
+        int cantAtaque = cantidad + this.getNivelDeConexion();
         return Math.min(cantAtaque, 100);
     }
 
