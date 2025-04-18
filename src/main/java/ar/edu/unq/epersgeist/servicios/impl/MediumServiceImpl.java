@@ -81,9 +81,9 @@ public class MediumServiceImpl implements MediumService {
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
             //-------esta mal una exception aca? ------------------------
-            if (angeles.isEmpty()){
-                throw new ExorcistaSinAngelesException(mediumExorcista);
-            }
+//            if (angeles.isEmpty()){
+//                throw new ExorcistaSinAngelesException(mediumExorcista);
+//            }
             //---------------------------------------------------------------------------------------
             mediumExorcista.exorcizarA(angeles, demonios);
 
@@ -109,7 +109,6 @@ public class MediumServiceImpl implements MediumService {
 
             mediumDAO.actualizar(medium);
             espirituDAO.actualizar(espiritu);
-
 
             return espiritu;
 

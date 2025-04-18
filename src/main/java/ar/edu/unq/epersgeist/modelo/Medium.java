@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,6 +62,7 @@ public class Medium {
         }
         espiritus.add(espiritu);
         espiritu.conectarA(this);
+
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
@@ -83,6 +85,9 @@ public class Medium {
 
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
         int i = 0;
+        if (angeles.isEmpty()){
+            throw new ExorcistaSinAngelesException(this);
+        }
         while (i < angeles.size() && !demonios.isEmpty()) {
             EspirituAngelical angel = angeles.get(i);
             EspirituDemoniaco demonio = demonios.getFirst();

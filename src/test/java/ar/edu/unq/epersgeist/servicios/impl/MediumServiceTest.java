@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -64,8 +66,27 @@ public class MediumServiceTest {
 
     @Test
     void testInvocar() {
+
         Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
+    }
+    @Test
+    void testInvocarFallaPorqueEspirituYaEstaConectado() {
+        demonio.setMediumConectado(medium1);
+        serviceE.actualizar(demonio);
+        assertThrows(ExceptionEspirituOcupado.class, () -> {
+            serviceM.invocar(medium1.getId(), demonio.getId());
+        });
+    }
+    @Test
+    void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
+        medium1.setMana(7);
+        demonio.setUbicacion(plata);
+        serviceM.actualizar(medium1);
+        demonio.setUbicacion(quilmes);
+        serviceE.actualizar(demonio);
+        Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
+        assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
     }
     @Test
     void testCrearYRecuperarMedium() {
@@ -105,23 +126,37 @@ public class MediumServiceTest {
         assertTrue(espiritusDelMedium.stream().anyMatch(e -> e.getId().equals(angel.getId())));
     }
 
-//    @Test
-//    void descansar(){
-//        MediumDAO mediumDAOMock = mock(MediumDAO.class);
-//        MediumService serviceMMock = new MediumServiceImpl(mediumDAOMock, espirituDAO);
-//        EspirituAngelical ang3 = mock(EspirituAngelical.class);
-//        when(ang3.estaConectado()).thenReturn(false);
-//        when(ang3.getUbicacion()).thenReturn(ubicacion);
-//        when(mediumDAOMock.recuperar(medium1.getId())).thenReturn(medium1);
-//        medium1.conectarseAEspiritu(ang3);
-//
-//        serviceMMock.descansar(medium1.getId());
-//
-//        Medium m1 = serviceMMock.recuperar(medium1.getId());
-//        assertEquals(65,m1.getMana());
-//        verify(ang3, times(1)).descansar();
-//    }
-
+    @Test
+    void descansarConEspiritus(){
+        angel.setNivelDeConexion(10);
+        serviceE.actualizar(angel);
+        medium1.setMana(5);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        Espiritu angelRecuperado = serviceE.recuperar(angel.getId());
+        assertEquals(20, mediumRecuperado.getMana());
+        assertEquals(16, angelRecuperado.getNivelDeConexion());
+    }
+    @Test
+    void descansarSinEspiritus(){
+        medium1.setMana(5);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(20, mediumRecuperado.getMana());
+    }
+    @Test
+    void descansarPeroElMagoLlegaAlLimiteDeMana(){
+        medium1.setMana(98);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(100, mediumRecuperado.getMana());
+    }
     @Test
     void exorcizarA_AtaqueExitoso_DemonioDerrotado() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1)); // 10 + nivel > 1

@@ -2,8 +2,12 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -123,37 +127,14 @@ public class MediumTest {
         assertDoesNotThrow(() -> mediumBernal.desvincularseDe(espirituMock));
     }
 
-
     @Test
-    void exorcizarA(){
-        //SETUP
+    void exorcizarA_SinAngeles() {
         Medium poseido = new Medium("Juan",100,35, bernal);
 
-        EspirituAngelical angelA = mock(EspirituAngelical.class);
-        EspirituAngelical angelB = mock(EspirituAngelical.class);
-        EspirituDemoniaco demonioA = mock(EspirituDemoniaco.class);
-        EspirituDemoniaco demonioB = mock(EspirituDemoniaco.class);
+        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
+        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
 
-        when(angelA.estaConectado()).thenReturn(false).thenReturn(true);
-        when(angelB.estaConectado()).thenReturn(false).thenReturn(true);
-        when(demonioA.estaConectado()).thenReturn(false).thenReturn(true);
-        when(demonioB.estaConectado()).thenReturn(false).thenReturn(true);
-        when(angelA.getUbicacion()).thenReturn(bernal);
-        when(angelB.getUbicacion()).thenReturn(bernal);
-        when(demonioA.getUbicacion()).thenReturn(bernal);
-        when(demonioB.getUbicacion()).thenReturn(bernal);
-//        when(angelA.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
-//        when(angelB.getTipo()).thenReturn(TipoEspiritu.ANGELICAL);
-//        when(demonioA.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
-//        when(demonioB.getTipo()).thenReturn(TipoEspiritu.DEMONIACO);
-
-        poseido.conectarseAEspiritu(demonioA);
-        poseido.conectarseAEspiritu(demonioB);
-        mediumBernal.conectarseAEspiritu(angelA);
-        mediumBernal.conectarseAEspiritu(angelB);
-
-        // EXERCISE
-        mediumBernal.exorcizarA(null, null);
+        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos));
 
     }
 }
