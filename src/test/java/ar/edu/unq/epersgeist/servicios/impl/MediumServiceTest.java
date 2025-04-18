@@ -81,9 +81,8 @@ public class MediumServiceTest {
     void testInvocarDevuelveAlMismoEspirituPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
         serviceM.actualizar(medium1);
-        assertThrows(ExceptionEspirituOcupado.class, () -> {
-            serviceM.invocar(medium1.getId(), espiritu.getId());
-        });
+        Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), espiritu.getId());
+        assertNotEquals(espiritu.getUbicacion(), espirituRecuperado.getUbicacion());
     }
     @Test
     void testCrearYRecuperarMedium() {
@@ -123,22 +122,37 @@ public class MediumServiceTest {
         assertTrue(espiritusDelMedium.stream().anyMatch(e -> e.getId().equals(angel.getId())));
     }
 
-//    @Test
-//    void descansar(){
-//        MediumDAO mediumDAOMock = mock(MediumDAO.class);
-//        MediumService serviceMMock = new MediumServiceImpl(mediumDAOMock, espirituDAO);
-//        EspirituAngelical ang3 = mock(EspirituAngelical.class);
-//        when(ang3.estaConectado()).thenReturn(false);
-//        when(ang3.getUbicacion()).thenReturn(ubicacion);
-//        when(mediumDAOMock.recuperar(medium1.getId())).thenReturn(medium1);
-//        medium1.conectarseAEspiritu(ang3);
-//
-//        serviceMMock.descansar(medium1.getId());
-//
-//        Medium m1 = serviceMMock.recuperar(medium1.getId());
-//        assertEquals(65,m1.getMana());
-//        verify(ang3, times(1)).descansar();
-//    }
+    @Test
+    void descansarConEspiritus(){
+        angel.setNivelDeConexion(10);
+        serviceE.actualizar(angel);
+        medium1.setMana(5);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        Espiritu angelRecuperado = serviceE.recuperar(angel.getId());
+        assertEquals(20, mediumRecuperado.getMana());
+        assertEquals(15, angelRecuperado.getNivelDeConexion());
+    }
+    @Test
+    void descansarSinEspiritus(){
+        medium1.setMana(5);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(20, mediumRecuperado.getMana());
+    }
+    @Test
+    void descansarPeroElMagoLlegaAlLimiteDeMana(){
+        medium1.setMana(98);
+        medium1.conectarseAEspiritu(angel);
+        serviceM.actualizar(medium1);
+        serviceM.descansar(medium1.getId());
+        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(100, mediumRecuperado.getMana());
+    }
 //    @Test
 //    void testExorcizar(){
 //
