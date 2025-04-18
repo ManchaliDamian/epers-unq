@@ -104,7 +104,6 @@ public class MediumServiceImpl implements MediumService {
             mediumDAO.actualizar(medium);
             espirituDAO.actualizar(espiritu);
 
-
             return espiritu;
 
         });

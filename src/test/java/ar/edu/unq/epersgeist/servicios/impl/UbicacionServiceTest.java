@@ -78,7 +78,7 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = service.espiritusEn(bernal.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(bernal.getId());
         assertEquals(0, espiritusEn.size());
     }
 

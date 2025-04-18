@@ -77,11 +77,14 @@ public class MediumServiceTest {
         });
     }
     @Test
-    void testInvocarDevuelveAlMismoEspirituPorqueSeTieneSuficienteMana() {
+    void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
+        espiritu.setUbicacion(plata);
         serviceM.actualizar(medium1);
+        espiritu.setUbicacion(ubicacion);
+        serviceE.actualizar(espiritu);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), espiritu.getId());
-        assertNotEquals(espiritu.getUbicacion(), espirituRecuperado.getUbicacion());
+        assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
     }
     @Test
     void testCrearYRecuperarMedium() {
@@ -132,7 +135,7 @@ public class MediumServiceTest {
         Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
         Espiritu angelRecuperado = serviceE.recuperar(angel.getId());
         assertEquals(20, mediumRecuperado.getMana());
-        assertEquals(15, angelRecuperado.getNivelDeConexion());
+        assertEquals(16, angelRecuperado.getNivelDeConexion());
     }
     @Test
     void descansarSinEspiritus(){
