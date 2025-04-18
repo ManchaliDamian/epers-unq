@@ -83,21 +83,21 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.crear(medium);
-        demonio1.setUbicacion(berazategui);
-        serviceE.actualizar(demonio1);
+        azazel.setUbicacion(berazategui);
+        serviceE.actualizar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
-            serviceE.conectar(demonio1.getId(), medium.getId());
+            serviceE.conectar(azazel.getId(), medium.getId());
         });
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
         serviceM.crear(medium);
-        serviceE.conectar(demonio1.getId(), medium.getId());
+        serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
-            serviceE.conectar(demonio1.getId(), medium.getId());
+            serviceE.conectar(azazel.getId(), medium.getId());
         });
     }
     @Test
