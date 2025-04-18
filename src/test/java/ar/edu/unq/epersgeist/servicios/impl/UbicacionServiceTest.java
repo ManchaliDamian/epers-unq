@@ -65,7 +65,7 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void espiritusEnUnaUbicacion() {
+    void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
@@ -74,7 +74,16 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void hayMediumsSinEspiritusEnQuilmes() {
+    void espiritusEnUnaUbicacionInexistente() {
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(bernal.getId());
+        assertEquals(0, espiritusEn.size());
+    }
+
+    @Test
+    void mediumsSinEspiritusEnUbicacion() {
         serviceM.crear(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());

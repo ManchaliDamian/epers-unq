@@ -62,6 +62,7 @@ public class Medium {
         }
         espiritus.add(espiritu);
         espiritu.conectarA(this);
+
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
