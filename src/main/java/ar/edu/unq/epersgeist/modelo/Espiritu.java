@@ -9,11 +9,12 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 @Entity
 public abstract class Espiritu {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,19 +39,15 @@ public abstract class Espiritu {
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
-    @Transient
-    protected GeneradorDeNumeros generador;
+    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion) {
 
-    public Espiritu (@NonNull Integer nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion, GeneradorDeNumeros generador) {
-        validarNivelDeConexion(nivelDeConexion);
-        this.nivelDeConexion = nivelDeConexion;
+        this.nivelDeConexion = 0;
         this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.generador = generador;
+        this.ubicacion = ubicacion;;
     }
 
-    public void conexionEnAumento(Medium medium){
-        this.estaEnLaMismaUbicacion(medium);
+    public void conectarA(Medium medium){
+        this.setMediumConectado(medium);
         this.aumentarConexion(medium);
     }
 

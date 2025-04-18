@@ -1,8 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
-import ar.edu.unq.epersgeist.modelo.Direccion;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 import org.hibernate.Session;
@@ -38,6 +36,22 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
         query.setFirstResult(pagina * cantidadPorPagina);
         query.setMaxResults(cantidadPorPagina);
 
+        return query.getResultList();
+    }
+
+    @Override
+    public List<EspirituAngelical> recuperarAngeles(){
+        Session session = HibernateTransactionRunner.getCurrentSession();
+        String hql = "from EspirituAngelical";
+        Query<EspirituAngelical> query = session.createQuery(hql, EspirituAngelical.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<EspirituDemoniaco> recuperarDemonios(){
+        Session session = HibernateTransactionRunner.getCurrentSession();
+        String hql = "from EspirituDemoniaco";
+        Query<EspirituDemoniaco> query = session.createQuery(hql, EspirituDemoniaco.class);
         return query.getResultList();
     }
 }

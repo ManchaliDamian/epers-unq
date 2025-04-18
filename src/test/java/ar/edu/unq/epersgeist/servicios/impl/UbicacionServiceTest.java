@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mock;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
 
-    private UbicacionServiceImpl service;
+    private UbicacionServiceImpl serviceU;
     private Ubicacion quilmes;
     private Ubicacion bernal;
     private UbicacionDAO ubicacionDao;
@@ -36,32 +36,31 @@ public class UbicacionServiceTest {
     private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
-    private GeneradorDeNumeros generadorMock;
 
+    private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
     void prepare() {
         ubicacionDao = new HibernateUbicacionDAO();
         espirituDAO = new HibernateEspirituDAO();
         mediumDAO = new HibernateMediumDAO();
 
-        service = new UbicacionServiceImpl(ubicacionDao);
+        serviceU = new UbicacionServiceImpl(ubicacionDao);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 
-        generadorMock = mock(GeneradorDeNumeros.class);
-
-        angel = new EspirituAngelical(10,"damian",quilmes, generadorMock);
-        demonio = new EspirituDemoniaco(15,"Roberto", quilmes, generadorMock);
+        angel = new EspirituAngelical("damian",quilmes);
+        demonio = new EspirituDemoniaco("Roberto", quilmes);
 
 
         medium = new Medium("roberto", 200, 150, quilmes);
 
-        service.crear(quilmes);
-        service.crear(bernal);
+        serviceU.crear(quilmes);
+        serviceU.crear(bernal);
 
+        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
 
     }
 
@@ -70,7 +69,7 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = service.espiritusEn(quilmes.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(quilmes.getId());
         assertEquals(2, espiritusEn.size());
     }
 
@@ -86,43 +85,66 @@ public class UbicacionServiceTest {
     @Test
     void mediumsSinEspiritusEnUbicacion() {
         serviceM.crear(medium);
-        List<Medium> mediums = service.mediumsSinEspiritusEn(quilmes.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
+        assertEquals(medium.getId(),mediums.getFirst().getId());
+    }
+
+    @Test
+    void noHayMediumsEnBernal() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
+        serviceE.guardar(angel);
+        serviceM.crear(medium);
+        serviceE.conectar(angel.getId(), medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        assertEquals(0, mediums.size());
+    }
+
+    @Test
+    void noHayMediumsSinEspiritusEnUbicacionInexistente() {
+        serviceM.crear(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
+        assertEquals(0, mediums.size());
     }
 
     @Test
     void recuperarUbicacionDada() {
-        Ubicacion q = service.recuperar(quilmes.getId());
+        Ubicacion q = serviceU.recuperar(quilmes.getId());
         assertEquals("Quilmes", q.getNombre());
     }
 
     @Test
     void recuperarTodasLasUbicaciones() {
-        List<Ubicacion> ubicaciones = service.recuperarTodos();
+        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(2, ubicaciones.size());
     }
 
     @Test
     void actualizarUnaUbicacion(){
-        Ubicacion q = service.recuperar(quilmes.getId());
-        service.actualizar(q.getId(), "Avellaneda");
-        Ubicacion nombreNuevo = service.recuperar(quilmes.getId());
+        Ubicacion q = serviceU.recuperar(quilmes.getId());
+        q.cambiarNombre("Avellaneda");
+        serviceU.actualizar(q);
+        Ubicacion nombreNuevo = serviceU.recuperar(q.getId());
 
         assertEquals("Avellaneda", nombreNuevo.getNombre());
     }
 
     @Test
     void eliminarUbicacion() {
-        service.eliminar(quilmes);
-        List<Ubicacion> ubicaciones = service.recuperarTodos();
+        serviceU.eliminar(quilmes);
+        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }
 
     @AfterEach
     void cleanup() {
-        serviceE.eliminarTodo();
-        serviceM.eliminarTodo();
-        service.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
     }
 
 }

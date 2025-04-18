@@ -61,7 +61,12 @@ public class Medium {
             throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu, this);
         }
         espiritus.add(espiritu);
-        espiritu.setMediumConectado(this);
+        espiritu.conectarA(this);
+
+    }
+
+    private boolean noEsMismaUbicacion(Espiritu espiritu) {
+        return !this.ubicacion.equals(espiritu.getUbicacion());
     }
 
     public void descansar() {
@@ -73,33 +78,19 @@ public class Medium {
     }
 
     public void desvincularseDe(Espiritu espiritu){
+        this.getEspiritus().remove(espiritu); // por el SET no elimina!
         espiritu.desvincularse();
-        this.getEspiritus().remove(espiritu);
     }
 
-    public void exorcizarA(Medium medium){
-        List<EspirituAngelical> angelesAliados = this.getEspiritus()
-                .stream()
-                .filter(e -> e.getTipo() == TipoEspiritu.ANGELICAL)
-                .map(e -> (EspirituAngelical) e)
-                .toList();
+    public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
+        for (EspirituAngelical angel : angeles) {
+            // busca el primer demonio que esté conectado
+            Optional<EspirituDemoniaco> demonioObjetivo = demonios.stream()
+                    .filter(EspirituDemoniaco::estaConectado)
+                    .findFirst(); // se filtra porque después de un ataque puede quedar algún demonio de la lista desconectado
 
-        List<EspirituDemoniaco> demoniosRivales = medium.getEspiritus()
-                .stream()
-                .filter(e -> e.getTipo() == TipoEspiritu.DEMONIACO)
-                .map(e -> (EspirituDemoniaco) e)
-                .toList();
-
-        for (EspirituAngelical angel : angelesAliados) {
-            if (angel.estaConectado()) {
-                // busca el primer demonio que esté conectado
-                Optional<EspirituDemoniaco> demonioObjetivo = demoniosRivales.stream()
-                        .filter(Espiritu::estaConectado)
-                        .findFirst();
-
-                // si hay un demonio, lo ataca
-                demonioObjetivo.ifPresent(angel::atacar);
-            }
+            // si hay un demonio, lo ataca
+            demonioObjetivo.ifPresent(angel::atacar);
         }
     }
 

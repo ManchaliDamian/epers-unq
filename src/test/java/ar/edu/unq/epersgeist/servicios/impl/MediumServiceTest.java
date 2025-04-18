@@ -37,14 +37,12 @@ public class MediumServiceTest {
     private Ubicacion ubicacion;
     private Ubicacion plata;
 
-    private GeneradorDeNumeros generadorMock;
-
+    private EliminarTodoServiceImpl eliminarTodo;
     @BeforeEach
     void setUp() {
         ubicacionDAO = new HibernateUbicacionDAO();
         mediumDAO = new HibernateMediumDAO();
         espirituDAO = new HibernateEspirituDAO();
-        generadorMock = mock(GeneradorDeNumeros.class);
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
@@ -56,12 +54,13 @@ public class MediumServiceTest {
 
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, ubicacion);
-        espiritu = new EspirituDemoniaco(80, "Jose", ubicacion, generadorMock);
-        angel = new EspirituAngelical(100, "kici", plata, generadorMock);
+        espiritu = new EspirituDemoniaco("Jose", ubicacion);
+        angel = new EspirituAngelical( "kici", plata);
         serviceM.crear(medium1);
         serviceM.crear(medium2);
         serviceE.guardar(espiritu);
         serviceE.guardar(angel);
+        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
     }
 
     @Test
@@ -106,7 +105,7 @@ public class MediumServiceTest {
 
     @Test
     void testEliminarTodosLosMediums() {
-        serviceM.eliminarTodo();
+        eliminarTodo.eliminarTodo();
         List<Medium> vacio = serviceM.recuperarTodos();
         assertTrue(vacio.isEmpty());
     }
@@ -177,8 +176,6 @@ public class MediumServiceTest {
 
     @AfterEach
     void cleanUp() {
-        serviceE.eliminarTodo();
-        serviceM.eliminarTodo();
-        serviceU.eliminarTodo();
+        eliminarTodo.eliminarTodo();
     }
 }
