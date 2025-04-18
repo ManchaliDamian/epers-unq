@@ -29,7 +29,7 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
     public List<Espiritu> recuperarDemoniacosPaginados(Direccion direccion, int pagina, int cantidadPorPagina){
         Session session = HibernateTransactionRunner.getCurrentSession();
         String orden = direccion == Direccion.ASCENDENTE ? "asc" : "desc";
-        String hql = "from Espiritu e where e.class = 'DEMONIACO' order by e.nivelDeConexion " + orden;
+        String hql = "from EspirituDemoniaco order by e.nivelDeConexion " + orden;
 
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         query.setFirstResult(pagina * cantidadPorPagina);
