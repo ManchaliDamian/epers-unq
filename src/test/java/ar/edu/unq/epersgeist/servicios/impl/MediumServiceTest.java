@@ -31,7 +31,7 @@ public class MediumServiceTest {
     private Medium medium2;
     private Espiritu demonio;
     private Espiritu angel;
-    private Ubicacion ubicacion;
+    private Ubicacion quilmes;
     private Ubicacion plata;
 
     private EliminarTodoServiceImpl eliminarTodo;
@@ -46,13 +46,13 @@ public class MediumServiceTest {
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         plata = new Ubicacion("La Plata");
-        ubicacion = new Ubicacion("Quilmes");
-        serviceU.crear(ubicacion);
+        quilmes = new Ubicacion("Quilmes");
+        serviceU.crear(quilmes);
         serviceU.crear(plata);
 
         medium1 = new Medium("Pablo", 100, 50, plata);
-        medium2 = new Medium("Fidol", 100, 50, ubicacion);
-        demonio = new EspirituDemoniaco("Jose", ubicacion);
+        medium2 = new Medium("Fidol", 100, 50, quilmes);
+        demonio = new EspirituDemoniaco("Jose", quilmes);
         angel = new EspirituAngelical( "kici", plata);
         serviceM.crear(medium1);
         serviceM.crear(medium2);
@@ -123,19 +123,44 @@ public class MediumServiceTest {
 
     @Test
     void testExorcizar(){
-        medium1.conectarseAEspiritu(angel);
-        medium2.conectarseAEspiritu(demonio);
+        //SETUP
+        Generador.setEstrategia(new GeneradorSecuencial(
+                5, // ataca angel con 5+85 = 90
+                24, // defiende demonio con 24, se desconecta
+                7, // ataca rafael con 7 + 90 = 97
+                18 // defiende azazel con 18, se desconecta
+                ));
+        Espiritu azazel = new EspirituDemoniaco("azazel", quilmes);
+        Espiritu rafael = new EspirituAngelical( "rafael", plata);
+        serviceE.guardar(azazel);
+        serviceE.guardar(rafael);
 
-        serviceM.actualizar(medium1);
-        serviceM.actualizar(medium2);
+        Medium mediumExorcista  = serviceE.conectar(angel.getId(),serviceE.conectar(rafael.getId(),medium1.getId()).getId());
+        Medium mediumExorcizado = serviceE.conectar(demonio.getId(),serviceE.conectar(azazel.getId(),medium2.getId()).getId());
+        angel.setNivelDeConexion(85); serviceE.actualizar(angel);
+        rafael.setNivelDeConexion(90); serviceE.actualizar(rafael);
+        demonio.setNivelDeConexion(30); serviceE.actualizar(demonio);
+        azazel.setNivelDeConexion(20); serviceE.actualizar(azazel);
 
-        serviceM.exorcizar(medium1.getId(), medium2.getId());
-        Medium mediumExorcista = serviceM.recuperar(medium1.getId());
-        Medium mediumExorcizado = serviceM.recuperar(medium2.getId());
-        Espiritu a = serviceE.recuperar(angel.getId());
-        Espiritu d = serviceE.recuperar(demonio.getId());
+        serviceM.exorcizar(mediumExorcista.getId(), mediumExorcizado.getId());
 
-        assertEquals(5, d.getNivelDeConexion());
+        mediumExorcista  = serviceM.recuperar(medium1.getId());
+        mediumExorcizado = serviceM.recuperar(medium2.getId());
+        angel = serviceE.recuperar(angel.getId());
+        demonio = serviceE.recuperar(demonio.getId());
+        azazel = serviceE.recuperar(azazel.getId());
+        rafael = serviceE.recuperar(rafael.getId());
+
+
+        //VERIFY
+
+        assertEquals(85, angel.getNivelDeConexion());
+        assertEquals(30, demonio.getNivelDeConexion());
+        assertEquals(90, rafael.getNivelDeConexion());
+        assertEquals(20, azazel.getNivelDeConexion());
+
+        //assertTrue(mediumExorcizado.getEspiritus().isEmpty());
+
     }
 
 
