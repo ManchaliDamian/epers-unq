@@ -151,8 +151,8 @@ public class MediumServiceTest {
         azazel = serviceE.recuperar(azazel.getId());
         rafael = serviceE.recuperar(rafael.getId());
 
-
         //VERIFY
+
 
         assertEquals(85, angel.getNivelDeConexion());
         assertEquals(30, demonio.getNivelDeConexion());

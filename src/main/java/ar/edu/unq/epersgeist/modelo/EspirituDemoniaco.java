@@ -17,21 +17,19 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     public void recibirAtaque(int cantidad){
-        int cantidadPerdida = this.getNivelDeConexion() - cantidad;
-        this.setNivelDeConexion(cantidadPerdida);
-        this.evaluarDesconectarDemoniaco();
+        this.perderNivelDeConexion(cantidad);
     }
-
-    public void evaluarDesconectarDemoniaco(){
-        if(this.getNivelDeConexion() <= 0){
-            this.desconectarDelMedium();
-        }
-    }
-
-    public void desconectarDelMedium(){
-        this.getMediumConectado().desvincularseDe(this);
-        this.setNivelDeConexion(0);
-
-    }
+//REPETIA CODIGO DE perderNivelDeConexion
+//    public void evaluarDesconectarDemoniaco(){
+//        if(this.getNivelDeConexion() <= 0){
+//            this.desconectarDelMedium();
+//        }
+//    }
+//
+//    public void desconectarDelMedium(){
+//        this.getMediumConectado().desvincularseDe(this);
+//        this.setNivelDeConexion(0);
+//
+//    }
 
 }

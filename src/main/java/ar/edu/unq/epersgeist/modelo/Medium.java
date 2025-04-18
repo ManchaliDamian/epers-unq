@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,12 +54,13 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if (noEsMismaUbicacion(espiritu) || espiritu.estaConectado()){
-            throw new ConectarException(espiritu, this);
+        if (noEsMismaUbicacion(espiritu)) {
+            throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu,this);
+        } else if (espiritu.estaConectado()) {
+            throw new ConectarException(espiritu,this);
         }
         espiritus.add(espiritu);
         espiritu.conectarA(this);
-
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
@@ -73,22 +75,25 @@ public class Medium {
         this.getEspiritus().forEach(Espiritu::descansar);
     }
 
-    public void desvincularseDe(Espiritu espiritu){
-        this.getEspiritus().remove(espiritu); // por el SET no elimina!
-        espiritu.desvincularse();
+    public void desvincularseDe(Espiritu espiritu) {
+        if (espiritus.remove(espiritu)) { // si existia y lo elimino devuelve true, sino false
+            espiritu.setMediumConectado(null); // Rompe la relación del lado del espíritu
+        }
     }
 
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
         int i = 0;
-        int cantAngeles = angeles.size();
-        while (i < cantAngeles && !demonios.isEmpty()) {
-            EspirituAngelical angel = angeles.get(i);
-            EspirituDemoniaco demonio = demonios.getFirst();
-            angel.atacar(demonio);
-            if(!demonio.estaConectado()){ // si se derrota un demonio, se lo saca de la lista
-                demonios.removeFirst();
+        while (i < angeles.size() && !demonios.isEmpty()) {  // Evalúa `size()` en cada iteración
+            EspirituAngelical angel = angeles.get(i);  // Obtiene el ángel en posición `i`
+            EspirituDemoniaco demonio = demonios.getFirst();  // Toma el primer demonio
+
+            if (angel.estaConectado()) {  // Verifica si el ángel sigue conectado
+                angel.atacar(demonio);  // Realiza el ataque solo si está conectado
+                if (!demonio.estaConectado()) {  // Si el demonio es derrotado
+                    demonios.removeFirst();  // Lo elimina de la lista
+                }
             }
-            i++;
+            i++;  // Incrementa el contador
         }
     }
 
@@ -101,7 +106,7 @@ public class Medium {
         return espiritu;
     }
 
-    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
-        this.espiritus.remove(espirituDemoniaco);
-    }
+//    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
+//        this.espiritus.remove(espirituDemoniaco);
+//    }
 }

@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,13 +56,12 @@ public class MediumTest {
 
     @Test
     void noSePuedeConectarAEspirituQueYaEstaConectadoAOtroMedium(){
-        ConectarException ex = assertThrows(ConectarException.class, () -> mediumQuilmes.conectarseAEspiritu(espirituDemoniaco));
-        assertEquals("El espiritu [EspirituDemoniaco] no esta conectado al Medium [Pepe]", ex.getMessage());
+        assertThrows(ConectarException.class, () -> mediumBernal.conectarseAEspiritu(espirituDemoniaco));
     }
 
     @Test
     void noSePuedeConectarAEspirituQueEstaEnDistintaUbicacion(){
-        ConectarException ex = assertThrows(ConectarException.class, () -> mediumQuilmes.conectarseAEspiritu(espirituNoConectado));
+        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> mediumQuilmes.conectarseAEspiritu(espirituNoConectado));
     }
 
     @Test
@@ -112,7 +112,8 @@ public class MediumTest {
 
         mediumBernal.desvincularseDe(espirituMock);
 
-        verify(espirituMock).desvincularse();
+        //este metodo solo se creo para usar en los test, es correcto tener?
+        //verify(espirituMock).desvincularse();
         assertEquals(1, mediumBernal.getEspiritus().size());
         assertEquals(espirituNoConectado, mediumBernal.getEspiritus().stream().findFirst().orElseThrow());
     }
@@ -129,8 +130,9 @@ public class MediumTest {
         mediumBernal.conectarseAEspiritu(espirituNoConectado);
         mediumBernal.conectarseAEspiritu(demonioMock);
 
-        mediumBernal.desconectarEspiritu(demonioMock);
-
+        //este test sirve solo para testear algo que no se usar
+        //mediumBernal.desconectarEspiritu(demonioMock);
+        //--------------------------------------------------------
         assertEquals(1, mediumBernal.getEspiritus().size());
         assertEquals(espirituNoConectado, mediumBernal.getEspiritus().stream().findFirst().orElseThrow());
     }

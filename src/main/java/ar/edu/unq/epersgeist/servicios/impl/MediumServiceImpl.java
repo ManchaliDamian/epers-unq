@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
@@ -78,6 +79,12 @@ public class MediumServiceImpl implements MediumService {
 
             List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
+
+            //-------esta mal una exception aca? ------------------------
+            if (angeles.isEmpty()){
+                throw new ExorcistaSinAngelesException(mediumExorcista);
+            }
+            //---------------------------------------------------------------------------------------
             mediumExorcista.exorcizarA(angeles, demonios);
 
             mediumDAO.actualizar(mediumExorcista);
