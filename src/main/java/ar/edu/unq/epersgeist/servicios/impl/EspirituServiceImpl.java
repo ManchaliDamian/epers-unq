@@ -63,7 +63,6 @@ public class EspirituServiceImpl implements EspirituService {
             Medium medium = mediumDAO.recuperar(mediumId);
 
             medium.conectarseAEspiritu(espiritu);
-            espiritu.aumentarConexion(medium);
 
             espirituDAO.actualizar(espiritu);
             mediumDAO.actualizar(medium);

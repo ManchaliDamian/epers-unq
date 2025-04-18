@@ -58,11 +58,6 @@ public abstract class Espiritu {
     }
 
     public void aumentarConexion(Medium medium) {
-        //este if nunca pasaria si primero se lo seteamos en conectarA
-        if (this.getMediumConectado() != medium){
-            throw new ConectarException(this, medium);
-        }
-        //--------------------------------------------------------------
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
         this.setNivelDeConexion(
