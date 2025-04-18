@@ -164,30 +164,6 @@ public class EspirituServiceTest {
             serviceE.actualizar(belcebu);
 
         }
-        //AMBAS OPCIONES FUNCIONAN, DEJO LAS QUE LES PAREZCA MENOS FEA
-//        @BeforeEach
-//        void setUpPaginacion() {
-//            record EspirituConfig(String nombre, int nivel) {}
-//
-//            List<EspirituConfig> configs = List.of(
-//                    new EspirituConfig("Lucifer", 75),
-//                    new EspirituConfig("Amon", 55),
-//                    new EspirituConfig("Belial", 65),
-//                    new EspirituConfig("Mephisto", 85),
-//                    new EspirituConfig("Andras", 45),
-//                    new EspirituConfig("Vine", 35)
-//            );
-//
-//            configs.forEach(conf -> {
-//                Espiritu espiritu = new EspirituDemoniaco(conf.nombre(), quilmes);
-//                espiritu.setNivelDeConexion(conf.nivel());
-//                serviceE.guardar(espiritu);
-//            });
-//            azazel.setNivelDeConexion(90);
-//            belcebu.setNivelDeConexion(10);
-//            serviceE.actualizar(azazel);
-//            serviceE.actualizar(belcebu);
-//        }
 
         @Test
         void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
