@@ -31,9 +31,6 @@ public abstract class Espiritu {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
-    private TipoEspiritu tipo;
-
     @ManyToOne
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;

@@ -12,7 +12,6 @@ public class EspirituAngelical extends Espiritu{
 
     public EspirituAngelical( String nombre, Ubicacion ubicacion) {
         super( nombre, ubicacion);
-        this.setTipo(TipoEspiritu.ANGELICAL);
 
     }
 
