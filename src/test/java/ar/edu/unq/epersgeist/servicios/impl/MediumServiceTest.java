@@ -43,7 +43,7 @@ public class MediumServiceTest {
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-        Generador.setEstrategia(new GeneradorFijo(50));
+        Generador.setEstrategia(new GeneradorSecuencial(50));
 
         plata = new Ubicacion("La Plata");
         ubicacion = new Ubicacion("Quilmes");

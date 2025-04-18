@@ -34,7 +34,7 @@ public class EspirituDemoniacoTest {
         espirituDemoniaco.setNivelDeConexion(20);
 
         // Ataca con éxito, baja 10 puntos
-        Generador.setEstrategia(new GeneradorFijo(10));
+        Generador.setEstrategia(new GeneradorSecuencial(10));
 
         espirituAngelical.atacar(espirituDemoniaco);
 

@@ -28,7 +28,7 @@ public class EspirituAngelicalTest {
     void espirituAngelicalAtacaConExitoAlDemoniaco() {
         espirituDemoniaco.setNivelDeConexion(20);
         espirituAngelical.setNivelDeConexion(20);
-        Generador.setEstrategia(new GeneradorFijo(10));
+        Generador.setEstrategia(new GeneradorSecuencial(10));
 
         espirituAngelical.atacar(espirituDemoniaco);
 
@@ -41,7 +41,7 @@ public class EspirituAngelicalTest {
         espirituAngelical.setNivelDeConexion(10);
         espirituDemoniaco.setNivelDeConexion(20);
 
-        Generador.setEstrategia(new GeneradorFijo(100));
+        Generador.setEstrategia(new GeneradorSecuencial(100));
         espirituAngelical.atacar(espirituDemoniaco);
 
         assertEquals(5, espirituAngelical.getNivelDeConexion());
