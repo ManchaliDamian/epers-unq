@@ -58,6 +58,29 @@ public class EspirituTest {
     }
 
     @Test
+    void espirituNoPuedePerderNivelDeConexionUnaVezYSerNegativo(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+
+        espiritu.perderNivelDeConexion(300);
+        assertEquals(0,espiritu.getNivelDeConexion());
+        assertNull(espiritu.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+    }
+
+    @Test
+    void espirituNoPuedePerderNivelDeConexionVariasVecesYSerNegativo(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+
+        espiritu.perderNivelDeConexion(10);
+        espiritu.perderNivelDeConexion(10);
+        espiritu.perderNivelDeConexion(10);
+        assertEquals(0,espiritu.getNivelDeConexion());
+        assertNull(espiritu.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+    }
+
+
+    @Test
     void elEspirituNoTieneMediumConectado(){
         assertNull(espiritu.getMediumConectado());
     }
