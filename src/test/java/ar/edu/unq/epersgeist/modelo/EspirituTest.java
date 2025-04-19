@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,12 +12,10 @@ import static org.mockito.Mockito.mock;
 public class EspirituTest {
     private Espiritu espiritu;
     private Ubicacion quilmes;
-    private Ubicacion bernal;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        bernal = new Ubicacion("Bernal");
         quilmes = new Ubicacion("Quilmes");
 
         mediumConectado = new Medium("Mago",100,90,quilmes);
@@ -35,11 +32,6 @@ public class EspirituTest {
     @Test
     void espirituRecienSeConectaYNoTieneId(){
         assertNull(espiritu.getId());
-    }
-
-    @Test
-    void estaEnLaMismaUbicacionDelMedium(){
-        assertTrue(espiritu.esMismaUbicacion(mediumConectado));
     }
 
     @Test
@@ -73,30 +65,5 @@ public class EspirituTest {
     void elEspirituDescansa(){
         espiritu.descansar();
         assertEquals(5,espiritu.getNivelDeConexion());
-    }
-
-    @Test
-    void elEspirituExcedeDelNivelDeConexiob(){
-        mediumConectado.conectarseAEspiritu(espiritu);
-        espiritu.setNivelDeConexion(105);
-        assertThrows(NivelDeConexionException.class, () -> {
-            espiritu.validarNivelDeConexion(105);
-        });
-    }
-
-    @Test
-    void elEspirituNoTieneMismaUbicacion(){
-        mediumConectado.setUbicacion(bernal);
-        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
-            espiritu.estaEnLaMismaUbicacion(mediumConectado);
-        });
-    }
-
-    @Test
-    void validarDisponibilidadDelEspirituTest(){
-        mediumConectado.conectarseAEspiritu(espiritu);
-        assertThrows(ExceptionEspirituOcupado.class, () -> {
-            espiritu.validarDisponibilidad();
-        });
     }
 }

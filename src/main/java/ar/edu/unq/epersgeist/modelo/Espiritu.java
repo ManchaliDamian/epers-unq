@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 
@@ -42,19 +41,11 @@ public abstract class Espiritu {
         this.ubicacion = ubicacion;;
     }
 
+    //FALTA TESTEAR --------------------------------------------------------
+
     public void conectarA(Medium medium){
         this.setMediumConectado(medium);
         this.aumentarConexion(medium);
-    }
-    //DONDE SE USA ESTO?---------------------------------------------------------
-    public void estaEnLaMismaUbicacion(Medium medium){
-        if(!this.esMismaUbicacion(medium)){
-            throw new EspirituNoEstaEnLaMismaUbicacionException(this,medium);
-        }
-    }
-    //--------------------------------------------------------------------------
-    public boolean esMismaUbicacion(Medium medium) {
-        return this.getUbicacion().equals(medium.getUbicacion());
     }
 
     public void aumentarConexion(Medium medium) {
@@ -64,19 +55,6 @@ public abstract class Espiritu {
                 Math.min(this.getNivelDeConexion() + aumento, 100)
         );
     }
-    //esto solo se usa en los test--------------------------------------------
-    public void validarNivelDeConexion(Integer nivelDeConexion) {
-        if (nivelDeConexion < 0 || nivelDeConexion > 100) {
-            throw new NivelDeConexionException();
-        }
-    }
-
-    public void validarDisponibilidad(){
-        if(estaConectado()){
-            throw new ExceptionEspirituOcupado(this);
-        }
-    }
-    /// ----------------------------------------------------------------------
 
     protected void perderNivelDeConexion(int cantidad){
         int nuevoNivel = this.getNivelDeConexion() - cantidad;
