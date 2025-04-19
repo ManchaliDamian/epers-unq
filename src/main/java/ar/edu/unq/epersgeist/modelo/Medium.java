@@ -91,12 +91,9 @@ public class Medium {
         while (i < angeles.size() && !demonios.isEmpty()) {
             EspirituAngelical angel = angeles.get(i);
             EspirituDemoniaco demonio = demonios.getFirst();
-
-            if (angel.estaConectado()) {
-                angel.atacar(demonio);
-                if (!demonio.estaConectado()) {
-                    demonios.removeFirst();
-                }
+            angel.atacar(demonio);
+            if (!demonio.estaConectado()) {
+                demonios.removeFirst();
             }
             i++;
         }

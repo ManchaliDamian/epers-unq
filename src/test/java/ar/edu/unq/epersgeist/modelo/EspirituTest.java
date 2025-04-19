@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,12 +12,10 @@ import static org.mockito.Mockito.mock;
 public class EspirituTest {
     private Espiritu espiritu;
     private Ubicacion quilmes;
-    private Ubicacion bernal;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        bernal = new Ubicacion("Bernal");
         quilmes = new Ubicacion("Quilmes");
 
         mediumConectado = new Medium("Mago",100,90,quilmes);
@@ -38,11 +35,6 @@ public class EspirituTest {
     }
 
     @Test
-    void estaEnLaMismaUbicacionDelMedium(){
-        assertTrue(espiritu.esMismaUbicacion(mediumConectado));
-    }
-
-    @Test
     void puedeAumentarLaConexionDelEspiritu(){
         mediumConectado.conectarseAEspiritu(espiritu);
 
@@ -56,6 +48,29 @@ public class EspirituTest {
         espiritu.perderNivelDeConexion(5);
         assertEquals(13,espiritu.getNivelDeConexion());
     }
+
+    @Test
+    void espirituNoPuedePerderNivelDeConexionUnaVezYSerNegativo(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+
+        espiritu.perderNivelDeConexion(300);
+        assertEquals(0,espiritu.getNivelDeConexion());
+        assertNull(espiritu.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+    }
+
+    @Test
+    void espirituNoPuedePerderNivelDeConexionVariasVecesYSerNegativo(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+
+        espiritu.perderNivelDeConexion(10);
+        espiritu.perderNivelDeConexion(10);
+        espiritu.perderNivelDeConexion(10);
+        assertEquals(0,espiritu.getNivelDeConexion());
+        assertNull(espiritu.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+    }
+
 
     @Test
     void elEspirituNoTieneMediumConectado(){
@@ -73,6 +88,7 @@ public class EspirituTest {
         espiritu.descansar();
         assertEquals(5,espiritu.getNivelDeConexion());
     }
+
 
     @Test
     void elEspirituExcedeDelNivelDeConexiob(){
@@ -126,4 +142,5 @@ public class EspirituTest {
         assertEquals(100, espiritu.getNivelDeConexion());
         assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
     }
+
 }
