@@ -57,7 +57,7 @@ public abstract class Espiritu {
         return this.getUbicacion().equals(medium.getUbicacion());
     }
 
-    public void aumentarConexion(Medium medium) {
+    private void aumentarConexion(Medium medium) {
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
         this.setNivelDeConexion(
