@@ -80,7 +80,6 @@ public class EspirituTest {
     @Test
     void elEspirituTieneUnMediumConectado(){
         espiritu.setMediumConectado(mediumConectado);
-        //Es falso porque no está libre.
         assertTrue(espiritu.estaConectado());
     }
 
@@ -89,4 +88,59 @@ public class EspirituTest {
         espiritu.descansar();
         assertEquals(5,espiritu.getNivelDeConexion());
     }
+
+
+    @Test
+    void elEspirituExcedeDelNivelDeConexiob(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+        espiritu.setNivelDeConexion(105);
+        assertThrows(NivelDeConexionException.class, () -> {
+            espiritu.validarNivelDeConexion(105);
+        });
+    }
+
+    @Test
+    void elEspirituNoTieneMismaUbicacion(){
+        mediumConectado.setUbicacion(bernal);
+        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
+            espiritu.estaEnLaMismaUbicacion(mediumConectado);
+        });
+    }
+
+    @Test
+    void validarDisponibilidadDelEspirituTest(){
+        mediumConectado.conectarseAEspiritu(espiritu);
+        assertThrows(ExceptionEspirituOcupado.class, () -> {
+            espiritu.validarDisponibilidad();
+        });
+    }
+
+
+    @Test
+    void conectarA_SeteaElMedium(){
+        espiritu.conectarA(mediumConectado);
+        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+    }
+
+
+    @Test
+    void conectarA_AumentaLaConexionCorrectamente() {
+        espiritu.setNivelDeConexion(60);
+        espiritu.conectarA(mediumConectado);
+
+        // el aumento debería ser el 20% de 90, o sea 18
+        assertEquals(78, espiritu.getNivelDeConexion());
+        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+    }
+
+    @Test
+    void conectarA_NoSuperaElMaximoDe100() {
+        // si el espíritu ya tiene una conexión de 95, y el medium da +18, debería quedar en 100
+        espiritu.setNivelDeConexion(95);
+        espiritu.conectarA(mediumConectado);
+
+        assertEquals(100, espiritu.getNivelDeConexion());
+        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+    }
+
 }
