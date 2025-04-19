@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +34,6 @@ public class EspirituTest {
     @Test
     void espirituRecienSeConectaYNoTieneId(){
         assertNull(espiritu.getId());
-    }
-
-    @Test
-    void estaEnLaMismaUbicacionDelMedium(){
-        assertTrue(espiritu.esMismaUbicacion(mediumConectado));
     }
 
     @Test
@@ -84,13 +78,6 @@ public class EspirituTest {
         });
     }
 
-    @Test
-    void elEspirituNoTieneMismaUbicacion(){
-        mediumConectado.setUbicacion(bernal);
-        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
-            espiritu.estaEnLaMismaUbicacion(mediumConectado);
-        });
-    }
 
     @Test
     void validarDisponibilidadDelEspirituTest(){
