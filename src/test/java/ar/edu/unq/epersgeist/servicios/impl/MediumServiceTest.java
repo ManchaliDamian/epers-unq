@@ -127,6 +127,13 @@ public class MediumServiceTest {
     }
 
     @Test
+    void testNoHayEspiritusDeUnMedium() {
+        List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
+
+        assertEquals(0, espiritusDelMedium.size());
+    }
+
+    @Test
     void descansarConEspiritus(){
         angel.setNivelDeConexion(10);
         serviceE.actualizar(angel);
