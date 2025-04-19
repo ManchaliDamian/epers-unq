@@ -22,7 +22,7 @@ public class MediumTest {
     private Medium mediumBernal;
     private EspirituDemoniaco espirituNoConectado;
     private EspirituAngelical espirituMock;
-    private EspirituDemoniaco demonioMock;
+
 
     @BeforeEach
     void setUp(){
@@ -37,7 +37,7 @@ public class MediumTest {
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
         espirituMock = mock(EspirituAngelical.class);
-        demonioMock = mock(EspirituDemoniaco.class);
+
     }
 
     @Test
@@ -116,8 +116,6 @@ public class MediumTest {
 
         mediumBernal.desvincularseDe(espirituMock);
 
-        //este metodo solo se creo para usar en los test, es correcto tener?
-        //verify(espirituMock).desvincularse();
         assertEquals(1, mediumBernal.getEspiritus().size());
         assertEquals(espirituNoConectado, mediumBernal.getEspiritus().stream().findFirst().orElseThrow());
     }

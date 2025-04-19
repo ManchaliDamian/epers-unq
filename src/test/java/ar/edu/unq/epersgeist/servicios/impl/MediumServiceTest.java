@@ -2,7 +2,6 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -203,7 +202,7 @@ public class MediumServiceTest {
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
-        Medium mediumExorcizado = serviceM.recuperar(medium2.getId());
+
         Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
         Espiritu angel1Actualizado = serviceE.recuperar(angel1.getId());
         Espiritu angel2Actualizado = serviceE.recuperar(angel2.getId());
@@ -218,7 +217,7 @@ public class MediumServiceTest {
 
     @Test
     void exorcizar_ExorcistaSinAngeles_LanzaExcepcion() {
-        // No conectar ángeles a medium1
+
         conectarEspirituAMedium(medium2, demonio);
 
         assertThrows(ExorcistaSinAngelesException.class, () -> {

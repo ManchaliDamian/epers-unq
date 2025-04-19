@@ -1,9 +1,5 @@
 package ar.edu.unq.epersgeist.modelo;
 
-
-import ar.edu.unq.epersgeist.modelo.exception.NivelDeConexionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
-
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -40,8 +36,6 @@ public abstract class Espiritu {
         this.nombre = nombre;
         this.ubicacion = ubicacion;;
     }
-
-    //FALTA TESTEAR --------------------------------------------------------
 
     public void conectarA(Medium medium){
         this.setMediumConectado(medium);
