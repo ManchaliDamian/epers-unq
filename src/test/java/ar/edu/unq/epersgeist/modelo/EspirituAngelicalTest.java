@@ -3,7 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
 
 public class EspirituAngelicalTest {
     private EspirituDemoniaco espirituDemoniaco;
