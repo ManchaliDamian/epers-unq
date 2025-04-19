@@ -12,12 +12,10 @@ import static org.mockito.Mockito.mock;
 public class EspirituTest {
     private Espiritu espiritu;
     private Ubicacion quilmes;
-    private Ubicacion bernal;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        bernal = new Ubicacion("Bernal");
         quilmes = new Ubicacion("Quilmes");
 
         mediumConectado = new Medium("Mago",100,90,quilmes);
@@ -67,23 +65,5 @@ public class EspirituTest {
     void elEspirituDescansa(){
         espiritu.descansar();
         assertEquals(5,espiritu.getNivelDeConexion());
-    }
-
-    @Test
-    void elEspirituExcedeDelNivelDeConexiob(){
-        mediumConectado.conectarseAEspiritu(espiritu);
-        espiritu.setNivelDeConexion(105);
-        assertThrows(NivelDeConexionException.class, () -> {
-            espiritu.validarNivelDeConexion(105);
-        });
-    }
-
-
-    @Test
-    void validarDisponibilidadDelEspirituTest(){
-        mediumConectado.conectarseAEspiritu(espiritu);
-        assertThrows(ExceptionEspirituOcupado.class, () -> {
-            espiritu.validarDisponibilidad();
-        });
     }
 }

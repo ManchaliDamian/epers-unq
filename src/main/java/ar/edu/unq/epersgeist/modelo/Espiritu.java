@@ -56,24 +56,6 @@ public abstract class Espiritu {
         );
     }
 
-    //-----------------------------------------------------------------------
-
-    //¿QUITAR O DEJAR?-------------------------------------------------------
-
-    public void validarNivelDeConexion(Integer nivelDeConexion) {
-        if (nivelDeConexion < 0 || nivelDeConexion > 100) {
-            throw new NivelDeConexionException();
-        }
-    }
-
-    public void validarDisponibilidad(){
-        if(estaConectado()){
-            throw new ExceptionEspirituOcupado(this);
-        }
-    }
-
-    //-----------------------------------------------------------------------
-
     protected void perderNivelDeConexion(int cantidad){
         int nuevoNivel = this.getNivelDeConexion() - cantidad;
         this.setNivelDeConexion(Math.max(nuevoNivel, 0));  // Asegura que no sea negativo
