@@ -1,54 +1,84 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.persistencia.dao.jdbc.JDBCEspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
+import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
 import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
-    private final JDBCEspirituDAO jDBCEspirituDAO;
+    private final EspirituDAO espirituDAO;
+    private final MediumDAO mediumDAO;
 
-    public EspirituServiceImpl(JDBCEspirituDAO jDBCEspirituDAO) {
-        this.jDBCEspirituDAO = jDBCEspirituDAO;
+    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
+        this.espirituDAO = espirituDAO;
+        this.mediumDAO = mediumDAO;
     }
 
     @Override
-    public Espiritu crear(Espiritu espiritu) {
-        return jDBCEspirituDAO.crear(espiritu);
+    public void guardar(Espiritu espiritu) {
+        HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.guardar(espiritu);
+            return null;
+        });
     }
 
     @Override
     public Espiritu recuperar(Long espirituId) {
-        return jDBCEspirituDAO.recuperar(espirituId);
+        return HibernateTransactionRunner.runTrx(() ->
+                espirituDAO.recuperar(espirituId));
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return jDBCEspirituDAO.recuperarTodos();
+        return HibernateTransactionRunner.runTrx(() -> espirituDAO.recuperarTodos());
     }
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        jDBCEspirituDAO.actualizar(espiritu);
+        HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.actualizar(espiritu);
+            return null;
+        });
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        jDBCEspirituDAO.eliminar(espirituId);
+        HibernateTransactionRunner.runTrx(() -> {
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            espirituDAO.eliminar(espiritu);
+            return null;
+        });
     }
 
     @Override
-    public Medium conectar(Long espirituId, Medium medium) {
-        Espiritu currentEspiritu = jDBCEspirituDAO.recuperar(espirituId);
-        medium.conectarseAEspiritu(currentEspiritu);
-        currentEspiritu.aumentarConexion(medium);
+    public Medium conectar(Long espirituId, Long mediumId) {
+        return HibernateTransactionRunner.runTrx(() -> {
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            Medium medium = mediumDAO.recuperar(mediumId);
 
-        jDBCEspirituDAO.actualizar(currentEspiritu);
+            medium.conectarseAEspiritu(espiritu);
 
-        return medium;
+            espirituDAO.actualizar(espiritu);
+            mediumDAO.actualizar(medium);
+
+            return medium;
+        });
+    }
+
+    @Override
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, int pagina, int cantidadPorPagina){
+        return HibernateTransactionRunner.runTrx(() -> {
+            if (pagina < 0) {
+                throw new RuntimeException("El número de página " + pagina + " es menor a 0");
+            }
+            return espirituDAO.recuperarDemoniacosPaginados(direccion, pagina, cantidadPorPagina);
+        });
     }
 
 }

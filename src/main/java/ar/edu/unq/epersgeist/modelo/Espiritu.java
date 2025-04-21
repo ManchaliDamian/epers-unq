@@ -1,45 +1,72 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import java.io.Serializable;
+import lombok.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.*;
 
-public class Espiritu implements Serializable {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
+@Entity
+public abstract class Espiritu {
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private Ubicacion ubicacion;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    @Check(constraints = "nivelDeConexion BETWEEN 0 AND 100")
     private Integer nivelDeConexion;
+
+    @Column(nullable = false)
     private String nombre;
 
-    public Espiritu(String tipo, Integer nivelDeConexion, String nombre) {
-        this.tipo = tipo;
-        this.nivelDeConexion = nivelDeConexion;
+    @ManyToOne
+    @JoinColumn(name = "medium_id")
+    private Medium mediumConectado;
+
+    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+
+        this.nivelDeConexion = 0;
         this.nombre = nombre;
+        this.ubicacion = ubicacion;;
     }
 
-    // CONSULTAR POR ESTA SOLUCION
-    public Espiritu(Long id, String tipo, Integer nivelDeConexion, String nombre) {
-        this.id = id;
-        this.tipo = tipo;
-        this.nivelDeConexion = nivelDeConexion;
-        this.nombre = nombre;
+    public void conectarA(Medium medium){
+        this.setMediumConectado(medium);
+        this.aumentarConexion(medium);
     }
 
-    public void aumentarConexion(Medium medium) {
-        nivelDeConexion = nivelDeConexion + 10;
+    private void aumentarConexion(Medium medium) {
+        int aumento = (int) Math.round(medium.getMana() * 0.20);
+
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + aumento, 100)
+        );
     }
 
-    public Long getId() {
-        return id;
+    protected void perderNivelDeConexion(int cantidad){
+        int nuevoNivel = this.getNivelDeConexion() - cantidad;
+        this.setNivelDeConexion(Math.max(nuevoNivel, 0));  // Asegura que no sea negativo
+
+        if (this.getNivelDeConexion() == 0 && this.estaConectado()) {  // Verifica estado actual
+            this.getMediumConectado().desvincularseDe(this);
+        }
     }
 
-    public String getTipo() {
-        return tipo;
+    public boolean estaConectado() {
+        return this.getMediumConectado() != null;
     }
 
-    public Integer getNivelDeConexion() {
-        return nivelDeConexion;
+    public void descansar() {
+        this.setNivelDeConexion(
+                Math.min(this.getNivelDeConexion() + 5, 100)
+        );
     }
 
-    public String getNombre() {
-        return nombre;
-    }
 }
