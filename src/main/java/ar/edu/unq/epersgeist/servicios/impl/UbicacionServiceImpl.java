@@ -34,9 +34,9 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void actualizar(Long ubicacionId, String nombreNuevo) {
+    public void actualizar(Ubicacion ubicacion) {
         HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.actualizar(ubicacionId, nombreNuevo);
+            ubicacionDAO.actualizar(ubicacion);
             return null;
         });
     }
@@ -59,10 +59,4 @@ public class UbicacionServiceImpl implements UbicacionService {
         return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.mediumsSinEspiritusEn(ubicacionId));
     }
 
-    public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.eliminarTodo();
-            return null;
-        });
-    }
 }

@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -16,14 +18,13 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 public class EspirituServiceTest {
 
     private EspirituService serviceE;
     private EspirituDAO espirituDAO;
-    private Espiritu demonio1;
-    private Espiritu demonio2;
+    private Espiritu azazel;
+    private Espiritu belcebu;
     private Espiritu angel;
 
     private MediumService serviceM;
@@ -32,13 +33,12 @@ public class EspirituServiceTest {
 
     private UbicacionService serviceU;
     private Ubicacion quilmes;
+    private Ubicacion berazategui;
     private UbicacionDAO ubicacionDao;
 
-    private GeneradorDeNumeros generadorMock;
-
+    private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
     void setUp() {
-        generadorMock = mock(GeneradorDeNumeros.class);
 
         ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
@@ -50,79 +50,64 @@ public class EspirituServiceTest {
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
 
         quilmes = new Ubicacion("Quilmes");
-        serviceU.crear(quilmes);
+        berazategui = new Ubicacion("Berazategui");
 
-        demonio1 = new EspirituDemoniaco( 80, "Azazel", quilmes, generadorMock);
-        demonio2 = new EspirituDemoniaco( 100, "Belcebu", quilmes, generadorMock);
-        angel = new EspirituAngelical( 90, "Gabriel", quilmes, generadorMock);
+        serviceU.crear(quilmes);
+        serviceU.crear(berazategui);
+
+        azazel = new EspirituDemoniaco( "Azazel", quilmes);
+        belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
+        angel = new EspirituAngelical( "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
-        serviceE.guardar(demonio1);
-        serviceE.guardar(demonio2);
+        serviceE.guardar(azazel);
+        serviceE.guardar(belcebu);
 
         serviceE.guardar(angel);
+        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
     }
 
-    @Test
-    void testEspiritusDemoniacosPaginados() {
-        List.of(
-                // Página 1
-                new EspirituDemoniaco(85, "Mephisto", quilmes, generadorMock),
-                new EspirituDemoniaco(75, "Lucifer", quilmes, generadorMock),
-                // Página 2
-                new EspirituDemoniaco(65, "Belial", quilmes, generadorMock),
-                new EspirituDemoniaco(55, "Amon", quilmes, generadorMock),
-                // Página 3
-                new EspirituDemoniaco(45, "Andras", quilmes, generadorMock),
-                new EspirituDemoniaco(35, "Vine", quilmes, generadorMock)
-        ).forEach(espiritu -> serviceE.guardar(espiritu));
-
-        List<Espiritu> pagina0 = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 2);
-        assertEquals(2, pagina0.size());
-        assertEquals("Belcebu", pagina0.get(0).getNombre());
-        assertEquals("Mephisto", pagina0.get(1).getNombre());
-
-        List<Espiritu> pagina1 = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
-        assertEquals(2, pagina1.size());
-        assertEquals("Azazel", pagina1.get(0).getNombre());
-        assertEquals("Lucifer", pagina1.get(1).getNombre());
-
-        List<Espiritu> pagina2 = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 2, 2);
-        assertEquals(2, pagina2.size());
-        assertEquals("Belial", pagina2.get(0).getNombre());
-        assertEquals("Amon", pagina2.get(1).getNombre());
-
-        //Página inexistente
-        List<Espiritu> pagina4 = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 4, 2);
-        assertTrue(pagina4.isEmpty());
-
-        List<Espiritu> pagina0Asc = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 0, 2);
-        assertEquals(2, pagina0Asc.size());
-        assertEquals("Vine", pagina0Asc.get(0).getNombre());
-        assertEquals("Andras", pagina0Asc.get(1).getNombre());
-    }
 
     @Test
-    void testConectarEspirituAMedium() {
+    void testConectarEspirituAMediumSaleBien() {
 
         serviceM.crear(medium);
 
-        Medium mediumConectado = serviceE.conectar(demonio1.getId(), medium.getId());
+        Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
-        Espiritu conectado = serviceE.recuperar(demonio1.getId());
+        Espiritu conectado = serviceE.recuperar(azazel.getId());
         assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
 
     }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
+        serviceM.crear(medium);
+        azazel.setUbicacion(berazategui);
+        serviceE.actualizar(azazel);
 
+        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
+            serviceE.conectar(azazel.getId(), medium.getId());
+        });
+    }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
+
+        serviceM.crear(medium);
+        serviceE.conectar(azazel.getId(), medium.getId());
+
+        assertThrows(ConectarException.class, () -> {
+            serviceE.conectar(azazel.getId(), medium.getId());
+        });
+    }
     @Test
     void testGuardarYRecuperarEspiritu() {
-        Espiritu nuevoEspiritu = new EspirituAngelical(50, "Miguel", quilmes, generadorMock);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
 
         Espiritu recuperado = serviceE.recuperar(nuevoEspiritu.getId());
         assertNotNull(recuperado);
         assertEquals("Miguel", recuperado.getNombre());
-        assertEquals(50, recuperado.getNivelDeConexion());
+        assertEquals(0, recuperado.getNivelDeConexion());
     }
 
     @Test
@@ -130,17 +115,17 @@ public class EspirituServiceTest {
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertEquals(3, espiritus.size());
 
-        List<Long> idsEsperados = List.of(demonio1.getId(), demonio2.getId(), angel.getId());
+        List<Long> idsEsperados = List.of(azazel.getId(), belcebu.getId(), angel.getId());
         assertTrue(espiritus.stream().allMatch(e -> idsEsperados.contains(e.getId())));
     }
 
     @Test
     void testActualizar() {
         String nuevoNombre = "Lucifer";
-        demonio1.setNombre(nuevoNombre);
-        serviceE.actualizar(demonio1);
+        azazel.setNombre(nuevoNombre);
+        serviceE.actualizar(azazel);
 
-        Espiritu actualizado = serviceE.recuperar(demonio1.getId());
+        Espiritu actualizado = serviceE.recuperar(azazel.getId());
         assertEquals(nuevoNombre, actualizado.getNombre());
     }
 
@@ -159,7 +144,7 @@ public class EspirituServiceTest {
     void testEliminarTodo() {
         serviceM.crear(medium);
 
-        serviceE.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
 
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
@@ -169,10 +154,80 @@ public class EspirituServiceTest {
         });
     }
 
+    @Test
+    void testRecuperarTodosCuandoNoExisten() {
+        serviceEliminarTodo.eliminarTodo();
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertTrue(espiritus.isEmpty());
+    }
+
+    @Nested
+    class PaginacionEspiritusDemoniacosTest {
+        @BeforeEach
+        void setUpPaginacion() {
+
+            List<EspirituDemoniaco> nuevos = List.of(
+                    new EspirituDemoniaco("Mephisto", quilmes),
+                    new EspirituDemoniaco("Lucifer", quilmes),
+                    new EspirituDemoniaco("Belial", quilmes),
+                    new EspirituDemoniaco("Amon", quilmes),
+                    new EspirituDemoniaco("Andras", quilmes),
+                    new EspirituDemoniaco("Vine", quilmes)
+            );
+
+            List<Integer> niveles = List.of(80, 75, 60, 55, 25, 15);
+
+            for (int i = 0; i < nuevos.size(); i++) {
+                EspirituDemoniaco espiritu = nuevos.get(i);
+                espiritu.setNivelDeConexion(niveles.get(i));
+                serviceE.guardar(espiritu);
+            }
+            azazel.setNivelDeConexion(90);
+            belcebu.setNivelDeConexion(10);
+            serviceE.actualizar(azazel);
+            serviceE.actualizar(belcebu);
+
+        }
+
+        @Test
+        void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 2);
+
+            assertEquals(2, resultado.size());
+            assertEquals("Azazel", resultado.get(0).getNombre());
+            assertEquals("Mephisto", resultado.get(1).getNombre());
+        }
+
+        @Test
+        void segundaPaginaDescendente_devuelveSiguientesDosEspiritus() {
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
+
+            assertEquals(2, resultado.size());
+            assertEquals("Lucifer", resultado.get(0).getNombre());
+            assertEquals("Belial", resultado.get(1).getNombre());
+        }
+
+        @Test
+        void paginaInexistente_devuelveListaVacia() {
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 10, 2);
+
+            assertTrue(resultado.isEmpty());
+        }
+
+        @Test
+        void primeraPaginaAscendente_devuelveEspiritusEnOrdenInverso() {
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 0, 2);
+            resultado.forEach(e -> System.out.println(e.getNombre() + " - Nivel: " + e.getNivelDeConexion()));
+
+            assertEquals(2, resultado.size());
+            assertEquals("Belcebu", resultado.get(0).getNombre());
+            assertEquals("Vine", resultado.get(1).getNombre());
+        }
+
+    }
+
     @AfterEach
     void cleanup() {
-        serviceE.eliminarTodo();
-        serviceM.eliminarTodo();
-        serviceU.eliminarTodo();
+        serviceEliminarTodo.eliminarTodo();
     }
 }

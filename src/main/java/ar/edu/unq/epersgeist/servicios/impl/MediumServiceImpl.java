@@ -1,8 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
@@ -20,7 +21,7 @@ public class MediumServiceImpl implements MediumService {
         this.espirituDAO = espirituDAO;
     }
 
-    private EspirituServiceImpl espirituService;
+
 
     @Override
     public Medium crear(Medium unMedium) {
@@ -51,14 +52,6 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            mediumDAO.eliminarTodo();
-            return null;
-        });
-    }
-
-    @Override
     public List<Medium> recuperarTodos() {
         return HibernateTransactionRunner.runTrx(mediumDAO::recuperarTodos);
     }
@@ -83,7 +76,10 @@ public class MediumServiceImpl implements MediumService {
             Medium mediumExorcista = mediumDAO.recuperar(idMediumExorcista);
             Medium mediumAExorcizar = mediumDAO.recuperar(idMediumAExorcizar);
 
-            mediumExorcista.exorcizarA(mediumAExorcizar);
+            List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
+            List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
+
+            mediumExorcista.exorcizarA(angeles, demonios);
 
             mediumDAO.actualizar(mediumExorcista);
             mediumDAO.actualizar(mediumAExorcizar);
@@ -107,7 +103,6 @@ public class MediumServiceImpl implements MediumService {
 
             mediumDAO.actualizar(medium);
             espirituDAO.actualizar(espiritu);
-
 
             return espiritu;
 

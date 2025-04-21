@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,11 +55,18 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if ((!this.ubicacion.equals(espiritu.getUbicacion())) || espiritu.estaConectado()){
-            throw new ConectarException(espiritu, this);
+        if (noEsMismaUbicacion(espiritu)) {
+            throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu,this);
+        } else if (espiritu.estaConectado()) {
+            throw new ConectarException(espiritu,this);
         }
         espiritus.add(espiritu);
-        espiritu.setMediumConectado(this);
+        espiritu.conectarA(this);
+
+    }
+
+    private boolean noEsMismaUbicacion(Espiritu espiritu) {
+        return !this.ubicacion.equals(espiritu.getUbicacion());
     }
 
     public void descansar() {
@@ -68,34 +77,25 @@ public class Medium {
         this.getEspiritus().forEach(Espiritu::descansar);
     }
 
-    public void desvincularseDe(Espiritu espiritu){
-        espiritu.desvincularse();
-        this.getEspiritus().remove(espiritu);
+    public void desvincularseDe(Espiritu espiritu) {
+        if (espiritus.remove(espiritu)) {
+            espiritu.setMediumConectado(null);
+        }
     }
 
-    public void exorcizarA(Medium medium){
-        List<EspirituAngelical> angelesAliados = this.getEspiritus()
-                .stream()
-                .filter(e -> e.getTipo() == TipoEspiritu.ANGELICAL)
-                .map(e -> (EspirituAngelical) e)
-                .toList();
-
-        List<EspirituDemoniaco> demoniosRivales = medium.getEspiritus()
-                .stream()
-                .filter(e -> e.getTipo() == TipoEspiritu.DEMONIACO)
-                .map(e -> (EspirituDemoniaco) e)
-                .toList();
-
-        for (EspirituAngelical angel : angelesAliados) {
-            if (angel.estaConectado()) {
-                // busca el primer demonio que esté conectado
-                Optional<EspirituDemoniaco> demonioObjetivo = demoniosRivales.stream()
-                        .filter(Espiritu::estaConectado)
-                        .findFirst();
-
-                // si hay un demonio, lo ataca
-                demonioObjetivo.ifPresent(angel::atacar);
+    public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios){
+        int i = 0;
+        if (angeles.isEmpty()){
+            throw new ExorcistaSinAngelesException(this);
+        }
+        while (i < angeles.size() && !demonios.isEmpty()) {
+            EspirituAngelical angel = angeles.get(i);
+            EspirituDemoniaco demonio = demonios.getFirst();
+            angel.atacar(demonio);
+            if (!demonio.estaConectado()) {
+                demonios.removeFirst();
             }
+            i++;
         }
     }
 
@@ -108,7 +108,4 @@ public class Medium {
         return espiritu;
     }
 
-    public void desconectarEspiritu(EspirituDemoniaco espirituDemoniaco){
-        this.espiritus.remove(espirituDemoniaco);
-    }
 }

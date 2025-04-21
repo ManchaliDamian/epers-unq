@@ -57,22 +57,12 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            espirituDAO.eliminarTodo();
-            mediumDAO.eliminarTodo();
-            return null;
-        });
-    }
-
-    @Override
     public Medium conectar(Long espirituId, Long mediumId) {
         return HibernateTransactionRunner.runTrx(() -> {
             Espiritu espiritu = espirituDAO.recuperar(espirituId);
             Medium medium = mediumDAO.recuperar(mediumId);
 
             medium.conectarseAEspiritu(espiritu);
-            espiritu.aumentarConexion(medium);
 
             espirituDAO.actualizar(espiritu);
             mediumDAO.actualizar(medium);
