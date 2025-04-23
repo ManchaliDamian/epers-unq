@@ -8,10 +8,15 @@ import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,16 +35,10 @@ public class EspirituServiceImpl implements EspirituService {
             espirituDAO.save(espiritu);
     }
 
-    //Esto tiene que ser Optional --------------------------------
     @Override
-    public Espiritu recuperar(Long espirituId) {
-        //Otra opción-----------------------------
-        //return espirituDAO.findById(espirituId)
-              //  .orElseThrow(() -> new NoSuchElementException("EspirituId not found: " + espirituId));
-        //----------------------------------------
-        return espirituDAO.recuperar(espirituId);
+    public Optional<Espiritu> recuperar(Long espirituId) {
+        return espirituDAO.findById(espirituId);
     }
-    //----------------------------------------------------------------------------
 
     @Override
     public List<Espiritu> recuperarTodos() {
@@ -47,20 +46,8 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void actualizar(Espiritu espiritu) {
-//        HibernateTransactionRunner.runTrx(() -> {
-//            espirituDAO.actualizar(espiritu);
-//            return null;
-//        });
-    }
-
-    @Override
     public void eliminar(Long espirituId) {
-//        HibernateTransactionRunner.runTrx(() -> {
-//            Espiritu espiritu = espirituDAO.recuperar(espirituId);
-//            espirituDAO.eliminar(espiritu);
-//            return null;
-//        });
+        espirituDAO.deleteById(espirituId);
     }
 
     @Override
@@ -70,29 +57,32 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
-//        return HibernateTransactionRunner.runTrx(() -> {
-//            Espiritu espiritu = espirituDAO.recuperar(espirituId);
-//            Medium medium = mediumDAO.recuperar(mediumId);
-//
-//            medium.conectarseAEspiritu(espiritu);
-//
-//            espirituDAO.actualizar(espiritu);
-//            mediumDAO.actualizar(medium);
-//
-//            return medium;
-//        });
-        return null;
+        Espiritu espiritu = espirituDAO.findById(espirituId)
+                .orElseThrow(() -> new NoSuchElementException("Espiritu no encontrado con id: " + espirituId));
+        Medium medium = mediumDAO.findById(mediumId)
+                .orElseThrow(() -> new NoSuchElementException("Medium no encontrado con id: " + mediumId));;
+
+        medium.conectarseAEspiritu(espiritu);
+
+        espirituDAO.save(espiritu);
+        mediumDAO.save(medium);
+
+        return medium;
     }
 
     @Override
-    public List<Espiritu> espiritusDemoniacos(Direccion direccion, int pagina, int cantidadPorPagina){
-//        return HibernateTransactionRunner.runTrx(() -> {
-//            if (pagina < 0) {
-//                throw new RuntimeException("El número de página " + pagina + " es menor a 0");
-//            }
-//            return espirituDAO.recuperarDemoniacosPaginados(direccion, pagina, cantidadPorPagina);
-//        });
-        return null;
+    public List<Espiritu> espiritusDemoniacos(Direccion dir, int pagina, int cantidadPorPagina){
+        if (pagina < 0) {
+            throw new IllegalArgumentException("El número de página " + pagina + " es menor a 0");
+        }
+        if (cantidadPorPagina < 0) {
+            throw new IllegalArgumentException("La cantidad por pagina " + cantidadPorPagina + " es menor a 0");
+        }
+
+        Sort.Direction sortDirection = dir == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(pagina, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
+
+        return espirituDAO.recuperarDemoniacosPaginados(pageable);
     }
 
 }

@@ -9,9 +9,8 @@ import java.util.Optional;
 
 public interface EspirituService {
     void guardar(Espiritu espiritu);
-    public Espiritu recuperar(Long espirituId);
+    Optional<Espiritu> recuperar(Long espirituId);
     List<Espiritu> recuperarTodos();
-    void actualizar(Espiritu espiritu);
     void eliminar(Long espirituId);
     void eliminarTodo();
     Medium conectar(Long espirituId, Long mediumId);
