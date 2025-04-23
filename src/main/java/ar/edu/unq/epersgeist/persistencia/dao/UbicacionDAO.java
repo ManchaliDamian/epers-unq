@@ -17,5 +17,4 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
-    //void eliminarTodo();
 }
