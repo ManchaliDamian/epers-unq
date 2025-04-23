@@ -36,8 +36,11 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Optional<Espiritu> recuperar(Long espirituId) {
-        return espirituDAO.findById(espirituId);
+    public Espiritu recuperar(Long espirituId) {
+        return espirituDAO.recuperar(espirituId);
+        //Luego arreglamos con el Optional, es solo para hacer correr los test y luego se borra
+        // el return de arriba y solo se deja el de abajo.
+       // return espirituDAO.findById(espirituId);
     }
 
     @Override

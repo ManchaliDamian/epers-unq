@@ -16,6 +16,13 @@ import java.util.Optional;
 @Repository
 public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
 
+    //Esto es momentaneamente, luego se quita ---------------------
+    @Query(
+            "FROM Espiritu e where e.id = :espirituId"
+    )
+    Espiritu recuperar(Long espirituId);
+    //-------------------------------------------------------------
+
     @Query(
             "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId"
     )
