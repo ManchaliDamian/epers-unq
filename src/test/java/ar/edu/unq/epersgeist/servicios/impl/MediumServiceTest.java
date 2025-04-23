@@ -7,25 +7,29 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
+
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MediumServiceTest {
 
+    @Autowired
     private MediumService serviceM;
     private EspirituService serviceE;
     private UbicacionService serviceU;
 
-    private MediumDAO mediumDAO;
+    @Autowired private MediumDAO mediumDAO;
     private EspirituDAO espirituDAO;
     private UbicacionDAO ubicacionDAO;
 
@@ -40,10 +44,9 @@ public class MediumServiceTest {
     @BeforeEach
     void setUp() {
         ubicacionDAO = new HibernateUbicacionDAO();
-        mediumDAO = new HibernateMediumDAO();
+
         espirituDAO = new HibernateEspirituDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
-        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
@@ -96,6 +99,8 @@ public class MediumServiceTest {
 
     @Test
     void testRecuperarTodosLosMediums() {
+        serviceM.crear(medium1);
+        serviceM.crear(medium2);
         List<Medium> todos = serviceM.recuperarTodos();
         assertEquals(2, todos.size());
     }
@@ -311,8 +316,8 @@ public class MediumServiceTest {
         serviceE.actualizar(espiritu);
     }
 
-    @AfterEach
-    void cleanUp() {
-        eliminarTodo.eliminarTodo();
-    }
+//    @AfterEach
+//    void cleanUp() {
+//        eliminarTodo.eliminarTodo();
+//    }
 }
