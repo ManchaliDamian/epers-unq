@@ -10,7 +10,7 @@ import org.hibernate.Session;
 
 import java.util.List;
 
-
+/*
 public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements UbicacionDAO {
     public HibernateUbicacionDAO() {
         super(Ubicacion.class);
@@ -50,3 +50,4 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
         return mediums;
     }
 }
+*/

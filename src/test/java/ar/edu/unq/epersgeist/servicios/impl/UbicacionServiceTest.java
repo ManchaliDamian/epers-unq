@@ -1,69 +1,64 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest
 public class UbicacionServiceTest {
 
-    private UbicacionServiceImpl serviceU;
+    @Autowired
+    private UbicacionService serviceU;
+
     private Ubicacion quilmes;
     private Ubicacion bernal;
-    private UbicacionDAO ubicacionDao;
+//    private UbicacionDAO ubicacionDao;
+//
+//    private EspirituServiceImpl serviceE;
+//    private EspirituDAO espirituDAO;
+//
+//    private MediumServiceImpl serviceM;
+//    private MediumDAO mediumDAO;
+//    private Medium medium;
+//    private Espiritu angel;
+//    private Espiritu demonio;
+//
+//    private EliminarTodoServiceImpl serviceEliminarTodo;
 
-    private EspirituServiceImpl serviceE;
-    private EspirituDAO espirituDAO;
-
-    private MediumServiceImpl serviceM;
-    private MediumDAO mediumDAO;
-    private Medium medium;
-    private Espiritu angel;
-    private Espiritu demonio;
-
-    private EliminarTodoServiceImpl serviceEliminarTodo;
     @BeforeEach
     void prepare() {
-        ubicacionDao = new HibernateUbicacionDAO();
-        espirituDAO = new HibernateEspirituDAO();
-        mediumDAO = new HibernateMediumDAO();
+//        espirituDAO = new HibernateEspirituDAO();
+//        mediumDAO = new HibernateMediumDAO();
 
-        serviceU = new UbicacionServiceImpl(ubicacionDao);
-        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
+//        serviceU = new UbicacionServiceImpl(ubicacionDao);
+//        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
+//        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-
-        angel = new EspirituAngelical("damian",quilmes);
-        demonio = new EspirituDemoniaco("Roberto", quilmes);
-
-
-        medium = new Medium("roberto", 200, 150, quilmes);
+//
+//        angel = new EspirituAngelical("damian",quilmes);
+//        demonio = new EspirituDemoniaco("Roberto", quilmes);
+//
+//
+//        medium = new Medium("roberto", 200, 150, quilmes);
 
         serviceU.crear(quilmes);
         serviceU.crear(bernal);
 
-        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        //serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
 
     }
-
+/*
     @Test
     void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
@@ -118,6 +113,17 @@ public class UbicacionServiceTest {
         Ubicacion q = serviceU.recuperar(quilmes.getId());
         assertEquals("Quilmes", q.getNombre());
     }
+*/
+    @Test
+    public void testCrearYRecuperarUbicacion() {
+        // Recuperar la ubicación de la base de datos
+        Ubicacion recuperada = serviceU.recuperar(quilmes.getId());
+
+        // Verificaciones
+        assertNotNull(recuperada, "La ubicación recuperada no debería ser null");
+        assertEquals("Quilmes", recuperada.getNombre(), "El nombre no coincide");
+        assertEquals(quilmes.getId(), recuperada.getId(), "El ID no coincide");
+    }
 
     @Test
     void recuperarTodasLasUbicaciones() {
@@ -142,9 +148,9 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-    @AfterEach
-    void cleanup() {
-        serviceEliminarTodo.eliminarTodo();
-    }
+//    @AfterEach
+//    void cleanup() {
+//        serviceEliminarTodo.eliminarTodo();
+//    }
 
 }

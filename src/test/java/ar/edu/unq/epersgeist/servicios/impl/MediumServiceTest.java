@@ -8,10 +8,9 @@ import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.EspirituService;
-import ar.edu.unq.epersgeist.servicios.MediumService;
-import ar.edu.unq.epersgeist.servicios.UbicacionService;
+import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.*;
 
 
@@ -39,7 +38,7 @@ public class MediumServiceTest {
     private EliminarTodoServiceImpl eliminarTodo;
     @BeforeEach
     void setUp() {
-        ubicacionDAO = new HibernateUbicacionDAO();
+        //ubicacionDAO = new HibernateUbicacionDAO();
         mediumDAO = new HibernateMediumDAO();
         espirituDAO = new HibernateEspirituDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDAO);

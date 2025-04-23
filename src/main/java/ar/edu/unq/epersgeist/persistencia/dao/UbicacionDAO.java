@@ -3,18 +3,19 @@ package ar.edu.unq.epersgeist.persistencia.dao;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+@Repository
+public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
-public interface UbicacionDAO {
-    // continuar
-    void guardar(Ubicacion ubicacion);
-    Ubicacion recuperar(Long ubicacionId);
-    void eliminar(Ubicacion ubicacion);
-    void actualizar(Ubicacion ubicacion);
+    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId")
+    List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
 
-    List<Ubicacion> recuperarTodos();
-    List<Espiritu> espiritusEn(Long ubicacionId);
-    List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
-    void eliminarTodo();
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0")
+    List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
+
+    //void eliminarTodo();
 }
