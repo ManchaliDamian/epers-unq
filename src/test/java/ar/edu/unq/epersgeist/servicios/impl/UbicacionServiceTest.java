@@ -157,9 +157,9 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-//    @AfterEach
-//    void cleanup() {
-//        serviceEliminarTodo.eliminarTodo();
-//    }
+    @AfterEach
+    void cleanup() {
+        serviceU.clearAll();
+    }
 
 }

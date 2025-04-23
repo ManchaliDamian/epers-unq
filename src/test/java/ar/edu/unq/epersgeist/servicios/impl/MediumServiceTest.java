@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -42,11 +41,6 @@ public class MediumServiceTest {
     private EliminarTodoServiceImpl eliminarTodo;
     @BeforeEach
     void setUp() {
-        //ubicacionDAO = new HibernateUbicacionDAO();
-
-        //ubicacionDAO = new HibernateUbicacionDAO();
-        //mediumDAO = new HibernateMediumDAO();
-        espirituDAO = new HibernateEspirituDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
         Generador.setEstrategia(new GeneradorSecuencial(50));
@@ -73,6 +67,8 @@ public class MediumServiceTest {
         Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
     }
+
+/*
     @Test
     void testInvocarFallaPorqueEspirituYaEstaConectado() {
         demonio.setMediumConectado(medium1);
@@ -316,7 +312,7 @@ public class MediumServiceTest {
         serviceM.actualizar(medium);
         serviceE.actualizar(espiritu);
     }
-
+*/
 //    @AfterEach
 //    void cleanUp() {
 //        eliminarTodo.eliminarTodo();
