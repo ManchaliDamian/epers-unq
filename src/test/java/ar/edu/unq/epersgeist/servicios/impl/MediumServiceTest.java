@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
@@ -41,7 +40,6 @@ public class MediumServiceTest {
     void setUp() {
         ubicacionDAO = new HibernateUbicacionDAO();
         mediumDAO = new HibernateMediumDAO();
-        espirituDAO = new HibernateEspirituDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDAO);
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
         serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);

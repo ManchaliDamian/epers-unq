@@ -102,7 +102,7 @@ public class MediumServiceImpl implements MediumService {
             medium.invocarA(espiritu);
 
             mediumDAO.actualizar(medium);
-            espirituDAO.actualizar(espiritu);
+            //espirituDAO.actualizar(espiritu);
 
             return espiritu;
 

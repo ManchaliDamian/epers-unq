@@ -7,7 +7,6 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import org.junit.jupiter.api.AfterEach;
@@ -41,7 +40,6 @@ public class UbicacionServiceTest {
     @BeforeEach
     void prepare() {
         ubicacionDao = new HibernateUbicacionDAO();
-        espirituDAO = new HibernateEspirituDAO();
         mediumDAO = new HibernateMediumDAO();
 
         serviceU = new UbicacionServiceImpl(ubicacionDao);
