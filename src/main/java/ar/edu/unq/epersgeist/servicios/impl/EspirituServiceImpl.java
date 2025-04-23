@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 
@@ -60,12 +61,12 @@ public class EspirituServiceImpl implements EspirituService {
     public Medium conectar(Long espirituId, Long mediumId) {
         return HibernateTransactionRunner.runTrx(() -> {
             Espiritu espiritu = espirituDAO.recuperar(espirituId);
-            Medium medium = mediumDAO.recuperar(mediumId);
+            Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
 
             medium.conectarseAEspiritu(espiritu);
 
             espirituDAO.actualizar(espiritu);
-            mediumDAO.actualizar(medium);
+            mediumDAO.save(medium);
 
             return medium;
         });

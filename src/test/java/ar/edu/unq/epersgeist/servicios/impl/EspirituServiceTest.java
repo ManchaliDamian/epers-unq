@@ -7,7 +7,6 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -42,7 +41,7 @@ public class EspirituServiceTest {
         //ubicacionDao = new HibernateUbicacionDAO();
         serviceU = new UbicacionServiceImpl(ubicacionDao);
 
-        mediumDAO = new HibernateMediumDAO();
+
         serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
 
         espirituDAO = new HibernateEspirituDAO();

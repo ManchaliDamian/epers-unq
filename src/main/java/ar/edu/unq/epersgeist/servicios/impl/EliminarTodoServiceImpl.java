@@ -19,8 +19,8 @@ public class EliminarTodoServiceImpl {
     public void eliminarTodo() {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.eliminarTodo();
-            mediumDAO.eliminarTodo();
             ubicacionDAO.deleteAll();
+            mediumDAO.deleteAll();
             return null;
         });
     }

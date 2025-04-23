@@ -8,6 +8,10 @@ import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
+
 
 import java.util.List;
 
@@ -153,9 +157,9 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-    @AfterEach
-    void cleanup() {
-        serviceU.clearAll();
-    }
+//    @AfterEach
+//    void cleanup() {
+//        serviceEliminarTodo.eliminarTodo();
+//    }
 
 }

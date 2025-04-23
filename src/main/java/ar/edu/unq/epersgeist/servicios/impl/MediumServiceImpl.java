@@ -8,9 +8,14 @@ import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import ar.edu.unq.epersgeist.servicios.MediumService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Service
+@Transactional
 public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
@@ -25,88 +30,77 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium crear(Medium unMedium) {
-        return HibernateTransactionRunner.runTrx(() ->
-                mediumDAO.crear(unMedium));
+        return mediumDAO.save(unMedium);
     }
 
     @Override
     public Medium recuperar(Long mediumId) {
-        return HibernateTransactionRunner.runTrx(() ->
-                mediumDAO.recuperar(mediumId));
+        return mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
     }
 
     @Override
     public void actualizar(Medium unMedium) {
-        HibernateTransactionRunner.runTrx(() -> {
-            mediumDAO.actualizar(unMedium);
-            return null;
-        });
+        mediumDAO.save(unMedium);
+
     }
 
     @Override
     public void eliminar(Long mediumId) {
-        HibernateTransactionRunner.runTrx(() -> {
-            mediumDAO.eliminar(mediumId);
-            return null;
-        });
+        mediumDAO.deleteById(mediumId);
+
     }
 
     @Override
     public List<Medium> recuperarTodos() {
-        return HibernateTransactionRunner.runTrx(mediumDAO::recuperarTodos);
+       return mediumDAO.findAll();
     }
 
 
 
     @Override
     public void descansar(Long mediumId) {
-        HibernateTransactionRunner.runTrx(() -> {
-            Medium medium = mediumDAO.recuperar(mediumId);
+
+            Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
 
             medium.descansar();
 
-            mediumDAO.actualizar(medium);
-            return null;
-        });
+            mediumDAO.save(medium);
+
     }
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-        HibernateTransactionRunner.runTrx(() -> {
-            Medium mediumExorcista = mediumDAO.recuperar(idMediumExorcista);
-            Medium mediumAExorcizar = mediumDAO.recuperar(idMediumAExorcizar);
+            //pasar a una excepcion personalizada
+            Medium mediumExorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con id: " + idMediumExorcista));
+            Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con id: " + idMediumAExorcizar));
 
             List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
             mediumExorcista.exorcizarA(angeles, demonios);
 
-            mediumDAO.actualizar(mediumExorcista);
-            mediumDAO.actualizar(mediumAExorcizar);
-            return null;
-        });
+            mediumDAO.save(mediumExorcista);
+            mediumDAO.save(mediumAExorcizar);
+
+
     }
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        return HibernateTransactionRunner.runTrx(() ->
-            mediumDAO.espiritus(mediumId));
+        return mediumDAO.findEspiritusByMediumId(mediumId);
     }
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        return HibernateTransactionRunner.runTrx(() -> {
+
             Espiritu espiritu = espirituDAO.recuperar(espirituId);
-            Medium medium = mediumDAO.recuperar(mediumId);
+            Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
 
             medium.invocarA(espiritu);
 
-            mediumDAO.actualizar(medium);
+            mediumDAO.save(medium);
             espirituDAO.actualizar(espiritu);
 
             return espiritu;
-
-        });
-
     }
 }
