@@ -57,10 +57,6 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
-        //otra opcion
-//        Ubicacion ubicacion = recuperar(ubicacionId); // Reutiliza el método existente
-//        return ubicacion.getEspiritus(); // Asumiendo una relación JPA
-
         return ubicacionDAO.findEspiritusByUbicacionId(ubicacionId);
     }
 
@@ -69,4 +65,8 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionDAO.findMediumsSinEspiritusByUbicacionId(ubicacionId);
     }
 
+    @Override
+    public void clearAll() {
+        ubicacionDAO.deleteAll();
+    }
 }

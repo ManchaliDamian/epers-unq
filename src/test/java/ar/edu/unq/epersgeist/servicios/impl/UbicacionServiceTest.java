@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
 
     @Autowired
     private UbicacionService serviceU;
+    private MediumService serviceM;
+    private EspirituService serviceE;
 
     private Ubicacion quilmes;
     private Ubicacion bernal;
@@ -29,8 +34,8 @@ public class UbicacionServiceTest {
 //    private MediumServiceImpl serviceM;
 //    private MediumDAO mediumDAO;
 //    private Medium medium;
-//    private Espiritu angel;
-//    private Espiritu demonio;
+    private Espiritu angel;
+    private Espiritu demonio;
 //
 //    private EliminarTodoServiceImpl serviceEliminarTodo;
 
@@ -46,8 +51,8 @@ public class UbicacionServiceTest {
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 //
-//        angel = new EspirituAngelical("damian",quilmes);
-//        demonio = new EspirituDemoniaco("Roberto", quilmes);
+        angel = new EspirituAngelical("damian",quilmes);
+        demonio = new EspirituDemoniaco("Roberto", quilmes);
 //
 //
 //        medium = new Medium("roberto", 200, 150, quilmes);
@@ -148,9 +153,9 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-//    @AfterEach
-//    void cleanup() {
-//        serviceEliminarTodo.eliminarTodo();
-//    }
+    @AfterEach
+    void cleanup() {
+        serviceU.clearAll();
+    }
 
 }
