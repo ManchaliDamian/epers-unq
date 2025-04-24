@@ -7,10 +7,9 @@ import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import java.util.List;
 
 public interface UbicacionService {
-    void crear(Ubicacion ubicacion);
+    void guardar(Ubicacion ubicacion);
     Ubicacion recuperar(Long ubicacionId);
     List<Ubicacion> recuperarTodos();
-    void actualizar(Ubicacion ubicacion);
     void eliminar(Ubicacion ubicacion);
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);

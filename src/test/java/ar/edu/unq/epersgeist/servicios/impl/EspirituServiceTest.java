@@ -49,8 +49,8 @@ public class EspirituServiceTest {
         quilmes = new Ubicacion("Quilmes");
         berazategui = new Ubicacion("Berazategui");
 
-        serviceU.crear(quilmes);
-        serviceU.crear(berazategui);
+        serviceU.guardar(quilmes);
+        serviceU.guardar(berazategui);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
