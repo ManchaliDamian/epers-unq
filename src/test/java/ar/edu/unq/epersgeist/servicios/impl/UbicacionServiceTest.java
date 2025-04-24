@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -39,13 +40,10 @@ public class UbicacionServiceTest {
     private Espiritu angel;
     private Espiritu demonio;
 
-    private EliminarTodoServiceImpl eliminarTodo;
+    private DataService eliminarTodo;
 
     @BeforeEach
     void prepare() {
-        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
-        eliminarTodo.eliminarTodo();
-
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
 
@@ -57,7 +55,7 @@ public class UbicacionServiceTest {
         serviceU.guardar(quilmes);
         serviceU.guardar(bernal);
 
-        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
+        eliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
     }
 
