@@ -2,6 +2,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -20,54 +23,44 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UbicacionServiceTest {
 
-    @Autowired
-    private UbicacionService serviceU;
-    private MediumService serviceM;
-    private EspirituService serviceE;
+    @Autowired private MediumService serviceM;
+    @Autowired private EspirituService serviceE;
+    @Autowired private UbicacionService serviceU;
 
+    @Autowired private MediumDAO mediumDAO;
+    @Autowired private EspirituDAO espirituDAO;
+    @Autowired private UbicacionDAO ubicacionDAO;
+
+    private Medium medium;
     private Ubicacion quilmes;
     private Ubicacion bernal;
-//    private UbicacionDAO ubicacionDao;
-//
-//    private EspirituServiceImpl serviceE;
-//    private EspirituDAO espirituDAO;
-//
-//    private MediumServiceImpl serviceM;
-//    private MediumDAO mediumDAO;
-//    private Medium medium;
     private Espiritu angel;
     private Espiritu demonio;
-//
-//    private EliminarTodoServiceImpl serviceEliminarTodo;
+
+    private EliminarTodoServiceImpl eliminarTodo;
 
     @BeforeEach
     void prepare() {
-//        espirituDAO = new HibernateEspirituDAO();
-//        mediumDAO = new HibernateMediumDAO();
-
-//        serviceU = new UbicacionServiceImpl(ubicacionDao);
-//        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-//        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
+        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
+        eliminarTodo.eliminarTodo();
 
         quilmes = new Ubicacion("Quilmes");
         bernal = new Ubicacion("Bernal");
-//
+
         angel = new EspirituAngelical("damian",quilmes);
         demonio = new EspirituDemoniaco("Roberto", quilmes);
-//
-//
-//        medium = new Medium("roberto", 200, 150, quilmes);
+
+        medium = new Medium("roberto", 200, 150, quilmes);
 
         serviceU.crear(quilmes);
         serviceU.crear(bernal);
 
-        //serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
     }
-/*
+
     @Test
     void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
@@ -122,13 +115,11 @@ public class UbicacionServiceTest {
         Ubicacion q = serviceU.recuperar(quilmes.getId());
         assertEquals("Quilmes", q.getNombre());
     }
-*/
+
     @Test
     public void testCrearYRecuperarUbicacion() {
-        // Recuperar la ubicación de la base de datos
         Ubicacion recuperada = serviceU.recuperar(quilmes.getId());
 
-        // Verificaciones
         assertNotNull(recuperada, "La ubicación recuperada no debería ser null");
         assertEquals("Quilmes", recuperada.getNombre(), "El nombre no coincide");
         assertEquals(quilmes.getId(), recuperada.getId(), "El ID no coincide");
@@ -159,7 +150,7 @@ public class UbicacionServiceTest {
 
     @AfterEach
     void cleanup() {
-        serviceU.clearAll();
+        eliminarTodo.eliminarTodo();
     }
 
 }
