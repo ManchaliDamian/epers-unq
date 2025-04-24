@@ -24,7 +24,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void crear(Ubicacion ubicacion) {
+    public void guardar(Ubicacion ubicacion) {
         try {
             ubicacionDAO.save(ubicacion);
         } catch (DataIntegrityViolationException e) {
@@ -34,20 +34,12 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion recuperar(Long ubicacionId) {
-        return ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Personaje not found with id: " + ubicacionId));
+        return ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Ubicación no encontrada con id: " + ubicacionId));
     }
 
     @Override
     public List<Ubicacion> recuperarTodos() {
         return ubicacionDAO.findAll();
-    }
-
-    @Override
-    public void actualizar(Ubicacion ubicacion) {
-        if (!ubicacionDAO.existsById(ubicacion.getId())) {
-            throw new NoSuchElementException("Ubicación no encontrada con id: " + ubicacion.getId());
-        }
-        ubicacionDAO.save(ubicacion);
     }
 
     @Override

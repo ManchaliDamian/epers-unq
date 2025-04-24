@@ -47,8 +47,8 @@ public class MediumServiceTest {
 
         plata = new Ubicacion("La Plata");
         quilmes = new Ubicacion("Quilmes");
-        serviceU.crear(quilmes);
-        serviceU.crear(plata);
+        serviceU.guardar(quilmes);
+        serviceU.guardar(plata);
 
         medium1 = new Medium("Pablo", 100, 50, plata);
         medium2 = new Medium("Fidol", 100, 50, quilmes);

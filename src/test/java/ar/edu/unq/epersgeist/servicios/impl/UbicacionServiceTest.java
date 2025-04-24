@@ -54,8 +54,8 @@ public class UbicacionServiceTest {
 
         medium = new Medium("roberto", 200, 150, quilmes);
 
-        serviceU.crear(quilmes);
-        serviceU.crear(bernal);
+        serviceU.guardar(quilmes);
+        serviceU.guardar(bernal);
 
         eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
@@ -135,7 +135,7 @@ public class UbicacionServiceTest {
     void actualizarUnaUbicacion(){
         Ubicacion q = serviceU.recuperar(quilmes.getId());
         q.cambiarNombre("Avellaneda");
-        serviceU.actualizar(q);
+        serviceU.guardar(q);
         Ubicacion nombreNuevo = serviceU.recuperar(q.getId());
 
         assertEquals("Avellaneda", nombreNuevo.getNombre());
