@@ -5,7 +5,7 @@ import lombok.Setter;
 public class Generador {
 
     @Setter
-    private static GeneradorDeNumeros estrategia = GeneradorRandom.getInstance();
+    private static GeneradorDeNumeros estrategia = new GeneradorRandom();
 
     private Generador() {}
 
