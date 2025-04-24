@@ -34,7 +34,7 @@ public class Medium {
     private Integer manaMax;
 
     @Column(nullable = false)
-    @Check(constraints = "mana BETWEEN 0 AND manaMax")
+    @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
 
 

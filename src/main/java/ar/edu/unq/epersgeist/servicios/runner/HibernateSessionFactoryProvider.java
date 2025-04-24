@@ -30,7 +30,6 @@ public class HibernateSessionFactoryProvider {
         createDatabaseIfNotExists(dataBase, user, password, host, port);
 
         Configuration configuration = new Configuration();
-        configuration.configure("hibernate.cfg.xml");
         configuration.setProperty("hibernate.connection.username", user);
         configuration.setProperty("hibernate.connection.password", password);
         configuration.setProperty("hibernate.connection.url", url);

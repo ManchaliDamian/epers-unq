@@ -3,60 +3,70 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+@Service
+@Transactional
 public class UbicacionServiceImpl implements UbicacionService {
 
-    private UbicacionDAO ubicacionDAO;
+    private final UbicacionDAO ubicacionDAO;
+
     public UbicacionServiceImpl(UbicacionDAO ubiDao) {
         this.ubicacionDAO = ubiDao;
     }
+
     @Override
     public void crear(Ubicacion ubicacion) {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.guardar(ubicacion);
-            return null;
-        });
+        try {
+            ubicacionDAO.save(ubicacion);
+        } catch (DataIntegrityViolationException e) {
+            throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
+        }
     }
 
     @Override
     public Ubicacion recuperar(Long ubicacionId) {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperar(ubicacionId));
+        return ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Personaje not found with id: " + ubicacionId));
     }
 
     @Override
     public List<Ubicacion> recuperarTodos() {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperarTodos());
+        return ubicacionDAO.findAll();
     }
 
     @Override
     public void actualizar(Ubicacion ubicacion) {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.actualizar(ubicacion);
-            return null;
-        });
+        if (!ubicacionDAO.existsById(ubicacion.getId())) {
+            throw new NoSuchElementException("Ubicación no encontrada con id: " + ubicacion.getId());
+        }
+        ubicacionDAO.save(ubicacion);
     }
 
     @Override
     public void eliminar(Ubicacion ubicacion) {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.eliminar(ubicacion);
-            return null;
-        });
+            ubicacionDAO.delete(ubicacion);
     }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.espiritusEn(ubicacionId));
+        return ubicacionDAO.findEspiritusByUbicacionId(ubicacionId);
     }
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.mediumsSinEspiritusEn(ubicacionId));
+        return ubicacionDAO.findMediumsSinEspiritusByUbicacionId(ubicacionId);
     }
 
+    @Override
+    public void clearAll() {
+        ubicacionDAO.deleteAll();
+    }
 }

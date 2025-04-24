@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.servicios;
+package ar.edu.unq.epersgeist.servicios.interfaces;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
@@ -14,4 +14,5 @@ public interface UbicacionService {
     void eliminar(Ubicacion ubicacion);
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
+    void clearAll();
 }
