@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -38,10 +39,10 @@ public class MediumServiceTest {
     private Ubicacion quilmes;
     private Ubicacion plata;
 
-    private EliminarTodoServiceImpl eliminarTodo;
+    private DataService eliminarTodo;
     @BeforeEach
     void setUp() {
-        eliminarTodo = new EliminarTodoServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
+        eliminarTodo = new DataServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
         eliminarTodo.eliminarTodo();
         Generador.setEstrategia(new GeneradorSecuencial(50));
 

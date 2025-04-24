@@ -1,19 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 
-import jakarta.persistence.NoResultException;
 import org.junit.jupiter.api.*;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +30,7 @@ public class EspirituServiceTest {
     private Ubicacion berazategui;
     private UbicacionDAO ubicacionDao;
 
-    private EliminarTodoServiceImpl serviceEliminarTodo;
+    private DataService serviceEliminarTodo;
     @BeforeEach
     void setUp() {
 
@@ -61,7 +57,7 @@ public class EspirituServiceTest {
         serviceE.guardar(belcebu);
 
         serviceE.guardar(angel);
-        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        serviceEliminarTodo = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
     }
 
 
