@@ -146,10 +146,6 @@ public class EspirituServiceTest {
 
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
-
-//        assertThrows(NoResultException.class, () -> {
-//            serviceM.recuperar(medium.getId());
-//        });
     }
 
     @Test
@@ -189,7 +185,7 @@ public class EspirituServiceTest {
 
         @Test
         void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
 
             assertEquals(2, resultado.size());
             assertEquals("Azazel", resultado.get(0).getNombre());
@@ -198,7 +194,7 @@ public class EspirituServiceTest {
 
         @Test
         void segundaPaginaDescendente_devuelveSiguientesDosEspiritus() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 2, 2);
 
             assertEquals(2, resultado.size());
             assertEquals("Lucifer", resultado.get(0).getNombre());
@@ -207,19 +203,45 @@ public class EspirituServiceTest {
 
         @Test
         void paginaInexistente_devuelveListaVacia() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 10, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 11, 2);
 
             assertTrue(resultado.isEmpty());
         }
 
         @Test
         void primeraPaginaAscendente_devuelveEspiritusEnOrdenInverso() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 0, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 2);
             resultado.forEach(e -> System.out.println(e.getNombre() + " - Nivel: " + e.getNivelDeConexion()));
 
             assertEquals(2, resultado.size());
             assertEquals("Belcebu", resultado.get(0).getNombre());
             assertEquals("Vine", resultado.get(1).getNombre());
+        }
+
+        @Test
+        void paginaNegativaOCeroLanzaError(){
+            IllegalArgumentException exceptionCero = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 5)
+            );
+
+            assertEquals("El número de página 0 es menor a 1", exceptionCero.getMessage());
+
+            IllegalArgumentException exceptionUno = assertThrows(IllegalArgumentException.class, () -> {
+                serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, -4, 5);
+            });
+
+            assertEquals("El número de página -4 es menor a 1", exceptionUno.getMessage());
+        }
+
+        @Test
+        void cantidadPorPaginaNegativaLanzaError(){
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 4, -1)
+            );
+
+            assertEquals("La cantidad por pagina -1 es menor a 0", exception.getMessage());
         }
 
     }
