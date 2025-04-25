@@ -84,7 +84,7 @@ public class EspirituServiceImpl implements EspirituService {
         }
 
         Sort.Direction sortDirection = dir == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(pagina-1, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
+        Pageable pageable = PageRequest.of(pagina, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
 
         return espirituDAO.recuperarDemoniacosPaginados(pageable);
     }
