@@ -9,10 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface MediumService {
-    Medium crear(Medium unMedium);
+    Medium guardar(Medium unMedium);
     Optional<Medium> recuperar(Long mediumId);
     List<Medium> recuperarTodos();
-    void actualizar(Medium unMedium);
     void eliminar(Long mediumId);
     void descansar(Long mediumId);
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);

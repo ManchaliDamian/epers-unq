@@ -56,8 +56,8 @@ public class MediumServiceTest {
         medium2 = new Medium("Fidol", 100, 50, quilmes);
         demonio = new EspirituDemoniaco("Jose", quilmes);
         angel = new EspirituAngelical( "kici", plata);
-        serviceM.crear(medium1);
-        serviceM.crear(medium2);
+        serviceM.guardar(medium1);
+        serviceM.guardar(medium2);
         serviceE.guardar(demonio);
         serviceE.guardar(angel);
 
@@ -83,7 +83,7 @@ public class MediumServiceTest {
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
         demonio.setUbicacion(plata);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         demonio.setUbicacion(quilmes);
         serviceE.guardar(demonio);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
@@ -98,8 +98,8 @@ public class MediumServiceTest {
 
     @Test
     void testRecuperarTodosLosMediums() {
-        serviceM.crear(medium1);
-        serviceM.crear(medium2);
+        serviceM.guardar(medium1);
+        serviceM.guardar(medium2);
         List<Medium> todos = serviceM.recuperarTodos();
         assertEquals(2, todos.size());
     }
@@ -121,7 +121,7 @@ public class MediumServiceTest {
     @Test
     void testEspiritusDeUnMedium() {
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
 
         List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
 
@@ -142,7 +142,7 @@ public class MediumServiceTest {
         serviceE.guardar(angel);
         medium1.setMana(5);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         Optional<Espiritu> angelRecuperado = serviceE.recuperar(angel.getId());
@@ -153,7 +153,7 @@ public class MediumServiceTest {
     void descansarSinEspiritus(){
         medium1.setMana(5);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         assertEquals(20, mediumRecuperado.get().getMana());
@@ -162,7 +162,7 @@ public class MediumServiceTest {
     void descansarPeroElMagoLlegaAlLimiteDeMana(){
         medium1.setMana(98);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         assertEquals(100, mediumRecuperado.get().getMana());
@@ -314,7 +314,7 @@ public class MediumServiceTest {
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {
         medium.conectarseAEspiritu(espiritu);
-        serviceM.actualizar(medium);
+        serviceM.guardar(medium);
         serviceE.guardar(espiritu);
     }
 

@@ -81,7 +81,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
@@ -89,7 +89,7 @@ public class UbicacionServiceTest {
 
     @Test
     void noHayMediumsEnBernal() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
         assertEquals(0, mediums.size());
     }
@@ -97,7 +97,7 @@ public class UbicacionServiceTest {
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
         serviceE.guardar(angel);
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(0, mediums.size());
@@ -105,7 +105,7 @@ public class UbicacionServiceTest {
 
     @Test
     void noHayMediumsSinEspiritusEnUbicacionInexistente() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
         assertEquals(0, mediums.size());
     }

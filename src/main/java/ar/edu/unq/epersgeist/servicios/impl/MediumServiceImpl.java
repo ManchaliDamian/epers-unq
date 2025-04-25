@@ -29,19 +29,13 @@ public class MediumServiceImpl implements MediumService {
 
 
     @Override
-    public Medium crear(Medium unMedium) {
+    public Medium guardar(Medium unMedium) {
         return mediumDAO.save(unMedium);
     }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
         return mediumDAO.findById(mediumId);
-    }
-
-    @Override
-    public void actualizar(Medium unMedium) {
-        mediumDAO.save(unMedium);
-
     }
 
     @Override

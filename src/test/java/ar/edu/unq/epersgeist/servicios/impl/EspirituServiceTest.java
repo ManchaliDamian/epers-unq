@@ -69,7 +69,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumSaleBien() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
 
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
@@ -79,7 +79,7 @@ public class EspirituServiceTest {
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
         serviceE.guardar(azazel);
 
@@ -90,7 +90,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -140,7 +140,7 @@ public class EspirituServiceTest {
 
     @Test
     void testEliminarTodo() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
 
         serviceEliminarTodo.eliminarTodo();
 
