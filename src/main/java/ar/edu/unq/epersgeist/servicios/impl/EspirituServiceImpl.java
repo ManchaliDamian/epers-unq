@@ -6,13 +6,10 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
-import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,11 +34,8 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Espiritu recuperar(Long espirituId) {
-        return espirituDAO.recuperar(espirituId);
-        //Luego arreglamos con el Optional, es solo para hacer correr los test y luego se borra
-        // el return de arriba y solo se deja el de abajo.
-       // return espirituDAO.findById(espirituId);
+    public Optional<Espiritu> recuperar(Long espirituId) {
+        return espirituDAO.findById(espirituId);
     }
 
     @Override

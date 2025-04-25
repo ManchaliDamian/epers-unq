@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional
 public class MediumServiceImpl implements MediumService {
@@ -32,8 +34,8 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public Medium recuperar(Long mediumId) {
-        return mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
+    public Optional<Medium> recuperar(Long mediumId) {
+        return mediumDAO.findById(mediumId);
     }
 
     @Override
