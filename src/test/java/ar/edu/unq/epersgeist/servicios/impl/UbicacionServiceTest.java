@@ -17,7 +17,9 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -79,7 +81,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
@@ -87,7 +89,7 @@ public class UbicacionServiceTest {
 
     @Test
     void noHayMediumsEnBernal() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
         assertEquals(0, mediums.size());
     }
@@ -95,7 +97,7 @@ public class UbicacionServiceTest {
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
         serviceE.guardar(angel);
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
         assertEquals(0, mediums.size());
@@ -103,24 +105,24 @@ public class UbicacionServiceTest {
 
     @Test
     void noHayMediumsSinEspiritusEnUbicacionInexistente() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
         assertEquals(0, mediums.size());
     }
 
     @Test
     void recuperarUbicacionDada() {
-        Ubicacion q = serviceU.recuperar(quilmes.getId());
-        assertEquals("Quilmes", q.getNombre());
+        Optional<Ubicacion> q = serviceU.recuperar(quilmes.getId());
+        assertEquals("Quilmes", q.get().getNombre());
     }
 
     @Test
     public void testCrearYRecuperarUbicacion() {
-        Ubicacion recuperada = serviceU.recuperar(quilmes.getId());
+        Optional<Ubicacion> recuperada = serviceU.recuperar(quilmes.getId());
 
         assertNotNull(recuperada, "La ubicación recuperada no debería ser null");
-        assertEquals("Quilmes", recuperada.getNombre(), "El nombre no coincide");
-        assertEquals(quilmes.getId(), recuperada.getId(), "El ID no coincide");
+        assertEquals("Quilmes", recuperada.get().getNombre(), "El nombre no coincide");
+        assertEquals(quilmes.getId(), recuperada.get().getId(), "El ID no coincide");
     }
 
     @Test
@@ -131,12 +133,12 @@ public class UbicacionServiceTest {
 
     @Test
     void actualizarUnaUbicacion(){
-        Ubicacion q = serviceU.recuperar(quilmes.getId());
-        q.cambiarNombre("Avellaneda");
-        serviceU.guardar(q);
-        Ubicacion nombreNuevo = serviceU.recuperar(q.getId());
+        Optional<Ubicacion> q = serviceU.recuperar(quilmes.getId());
+        q.get().cambiarNombre("Avellaneda");
+        serviceU.guardar(q.get());
+        Optional<Ubicacion> nombreNuevo = serviceU.recuperar(q.get().getId());
 
-        assertEquals("Avellaneda", nombreNuevo.getNombre());
+        assertEquals("Avellaneda", nombreNuevo.get().getNombre());
     }
 
     @Test

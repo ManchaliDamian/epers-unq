@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EspirituService {
     void guardar(Espiritu espiritu);
-    Espiritu recuperar(Long espirituId);
+    Optional<Espiritu> recuperar(Long espirituId);
     List<Espiritu> recuperarTodos();
     void eliminar(Long espirituId);
     void eliminarTodo();

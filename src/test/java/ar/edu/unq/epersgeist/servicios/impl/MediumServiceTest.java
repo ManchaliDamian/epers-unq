@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -55,8 +56,8 @@ public class MediumServiceTest {
         medium2 = new Medium("Fidol", 100, 50, quilmes);
         demonio = new EspirituDemoniaco("Jose", quilmes);
         angel = new EspirituAngelical( "kici", plata);
-        serviceM.crear(medium1);
-        serviceM.crear(medium2);
+        serviceM.guardar(medium1);
+        serviceM.guardar(medium2);
         serviceE.guardar(demonio);
         serviceE.guardar(angel);
 
@@ -82,7 +83,7 @@ public class MediumServiceTest {
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
         demonio.setUbicacion(plata);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         demonio.setUbicacion(quilmes);
         serviceE.guardar(demonio);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
@@ -90,15 +91,15 @@ public class MediumServiceTest {
     }
     @Test
     void testCrearYRecuperarMedium() {
-        Medium recuperado = serviceM.recuperar(medium1.getId());
-        assertEquals(medium1.getNombre(), recuperado.getNombre());
-        assertEquals(medium1.getMana(), recuperado.getMana());
+        Optional<Medium> recuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(medium1.getNombre(), recuperado.get().getNombre());
+        assertEquals(medium1.getMana(), recuperado.get().getMana());
     }
 
     @Test
     void testRecuperarTodosLosMediums() {
-        serviceM.crear(medium1);
-        serviceM.crear(medium2);
+        serviceM.guardar(medium1);
+        serviceM.guardar(medium2);
         List<Medium> todos = serviceM.recuperarTodos();
         assertEquals(2, todos.size());
     }
@@ -120,7 +121,7 @@ public class MediumServiceTest {
     @Test
     void testEspiritusDeUnMedium() {
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
 
         List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
 
@@ -141,30 +142,30 @@ public class MediumServiceTest {
         serviceE.guardar(angel);
         medium1.setMana(5);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
-        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
-        Espiritu angelRecuperado = serviceE.recuperar(angel.getId());
-        assertEquals(20, mediumRecuperado.getMana());
-        assertEquals(16, angelRecuperado.getNivelDeConexion());
+        Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
+        Optional<Espiritu> angelRecuperado = serviceE.recuperar(angel.getId());
+        assertEquals(20, mediumRecuperado.get().getMana());
+        assertEquals(16, angelRecuperado.get().getNivelDeConexion());
     }
     @Test
     void descansarSinEspiritus(){
         medium1.setMana(5);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
-        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
-        assertEquals(20, mediumRecuperado.getMana());
+        Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(20, mediumRecuperado.get().getMana());
     }
     @Test
     void descansarPeroElMagoLlegaAlLimiteDeMana(){
         medium1.setMana(98);
         medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
-        Medium mediumRecuperado = serviceM.recuperar(medium1.getId());
-        assertEquals(100, mediumRecuperado.getMana());
+        Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
+        assertEquals(100, mediumRecuperado.get().getMana());
     }
     @Test
     void exorcizarA_AtaqueExitoso_DemonioDerrotado() {
@@ -178,14 +179,14 @@ public class MediumServiceTest {
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
-        Espiritu angelActualizado = serviceE.recuperar(angel.getId());
-        Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
+        Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
         List<Espiritu> espiritusMedium2 = serviceM.espiritus(medium2.getId());
 
-        assertFalse(demonioActualizado.estaConectado());
-        assertEquals(0, demonioActualizado.getNivelDeConexion());
+        assertFalse(demonioActualizado.get().estaConectado());
+        assertEquals(0, demonioActualizado.get().getNivelDeConexion());
         assertTrue(espiritusMedium2.isEmpty());
-        assertEquals(30, angelActualizado.getNivelDeConexion());
+        assertEquals(30, angelActualizado.get().getNivelDeConexion());
     }
 
     @Test
@@ -206,16 +207,16 @@ public class MediumServiceTest {
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
 
-        Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
-        Espiritu angel1Actualizado = serviceE.recuperar(angel1.getId());
-        Espiritu angel2Actualizado = serviceE.recuperar(angel2.getId());
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
+        Optional<Espiritu> angel1Actualizado = serviceE.recuperar(angel1.getId());
+        Optional<Espiritu> angel2Actualizado = serviceE.recuperar(angel2.getId());
         List<Espiritu> espiritusMedium2 = serviceM.espiritus(medium2.getId());
 
-        assertEquals(0, demonioActualizado.getNivelDeConexion());
-        assertFalse(demonioActualizado.estaConectado());
+        assertEquals(0, demonioActualizado.get().getNivelDeConexion());
+        assertFalse(demonioActualizado.get().estaConectado());
         assertTrue(espiritusMedium2.isEmpty());
-        assertEquals(30, angel1Actualizado.getNivelDeConexion());
-        assertEquals(40, angel2Actualizado.getNivelDeConexion());
+        assertEquals(30, angel1Actualizado.get().getNivelDeConexion());
+        assertEquals(40, angel2Actualizado.get().getNivelDeConexion());
     }
 
     @Test
@@ -262,12 +263,12 @@ public class MediumServiceTest {
         assertTrue(medium2.getEspiritus().contains(demonio),
                 "El demonio debería estar conectado al medium exorcizado");
 
-        Espiritu angelActualizado = serviceE.recuperar(angel.getId());
-        assertEquals(25, angelActualizado.getNivelDeConexion(),
+        Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
+        assertEquals(25, angelActualizado.get().getNivelDeConexion(),
                 "El ángel debería haber perdido 5 puntos de conexión al fallar el ataque");
 
-        Espiritu demonioActualizado = serviceE.recuperar(demonio.getId());
-        assertEquals(20, demonioActualizado.getNivelDeConexion(),
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
+        assertEquals(20, demonioActualizado.get().getNivelDeConexion(),
                 "El demonio no debería haber sido afectado en un ataque fallido");
     }
 
@@ -297,23 +298,23 @@ public class MediumServiceTest {
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
-        Espiritu angel1Actualizado = serviceE.recuperar(angel1.getId());
-        Espiritu angel2Actualizado = serviceE.recuperar(angel2.getId());
-        Espiritu demonio1Actualizado = serviceE.recuperar(demonio1.getId());
-        Espiritu demonio2Actualizado = serviceE.recuperar(demonio2.getId());
+        Optional<Espiritu> angel1Actualizado = serviceE.recuperar(angel1.getId());
+        Optional<Espiritu> angel2Actualizado = serviceE.recuperar(angel2.getId());
+        Optional<Espiritu> demonio1Actualizado = serviceE.recuperar(demonio1.getId());
+        Optional<Espiritu> demonio2Actualizado = serviceE.recuperar(demonio2.getId());
         // valores anteriores pero rompian... revisar
         //        assertEquals(30, angel1Actualizado.getNivelDeConexion());
         //        assertEquals(15, angel2Actualizado.getNivelDeConexion());
         //        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
-        assertEquals(25, angel1Actualizado.getNivelDeConexion());
-        assertEquals(20, angel2Actualizado.getNivelDeConexion());
-        assertEquals(15, demonio1Actualizado.getNivelDeConexion());
-        assertEquals(30, demonio2Actualizado.getNivelDeConexion());
+        assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
+        assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
+        assertEquals(15, demonio1Actualizado.get().getNivelDeConexion());
+        assertEquals(30, demonio2Actualizado.get().getNivelDeConexion());
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {
         medium.conectarseAEspiritu(espiritu);
-        serviceM.actualizar(medium);
+        serviceM.guardar(medium);
         serviceE.guardar(espiritu);
     }
 

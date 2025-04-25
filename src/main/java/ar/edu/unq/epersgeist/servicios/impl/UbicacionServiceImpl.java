@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,8 +34,8 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public Ubicacion recuperar(Long ubicacionId) {
-        return ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Ubicación no encontrada con id: " + ubicacionId));
+    public Optional<Ubicacion> recuperar(Long ubicacionId) {
+        return ubicacionDAO.findById(ubicacionId);
     }
 
     @Override

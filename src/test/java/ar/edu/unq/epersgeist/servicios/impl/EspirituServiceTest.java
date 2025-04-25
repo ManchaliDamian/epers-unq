@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -67,17 +69,17 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumSaleBien() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
 
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
-        Espiritu conectado = serviceE.recuperar(azazel.getId());
-        assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
+        Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
+        assertEquals(mediumConectado.getId(), conectado.get().getMediumConectado().getId());
 
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
         serviceE.guardar(azazel);
 
@@ -88,7 +90,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -100,10 +102,10 @@ public class EspirituServiceTest {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
 
-        Espiritu recuperado = serviceE.recuperar(nuevoEspiritu.getId());
+        Optional<Espiritu> recuperado = serviceE.recuperar(nuevoEspiritu.getId());
         assertNotNull(recuperado);
-        assertEquals("Miguel", recuperado.getNombre());
-        assertEquals(0, recuperado.getNivelDeConexion());
+        assertEquals("Miguel", recuperado.get().getNombre());
+        assertEquals(0, recuperado.get().getNivelDeConexion());
     }
 
     @Test
@@ -121,16 +123,16 @@ public class EspirituServiceTest {
         azazel.setNombre(nuevoNombre);
         serviceE.guardar(azazel);
 
-        Espiritu actualizado = serviceE.recuperar(azazel.getId());
-        assertEquals(nuevoNombre, actualizado.getNombre());
+        Optional<Espiritu> actualizado = serviceE.recuperar(azazel.getId());
+        assertEquals(nuevoNombre, actualizado.get().getNombre());
     }
 
     @Test
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        Espiritu eliminado = serviceE.recuperar(angel.getId());
-        assertNull(eliminado);
+        Optional<Espiritu> eliminado = serviceE.recuperar(angel.getId());
+        assertTrue(eliminado.isEmpty());
 
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertEquals(2, espiritus.size());
@@ -138,7 +140,7 @@ public class EspirituServiceTest {
 
     @Test
     void testEliminarTodo() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
 
         serviceEliminarTodo.eliminarTodo();
 
