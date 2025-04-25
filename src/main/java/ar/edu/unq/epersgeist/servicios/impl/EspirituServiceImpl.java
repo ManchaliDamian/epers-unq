@@ -70,15 +70,15 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public List<Espiritu> espiritusDemoniacos(Direccion dir, int pagina, int cantidadPorPagina){
-        if (pagina < 0) {
-            throw new IllegalArgumentException("El número de página " + pagina + " es menor a 0");
+        if (pagina < 1) {
+            throw new IllegalArgumentException("El número de página " + pagina + " es menor a 1");
         }
         if (cantidadPorPagina < 0) {
             throw new IllegalArgumentException("La cantidad por pagina " + cantidadPorPagina + " es menor a 0");
         }
 
         Sort.Direction sortDirection = dir == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(pagina, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
+        Pageable pageable = PageRequest.of(pagina-1, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
 
         return espirituDAO.recuperarDemoniacosPaginados(pageable);
     }
