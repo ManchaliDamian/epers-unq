@@ -12,7 +12,6 @@ public class EspirituAngelical extends Espiritu{
 
     public EspirituAngelical( String nombre, Ubicacion ubicacion) {
         super( nombre, ubicacion);
-
     }
 
     public void atacar(EspirituDemoniaco objetivo) {
@@ -33,4 +32,15 @@ public class EspirituAngelical extends Espiritu{
         return Math.min(cantAtaque, 100);
     }
 
+    @Override
+    public void recibirEfectoDe(Santuario santuario) {
+        this.nivelDeConexion = Math.min(
+                nivelDeConexion + santuario.getFlujoDeEnergia(),
+                100
+        );
+    }
+    @Override
+    public boolean puedeSerInvocadoEnSantuario() {
+        return true;
+    }
 }

@@ -15,8 +15,8 @@ import static org.mockito.Mockito.*;
 public class MediumTest {
     private EspirituDemoniaco espirituDemoniaco;
     private EspirituAngelical espirituAngelical;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumConectado;
     private Medium mediumQuilmes;
     private Medium mediumBernal;
@@ -26,14 +26,14 @@ public class MediumTest {
 
     @BeforeEach
     void setUp(){
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
-        espirituAngelical = new EspirituAngelical("EspirituAngelical",quilmes);
-        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",bernal);
-        espirituNoConectado = new EspirituDemoniaco("Belcebú",bernal);
-        mediumConectado = new Medium("Mago",100,50,quilmes);
-        mediumQuilmes = new Medium("Pepe",100,50,quilmes);
-        mediumBernal = new Medium("Bernardo",100,90,bernal);
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical",santuario);
+        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio);
+        espirituNoConectado = new EspirituDemoniaco("Belcebú",cementerio);
+        mediumConectado = new Medium("Mago",100,50,santuario);
+        mediumQuilmes = new Medium("Pepe",100,50,santuario);
+        mediumBernal = new Medium("Bernardo",100,90,cementerio);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
         espirituMock = mock(EspirituAngelical.class);
@@ -42,19 +42,19 @@ public class MediumTest {
 
     @Test
     void noSePuedeCrearMediumConManaNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, -4, quilmes));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, -4, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMayorAManaMax(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, 301, quilmes));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, 301, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMaxNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",-3, 301, quilmes));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",-3, 301, santuario));
         assertEquals("manaMax no puede ser negativo.", ex.getMessage());
     }
 
@@ -80,7 +80,7 @@ public class MediumTest {
     void cuandoSeDescansaNoSeSobrepasaManaMax(){
         //setup
         when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(quilmes);
+        when(espirituMock.getUbicacion()).thenReturn(santuario);
         mediumQuilmes.conectarseAEspiritu(espirituMock);
         mediumQuilmes.setMana(90);
 
@@ -89,14 +89,14 @@ public class MediumTest {
 
         //verify
         assertEquals(100, mediumQuilmes.getMana());
-        verify(espirituMock).descansar();
+        verify(espirituMock).descansar(santuario);
     }
 
     @Test
     void cuandoSeDescansaSeRecuperaHasta15DeMana(){
         //setup
         when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(quilmes);
+        when(espirituMock.getUbicacion()).thenReturn(santuario);
         mediumQuilmes.conectarseAEspiritu(espirituMock);
 
         //exercise
@@ -104,13 +104,13 @@ public class MediumTest {
 
         //verify
         assertEquals(65, mediumQuilmes.getMana());
-        verify(espirituMock).descansar();
+        verify(espirituMock).descansar(santuario);
     }
 
     @Test
     void desvincularseDe(){
         when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(bernal);
+        when(espirituMock.getUbicacion()).thenReturn(cementerio);
         mediumBernal.conectarseAEspiritu(espirituNoConectado);
         mediumBernal.conectarseAEspiritu(espirituMock);
 
@@ -127,7 +127,7 @@ public class MediumTest {
 
     @Test
     void exorcizarA_SinAngeles() {
-        Medium poseido = new Medium("Juan",100,35, bernal);
+        Medium poseido = new Medium("Juan",100,35, cementerio);
 
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();

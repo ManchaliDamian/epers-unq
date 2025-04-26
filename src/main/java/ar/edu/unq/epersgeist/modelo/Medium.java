@@ -1,16 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.modelo.exception.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Check;
-
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 
 import java.util.*;
 
@@ -69,14 +65,6 @@ public class Medium {
         return !this.ubicacion.equals(espiritu.getUbicacion());
     }
 
-    public void descansar() {
-        this.setMana(
-                Math.min(this.getMana() + 15, this.getManaMax())
-        );
-
-        this.getEspiritus().forEach(Espiritu::descansar);
-    }
-
     public void desvincularseDe(Espiritu espiritu) {
         if (espiritus.remove(espiritu)) {
             espiritu.setMediumConectado(null);
@@ -99,8 +87,19 @@ public class Medium {
         }
     }
 
+    public void descansar() {
+        ubicacion.aplicarEfectoMedium(this);
+        espiritus.forEach(e -> ubicacion.aplicarEfectoEspiritu(e));
+    }
+
+    public void recuperarMana(int cantidad) {
+        this.mana = Math.min(mana + cantidad, manaMax);
+    }
+
     public Espiritu invocarA(Espiritu espiritu) {
         if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+        if (!ubicacion.permiteInvocar(espiritu)) throw new InvocacionNoPermitidaException(espiritu, ubicacion);
+
         if (this.getMana() < 10) return espiritu;
 
         espiritu.setUbicacion(this.getUbicacion());

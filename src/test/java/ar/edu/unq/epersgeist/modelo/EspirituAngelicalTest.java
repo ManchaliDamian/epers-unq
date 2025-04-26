@@ -8,20 +8,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EspirituAngelicalTest {
     private EspirituDemoniaco espirituDemoniaco;
     private EspirituAngelical espirituAngelical;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        espirituAngelical = new EspirituAngelical("EspirituAngelical", quilmes);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
-        mediumConectado = new Medium("Mago",100,50,quilmes);
-        espirituDemoniaco.setMediumConectado(mediumConectado);
-        espirituAngelical.setMediumConectado(mediumConectado);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical", santuario);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        mediumConectado = new Medium("Mago",100,50,santuario);
+
     }
 
     @Test

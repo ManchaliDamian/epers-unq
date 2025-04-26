@@ -21,7 +21,7 @@ public abstract class Espiritu {
     @Column(nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
-    private Integer nivelDeConexion;
+    protected Integer nivelDeConexion;
 
     @Column(nullable = false)
     private String nombre;
@@ -30,7 +30,7 @@ public abstract class Espiritu {
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
-    public Espiritu ( @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
 
         this.nivelDeConexion = 0;
         this.nombre = nombre;
@@ -52,9 +52,9 @@ public abstract class Espiritu {
 
     protected void perderNivelDeConexion(int cantidad){
         int nuevoNivel = this.getNivelDeConexion() - cantidad;
-        this.setNivelDeConexion(Math.max(nuevoNivel, 0));  // Asegura que no sea negativo
+        this.setNivelDeConexion(Math.max(nuevoNivel, 0));
 
-        if (this.getNivelDeConexion() == 0 && this.estaConectado()) {  // Verifica estado actual
+        if (this.getNivelDeConexion() == 0 && this.estaConectado()) {
             this.getMediumConectado().desvincularseDe(this);
         }
     }
@@ -63,10 +63,19 @@ public abstract class Espiritu {
         return this.getMediumConectado() != null;
     }
 
-    public void descansar() {
-        this.setNivelDeConexion(
-                Math.min(this.getNivelDeConexion() + 5, 100)
-        );
+    public boolean puedeSerInvocadoEnCementerio() {
+        return false;
     }
 
+    public boolean puedeSerInvocadoEnSantuario() {
+        return false;
+    }
+
+    public void descansar(Ubicacion ubicacion) {
+        ubicacion.aplicarEfectoEspiritu(this);
+    }
+
+    public void recibirEfectoDe(Cementerio cementerio){};
+
+    public void recibirEfectoDe(Santuario santuario){};
 }

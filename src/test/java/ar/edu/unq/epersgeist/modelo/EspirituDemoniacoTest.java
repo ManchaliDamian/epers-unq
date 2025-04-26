@@ -8,20 +8,20 @@ public class EspirituDemoniacoTest {
 
     private EspirituDemoniaco espirituDemoniaco;
     private EspirituAngelical espirituAngelical;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumAngel;
     private Medium mediumDemon;
 
     @BeforeEach
     void setUp() {
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        espirituAngelical = new EspirituAngelical( "EspirituAngelical", quilmes);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
-        mediumAngel= new Medium("Mago", 100, 50, quilmes);
-        mediumDemon = new Medium("Maguito",100, 10, bernal);
+        espirituAngelical = new EspirituAngelical( "EspirituAngelical", santuario);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        mediumAngel= new Medium("Mago", 100, 50, santuario);
+        mediumDemon = new Medium("Maguito",100, 10, cementerio);
 
     }
 
