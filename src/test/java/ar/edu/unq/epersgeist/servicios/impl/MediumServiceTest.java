@@ -47,7 +47,7 @@ public class MediumServiceTest {
         eliminarTodo.eliminarTodo();
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
-        cementerio = new Cementerio("La Plata", 100);
+        cementerio = new Cementerio("La Plata", 4);
         santuario = new Santuario("Quilmes",100);
         serviceU.guardar(santuario);
         serviceU.guardar(cementerio);
@@ -140,14 +140,14 @@ public class MediumServiceTest {
     void descansarConEspiritus(){
         angel.setNivelDeConexion(10);
         serviceE.guardar(angel);
-        medium1.setMana(5);
-        medium1.conectarseAEspiritu(angel);
+        medium1.setMana(5);//5*0.5=2.5
+        medium1.conectarseAEspiritu(angel);//11
         serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         Optional<Espiritu> angelRecuperado = serviceE.recuperar(angel.getId());
-        assertEquals(20, mediumRecuperado.get().getMana());
-        assertEquals(16, angelRecuperado.get().getNivelDeConexion());
+        assertEquals(11, angelRecuperado.get().getNivelDeConexion());
+        assertEquals(7, mediumRecuperado.get().getMana());
     }
     @Test
     void descansarSinEspiritus(){
@@ -156,7 +156,7 @@ public class MediumServiceTest {
         serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
-        assertEquals(20, mediumRecuperado.get().getMana());
+        assertEquals(7, mediumRecuperado.get().getMana());
     }
     @Test
     void descansarPeroElMagoLlegaAlLimiteDeMana(){
