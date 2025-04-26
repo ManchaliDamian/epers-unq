@@ -51,6 +51,9 @@ public abstract class Espiritu {
     }
 
     protected void perderNivelDeConexion(int cantidad){
+        if (cantidad < 0) {
+            throw new IllegalArgumentException("La cantidad no puede ser negativa");
+        }
         int nuevoNivel = this.getNivelDeConexion() - cantidad;
         this.setNivelDeConexion(Math.max(nuevoNivel, 0));
 
@@ -63,17 +66,13 @@ public abstract class Espiritu {
         return this.getMediumConectado() != null;
     }
 
-    public boolean puedeSerInvocadoEnCementerio() {
-        return false;
-    }
-
-    public boolean puedeSerInvocadoEnSantuario() {
-        return false;
-    }
-
     public void descansar(Ubicacion ubicacion) {
         ubicacion.aplicarEfectoEspiritu(this);
     }
+
+    public boolean puedeSerInvocadoEnCementerio() {return false;}
+
+    public boolean puedeSerInvocadoEnSantuario() {return false;}
 
     public void recibirEfectoDe(Cementerio cementerio){};
 

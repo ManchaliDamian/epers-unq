@@ -47,5 +47,49 @@ public class EspirituAngelicalTest {
         assertEquals(20, espirituDemoniaco.getNivelDeConexion());
     }
 
+    @Test
+    void probabilidadDeAtaqueExitoso_DentroDeRango() {
+        espirituAngelical.setNivelDeConexion(50);
+        Generador.setEstrategia(new GeneradorSecuencial(5));
+
+        int probabilidad = espirituAngelical.probabilidadDeAtaqueExitoso();
+
+        assertEquals(55, probabilidad);
+    }
+
+    @Test
+    void probabilidadDeAtaqueExitoso_NoExcedeMaximo() {
+        espirituAngelical.setNivelDeConexion(95);
+        Generador.setEstrategia(new GeneradorSecuencial(10));
+
+        int probabilidad = espirituAngelical.probabilidadDeAtaqueExitoso();
+
+        assertEquals(100, probabilidad);
+    }
+
+    @Test
+    void recibirEfectoDeSantuario_AumentaNivelDeConexion() {
+        Santuario santuario = new Santuario("Test", 30);
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recibirEfectoDe(santuario);
+
+        assertEquals(80, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirEfectoDeSantuario_NoExcedeMaximo() {
+        Santuario santuario = new Santuario("Test", 60);
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recibirEfectoDe(santuario);
+
+        assertEquals(100, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void puedeSerInvocadoEnSantuario_RetornaTrue() {
+        assertTrue(espirituAngelical.puedeSerInvocadoEnSantuario());
+    }
 
 }

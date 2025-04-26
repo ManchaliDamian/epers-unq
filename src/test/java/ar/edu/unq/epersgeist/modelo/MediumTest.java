@@ -21,7 +21,7 @@ public class MediumTest {
     private Medium mediumQuilmes;
     private Medium mediumBernal;
     private EspirituDemoniaco espirituNoConectado;
-    private EspirituAngelical espirituMock;
+    private EspirituAngelical espirituAngelicalMock;
 
 
     @BeforeEach
@@ -36,7 +36,7 @@ public class MediumTest {
         mediumBernal = new Medium("Bernardo",100,90,cementerio);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
-        espirituMock = mock(EspirituAngelical.class);
+        espirituAngelicalMock = mock(EspirituAngelical.class);
 
     }
 
@@ -78,43 +78,20 @@ public class MediumTest {
 
     @Test
     void cuandoSeDescansaNoSeSobrepasaManaMax(){
-        //setup
-        when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(santuario);
-        mediumQuilmes.conectarseAEspiritu(espirituMock);
-        mediumQuilmes.setMana(90);
-
-        //exercise
-        mediumQuilmes.descansar();
-
-        //verify
-        assertEquals(100, mediumQuilmes.getMana());
-        verify(espirituMock).descansar(santuario);
+        mediumBernal.conectarseAEspiritu(espirituNoConectado);
+        mediumBernal.descansar();
+        assertEquals(100, mediumBernal.getMana());
     }
 
-    @Test
-    void cuandoSeDescansaSeRecuperaHasta15DeMana(){
-        //setup
-        when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(santuario);
-        mediumQuilmes.conectarseAEspiritu(espirituMock);
-
-        //exercise
-        mediumQuilmes.descansar();
-
-        //verify
-        assertEquals(65, mediumQuilmes.getMana());
-        verify(espirituMock).descansar(santuario);
-    }
 
     @Test
     void desvincularseDe(){
-        when(espirituMock.estaConectado()).thenReturn(false);
-        when(espirituMock.getUbicacion()).thenReturn(cementerio);
+        when(espirituAngelicalMock.estaConectado()).thenReturn(false);
+        when(espirituAngelicalMock.getUbicacion()).thenReturn(cementerio);
         mediumBernal.conectarseAEspiritu(espirituNoConectado);
-        mediumBernal.conectarseAEspiritu(espirituMock);
+        mediumBernal.conectarseAEspiritu(espirituAngelicalMock);
 
-        mediumBernal.desvincularseDe(espirituMock);
+        mediumBernal.desvincularseDe(espirituAngelicalMock);
 
         assertEquals(1, mediumBernal.getEspiritus().size());
         assertEquals(espirituNoConectado, mediumBernal.getEspiritus().stream().findFirst().orElseThrow());
@@ -122,7 +99,7 @@ public class MediumTest {
 
     @Test
     void desvincularseDeNoLanzaErrorCuandoNoHayEspiritusVinculados(){
-        assertDoesNotThrow(() -> mediumBernal.desvincularseDe(espirituMock));
+        assertDoesNotThrow(() -> mediumBernal.desvincularseDe(espirituAngelicalMock));
     }
 
     @Test

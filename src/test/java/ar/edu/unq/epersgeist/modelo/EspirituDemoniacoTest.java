@@ -33,7 +33,6 @@ public class EspirituDemoniacoTest {
         espirituAngelical.setNivelDeConexion(20);
         espirituDemoniaco.setNivelDeConexion(20);
 
-        // Ataca con éxito, baja 10 puntos
         Generador.setEstrategia(new GeneradorSecuencial(10));
 
         espirituAngelical.atacar(espirituDemoniaco);
@@ -56,6 +55,43 @@ public class EspirituDemoniacoTest {
         assertNull(espirituDemoniaco.getMediumConectado());
         assertEquals(0, espirituDemoniaco.getNivelDeConexion());
         assertEquals(0, mediumDemon.getEspiritus().size());
+    }
+
+    @Test
+    void recibirEfectoDeCementerio_AumentaNivelDeConexion() {
+        Cementerio cementerio = new Cementerio("Test", 30);
+        espirituDemoniaco.setNivelDeConexion(50);
+
+        espirituDemoniaco.recibirEfectoDe(cementerio);
+
+        assertEquals(80, espirituDemoniaco.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirEfectoDeCementerio_NoExcedeMaximo() {
+        Cementerio cementerio = new Cementerio("Test", 60);
+        espirituDemoniaco.setNivelDeConexion(50);
+
+        espirituDemoniaco.recibirEfectoDe(cementerio);
+
+        // 50 + 60 = 110, pero el máximo es 100
+        assertEquals(100, espirituDemoniaco.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirAtaque_DisminuyeNivelDeConexion() {
+        espirituDemoniaco.setNivelDeConexion(30);
+        espirituDemoniaco.recibirAtaque(15);
+
+        assertEquals(15, espirituDemoniaco.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirAtaque_NoBajaDeCero() {
+        espirituDemoniaco.setNivelDeConexion(10);
+        espirituDemoniaco.recibirAtaque(15);
+
+        assertEquals(0, espirituDemoniaco.getNivelDeConexion());
     }
 }
 

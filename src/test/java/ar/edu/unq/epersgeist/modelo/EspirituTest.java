@@ -107,7 +107,6 @@ public class EspirituTest {
 
     @Test
     void conectarA_NoSuperaElMaximoDe100() {
-        // si el espíritu ya tiene una conexión de 95, y el medium da +18, debería quedar en 100
         angel.setNivelDeConexion(95);
         angel.conectarA(mediumConectado);
 
@@ -115,4 +114,33 @@ public class EspirituTest {
         assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
+    @Test
+    void aumentarConexion_ConManaCero() {
+        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario);
+        angel.setNivelDeConexion(50);
+        angel.conectarA(mediumSinMana);
+        assertEquals(50, angel.getNivelDeConexion());
+    }
+
+    @Test
+    void perderNivelDeConexion_CantidadNegativa() {
+        angel.setNivelDeConexion(50);
+        assertThrows(IllegalArgumentException.class, () -> {
+            angel.perderNivelDeConexion(-10);
+        });
+    }
+
+    @Test
+    void conectarA_MediumNuloLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> {
+            angel.conectarA(null);
+        });
+    }
+
+    @Test
+    void descansar_UbicacionNulaLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> {
+            angel.descansar(null);
+        });
+    }
 }
