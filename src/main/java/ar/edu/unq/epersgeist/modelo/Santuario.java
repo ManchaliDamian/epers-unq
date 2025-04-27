@@ -22,12 +22,12 @@ public class Santuario extends Ubicacion {
     }
 
     @Override
-    public void aplicarEfectoMedium(Medium medium) {
-        int recuperacion = (int) (getFlujoDeEnergia() * 1.5);
-        medium.recuperarMana(recuperacion);
-    }
-    @Override
-    public  void aplicarEfectoEspiritu(Espiritu espiritu){
+    public void aplicarEfectoEspiritu(Espiritu espiritu){
         espiritu.recibirEfectoDe(this);
+    }
+
+    @Override
+    protected double getMultiplicadorMana() {
+        return 1.5;
     }
 }

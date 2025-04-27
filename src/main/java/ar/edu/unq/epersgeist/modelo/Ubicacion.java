@@ -34,8 +34,12 @@ public abstract class Ubicacion {
         this.setNombre(nombre);
     }
 
-    public abstract boolean permiteInvocar(Espiritu espiritu);
-    public abstract void aplicarEfectoMedium(Medium medium);
+    public void aplicarEfectoMedium(Medium medium) {
+        int recuperacion = (int) (getFlujoDeEnergia() * getMultiplicadorMana());
+        medium.recuperarMana(recuperacion);
+    }
 
+    public abstract boolean permiteInvocar(Espiritu espiritu);
     public abstract void aplicarEfectoEspiritu(Espiritu espiritu);
+    protected abstract double getMultiplicadorMana();
 }

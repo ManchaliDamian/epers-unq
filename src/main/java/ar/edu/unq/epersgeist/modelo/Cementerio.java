@@ -18,13 +18,12 @@ public class Cementerio extends Ubicacion {
     }
 
     @Override
-    public void aplicarEfectoMedium(Medium medium) {
-        int recuperacion = (int) (getFlujoDeEnergia() * 0.5);
-        medium.recuperarMana(recuperacion);
+    public void aplicarEfectoEspiritu(Espiritu espiritu){
+        espiritu.recibirEfectoDe(this);
     }
 
     @Override
-    public  void aplicarEfectoEspiritu(Espiritu espiritu){
-        espiritu.recibirEfectoDe(this);
+    protected double getMultiplicadorMana() {
+        return 0.5;
     }
 }
