@@ -39,15 +39,13 @@ public abstract class Espiritu {
 
     public void conectarA(Medium medium){
         this.setMediumConectado(medium);
-        this.aumentarConexion(medium);
+        this.aumentarConexionCon(medium);
     }
 
-    private void aumentarConexion(Medium medium) {
+    private void aumentarConexionCon(Medium medium) {
         int aumento = (int) Math.round(medium.getMana() * 0.20);
 
-        this.setNivelDeConexion(
-                Math.min(this.getNivelDeConexion() + aumento, 100)
-        );
+        this.aumentarNivelDeConexion(aumento);
     }
 
     protected void perderNivelDeConexion(int cantidad){
@@ -67,17 +65,15 @@ public abstract class Espiritu {
     }
 
     public void descansar(Ubicacion ubicacion) {
-        ubicacion.aplicarEfectoEspiritu(this);
+        this.recuperarConexionEn(ubicacion);
     }
+
+    public void aumentarNivelDeConexion(int aumento){
+        this.nivelDeConexion += Math.min(this.getNivelDeConexion() + aumento, 100);
+    }
+
     public void atacar(Espiritu objetivo){};
-    public void recibirAtaque(int cantidad){};
-
-
-    public boolean puedeSerInvocadoEnCementerio() {return false;}
-
-    public boolean puedeSerInvocadoEnSantuario() {return false;}
-
-    public void recibirEfectoDe(Cementerio cementerio){};
-
-    public void recibirEfectoDe(Santuario santuario){};
+    public abstract void serInvocadoEn(Ubicacion ubicacion);
+    public abstract void recuperarConexionEn(Ubicacion ubicacion);
+    public abstract void mover(Ubicacion ubicacion);
 }

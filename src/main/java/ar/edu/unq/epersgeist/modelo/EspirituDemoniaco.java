@@ -11,22 +11,18 @@ public class EspirituDemoniaco extends Espiritu{
     public EspirituDemoniaco( String nombre, Ubicacion ubicacion) {
         super(nombre, ubicacion);
     }
+
     @Override
-    public void recibirAtaque(int cantidad){
-        this.perderNivelDeConexion(cantidad);
+    public void serInvocadoEn(Ubicacion ubicacion) {
+        ubicacion.invocarDemonio(this);
+    }
+    @Override
+    public void recuperarConexionEn(Ubicacion ubicacion) {
+        ubicacion.recuperarConexionComoDemonio(this);
     }
 
     @Override
-    public boolean puedeSerInvocadoEnCementerio() {
-        return true;
+    public void mover(Ubicacion ubicacion) {
+        ubicacion.moverDemonio(this);
     }
-
-    @Override
-    public void recibirEfectoDe(Cementerio cementerio){
-        this.nivelDeConexion = Math.min(
-                nivelDeConexion + cementerio.getFlujoDeEnergia(),
-                100
-        );
-    }
-
 }

@@ -88,8 +88,8 @@ public class Medium {
     }
 
     public void descansar() {
-        ubicacion.aplicarEfectoMedium(this);
-        espiritus.forEach(e -> ubicacion.aplicarEfectoEspiritu(e));
+        this.recuperarMana(ubicacion.getCantidadRecuperada());
+        espiritus.forEach(e -> e.recuperarEnergiaEn(ubicacion));
     }
 
     public void recuperarMana(int cantidad) {
@@ -97,14 +97,17 @@ public class Medium {
     }
 
     public Espiritu invocarA(Espiritu espiritu) {
-        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
-        if (!ubicacion.permiteInvocar(espiritu)) throw new InvocacionNoPermitidaException(espiritu, ubicacion);
+        this.validarInvocar(espiritu);
 
-        if (this.getMana() < 10) return espiritu;
+        if (this.getMana() >= 10) {
+            espiritu.serInvocadoEn(this.ubicacion);
+            this.mana -= 10;
+        }
 
-        espiritu.setUbicacion(this.getUbicacion());
-        this.setMana(this.getMana() - 10);
         return espiritu;
     }
 
+    public void validarInvocar(Espiritu espiritu){
+        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+    }
 }

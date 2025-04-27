@@ -21,7 +21,7 @@ public class EspirituAngelical extends Espiritu{
 
         if (probAtaqueExitoso > defensaDemonio) {
             int cantidad = this.getNivelDeConexion() / 2;
-            objetivo.recibirAtaque(cantidad);
+            objetivo.perderNivelDeConexion(cantidad);
         } else {
             this.perderNivelDeConexion(5);
         }
@@ -34,14 +34,17 @@ public class EspirituAngelical extends Espiritu{
     }
 
     @Override
-    public void recibirEfectoDe(Santuario santuario) {
-        this.nivelDeConexion = Math.min(
-                nivelDeConexion + santuario.getFlujoDeEnergia(),
-                100
-        );
+    public void serInvocadoEn(Ubicacion ubicacion) {
+        ubicacion.invocarAngel(this);
     }
+
     @Override
-    public boolean puedeSerInvocadoEnSantuario() {
-        return true;
+    public void recuperarConexionEn(Ubicacion ubicacion) {
+        ubicacion.recuperarConexionComoAngel(this);
+    }
+
+    @Override
+    public void mover(Ubicacion ubicacion) {
+        ubicacion.moverAngel(this);
     }
 }

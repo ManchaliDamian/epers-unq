@@ -34,12 +34,15 @@ public abstract class Ubicacion {
         this.setNombre(nombre);
     }
 
-    public void aplicarEfectoMedium(Medium medium) {
-        int recuperacion = (int) (getFlujoDeEnergia() * getMultiplicadorMana());
-        medium.recuperarMana(recuperacion);
+    public Integer getCantidadRecuperada() {
+        return (int) (getFlujoDeEnergia() * getMultiplicadorMana());
     }
-
-    public abstract boolean permiteInvocar(Espiritu espiritu);
-    public abstract void aplicarEfectoEspiritu(Espiritu espiritu);
     protected abstract double getMultiplicadorMana();
+
+    public abstract void invocarAngel (Espiritu espiritu);
+    public abstract void invocarDemonio(Espiritu espiritu);
+    public  void recuperarConexionComoAngel(Espiritu espiritu){};
+    public  void recuperarConexionComoDemonio(Espiritu espiritu){};
+    public abstract void moverAngel(Espiritu espiritu);
+    public abstract void moverDemonio(Espiritu espiritu);
 }
