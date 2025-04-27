@@ -1,7 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @ToString
@@ -9,8 +10,8 @@ import lombok.*;
 @DiscriminatorValue("CEMENTERIO")
 public class Cementerio extends Ubicacion {
 
-    public Cementerio(@NonNull String nombre,@NonNull Integer energiaUbicacion) {
-        super(nombre, energiaUbicacion);
+    public Cementerio(String nombre, Integer flujoDeEnergia) {
+        super(nombre, flujoDeEnergia);
     }
 
     @Override

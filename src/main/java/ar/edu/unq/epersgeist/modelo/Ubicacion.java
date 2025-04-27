@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
-import java.util.*;
 
 @Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode @ToString

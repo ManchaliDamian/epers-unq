@@ -10,7 +10,7 @@ import lombok.*;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical( String nombre, Ubicacion ubicacion) {
+    public EspirituAngelical(String nombre, Ubicacion ubicacion) {
         super( nombre, ubicacion);
     }
 
