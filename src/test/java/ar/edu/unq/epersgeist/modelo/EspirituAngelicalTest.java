@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class EspirituAngelicalTest {
-    private EspirituDemoniaco espirituDemoniaco;
-    private EspirituAngelical espirituAngelical;
+    private Espiritu espirituDemoniaco;
+    private Espiritu espirituAngelical;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
@@ -45,26 +45,6 @@ public class EspirituAngelicalTest {
 
         assertEquals(5, espirituAngelical.getNivelDeConexion());
         assertEquals(20, espirituDemoniaco.getNivelDeConexion());
-    }
-
-    @Test
-    void probabilidadDeAtaqueExitoso_DentroDeRango() {
-        espirituAngelical.setNivelDeConexion(50);
-        Generador.setEstrategia(new GeneradorSecuencial(5));
-
-        int probabilidad = espirituAngelical.probabilidadDeAtaqueExitoso();
-
-        assertEquals(55, probabilidad);
-    }
-
-    @Test
-    void probabilidadDeAtaqueExitoso_NoExcedeMaximo() {
-        espirituAngelical.setNivelDeConexion(95);
-        Generador.setEstrategia(new GeneradorSecuencial(10));
-
-        int probabilidad = espirituAngelical.probabilidadDeAtaqueExitoso();
-
-        assertEquals(100, probabilidad);
     }
 
     @Test

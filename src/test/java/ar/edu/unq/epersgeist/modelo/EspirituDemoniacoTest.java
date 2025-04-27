@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituDemoniacoTest {
 
-    private EspirituDemoniaco espirituDemoniaco;
-    private EspirituAngelical espirituAngelical;
+    private Espiritu espirituDemoniaco;
+    private Espiritu espirituAngelical;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumAngel;

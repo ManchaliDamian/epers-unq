@@ -69,6 +69,9 @@ public abstract class Espiritu {
     public void descansar(Ubicacion ubicacion) {
         ubicacion.aplicarEfectoEspiritu(this);
     }
+    public void atacar(Espiritu objetivo){};
+    public void recibirAtaque(int cantidad){};
+
 
     public boolean puedeSerInvocadoEnCementerio() {return false;}
 

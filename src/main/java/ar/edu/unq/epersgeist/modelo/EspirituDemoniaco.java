@@ -11,7 +11,7 @@ public class EspirituDemoniaco extends Espiritu{
     public EspirituDemoniaco( String nombre, Ubicacion ubicacion) {
         super(nombre, ubicacion);
     }
-
+    @Override
     public void recibirAtaque(int cantidad){
         this.perderNivelDeConexion(cantidad);
     }
