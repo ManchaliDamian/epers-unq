@@ -52,7 +52,7 @@ public class EspirituAngelicalTest {
         Santuario santuario = new Santuario("Test", 30);
         espirituAngelical.setNivelDeConexion(50);
 
-        espirituAngelical.recibirEfectoDe(santuario);
+        espirituAngelical.recuperarConexionEn(santuario);
 
         assertEquals(80, espirituAngelical.getNivelDeConexion());
     }
@@ -62,14 +62,24 @@ public class EspirituAngelicalTest {
         Santuario santuario = new Santuario("Test", 60);
         espirituAngelical.setNivelDeConexion(50);
 
-        espirituAngelical.recibirEfectoDe(santuario);
+        espirituAngelical.recuperarConexionEn(santuario);
 
         assertEquals(100, espirituAngelical.getNivelDeConexion());
     }
 
     @Test
-    void puedeSerInvocadoEnSantuario_RetornaTrue() {
-        assertTrue(espirituAngelical.puedeSerInvocadoEnSantuario());
+    void recibirEfectoDeCementerio_NoHaceNada() {
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recuperarConexionEn(cementerio);
+
+        assertEquals(50, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void espirituAngelicalPuedeMoverseAUnaUbicacion() {
+        espirituAngelical.mover(cementerio);
+        assertEquals(cementerio, espirituAngelical.getUbicacion());
     }
 
 }

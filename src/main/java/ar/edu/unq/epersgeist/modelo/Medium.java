@@ -89,7 +89,7 @@ public class Medium {
 
     public void descansar() {
         this.recuperarMana(ubicacion.getCantidadRecuperada());
-        espiritus.forEach(e -> e.recuperarEnergiaEn(ubicacion));
+        espiritus.forEach(e -> e.recuperarConexionEn(ubicacion));
     }
 
     public void recuperarMana(int cantidad) {

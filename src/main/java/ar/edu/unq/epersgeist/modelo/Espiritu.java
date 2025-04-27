@@ -69,7 +69,7 @@ public abstract class Espiritu {
     }
 
     public void aumentarNivelDeConexion(int aumento){
-        this.nivelDeConexion += Math.min(this.getNivelDeConexion() + aumento, 100);
+        this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
     }
 
     public void atacar(Espiritu objetivo){};

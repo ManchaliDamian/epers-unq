@@ -59,29 +59,35 @@ public class EspirituDemoniacoTest {
 
     @Test
     void recibirEfectoDeCementerio_AumentaNivelDeConexion() {
-        Cementerio cementerio = new Cementerio("Test", 30);
-        espirituDemoniaco.setNivelDeConexion(50);
+        espirituDemoniaco.setNivelDeConexion(30);
 
-        espirituDemoniaco.recibirEfectoDe(cementerio);
+        espirituDemoniaco.recuperarConexionEn(cementerio);
 
-        assertEquals(80, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(90, espirituDemoniaco.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeCementerio_NoExcedeMaximo() {
-        Cementerio cementerio = new Cementerio("Test", 60);
         espirituDemoniaco.setNivelDeConexion(50);
 
-        espirituDemoniaco.recibirEfectoDe(cementerio);
+        espirituDemoniaco.recuperarConexionEn(cementerio);
 
-        // 50 + 60 = 110, pero el máximo es 100
         assertEquals(100, espirituDemoniaco.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirEfectoDeSantuario_NoHaceNada() {
+        espirituDemoniaco.setNivelDeConexion(50);
+
+        espirituDemoniaco.recuperarConexionEn(santuario);
+
+        assertEquals(50, espirituDemoniaco.getNivelDeConexion());
     }
 
     @Test
     void recibirAtaque_DisminuyeNivelDeConexion() {
         espirituDemoniaco.setNivelDeConexion(30);
-        espirituDemoniaco.recibirAtaque(15);
+        espirituDemoniaco.perderNivelDeConexion(15);
 
         assertEquals(15, espirituDemoniaco.getNivelDeConexion());
     }
@@ -89,7 +95,7 @@ public class EspirituDemoniacoTest {
     @Test
     void recibirAtaque_NoBajaDeCero() {
         espirituDemoniaco.setNivelDeConexion(10);
-        espirituDemoniaco.recibirAtaque(15);
+        espirituDemoniaco.perderNivelDeConexion(15);
 
         assertEquals(0, espirituDemoniaco.getNivelDeConexion());
     }
