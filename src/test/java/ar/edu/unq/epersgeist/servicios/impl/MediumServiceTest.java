@@ -62,6 +62,18 @@ public class MediumServiceTest {
         serviceE.guardar(angel);
 
     }
+    @Test
+    void moverMedium() {
+        medium1.conectarseAEspiritu(angel);
+        serviceM.guardar(medium1);
+
+        serviceM.mover(medium1.getId(), santuario.getId());
+
+        serviceM.guardar(medium1);
+        Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
+
+        assertEquals(cementerio, mediumActualizado.get().getUbicacion());
+    }
 
     @Test
     void testInvocar() {
