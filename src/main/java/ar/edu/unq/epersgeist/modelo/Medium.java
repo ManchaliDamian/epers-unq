@@ -37,7 +37,6 @@ public class Medium {
     @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
 
-
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
