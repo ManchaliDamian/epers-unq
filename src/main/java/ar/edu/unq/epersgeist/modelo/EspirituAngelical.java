@@ -10,27 +10,41 @@ import lombok.*;
 @DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
-    public EspirituAngelical( String nombre, Ubicacion ubicacion) {
+    public EspirituAngelical(String nombre, Ubicacion ubicacion) {
         super( nombre, ubicacion);
-
     }
 
-    public void atacar(EspirituDemoniaco objetivo) {
+    @Override
+    public void atacar(Espiritu objetivo) {
         int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();
         int defensaDemonio = Generador.entre(1, 100);
 
         if (probAtaqueExitoso > defensaDemonio) {
             int cantidad = this.getNivelDeConexion() / 2;
-            objetivo.recibirAtaque(cantidad);
+            objetivo.perderNivelDeConexion(cantidad);
         } else {
             this.perderNivelDeConexion(5);
         }
     }
 
-    protected int probabilidadDeAtaqueExitoso() {
+    private int probabilidadDeAtaqueExitoso() {
         int cantidad = Generador.entre(1, 10);
         int cantAtaque = cantidad + this.getNivelDeConexion();
         return Math.min(cantAtaque, 100);
     }
 
+    @Override
+    public void serInvocadoEn(Ubicacion ubicacion) {
+        ubicacion.invocarAngel(this);
+    }
+
+    @Override
+    public void recuperarConexionEn(Ubicacion ubicacion) {
+        ubicacion.recuperarConexionComoAngel(this);
+    }
+
+    @Override
+    public void mover(Ubicacion ubicacion) {
+        ubicacion.moverAngel(this);
+    }
 }

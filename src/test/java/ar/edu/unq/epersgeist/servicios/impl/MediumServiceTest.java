@@ -37,8 +37,8 @@ public class MediumServiceTest {
     private Medium medium2;
     private Espiritu demonio;
     private Espiritu angel;
-    private Ubicacion quilmes;
-    private Ubicacion plata;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
 
     private DataService eliminarTodo;
     @BeforeEach
@@ -47,15 +47,15 @@ public class MediumServiceTest {
         eliminarTodo.eliminarTodo();
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
-        plata = new Ubicacion("La Plata");
-        quilmes = new Ubicacion("Quilmes");
-        serviceU.guardar(quilmes);
-        serviceU.guardar(plata);
+        cementerio = new Cementerio("La Plata", 4);
+        santuario = new Santuario("Quilmes",100);
+        serviceU.guardar(santuario);
+        serviceU.guardar(cementerio);
 
-        medium1 = new Medium("Pablo", 100, 50, plata);
-        medium2 = new Medium("Fidol", 100, 50, quilmes);
-        demonio = new EspirituDemoniaco("Jose", quilmes);
-        angel = new EspirituAngelical( "kici", plata);
+        medium1 = new Medium("Pablo", 100, 50, cementerio);
+        medium2 = new Medium("Fidol", 100, 50, santuario);
+        demonio = new EspirituDemoniaco("Jose", santuario);
+        angel = new EspirituAngelical( "kici", cementerio);
         serviceM.guardar(medium1);
         serviceM.guardar(medium2);
         serviceE.guardar(demonio);
@@ -82,9 +82,9 @@ public class MediumServiceTest {
     @Test
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
-        demonio.setUbicacion(plata);
+        demonio.setUbicacion(cementerio);
         serviceM.guardar(medium1);
-        demonio.setUbicacion(quilmes);
+        demonio.setUbicacion(santuario);
         serviceE.guardar(demonio);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
@@ -140,14 +140,14 @@ public class MediumServiceTest {
     void descansarConEspiritus(){
         angel.setNivelDeConexion(10);
         serviceE.guardar(angel);
-        medium1.setMana(5);
-        medium1.conectarseAEspiritu(angel);
+        medium1.setMana(5);//5*0.5=2.5
+        medium1.conectarseAEspiritu(angel);//11
         serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         Optional<Espiritu> angelRecuperado = serviceE.recuperar(angel.getId());
-        assertEquals(20, mediumRecuperado.get().getMana());
-        assertEquals(16, angelRecuperado.get().getNivelDeConexion());
+        assertEquals(11, angelRecuperado.get().getNivelDeConexion());
+        assertEquals(7, mediumRecuperado.get().getMana());
     }
     @Test
     void descansarSinEspiritus(){
@@ -156,7 +156,7 @@ public class MediumServiceTest {
         serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
-        assertEquals(20, mediumRecuperado.get().getMana());
+        assertEquals(7, mediumRecuperado.get().getMana());
     }
     @Test
     void descansarPeroElMagoLlegaAlLimiteDeMana(){
@@ -193,8 +193,8 @@ public class MediumServiceTest {
     void exorcizar_DosAngelesDerrotanUnDemonio() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
-        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", plata);
-        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", plata);
+        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
+        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", cementerio);
         angel1.setNivelDeConexion(20); // 30 al conectarse, daño = 15
         angel2.setNivelDeConexion(30); // 40 al conectarse, daño = 20
 
@@ -276,13 +276,13 @@ public class MediumServiceTest {
     void exorcizar_MultiplesDemoniosYAngeles_ActualizaCorrectamente() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 5, 100)); // Primer ataque exitoso, segundo falla
 
-        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", plata);
-        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", plata);
+        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
+        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", cementerio);
         angel1.setNivelDeConexion(20);
         angel2.setNivelDeConexion(10);
 
-        EspirituDemoniaco demonio1 = new EspirituDemoniaco("Demonio1", quilmes);
-        EspirituDemoniaco demonio2 = new EspirituDemoniaco("Demonio2", quilmes);
+        EspirituDemoniaco demonio1 = new EspirituDemoniaco("Demonio1", santuario);
+        EspirituDemoniaco demonio2 = new EspirituDemoniaco("Demonio2", santuario);
         demonio1.setNivelDeConexion(15);
         demonio2.setNivelDeConexion(20);
 

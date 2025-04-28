@@ -48,8 +48,8 @@ public class EspirituServiceTest {
         serviceEliminarTodo = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
         serviceEliminarTodo.eliminarTodo();
 
-        quilmes = new Ubicacion("Quilmes");
-        berazategui = new Ubicacion("Berazategui");
+        quilmes = new Santuario("Quilmes", 100);
+        berazategui = new Cementerio("Berazategui",100);
 
         serviceU.guardar(quilmes);
         serviceU.guardar(berazategui);

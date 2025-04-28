@@ -6,22 +6,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class EspirituAngelicalTest {
-    private EspirituDemoniaco espirituDemoniaco;
-    private EspirituAngelical espirituAngelical;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
+    private Espiritu espirituDemoniaco;
+    private Espiritu espirituAngelical;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        espirituAngelical = new EspirituAngelical("EspirituAngelical", quilmes);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", bernal);
-        mediumConectado = new Medium("Mago",100,50,quilmes);
-        espirituDemoniaco.setMediumConectado(mediumConectado);
-        espirituAngelical.setMediumConectado(mediumConectado);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical", santuario);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        mediumConectado = new Medium("Mago",100,50,santuario);
+
     }
 
     @Test
@@ -48,5 +47,39 @@ public class EspirituAngelicalTest {
         assertEquals(20, espirituDemoniaco.getNivelDeConexion());
     }
 
+    @Test
+    void recibirEfectoDeSantuario_AumentaNivelDeConexion() {
+        Santuario santuario = new Santuario("Test", 30);
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recuperarConexionEn(santuario);
+
+        assertEquals(80, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirEfectoDeSantuario_NoExcedeMaximo() {
+        Santuario santuario = new Santuario("Test", 60);
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recuperarConexionEn(santuario);
+
+        assertEquals(100, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirEfectoDeCementerio_NoHaceNada() {
+        espirituAngelical.setNivelDeConexion(50);
+
+        espirituAngelical.recuperarConexionEn(cementerio);
+
+        assertEquals(50, espirituAngelical.getNivelDeConexion());
+    }
+
+    @Test
+    void espirituAngelicalPuedeMoverseAUnaUbicacion() {
+        espirituAngelical.mover(cementerio);
+        assertEquals(cementerio, espirituAngelical.getUbicacion());
+    }
 
 }
