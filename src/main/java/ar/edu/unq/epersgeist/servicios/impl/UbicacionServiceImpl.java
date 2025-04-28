@@ -26,11 +26,10 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public Ubicacion guardar(Ubicacion ubicacion) {
         try {
-            ubicacionDAO.save(ubicacion);
+            return ubicacionDAO.save(ubicacion);
         } catch (DataIntegrityViolationException e) {
             throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
         }
-        return ubicacion;
     }
 
     @Override
