@@ -114,4 +114,9 @@ public class Medium {
     public void validarInvocar(Espiritu espiritu){
         if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
     }
+
+    public void mover(Ubicacion ubicacion) {
+        this.setUbicacion(ubicacion);
+        this.espiritus.forEach(e -> e.mover(ubicacion));
+    }
 }

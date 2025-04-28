@@ -1,8 +1,10 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.espiritu.*;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
+    private final UbicacionDAO ubicacionDAO;
 
-    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO) {
+    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO) {
         this.mediumDAO = unMediumDAO;
         this.espirituDAO = espirituDAO;
+        this.ubicacionDAO = ubicacionDAO;
     }
 
 
@@ -89,14 +93,25 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-            Espiritu espiritu = espirituDAO.recuperar(espirituId);
-            Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
+            Optional<Espiritu> espiritu = espirituDAO.findById(espirituId);
+            Optional<Medium> medium = mediumDAO.findById(mediumId);
 
-            medium.invocarA(espiritu);
+            medium.get().invocarA(espiritu.get());
 
-            mediumDAO.save(medium);
-            espirituDAO.save(espiritu);
+            mediumDAO.save(medium.get());
+            espirituDAO.save(espiritu.get());
 
-            return espiritu;
+            return espiritu.get();
+    }
+
+    @Override
+    public void mover(Long mediumId, Long ubicacionId) {
+        Optional<Medium> medium = mediumDAO.findById(mediumId);
+        Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId);
+
+        medium.get().mover(ubicacion.get());
+
+        mediumDAO.save(medium.get());
+
     }
 }
