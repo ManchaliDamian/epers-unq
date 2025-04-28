@@ -2,6 +2,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -12,12 +15,11 @@ import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +39,8 @@ public class UbicacionServiceTest {
     @Autowired private UbicacionDAO ubicacionDAO;
 
     private Medium medium;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Espiritu angel;
     private Espiritu demonio;
 
@@ -46,16 +48,16 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        angel = new EspirituAngelical("damian",quilmes);
-        demonio = new EspirituDemoniaco("Roberto", quilmes);
+        angel = new EspirituAngelical("damian",santuario);
+        demonio = new EspirituDemoniaco("Roberto", santuario);
 
-        medium = new Medium("roberto", 200, 150, quilmes);
+        medium = new Medium("roberto", 200, 150, santuario);
 
-        serviceU.guardar(quilmes);
-        serviceU.guardar(bernal);
+        serviceU.guardar(santuario);
+        serviceU.guardar(cementerio);
 
         eliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
@@ -66,7 +68,7 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = serviceU.espiritusEn(quilmes.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
     }
 
@@ -75,14 +77,14 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = serviceU.espiritusEn(bernal.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(cementerio.getId());
         assertEquals(0, espiritusEn.size());
     }
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
         serviceM.guardar(medium);
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
     }
@@ -90,7 +92,7 @@ public class UbicacionServiceTest {
     @Test
     void noHayMediumsEnBernal() {
         serviceM.guardar(medium);
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(cementerio.getId());
         assertEquals(0, mediums.size());
     }
 
@@ -99,7 +101,7 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
     }
 
@@ -112,17 +114,17 @@ public class UbicacionServiceTest {
 
     @Test
     void recuperarUbicacionDada() {
-        Optional<Ubicacion> q = serviceU.recuperar(quilmes.getId());
+        Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         assertEquals("Quilmes", q.get().getNombre());
     }
 
     @Test
     public void testCrearYRecuperarUbicacion() {
-        Optional<Ubicacion> recuperada = serviceU.recuperar(quilmes.getId());
+        Optional<Ubicacion> recuperada = serviceU.recuperar(santuario.getId());
 
         assertNotNull(recuperada, "La ubicación recuperada no debería ser null");
         assertEquals("Quilmes", recuperada.get().getNombre(), "El nombre no coincide");
-        assertEquals(quilmes.getId(), recuperada.get().getId(), "El ID no coincide");
+        assertEquals(santuario.getId(), recuperada.get().getId(), "El ID no coincide");
     }
 
     @Test
@@ -133,7 +135,7 @@ public class UbicacionServiceTest {
 
     @Test
     void actualizarUnaUbicacion(){
-        Optional<Ubicacion> q = serviceU.recuperar(quilmes.getId());
+        Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         q.get().cambiarNombre("Avellaneda");
         serviceU.guardar(q.get());
         Optional<Ubicacion> nombreNuevo = serviceU.recuperar(q.get().getId());
@@ -143,7 +145,14 @@ public class UbicacionServiceTest {
 
     @Test
     void eliminarUbicacion() {
-        serviceU.eliminar(quilmes);
+        serviceU.eliminar(santuario);
+        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
+        assertEquals(1, ubicaciones.size());
+    }
+
+    @Test
+    void eliminarUbicacionPorId() {
+        serviceU.eliminar(santuario.getId());
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }

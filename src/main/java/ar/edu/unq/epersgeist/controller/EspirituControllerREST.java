@@ -1,8 +1,7 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

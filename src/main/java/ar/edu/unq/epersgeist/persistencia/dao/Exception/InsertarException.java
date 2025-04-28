@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.dao.Exception;
 
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 
 public class InsertarException extends RuntimeException {
     public InsertarException(Espiritu espiritu) {
