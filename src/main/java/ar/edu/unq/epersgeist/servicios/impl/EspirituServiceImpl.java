@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Direccion;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -30,6 +30,11 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void guardar(Espiritu espiritu) {
+            espirituDAO.save(espiritu);
+    }
+
+    @Override
+    public void actualizar(Espiritu espiritu){
             espirituDAO.save(espiritu);
     }
 

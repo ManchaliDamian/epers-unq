@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -25,12 +24,18 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void guardar(Ubicacion ubicacion) {
+    public Ubicacion guardar(Ubicacion ubicacion) {
         try {
             ubicacionDAO.save(ubicacion);
         } catch (DataIntegrityViolationException e) {
             throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
         }
+        return ubicacion;
+    }
+
+    @Override
+    public Ubicacion actualizar(Ubicacion ubicacion){
+        return this.guardar(ubicacion);
     }
 
     @Override
@@ -47,6 +52,12 @@ public class UbicacionServiceImpl implements UbicacionService {
     public void eliminar(Ubicacion ubicacion) {
             ubicacionDAO.delete(ubicacion);
     }
+
+    @Override
+    public void eliminar(Long id) {
+        ubicacionDAO.deleteById(id);
+    }
+
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {

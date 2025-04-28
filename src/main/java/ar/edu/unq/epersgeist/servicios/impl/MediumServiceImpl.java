@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -30,6 +30,11 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium guardar(Medium unMedium) {
+        return mediumDAO.save(unMedium);
+    }
+
+    @Override
+    public Medium actualizar(Medium unMedium) {
         return mediumDAO.save(unMedium);
     }
 

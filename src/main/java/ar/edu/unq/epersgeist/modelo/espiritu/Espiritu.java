@@ -1,5 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.espiritu;
 
+import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -48,7 +50,7 @@ public abstract class Espiritu {
         this.aumentarNivelDeConexion(aumento);
     }
 
-    protected void perderNivelDeConexion(int cantidad){
+    public void perderNivelDeConexion(int cantidad){
         if (cantidad < 0) {
             throw new IllegalArgumentException("La cantidad no puede ser negativa");
         }
