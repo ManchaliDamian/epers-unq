@@ -21,9 +21,9 @@ public record UbicacionDTO(Long id, @NotBlank String nombre, @NotNull @Min(1) @M
     }
 
     public Ubicacion aModelo() {
-        return switch (tipo) {
-            case SANTUARIO -> new Santuario(nombre, energia);
-            case CEMENTERIO -> new Cementerio(nombre, energia);
+        return switch (this.tipo()) {
+            case SANTUARIO -> new Santuario(this.nombre(), this.energia());
+            case CEMENTERIO -> new Cementerio(this.nombre(), this.energia());
         };
     }
 }
