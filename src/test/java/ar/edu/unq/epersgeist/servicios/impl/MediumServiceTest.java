@@ -1,6 +1,14 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
+import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;

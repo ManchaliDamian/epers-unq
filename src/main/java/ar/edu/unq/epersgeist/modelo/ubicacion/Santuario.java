@@ -1,5 +1,6 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.ubicacion;
 
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -43,6 +44,11 @@ public class Santuario extends Ubicacion {
     @Override
     public void recuperarConexionComoAngel(Espiritu espiritu) {
         espiritu.aumentarNivelDeConexion(this.getFlujoDeEnergia());
+    }
+
+    @Override
+    public TipoUbicacion getTipo() {
+        return TipoUbicacion.SANTUARIO;
     }
 
 }

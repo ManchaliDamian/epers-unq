@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.generador;
 
 import java.util.Random;
 

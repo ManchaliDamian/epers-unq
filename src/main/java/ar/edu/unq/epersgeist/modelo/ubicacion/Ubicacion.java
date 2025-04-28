@@ -1,5 +1,6 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.ubicacion;
 
+import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -44,4 +45,6 @@ public abstract class Ubicacion {
     public  void recuperarConexionComoDemonio(Espiritu espiritu){};
     public abstract void moverAngel(Espiritu espiritu);
     public abstract void moverDemonio(Espiritu espiritu);
+
+    public abstract TipoUbicacion getTipo();
 }
