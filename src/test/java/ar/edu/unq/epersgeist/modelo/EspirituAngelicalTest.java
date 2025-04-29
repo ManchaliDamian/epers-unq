@@ -102,7 +102,11 @@ public class EspirituAngelicalTest {
 
     @Test
     public void moverAngelACementerioCambiaSuUbicacionYLeBaja5DeEnergia(){
-
+        angel.setNivelDeConexion(100);
+        mediumConectado.conectarseAEspiritu(angel);//100
+        mediumConectado.mover(cementerio);
+        assertEquals(95, angel.getNivelDeConexion());
+        assertEquals("Bernal", angel.getUbicacion().getNombre());
     }
 
     @Test

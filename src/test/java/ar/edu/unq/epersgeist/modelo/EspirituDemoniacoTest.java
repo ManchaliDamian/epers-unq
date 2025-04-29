@@ -123,7 +123,11 @@ public class EspirituDemoniacoTest {
 
     @Test
     public void moverDemonioASantuarioCambiaSuUbicacionYLeBaja10DeEnergia(){
-
+        demonio.setNivelDeConexion(80);
+        mediumDemon.conectarseAEspiritu(demonio);//82
+        mediumDemon.mover(santuario);
+        assertEquals(72, demonio.getNivelDeConexion());
+        assertEquals("Quilmes", demonio.getUbicacion().getNombre());
     }
 
     @Test
