@@ -1,14 +1,14 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Santuario;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcizarNoPermitidoNoEsMismaUbicacion;
@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,20 +83,6 @@ public class MediumServiceTest {
 
         assertEquals(santuario, mediumActualizado.get().getUbicacion());
     }
-//    @Test
-//    void exorcizar_mismaUbicacion() {
-//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
-//        angeles.add();
-//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
-//        .exorcizarA(angeles, demoniacos, santuario);
-//    }
-//    @Test
-//    void noSePuedeExorcizar_diferenteUbicacion() {
-//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
-//        angeles.add(espirituAngelical);
-//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
-//        mediumBernal.exorcizarA(angeles, demoniacos, santuario);
-//    }
     @Test
     void testInvocar() {
 
@@ -362,8 +347,9 @@ public class MediumServiceTest {
         //        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
         assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
         assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
-        assertEquals(15, demonio1Actualizado.get().getNivelDeConexion());
-        assertEquals(30, demonio2Actualizado.get().getNivelDeConexion());
+        //Volvió a cambiar valores porque al tener santuario en angel aumenta su conexion y ganan el segundo ataque
+        assertEquals(25, demonio1Actualizado.get().getNivelDeConexion());
+        assertEquals(0, demonio2Actualizado.get().getNivelDeConexion());
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {

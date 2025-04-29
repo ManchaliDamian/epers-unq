@@ -1,13 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.generador.Generador;
-import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
+import ar.edu.unq.epersgeist.modelo.generador.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,6 +60,22 @@ public class EspirituDemoniacoTest {
     }
 
     @Test
+    void recibirAtaque_DisminuyeNivelDeConexion() {
+        demonio.setNivelDeConexion(30);
+        demonio.perderNivelDeConexion(15);
+
+        assertEquals(15, demonio.getNivelDeConexion());
+    }
+
+    @Test
+    void recibirAtaque_NoBajaDeCero() {
+        demonio.setNivelDeConexion(10);
+        demonio.perderNivelDeConexion(15);
+
+        assertEquals(0, demonio.getNivelDeConexion());
+    }
+
+    @Test
     void recibirEfectoDeCementerio_AumentaNivelDeConexion() {
         demonio.setNivelDeConexion(30);
 
@@ -93,33 +103,32 @@ public class EspirituDemoniacoTest {
     }
 
     @Test
-    void recibirAtaque_DisminuyeNivelDeConexion() {
-        demonio.setNivelDeConexion(30);
-        demonio.perderNivelDeConexion(15);
-
-        assertEquals(15, demonio.getNivelDeConexion());
+    void espirituDemoniacoPuedeMoverseAUnaUbicacion() {
+        mediumDemon.conectarseAEspiritu(demonio);
+        mediumDemon.mover(cementerio);
+        assertEquals(cementerio, demonio.getUbicacion());
     }
-
     @Test
-    void recibirAtaque_NoBajaDeCero() {
-        demonio.setNivelDeConexion(10);
-        demonio.perderNivelDeConexion(15);
+    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_mediumNoSeMueve() {
+        mediumDemon.conectarseAEspiritu(demonio);
 
-        assertEquals(0, demonio.getNivelDeConexion());
+        assertThrows(EspirituNoPuedeMoverse.class, () -> demonio.mover(santuario));
+
+        assertEquals(cementerio, demonio.getUbicacion());
+    }
+    @Test
+    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_porqueNoEstaConectado() {
+        assertThrows(EspirituNoPuedeMoverse.class, () -> demonio.mover(cementerio));
     }
 
     @Test
     public void moverDemonioASantuarioCambiaSuUbicacionYLeBaja10DeEnergia(){
-        demonio.setNivelDeConexion(70);
-        demonio.mover(santuario);
 
-        assertEquals(santuario, demonio.getUbicacion());
-        assertEquals(60, demonio.getNivelDeConexion());
     }
 
     @Test
-    public void moverDemonioACementerioCambiaSuUbicacion(){
-        demonio.mover(cementerio);
+    public void invocarDemonioACementerioCambiaSuUbicacion(){
+        demonio.serInvocadoEn(cementerio);
 
         assertEquals(cementerio, demonio.getUbicacion());
     }

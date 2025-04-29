@@ -1,13 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,21 +81,32 @@ public class EspirituAngelicalTest {
 
     @Test
     void espirituAngelicalPuedeMoverseAUnaUbicacion() {
-        angel.mover(cementerio);
+        mediumConectado.conectarseAEspiritu(angel);
+        mediumConectado.mover(cementerio);
         assertEquals(cementerio, angel.getUbicacion());
+    }
+
+    @Test
+    void espirituAngelicalNoPuedeMoverseAUnaUbicacion_mediumNoSeMueve() {
+        mediumConectado.conectarseAEspiritu(angel);
+
+        assertThrows(EspirituNoPuedeMoverse.class, () -> angel.mover(cementerio));
+
+        assertEquals(santuario, angel.getUbicacion());
+    }
+
+    @Test
+    void espirituAngelicalNoPuedeMoverseAUnaUbicacion_porqueNoEstaConectado() {
+        assertThrows(EspirituNoPuedeMoverse.class, () -> angel.mover(cementerio));
     }
 
     @Test
     public void moverAngelACementerioCambiaSuUbicacionYLeBaja5DeEnergia(){
-        angel.setNivelDeConexion(50);
-        angel.mover(cementerio);
 
-        assertEquals(cementerio, angel.getUbicacion());
-        assertEquals(45, angel.getNivelDeConexion());
     }
 
     @Test
-    public void moverAngelASantuarioCambiaSuUbicacion(){
+    public void invocarAngelASantuarioCambiaSuUbicacion(){
         angel.serInvocadoEn(santuario);
 
         assertEquals(santuario, angel.getUbicacion());

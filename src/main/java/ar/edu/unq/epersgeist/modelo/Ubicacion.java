@@ -1,6 +1,5 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
