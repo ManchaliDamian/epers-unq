@@ -85,12 +85,12 @@ class UbicacionTest {
     void testCementerioRecuperarConexionComoDemonio() {
         espirituDemonio.setNivelDeConexion(10);
         cementerio.recuperarConexionComoDemonio(espirituDemonio);
-        assertEquals(60, espirituDemonio.getNivelDeConexion()); // 10 + (50 * 1)
+        assertEquals(60, espirituDemonio.getNivelDeConexion());
     }
 
     @Test
     void testCementerioGetCantidadRecuperada() {
-        assertEquals(25, cementerio.getCantidadRecuperada()); // 50 * 0.5
+        assertEquals(25, cementerio.getCantidadRecuperada());
     }
 
     @Test
@@ -115,7 +115,6 @@ class UbicacionTest {
     void testSantuarioMoverAngel() {
         santuario.moverAngel(espirituAngel);
         assertEquals(santuario, espirituAngel.getUbicacion());
-        // No debe afectar el nivel de conexión
         assertEquals(0, espirituAngel.getNivelDeConexion());
     }
 
@@ -131,12 +130,12 @@ class UbicacionTest {
     void testSantuarioRecuperarConexionComoAngel() {
         espirituAngel.setNivelDeConexion(10);
         santuario.recuperarConexionComoAngel(espirituAngel);
-        assertEquals(85, espirituAngel.getNivelDeConexion()); // 10 + (75 * 1)
+        assertEquals(85, espirituAngel.getNivelDeConexion());
     }
 
     @Test
     void testSantuarioGetCantidadRecuperada() {
-        assertEquals(112, santuario.getCantidadRecuperada()); // 75 * 1.5
+        assertEquals(112, santuario.getCantidadRecuperada());
     }
 
 }
