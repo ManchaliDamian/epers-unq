@@ -114,7 +114,8 @@ public class MediumTest {
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
 
-        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos));
+        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos, null));
 
     }
+
 }
