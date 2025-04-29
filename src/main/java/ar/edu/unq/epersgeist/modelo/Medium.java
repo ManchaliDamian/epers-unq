@@ -125,6 +125,11 @@ public class Medium {
 
     public void mover(Ubicacion ubicacion) {
         this.setUbicacion(ubicacion);
-        this.espiritus.forEach(e -> e.mover(ubicacion));
+        this.espiritus.forEach(e -> {
+                e.setAutorizadoPorMedium(true);
+                e.mover(ubicacion);
+        });
+
+
     }
 }

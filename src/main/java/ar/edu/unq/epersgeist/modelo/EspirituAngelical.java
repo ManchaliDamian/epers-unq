@@ -44,7 +44,7 @@ public class EspirituAngelical extends Espiritu{
     }
 
     @Override
-    public void mover(Ubicacion ubicacion) {
+    protected void realizarMovimiento(Ubicacion ubicacion) {
         ubicacion.moverAngel(this);
     }
 }

@@ -76,20 +76,6 @@ public class MediumServiceTest {
 
         assertEquals(santuario, mediumActualizado.get().getUbicacion());
     }
-//    @Test
-//    void exorcizar_mismaUbicacion() {
-//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
-//        angeles.add();
-//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
-//        .exorcizarA(angeles, demoniacos, santuario);
-//    }
-//    @Test
-//    void noSePuedeExorcizar_diferenteUbicacion() {
-//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
-//        angeles.add(espirituAngelical);
-//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
-//        mediumBernal.exorcizarA(angeles, demoniacos, santuario);
-//    }
     @Test
     void testInvocar() {
 
@@ -351,8 +337,9 @@ public class MediumServiceTest {
         //        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
         assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
         assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
-        assertEquals(15, demonio1Actualizado.get().getNivelDeConexion());
-        assertEquals(30, demonio2Actualizado.get().getNivelDeConexion());
+        //Volvió a cambiar valores porque al tener santuario en angel aumenta su conexion y ganan el segundo ataque
+        assertEquals(25, demonio1Actualizado.get().getNivelDeConexion());
+        assertEquals(0, demonio2Actualizado.get().getNivelDeConexion());
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {

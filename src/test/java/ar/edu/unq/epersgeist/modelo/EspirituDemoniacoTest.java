@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,9 +20,9 @@ public class EspirituDemoniacoTest {
         cementerio = new Cementerio("Bernal",60);
 
         espirituAngelical = new EspirituAngelical( "EspirituAngelical", santuario);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", santuario);
         mediumAngel= new Medium("Mago", 100, 50, santuario);
-        mediumDemon = new Medium("Maguito",100, 10, cementerio);
+        mediumDemon = new Medium("Maguito",100, 10, santuario);
 
     }
 
@@ -98,6 +99,24 @@ public class EspirituDemoniacoTest {
         espirituDemoniaco.perderNivelDeConexion(15);
 
         assertEquals(0, espirituDemoniaco.getNivelDeConexion());
+    }
+    @Test
+    void espirituDemoniacoPuedeMoverseAUnaUbicacion() {
+        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
+        mediumDemon.mover(cementerio);
+        assertEquals(cementerio, espirituDemoniaco.getUbicacion());
+    }
+    @Test
+    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_mediumNoSeMueve() {
+        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
+
+        assertThrows(EspirituNoPuedeMoverse.class, () -> espirituDemoniaco.mover(cementerio));
+
+        assertEquals(santuario, espirituDemoniaco.getUbicacion());
+    }
+    @Test
+    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_porqueNoEstaConectado() {
+        assertThrows(EspirituNoPuedeMoverse.class, () -> espirituDemoniaco.mover(cementerio));
     }
 }
 
