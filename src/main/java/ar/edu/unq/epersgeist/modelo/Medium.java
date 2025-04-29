@@ -83,12 +83,12 @@ public class Medium {
     }
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios, Ubicacion ubicacion){
 
-        if (!esMismaUbicacionParaExorcizar(ubicacion)) {
-            throw new ExorcizarNoPermitidoNoEsMismaUbicacion(ubicacion, this);
-        }
-
         if (angeles.isEmpty()) {
             throw new ExorcistaSinAngelesException(this);
+        }
+
+        if (!esMismaUbicacionParaExorcizar(ubicacion)) {
+            throw new ExorcizarNoPermitidoNoEsMismaUbicacion(ubicacion, this);
         }
 
         int i = 0;

@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituDemoniacoTest {
 
-    private Espiritu espirituDemoniaco;
-    private Espiritu espirituAngelical;
+    private Espiritu demonio;
+    private Espiritu angel;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumAngel;
@@ -26,8 +26,8 @@ public class EspirituDemoniacoTest {
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
 
-        espirituAngelical = new EspirituAngelical( "EspirituAngelical", santuario);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        angel = new EspirituAngelical( "EspirituAngelical", santuario);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
         mediumAngel= new Medium("Mago", 100, 50, santuario);
         mediumDemon = new Medium("Maguito",100, 10, cementerio);
 
@@ -35,77 +35,93 @@ public class EspirituDemoniacoTest {
 
     @Test
     void espirituDemoniacoRecibeAtaque() {
-        mediumAngel.conectarseAEspiritu(espirituAngelical);
-        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
+        mediumAngel.conectarseAEspiritu(angel);
+        mediumDemon.conectarseAEspiritu(demonio);
 
-        espirituAngelical.setNivelDeConexion(20);
-        espirituDemoniaco.setNivelDeConexion(20);
+        angel.setNivelDeConexion(20);
+        demonio.setNivelDeConexion(20);
 
         Generador.setEstrategia(new GeneradorSecuencial(10));
 
-        espirituAngelical.atacar(espirituDemoniaco);
+        angel.atacar(demonio);
 
-        assertEquals(10, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(10, demonio.getNivelDeConexion());
     }
 
     @Test
     void espirituDemoniacoSeDesconectaDelMediumPorFaltaDeNivelConexion() {
-        mediumAngel.conectarseAEspiritu(espirituAngelical);
-        mediumDemon.conectarseAEspiritu(espirituDemoniaco);
+        mediumAngel.conectarseAEspiritu(angel);
+        mediumDemon.conectarseAEspiritu(demonio);
 
-        espirituAngelical.setNivelDeConexion(20);
-        espirituDemoniaco.setNivelDeConexion(5);
+        angel.setNivelDeConexion(20);
+        demonio.setNivelDeConexion(5);
 
         Generador.setEstrategia(new GeneradorSecuencial(30, 5));
 
-        espirituAngelical.atacar(espirituDemoniaco);
+        angel.atacar(demonio);
 
-        assertNull(espirituDemoniaco.getMediumConectado());
-        assertEquals(0, espirituDemoniaco.getNivelDeConexion());
+        assertNull(demonio.getMediumConectado());
+        assertEquals(0, demonio.getNivelDeConexion());
         assertEquals(0, mediumDemon.getEspiritus().size());
     }
 
     @Test
     void recibirEfectoDeCementerio_AumentaNivelDeConexion() {
-        espirituDemoniaco.setNivelDeConexion(30);
+        demonio.setNivelDeConexion(30);
 
-        espirituDemoniaco.recuperarConexionEn(cementerio);
+        demonio.recuperarConexionEn(cementerio);
 
-        assertEquals(90, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(90, demonio.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeCementerio_NoExcedeMaximo() {
-        espirituDemoniaco.setNivelDeConexion(50);
+        demonio.setNivelDeConexion(50);
 
-        espirituDemoniaco.recuperarConexionEn(cementerio);
+        demonio.recuperarConexionEn(cementerio);
 
-        assertEquals(100, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(100, demonio.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeSantuario_NoHaceNada() {
-        espirituDemoniaco.setNivelDeConexion(50);
+        demonio.setNivelDeConexion(50);
 
-        espirituDemoniaco.recuperarConexionEn(santuario);
+        demonio.recuperarConexionEn(santuario);
 
-        assertEquals(50, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(50, demonio.getNivelDeConexion());
     }
 
     @Test
     void recibirAtaque_DisminuyeNivelDeConexion() {
-        espirituDemoniaco.setNivelDeConexion(30);
-        espirituDemoniaco.perderNivelDeConexion(15);
+        demonio.setNivelDeConexion(30);
+        demonio.perderNivelDeConexion(15);
 
-        assertEquals(15, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(15, demonio.getNivelDeConexion());
     }
 
     @Test
     void recibirAtaque_NoBajaDeCero() {
-        espirituDemoniaco.setNivelDeConexion(10);
-        espirituDemoniaco.perderNivelDeConexion(15);
+        demonio.setNivelDeConexion(10);
+        demonio.perderNivelDeConexion(15);
 
-        assertEquals(0, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(0, demonio.getNivelDeConexion());
+    }
+
+    @Test
+    public void moverDemonioASantuarioCambiaSuUbicacionYLeBaja10DeEnergia(){
+        demonio.setNivelDeConexion(70);
+        demonio.mover(santuario);
+
+        assertEquals(santuario, demonio.getUbicacion());
+        assertEquals(60, demonio.getNivelDeConexion());
+    }
+
+    @Test
+    public void moverDemonioACementerioCambiaSuUbicacion(){
+        demonio.mover(cementerio);
+
+        assertEquals(cementerio, demonio.getUbicacion());
     }
 }
 

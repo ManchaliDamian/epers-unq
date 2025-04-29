@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.modelo;
 
-
-
 import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +14,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
     private Espiritu angel;
+    private Espiritu demonio;
     private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        santuario = new Santuario("Quilmes", 40);
+        santuario = new Santuario("santuario", 40);
+        cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Mago",100,90,santuario);
-        angel = new EspirituAngelical("Espiritu",santuario);
+        mediumConectado = new Medium("Mago",100,90,cementerio);
+        angel = new EspirituAngelical("Espiritu",cementerio);
+        demonio = new EspirituDemoniaco("Espiritu", santuario);
     }
 
     @Test
