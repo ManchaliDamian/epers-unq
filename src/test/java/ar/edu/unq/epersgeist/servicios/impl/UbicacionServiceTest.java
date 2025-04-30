@@ -2,6 +2,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
 
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -17,7 +20,6 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,6 +146,13 @@ public class UbicacionServiceTest {
     @Test
     void eliminarUbicacion() {
         serviceU.eliminar(santuario);
+        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
+        assertEquals(1, ubicaciones.size());
+    }
+
+    @Test
+    void eliminarUbicacionPorId() {
+        serviceU.eliminar(santuario.getId());
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }

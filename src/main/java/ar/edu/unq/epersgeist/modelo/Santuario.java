@@ -45,4 +45,9 @@ public class Santuario extends Ubicacion {
         espiritu.aumentarNivelDeConexion(this.getFlujoDeEnergia());
     }
 
+    @Override
+    public TipoUbicacion getTipo() {
+        return TipoUbicacion.SANTUARIO;
+    }
+
 }

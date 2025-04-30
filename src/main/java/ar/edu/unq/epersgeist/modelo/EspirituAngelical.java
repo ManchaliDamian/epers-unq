@@ -1,4 +1,5 @@
 package ar.edu.unq.epersgeist.modelo;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,7 +45,7 @@ public class EspirituAngelical extends Espiritu{
     }
 
     @Override
-    public void mover(Ubicacion ubicacion) {
+    protected void realizarMovimiento(Ubicacion ubicacion) {
         ubicacion.moverAngel(this);
     }
 }

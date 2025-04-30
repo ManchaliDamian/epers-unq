@@ -1,8 +1,17 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
+import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
+import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Santuario;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+import ar.edu.unq.epersgeist.modelo.exception.ExorcizarNoPermitidoNoEsMismaUbicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -69,16 +78,18 @@ public class MediumServiceTest {
 
         serviceM.mover(medium1.getId(), santuario.getId());
 
-        serviceM.guardar(medium1);
+
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
 
-        assertEquals(cementerio, mediumActualizado.get().getUbicacion());
+        assertEquals(santuario, mediumActualizado.get().getUbicacion());
     }
-
     @Test
     void testInvocar() {
 
         Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
+        Medium actualizado = mediumDAO.findById(medium1.getId()).get();
+        assertEquals(0, invocado.getNivelDeConexion());
+        assertEquals(40, actualizado.getMana());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
     }
 
@@ -180,7 +191,7 @@ public class MediumServiceTest {
         assertEquals(100, mediumRecuperado.get().getMana());
     }
     @Test
-    void exorcizarA_AtaqueExitoso_DemonioDerrotado() {
+    void exorcizarA_AtaqueExitoso_DemonioDerrotado_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1)); // 10 + nivel > 1
 
         angel.setNivelDeConexion(20);
@@ -188,6 +199,8 @@ public class MediumServiceTest {
 
         conectarEspirituAMedium(medium1, angel); // angel: 20 + 10 = 30 (daño = 15)
         conectarEspirituAMedium(medium2, demonio); // demonio: 5 + 10 = 15
+
+        serviceM.mover(medium2.getId(), cementerio.getId());
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -202,7 +215,7 @@ public class MediumServiceTest {
     }
 
     @Test
-    void exorcizar_DosAngelesDerrotanUnDemonio() {
+    void exorcizar_DosAngelesDerrotanUnDemonio_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
         EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
@@ -215,6 +228,8 @@ public class MediumServiceTest {
         conectarEspirituAMedium(medium1, angel1);
         conectarEspirituAMedium(medium1, angel2);
         conectarEspirituAMedium(medium2, demonio);
+
+        serviceM.mover(medium2.getId(), cementerio.getId());
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -232,10 +247,10 @@ public class MediumServiceTest {
     }
 
     @Test
-    void exorcizar_ExorcistaSinAngeles_LanzaExcepcion() {
+    void exorcizar_ExorcistaSinAngeles_LanzaExcepcion_MismaUbicacionAlMoverse() {
 
         conectarEspirituAMedium(medium2, demonio);
-
+        serviceM.mover(medium1.getId(), santuario.getId());
         assertThrows(ExorcistaSinAngelesException.class, () -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
         });
@@ -248,14 +263,21 @@ public class MediumServiceTest {
         serviceE.guardar(demonio);
 
         conectarEspirituAMedium(medium1, angel);
-
+        serviceM.mover(medium2.getId(), cementerio.getId());
         assertDoesNotThrow(() -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
         });
     }
-
     @Test
-    void exorcizar_AtaqueFallido_AngelPierdeEnergia() {
+    void exorcizar_enDistintaUbicacion_lanzaError(){
+        conectarEspirituAMedium(medium1, angel);
+        conectarEspirituAMedium(medium2, demonio);
+        assertThrows(ExorcizarNoPermitidoNoEsMismaUbicacion.class, () -> {
+            serviceM.exorcizar(medium1.getId(), medium2.getId());
+        });
+    }
+    @Test
+    void exorcizar_AtaqueFallido_AngelPierdeEnergia_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(1, 100));
 
         angel.setNivelDeConexion(20);
@@ -263,6 +285,8 @@ public class MediumServiceTest {
 
         conectarEspirituAMedium(medium1, angel);
         conectarEspirituAMedium(medium2, demonio);
+
+        serviceM.mover(medium2.getId(), cementerio.getId());
 
         assertEquals(30, angel.getNivelDeConexion());
         assertEquals(20, demonio.getNivelDeConexion());
@@ -285,7 +309,7 @@ public class MediumServiceTest {
     }
 
     @Test
-    void exorcizar_MultiplesDemoniosYAngeles_ActualizaCorrectamente() {
+    void exorcizar_MultiplesDemoniosYAngeles_ActualizaCorrectamente_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 5, 100)); // Primer ataque exitoso, segundo falla
 
         EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
@@ -308,7 +332,10 @@ public class MediumServiceTest {
         assertEquals(25, demonio1.getNivelDeConexion());
         assertEquals(30, demonio2.getNivelDeConexion());
 
+        serviceM.mover(medium2.getId(), cementerio.getId());
+
         serviceM.exorcizar(medium1.getId(), medium2.getId());
+
 
         Optional<Espiritu> angel1Actualizado = serviceE.recuperar(angel1.getId());
         Optional<Espiritu> angel2Actualizado = serviceE.recuperar(angel2.getId());
@@ -320,8 +347,9 @@ public class MediumServiceTest {
         //        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
         assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
         assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
-        assertEquals(15, demonio1Actualizado.get().getNivelDeConexion());
-        assertEquals(30, demonio2Actualizado.get().getNivelDeConexion());
+        //Volvió a cambiar valores porque al tener santuario en angel aumenta su conexion y ganan el segundo ataque
+        assertEquals(25, demonio1Actualizado.get().getNivelDeConexion());
+        assertEquals(0, demonio2Actualizado.get().getNivelDeConexion());
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {

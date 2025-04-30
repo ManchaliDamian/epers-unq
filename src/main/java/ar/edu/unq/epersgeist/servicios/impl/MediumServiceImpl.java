@@ -1,5 +1,4 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -30,6 +29,11 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium guardar(Medium unMedium) {
+        return mediumDAO.save(unMedium);
+    }
+
+    @Override
+    public Medium actualizar(Medium unMedium) {
         return mediumDAO.save(unMedium);
     }
 
@@ -71,7 +75,9 @@ public class MediumServiceImpl implements MediumService {
             List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
-            mediumExorcista.exorcizarA(angeles, demonios);
+
+            mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
+
 
             mediumDAO.save(mediumExorcista);
             mediumDAO.save(mediumAExorcizar);

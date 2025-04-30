@@ -34,6 +34,11 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
+    public void actualizar(Espiritu espiritu){
+            espirituDAO.save(espiritu);
+    }
+
+    @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
         return espirituDAO.findById(espirituId);
     }

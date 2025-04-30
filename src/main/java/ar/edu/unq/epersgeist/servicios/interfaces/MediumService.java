@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MediumService {
     Medium guardar(Medium unMedium);
+    Medium actualizar(Medium unMedium);
     Optional<Medium> recuperar(Long mediumId);
     List<Medium> recuperarTodos();
     void eliminar(Long mediumId);

@@ -1,13 +1,16 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
+import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class EspirituAngelicalTest {
-    private Espiritu espirituDemoniaco;
-    private Espiritu espirituAngelical;
+    private Espiritu demonio;
+    private Espiritu angel;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
@@ -17,69 +20,99 @@ public class EspirituAngelicalTest {
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
 
-        espirituAngelical = new EspirituAngelical("EspirituAngelical", santuario);
-        espirituDemoniaco = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        angel = new EspirituAngelical("EspirituAngelical", santuario);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
         mediumConectado = new Medium("Mago",100,50,santuario);
 
     }
 
     @Test
     void espirituAngelicalAtacaConExitoAlDemoniaco() {
-        espirituDemoniaco.setNivelDeConexion(20);
-        espirituAngelical.setNivelDeConexion(20);
+        demonio.setNivelDeConexion(20);
+        angel.setNivelDeConexion(20);
         Generador.setEstrategia(new GeneradorSecuencial(10));
 
-        espirituAngelical.atacar(espirituDemoniaco);
+        angel.atacar(demonio);
 
-        assertEquals(10, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(10, demonio.getNivelDeConexion());
 
     }
 
     @Test
     void espirituAngelicalFallaAlAtacarAlDemoniaco() {
-        espirituAngelical.setNivelDeConexion(10);
-        espirituDemoniaco.setNivelDeConexion(20);
+        angel.setNivelDeConexion(10);
+        demonio.setNivelDeConexion(20);
 
         Generador.setEstrategia(new GeneradorSecuencial(5,100));
-        espirituAngelical.atacar(espirituDemoniaco);
+        angel.atacar(demonio);
 
-        assertEquals(5, espirituAngelical.getNivelDeConexion());
-        assertEquals(20, espirituDemoniaco.getNivelDeConexion());
+        assertEquals(5, angel.getNivelDeConexion());
+        assertEquals(20, demonio.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeSantuario_AumentaNivelDeConexion() {
         Santuario santuario = new Santuario("Test", 30);
-        espirituAngelical.setNivelDeConexion(50);
+        angel.setNivelDeConexion(50);
 
-        espirituAngelical.recuperarConexionEn(santuario);
+        angel.recuperarConexionEn(santuario);
 
-        assertEquals(80, espirituAngelical.getNivelDeConexion());
+        assertEquals(80, angel.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeSantuario_NoExcedeMaximo() {
         Santuario santuario = new Santuario("Test", 60);
-        espirituAngelical.setNivelDeConexion(50);
+        angel.setNivelDeConexion(50);
 
-        espirituAngelical.recuperarConexionEn(santuario);
+        angel.recuperarConexionEn(santuario);
 
-        assertEquals(100, espirituAngelical.getNivelDeConexion());
+        assertEquals(100, angel.getNivelDeConexion());
     }
 
     @Test
     void recibirEfectoDeCementerio_NoHaceNada() {
-        espirituAngelical.setNivelDeConexion(50);
+        angel.setNivelDeConexion(50);
 
-        espirituAngelical.recuperarConexionEn(cementerio);
+        angel.recuperarConexionEn(cementerio);
 
-        assertEquals(50, espirituAngelical.getNivelDeConexion());
+        assertEquals(50, angel.getNivelDeConexion());
     }
 
     @Test
     void espirituAngelicalPuedeMoverseAUnaUbicacion() {
-        espirituAngelical.mover(cementerio);
-        assertEquals(cementerio, espirituAngelical.getUbicacion());
+        mediumConectado.conectarseAEspiritu(angel);
+        mediumConectado.mover(cementerio);
+        assertEquals(cementerio, angel.getUbicacion());
     }
 
+    @Test
+    void espirituAngelicalNoPuedeMoverseAUnaUbicacion_mediumNoSeMueve() {
+        mediumConectado.conectarseAEspiritu(angel);
+
+        assertThrows(EspirituNoPuedeMoverse.class, () -> angel.mover(cementerio));
+
+        assertEquals(santuario, angel.getUbicacion());
+    }
+
+    @Test
+    void espirituAngelicalNoPuedeMoverseAUnaUbicacion_porqueNoEstaConectado() {
+        assertThrows(EspirituNoPuedeMoverse.class, () -> angel.mover(cementerio));
+    }
+
+    @Test
+    public void moverAngelACementerioCambiaSuUbicacionYLeBaja5DeEnergia(){
+        angel.setNivelDeConexion(100);
+        mediumConectado.conectarseAEspiritu(angel);//100
+        mediumConectado.mover(cementerio);
+        assertEquals(95, angel.getNivelDeConexion());
+        assertEquals("Bernal", angel.getUbicacion().getNombre());
+    }
+
+    @Test
+    public void invocarAngelASantuarioCambiaSuUbicacion(){
+        angel.serInvocadoEn(santuario);
+
+        assertEquals(santuario, angel.getUbicacion());
+    }
 }

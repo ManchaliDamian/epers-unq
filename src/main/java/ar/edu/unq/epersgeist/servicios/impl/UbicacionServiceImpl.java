@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -25,12 +24,17 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void guardar(Ubicacion ubicacion) {
+    public Ubicacion guardar(Ubicacion ubicacion) {
         try {
-            ubicacionDAO.save(ubicacion);
+            return ubicacionDAO.save(ubicacion);
         } catch (DataIntegrityViolationException e) {
             throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
         }
+    }
+
+    @Override
+    public Ubicacion actualizar(Ubicacion ubicacion){
+        return this.guardar(ubicacion);
     }
 
     @Override
@@ -47,6 +51,12 @@ public class UbicacionServiceImpl implements UbicacionService {
     public void eliminar(Ubicacion ubicacion) {
             ubicacionDAO.delete(ubicacion);
     }
+
+    @Override
+    public void eliminar(Long id) {
+        ubicacionDAO.deleteById(id);
+    }
+
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {

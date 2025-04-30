@@ -83,7 +83,6 @@ public class MediumTest {
         assertEquals(100, mediumBernal.getMana());
     }
 
-
     @Test
     void desvincularseDe(){
         when(espirituAngelicalMock.estaConectado()).thenReturn(false);
@@ -109,7 +108,24 @@ public class MediumTest {
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
 
-        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos));
+        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos, cementerio));
 
     }
+    //ejemplos del enunciado
+    @Test
+    void descansarEnCementerioAumentaManaCorrectamente() {
+        Ubicacion cementerio = new Cementerio("cementerio",100);
+        Medium yohAsakura = new Medium("Yoh Asakura", 200, 10, cementerio);
+        yohAsakura.descansar();
+        assertEquals(60, yohAsakura.getMana());
+    }
+
+    @Test
+    void descansarEnSantuarioAumentaManaCorrectamente() {
+        Ubicacion santuario = new Santuario("santuario",100);
+        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario);
+        lorraineWaine.descansar();
+        assertEquals(160, lorraineWaine.getMana());
+    }
+
 }

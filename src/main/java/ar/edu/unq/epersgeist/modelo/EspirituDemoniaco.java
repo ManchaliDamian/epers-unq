@@ -22,7 +22,7 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     @Override
-    public void mover(Ubicacion ubicacion) {
+    protected void realizarMovimiento(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
     }
 }

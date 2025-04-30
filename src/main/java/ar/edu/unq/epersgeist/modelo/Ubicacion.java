@@ -44,4 +44,6 @@ public abstract class Ubicacion {
     public  void recuperarConexionComoDemonio(Espiritu espiritu){};
     public abstract void moverAngel(Espiritu espiritu);
     public abstract void moverDemonio(Espiritu espiritu);
+
+    public abstract TipoUbicacion getTipo();
 }

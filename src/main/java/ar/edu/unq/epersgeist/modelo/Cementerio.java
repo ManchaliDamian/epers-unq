@@ -44,4 +44,9 @@ public class Cementerio extends Ubicacion {
     public void recuperarConexionComoDemonio(Espiritu espiritu) {
         espiritu.aumentarNivelDeConexion(this.getFlujoDeEnergia());
     }
+
+    @Override
+    public TipoUbicacion getTipo() {
+        return TipoUbicacion.CEMENTERIO;
+    }
 }
