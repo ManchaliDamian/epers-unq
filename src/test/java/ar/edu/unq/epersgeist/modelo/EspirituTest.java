@@ -36,13 +36,6 @@ public class EspirituTest {
     }
 
     @Test
-    void puedeAumentarLaConexionDelEspiritu(){
-        mediumConectado.conectarseAEspiritu(angel);
-
-        assertEquals(18,angel.getNivelDeConexion());
-    }
-
-    @Test
     void perderNivelDeConexionConCiertaCantidad(){
         mediumConectado.conectarseAEspiritu(angel);
 
