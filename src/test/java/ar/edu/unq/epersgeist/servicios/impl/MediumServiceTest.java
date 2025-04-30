@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,22 @@ public class MediumServiceTest {
         serviceE.guardar(angel);
 
     }
+
+//    @Test
+//    void exorcizar_mismaUbicacion() {
+//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
+//        angeles.add(angel);
+//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
+//        medium1.exorcizarA(angeles, demoniacos, santuario);
+//    }
+//    @Test
+//    void noSePuedeExorcizar_diferenteUbicacion() {
+//        List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
+//        angeles.add(angel);
+//        List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
+//        medium2.exorcizarA(angeles, demoniacos, santuario);
+//    }
+
     @Test
     void moverMedium() {
         medium1.conectarseAEspiritu(angel);

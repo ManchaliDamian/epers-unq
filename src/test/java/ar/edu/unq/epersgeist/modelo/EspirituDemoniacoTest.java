@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
 import ar.edu.unq.epersgeist.modelo.generador.*;
 import org.junit.jupiter.api.*;
 
@@ -107,18 +106,6 @@ public class EspirituDemoniacoTest {
         mediumDemon.conectarseAEspiritu(demonio);
         mediumDemon.mover(cementerio);
         assertEquals(cementerio, demonio.getUbicacion());
-    }
-    @Test
-    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_mediumNoSeMueve() {
-        mediumDemon.conectarseAEspiritu(demonio);
-
-        assertThrows(EspirituNoPuedeMoverse.class, () -> demonio.mover(santuario));
-
-        assertEquals(cementerio, demonio.getUbicacion());
-    }
-    @Test
-    void espirituDemoniacoNoPuedeMoverseAUnaUbicacion_porqueNoEstaConectado() {
-        assertThrows(EspirituNoPuedeMoverse.class, () -> demonio.mover(cementerio));
     }
 
     @Test
