@@ -1,12 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Santuario;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;

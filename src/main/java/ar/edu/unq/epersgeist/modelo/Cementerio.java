@@ -1,6 +1,5 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
 import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -8,47 +7,46 @@ import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @ToString
 @Entity
-@DiscriminatorValue("SANTUARIO")
-public class Santuario extends Ubicacion {
+@DiscriminatorValue("CEMENTERIO")
+public class Cementerio extends Ubicacion {
 
-    public Santuario(String nombre, Integer flujoDeEnergia)  {
+    public Cementerio(String nombre, Integer flujoDeEnergia) {
         super(nombre, flujoDeEnergia);
     }
 
     @Override
     protected double getMultiplicadorMana() {
-        return 1.5;
+        return 0.5;
     }
 
     @Override
-    public void invocarAngel(Espiritu espiritu) {
-        this.moverAngel(espiritu);
+    public void invocarAngel(Espiritu espiritu){
+        throw new InvocacionNoPermitidaException(espiritu, this);
     }
 
     @Override
     public void invocarDemonio(Espiritu espiritu) {
-        throw new InvocacionNoPermitidaException(espiritu, this);
+        this.moverDemonio(espiritu);
     }
 
     @Override
     public void moverAngel(Espiritu espiritu) {
         espiritu.setUbicacion(this);
+        espiritu.perderNivelDeConexion(5);
     }
 
     @Override
     public void moverDemonio(Espiritu espiritu) {
         espiritu.setUbicacion(this);
-        espiritu.perderNivelDeConexion(10);
     }
 
     @Override
-    public void recuperarConexionComoAngel(Espiritu espiritu) {
+    public void recuperarConexionComoDemonio(Espiritu espiritu) {
         espiritu.aumentarNivelDeConexion(this.getFlujoDeEnergia());
     }
 
     @Override
     public TipoUbicacion getTipo() {
-        return TipoUbicacion.SANTUARIO;
+        return TipoUbicacion.CEMENTERIO;
     }
-
 }

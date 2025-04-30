@@ -1,10 +1,5 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.espiritu.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
@@ -88,7 +83,6 @@ public class MediumTest {
         assertEquals(100, mediumBernal.getMana());
     }
 
-
     @Test
     void desvincularseDe(){
         when(espirituAngelicalMock.estaConectado()).thenReturn(false);
@@ -114,8 +108,24 @@ public class MediumTest {
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
 
-        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos, null));
+        assertThrows(ExorcistaSinAngelesException.class, () -> poseido.exorcizarA(angeles, demoniacos, cementerio));
 
+    }
+    //ejemplos del enunciado
+    @Test
+    void descansarEnCementerioAumentaManaCorrectamente() {
+        Ubicacion cementerio = new Cementerio("cementerio",100);
+        Medium yohAsakura = new Medium("Yoh Asakura", 200, 10, cementerio);
+        yohAsakura.descansar();
+        assertEquals(60, yohAsakura.getMana());
+    }
+
+    @Test
+    void descansarEnSantuarioAumentaManaCorrectamente() {
+        Ubicacion santuario = new Santuario("santuario",100);
+        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario);
+        lorraineWaine.descansar();
+        assertEquals(160, lorraineWaine.getMana());
     }
 
 }

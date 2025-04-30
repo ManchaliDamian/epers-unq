@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
 
 //Ver luego que agregar, falta agregar UbicacionDTO 
 //A lo último, terminar de agregar el tipo de espiritu

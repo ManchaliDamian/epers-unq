@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-import ar.edu.unq.epersgeist.modelo.espiritu.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
 
 public class ExceptionEspirituOcupado extends RuntimeException {
   private final Espiritu espiritu;

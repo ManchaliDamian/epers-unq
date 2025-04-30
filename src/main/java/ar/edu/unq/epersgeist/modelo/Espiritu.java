@@ -1,7 +1,6 @@
-package ar.edu.unq.epersgeist.modelo.espiritu;
+package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoPuedeMoverse;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
@@ -31,6 +30,10 @@ public abstract class Espiritu {
     @ManyToOne
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
+    // esto hace que lo ignore en la bd
+    // desp se borra para entregar, solo es un recordatorio xd
+    @Transient
+    private boolean autorizadoPorMedium = false;
 
     public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
 
@@ -73,9 +76,17 @@ public abstract class Espiritu {
     public void aumentarNivelDeConexion(int aumento){
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
     }
+    protected final void mover(Ubicacion ubicacion) {
+        if (!autorizadoPorMedium) {
+            throw new EspirituNoPuedeMoverse(this);
+        }
+        autorizadoPorMedium = false;
+        realizarMovimiento(ubicacion);
+    }
 
     public void atacar(Espiritu objetivo){};
     public abstract void serInvocadoEn(Ubicacion ubicacion);
     public abstract void recuperarConexionEn(Ubicacion ubicacion);
-    public abstract void mover(Ubicacion ubicacion);
+
+    protected abstract void realizarMovimiento(Ubicacion nuevaUbicacion);
 }

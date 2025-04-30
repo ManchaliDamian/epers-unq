@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.modelo;
 
 public enum TipoUbicacion {
     CEMENTERIO,
