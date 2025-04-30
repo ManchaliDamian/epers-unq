@@ -18,6 +18,7 @@ public class EstadisticaServiceImpl implements EstadisticaService {
         this.ubicacionDAO = ubicacionDAO;
     }
 
+    @Override
     public ReporteSantuarioMasCorrupto santuarioCorrupto(){
             Santuario santuarioMasCorrupto = ubicacionDAO.obtenerSantuarioMasCorrupto();
             long ubicacionId = santuarioMasCorrupto.getId();

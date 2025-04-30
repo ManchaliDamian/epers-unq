@@ -23,31 +23,31 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
     @Query(
             "FROM Ubicacion u JOIN Espiritu e ON u.id = e.ubicacion.id " +
-            "WHERE TYPE(E) = Santuario GROUP BY u.id" +
+            "WHERE TYPE(E) = Santuario GROUP BY u.id " +
             "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
             "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC LIMIT 1"
     )
     Santuario obtenerSantuarioMasCorrupto();
 
     @Query(
-        "FROM medium m LEFT JOIN m.espiritus e" +
-        " WHERE m.ubicacion.id = :ubicacionId AND TYPE(e)= EspirituDemoniaco" +
-        "GROUP BY m.id" +
-        "ORDER BY COUNT(e), m.mana DESC" + //Si hay empate, se elige el médium con más mana
+        "FROM medium m LEFT JOIN m.espiritus e " +
+        " WHERE m.ubicacion.id = :ubicacionId AND TYPE(e)= EspirituDemoniaco " +
+        "GROUP BY m.id " +
+        "ORDER BY COUNT(e), m.mana DESC " + //Si hay empate, se elige el médium con más mana
         "LIMIT 1"
     )
     Medium mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
-        "SELECT COUNT(e) FROM espiritu e" +
-        "WHERE TYPE(e) = EspiritDemoniaco AND e.id = :ubicacionId"
+        "SELECT COUNT(e) FROM Espiritu e " +
+        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId"
     )
     int cantTotalDeDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
-         "SELECT COUNT(e) FROM espiritu e" +
-         "WHERE TYPE(e) = EspiritDemoniaco AND e.id = :ubicacionId AND e.mediumConectado is NULL"
+         "SELECT COUNT(e) FROM Espiritu e " +
+         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL "
     )
-    int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId")Long ubicacionId);
+    int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 
 }
