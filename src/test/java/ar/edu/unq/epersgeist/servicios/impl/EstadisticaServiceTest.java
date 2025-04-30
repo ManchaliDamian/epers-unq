@@ -27,7 +27,7 @@ public class EstadisticaServiceTest {
     private Medium medium2;
     private Medium medium3;
 
-    private Santuario quilmes;
+    private Cementerio cementerio;
 
     private Santuario santuario1;
     private Santuario santuario2;
@@ -48,47 +48,41 @@ public class EstadisticaServiceTest {
         serviceEliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
         serviceEliminarTodo.eliminarTodo();
 
-            quilmes = new Santuario("Quilmes",1);
+            cementerio = new Cementerio("Quilmes",1);
 
             santuario1 = new Santuario("santuario 1",50);
-            santuario2 = new Santuario("santuario 2",50);
+
 
             angelical1 = new EspirituAngelical("agelical 1", santuario1);
-            angelical2 = new EspirituAngelical("agelical 2", santuario2);
-            angelical3 = new EspirituAngelical("agelical 3", santuario2);
 
-            demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
-            demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
-            demoniaco3 = new EspirituDemoniaco("demoniaco 2",santuario2);
+            demoniaco1 = new EspirituDemoniaco("demoniaco 1",cementerio);
 
-            medium1 = new Medium("medium 1",100,50,quilmes);
+
+            medium1 = new Medium("medium 1",100,50,cementerio);
             medium2 = new Medium("medium 2",100,25,santuario1);
-            medium3 = new Medium("medium 3",100,75,santuario2);
 
-            ubicacionService.guardar(quilmes);
+            ubicacionService.guardar(cementerio);
             ubicacionService.guardar(santuario1);
-            ubicacionService.guardar(santuario2);
 
             mediumService.guardar(medium1);
             mediumService.guardar(medium2);
 
             espirituService.guardar(demoniaco1);
-            espirituService.guardar(demoniaco2);
-            espirituService.guardar(demoniaco3);
 
             espirituService.guardar(angelical1);
-            espirituService.guardar(angelical2);
-            espirituService.guardar(angelical3);
+
 
     }
 
     @Test
     void elSantuarioMasCorrupto(){
-        medium2.conectarseAEspiritu(demoniaco1);
-        demoniaco1.setUbicacion(santuario1);
+        medium1.conectarseAEspiritu(demoniaco1);
+        mediumService.guardar(medium1);
+        mediumService.mover(medium1.getId(), santuario1.getId());
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
         assertEquals(santuario1.getNombre(),reporte.getNombreSantuario());
+        assertEquals(1, reporte.getTotalDemonios());
     }
 
 }

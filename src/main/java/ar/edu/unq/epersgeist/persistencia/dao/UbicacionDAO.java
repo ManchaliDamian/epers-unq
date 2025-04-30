@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 @Repository
 public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
@@ -22,21 +23,21 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     //-----------------------------------------------------------------
 
     @Query(
-            "FROM Ubicacion u JOIN Espiritu e ON u.id = e.ubicacion.id " +
-            "WHERE TYPE(E) = Santuario GROUP BY u.id " +
-            "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
-            "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC LIMIT 1"
+            "SELECT u FROM Ubicacion u JOIN Espiritu e ON u.id = e.ubicacion.id " +
+                    "WHERE TYPE(u) = Santuario " +
+                    "GROUP BY u " +
+                    "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
+                    "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC"
     )
-    Santuario obtenerSantuarioMasCorrupto();
+    List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
 
     @Query(
-        "FROM medium m LEFT JOIN m.espiritus e " +
-        " WHERE m.ubicacion.id = :ubicacionId AND TYPE(e)= EspirituDemoniaco " +
-        "GROUP BY m.id " +
-        "ORDER BY COUNT(e), m.mana DESC " + //Si hay empate, se elige el médium con más mana
-        "LIMIT 1"
+            "SELECT m FROM Medium m LEFT JOIN m.espiritus e " +
+                    "WHERE m.ubicacion.id = :ubicacionId AND TYPE(e) = EspirituDemoniaco " +
+                    "GROUP BY m " +
+                    "ORDER BY COUNT(e) DESC, m.mana DESC"
     )
-    Medium mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
+    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId, Pageable pageable);
 
     @Query(
         "SELECT COUNT(e) FROM Espiritu e " +
