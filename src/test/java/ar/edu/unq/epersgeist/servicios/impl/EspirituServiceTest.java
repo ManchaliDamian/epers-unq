@@ -144,16 +144,6 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void testEliminarTodo() {
-        serviceM.guardar(medium);
-
-        serviceEliminarTodo.eliminarTodo();
-
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertTrue(espiritus.isEmpty());
-    }
-
-    @Test
     void testRecuperarTodosCuandoNoExisten() {
         serviceEliminarTodo.eliminarTodo();
         List<Espiritu> espiritus = serviceE.recuperarTodos();
@@ -216,7 +206,7 @@ public class EspirituServiceTest {
         @Test
         void primeraPaginaAscendente_devuelveEspiritusEnOrdenInverso() {
             List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 2);
-            resultado.forEach(e -> System.out.println(e.getNombre() + " - Nivel: " + e.getNivelDeConexion()));
+
 
             assertEquals(2, resultado.size());
             assertEquals("Belcebu", resultado.get(0).getNombre());
