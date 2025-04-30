@@ -57,7 +57,7 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(espirituDTOS);
     }
 /*
-    @GetMapping("/{id}/mediumSinEspiritus")
+    @GetMapping("/{id}/mediumsSinEspiritus")
     public ResponseEntity<List<MediumDTO>> getMediumsSinEspiritusEn (@PathVariable Long id){
         List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(id);
         List<MediumDTO> mediumDTOS = mediumsSinEspiritusEn.stream().map(MediumDTO::desdeModelo).toList();
@@ -65,13 +65,13 @@ public final class UbicacionControllerREST {
     }
 */
     //POST handlers
-@PostMapping
-public ResponseEntity<Void> guardarUbicacion(@Valid @RequestBody UbicacionDTO dto) {
-    Ubicacion ubicacion = dto.aModelo();
-    Ubicacion creada = ubicacionService.guardar(ubicacion);
-    URI location = URI.create("/ubicacion/" + creada.getId());
-    return ResponseEntity.created(location).build();
-}
+    @PostMapping
+    public ResponseEntity<Void> guardarUbicacion(@Valid @RequestBody UbicacionDTO dto) {
+        Ubicacion ubicacion = dto.aModelo();
+        Ubicacion creada = ubicacionService.guardar(ubicacion);
+        URI location = URI.create("/ubicacion/" + creada.getId());
+        return ResponseEntity.created(location).build();
+    }
 
     //PUT handlers
     @PutMapping("/{id}")
