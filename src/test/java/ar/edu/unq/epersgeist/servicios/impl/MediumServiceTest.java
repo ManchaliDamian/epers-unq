@@ -278,6 +278,29 @@ public class MediumServiceTest {
     }
 
     @Test
+    void descansar_conVariosEspiritus() {
+        angel.setNivelDeConexion(10);
+        demonio.setNivelDeConexion(30);
+        angel.setUbicacion(santuario);
+        medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
+        medium2.conectarseAEspiritu(demonio);
+
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+        serviceM.guardar(medium2);
+
+        serviceM.descansar(medium2.getId());
+
+        Optional<Medium> mediumRecuperado = serviceM.recuperar(medium2.getId());
+        Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
+
+        assertEquals(100, mediumRecuperado.get().getMana());
+        assertEquals(90, angelActualizado.get().getNivelDeConexion());
+        assertEquals(40, demonioActualizado.get().getNivelDeConexion());
+    }
+
+    @Test
     void noSePuedeExorcizar_diferenteUbicacion() {
         medium1.conectarseAEspiritu(angel);
         medium2.conectarseAEspiritu(demonio);
