@@ -89,4 +89,7 @@ public abstract class Espiritu {
     public abstract void recuperarConexionEn(Ubicacion ubicacion);
 
     protected abstract void realizarMovimiento(Ubicacion nuevaUbicacion);
+
+    public abstract TipoEspiritu getTipo();
+
 }

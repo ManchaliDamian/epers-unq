@@ -34,7 +34,11 @@ public final  class EspirituControllerREST {
         return espiritu.map(value -> ResponseEntity.ok(EspirituDTO.desdeModelo(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEspiritu(@PathVariable Long id){
+        espirituService.eliminar(id);
+        return ResponseEntity.ok().body("El espiritu ha sido eliminado con exito");
+    }
 
 //Lo descomento luego de tener hecho el aModelo() en espíritu.
 //    @GetMapping
