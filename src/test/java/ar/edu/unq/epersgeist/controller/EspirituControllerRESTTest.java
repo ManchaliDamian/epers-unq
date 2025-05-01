@@ -93,9 +93,9 @@ public class EspirituControllerRESTTest {
         assertEquals(mockMVCEspirituController.recuperarTodos().size(), 2);
     }
 
-//    @AfterEach
-//    void eliminarTodo(){
-//        serviceEliminarTodo.eliminarTodo();
-//    }
+    @AfterEach
+    void eliminarTodo(){
+        serviceEliminarTodo.eliminarTodo();
+    }
 
 }

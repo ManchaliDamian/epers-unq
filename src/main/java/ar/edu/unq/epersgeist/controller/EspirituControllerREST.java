@@ -3,9 +3,12 @@ package ar.edu.unq.epersgeist.controller;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,11 +43,20 @@ public final  class EspirituControllerREST {
         return ResponseEntity.ok().body("El espiritu ha sido eliminado con exito");
     }
 
-//Lo descomento luego de tener hecho el aModelo() en espíritu.
-//    @GetMapping
-//    public void createEspiritu(@RequestBody EspirituDTO espirituDTO ){
-//        espirituService.guardar(espirituDTO.aModelo());
-//    }
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Void>guardarEspiritu(@Valid @RequestBody EspirituDTO espirituDTO){
+        Espiritu espiritu = espirituDTO.aModelo();
+        espirituService.guardar(espiritu);
+        URI location = URI.create("/espiritu/" + espiritu.getId());
+        return ResponseEntity.created(location).build();
+    }
+
+
+    @GetMapping
+    public void createEspiritu(@RequestBody EspirituDTO espirituDTO ){
+        espirituService.guardar(espirituDTO.aModelo());
+    }
 
 //Descomentar luego de tener a MediumDTO hecho
 //    @GetMapping("/{idEspiritu}/conectar/{idMedium}")
