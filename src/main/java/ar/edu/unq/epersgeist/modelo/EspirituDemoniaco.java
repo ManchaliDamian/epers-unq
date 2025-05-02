@@ -25,4 +25,9 @@ public class EspirituDemoniaco extends Espiritu{
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
     }
+
+    @Override
+    public TipoEspiritu getTipo(){
+        return TipoEspiritu.DEMONIACO;
+    }
 }
