@@ -34,18 +34,36 @@ public class MockMVCEspirituController {
         }
     }
 
-    private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable{
+//    private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable{
+//        var dto = EspirituDTO.desdeModelo(espiritu);
+//        var json = objectMapper.writeValueAsString(dto);
+//
+//        return Long.parseLong(
+//                performRequest(MockMvcRequestBuilders.post("/espiritu")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(json))
+//                        .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
+//                        .andReturn().getResponse().getContentAsString()
+//        );
+//    }
+
+    private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable {
         var dto = EspirituDTO.desdeModelo(espiritu);
         var json = objectMapper.writeValueAsString(dto);
 
-        return Long.parseLong(
-                performRequest(MockMvcRequestBuilders.post("/espiritu")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                        .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
-                        .andReturn().getResponse().getContentAsString()
-        );
+        var response = performRequest(MockMvcRequestBuilders.post("/espiritu")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
+                .andReturn().getResponse();
+
+        String location = response.getHeader("Location");
+        if (location == null || !location.contains("/")) {
+            throw new IllegalStateException("No se pudo obtener el ID desde la cabecera Location");
+        }
+        return Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
     }
+
 
     public Long guardarEspiritu(Espiritu espiritu) throws Throwable {
         return guardarEspiritu(espiritu, HttpStatus.CREATED);

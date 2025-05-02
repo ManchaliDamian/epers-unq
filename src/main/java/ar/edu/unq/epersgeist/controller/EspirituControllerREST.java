@@ -24,7 +24,7 @@ public final  class EspirituControllerREST {
         this.espirituService = espirituService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<EspirituDTO> getAllEspiritus(){
         return espirituService.recuperarTodos().stream()
                  .map(EspirituDTO::desdeModelo).collect(Collectors.toList());
