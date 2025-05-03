@@ -157,6 +157,7 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
+    @Test
     @AfterEach
     void cleanup() {
         eliminarTodo.eliminarTodo();

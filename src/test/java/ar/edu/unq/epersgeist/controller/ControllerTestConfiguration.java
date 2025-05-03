@@ -20,7 +20,8 @@ public class ControllerTestConfiguration {
     }
 
     @Bean // pasarle como parámetro mediumControllerRest luego
-    public MockMvc mockMvc(EspirituControllerREST esp, UbicacionControllerREST ubi) {
-        return MockMvcBuilders.standaloneSetup(esp, ubi).build();
+    // Spring va a intentar hacer autowiring de toda dependencia que declaremos como parametro en el metodo del Bean.
+    public MockMvc mockMvc(EspirituControllerREST espirituControllerREST, UbicacionControllerREST ubicacionControllerREST) {
+        return MockMvcBuilders.standaloneSetup(espirituControllerREST, ubicacionControllerREST).build();
     }
 }
