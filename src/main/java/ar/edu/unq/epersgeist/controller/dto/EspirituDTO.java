@@ -11,16 +11,16 @@ import static ar.edu.unq.epersgeist.modelo.TipoEspiritu.ANGELICAL;
 //Ver luego que agregar, falta agregar UbicacionDTO 
 //A lo último, terminar de agregar el tipo de espiritu
 public record EspirituDTO(Long id, String nombre,Integer nivelDeConexion,Long mediumConectadoId,UbicacionDTO ubicacion, TipoEspiritu tipo) {
-    public static EspirituDTO desdeModelo(Espiritu espiritu) {
-        return new EspirituDTO(
-                espiritu.getId(),
-                espiritu.getNombre(),
-                espiritu.getNivelDeConexion(),
-                espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
-                UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
-                espiritu.getTipo()
-        );
-    }
+//    public static EspirituDTO desdeModelo(Espiritu espiritu) {
+//        return new EspirituDTO(
+//                espiritu.getId(),
+//                espiritu.getNombre(),
+//                espiritu.getNivelDeConexion(),
+//                espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
+//                UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
+//                espiritu.getTipo()
+//        );
+//    }
 
 
     public Espiritu aModelo(){
