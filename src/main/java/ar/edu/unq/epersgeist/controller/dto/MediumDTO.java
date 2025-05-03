@@ -1,9 +1,12 @@
 package ar.edu.unq.epersgeist.controller.dto;
+
+import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record MediumDTO(
         Long id,
@@ -11,14 +14,34 @@ public record MediumDTO(
         Ubicacion ubicacion,
         Integer manaMax,
         Integer mana,
-        List<String> espiritus
-        ) {
+        List<EspirituDTO> espiritus
+) {
+    public static MediumDTO desdeModelo(Medium medium) {
+        List<EspirituDTO> espiritusDTO = medium.getEspiritus()
+                .stream()
+                .map(EspirituDTO::desdeModelo)
+                .collect(Collectors.toList());
 
-    public static MediumDTO desdeModelo(Medium medium){
+        return new MediumDTO(
+                medium.getId(),
+                medium.getNombre(),
+                medium.getUbicacion(),
+                medium.getManaMax(),
+                medium.getMana(),
+                espiritusDTO
+        );
+    }
 
-    };
+    public Medium aModelo() {
+        Medium medium = new Medium(nombre, manaMax, mana, ubicacion);
 
-    public static MediumDTO aModelo(Medium medium){
+        if (espiritus != null) {
+            for (EspirituDTO dto : espiritus) {
+                Espiritu e = dto.aModelo();
+                medium.conectarseAEspiritu(e);
+            }
+        }
 
-    };
+        return medium;
+    }
 }
