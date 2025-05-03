@@ -1,6 +1,5 @@
-package ar.edu.unq.epersgeist.modelo.espiritu;
+package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +22,12 @@ public class EspirituDemoniaco extends Espiritu{
     }
 
     @Override
-    public void mover(Ubicacion ubicacion) {
+    protected void mover(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
+    }
+
+    @Override
+    public TipoEspiritu getTipo(){
+        return TipoEspiritu.DEMONIACO;
     }
 }

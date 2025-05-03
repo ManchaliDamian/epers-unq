@@ -1,12 +1,11 @@
-package ar.edu.unq.epersgeist.modelo.espiritu;
+package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
+@Getter @Setter @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 @Entity
@@ -77,5 +76,6 @@ public abstract class Espiritu {
     public void atacar(Espiritu objetivo){};
     public abstract void serInvocadoEn(Ubicacion ubicacion);
     public abstract void recuperarConexionEn(Ubicacion ubicacion);
-    public abstract void mover(Ubicacion ubicacion);
+
+    protected abstract void mover(Ubicacion nuevaUbicacion);
 }

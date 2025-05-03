@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.ubicacion.*;
-import ar.edu.unq.epersgeist.modelo.espiritu.*;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -26,7 +25,6 @@ public class MediumServiceImpl implements MediumService {
         this.espirituDAO = espirituDAO;
         this.ubicacionDAO = ubicacionDAO;
     }
-
 
 
     @Override
@@ -56,28 +54,28 @@ public class MediumServiceImpl implements MediumService {
     }
 
 
-
     @Override
     public void descansar(Long mediumId) {
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() ->
+                new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
 
-            Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con ID: " + mediumId));
+        medium.descansar();
 
-            medium.descansar();
-
-            mediumDAO.save(medium);
+        mediumDAO.save(medium);
 
     }
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-            //pasar a una excepcion personalizada
-            Medium mediumExorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con id: " + idMediumExorcista));
-            Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new EntityNotFoundException("Medium no encontrado con id: " + idMediumAExorcizar));
+            Medium mediumExorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new MediumNoEncontrado(idMediumExorcista));
+            Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontrado(idMediumAExorcizar));
 
             List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
-            mediumExorcista.exorcizarA(angeles, demonios);
+
+            mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
+
 
             mediumDAO.save(mediumExorcista);
             mediumDAO.save(mediumAExorcizar);

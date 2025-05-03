@@ -1,8 +1,8 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.modelo;
 
-public enum TipoUbicacion {
-    CEMENTERIO,
-    SANTUARIO;
+public enum TipoEspiritu {
+    ANGELICAL,
+    DEMONIACO;
 
     public boolean equalsIgnoreCase(String tipo) {
         return this.name().equalsIgnoreCase(tipo);
