@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -66,16 +67,17 @@ public final class UbicacionControllerREST {
 */
     //POST handlers
     @PostMapping
-    public ResponseEntity<Void> guardarUbicacion(@Valid @RequestBody UbicacionDTO dto) {
+    public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {
         Ubicacion ubicacion = dto.aModelo();
         Ubicacion creada = ubicacionService.guardar(ubicacion);
         URI location = URI.create("/ubicacion/" + creada.getId());
-        return ResponseEntity.created(location).build();
+        UbicacionDTO respuesta = UbicacionDTO.desdeModelo(creada);
+        return ResponseEntity.created(location).body(respuesta);
     }
 
     //PUT handlers
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UbicacionDTO dto) {
+    public ResponseEntity<UbicacionDTO> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UbicacionDTO dto) {
         if (!id.equals(dto.id())) {
             return ResponseEntity.badRequest().build();
         }
@@ -89,7 +91,10 @@ public final class UbicacionControllerREST {
         Ubicacion ubicacion = dto.aModelo();
         ubicacionService.guardar(ubicacion);
 
-        return ResponseEntity.ok().build();
+        Ubicacion ubicacionActualizada = ubicacionService.guardar(dto.aModelo());
+        UbicacionDTO respuesta = UbicacionDTO.desdeModelo(ubicacionActualizada);
+
+        return ResponseEntity.ok(respuesta);
     }
 
     //DELETE handlers

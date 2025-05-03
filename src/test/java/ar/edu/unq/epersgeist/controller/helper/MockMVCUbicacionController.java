@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.controller.helper;
 
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
@@ -93,30 +94,39 @@ public class MockMVCUbicacionController {
     }
     */
 
-
-    private void guardarUbicacion(UbicacionDTO dto, HttpStatus expectedStatus) throws Throwable {
+    public Ubicacion guardarUbicacion(Ubicacion ubi, HttpStatus expectedStatus) throws Throwable {
+        var dto = CreateUbicacionDTO.desdeModelo(ubi);
         var json = objectMapper.writeValueAsString(dto);
 
-        performRequest(MockMvcRequestBuilders
-                        .post("/ubicacion")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()));
+        var mvcResult = performRequest(MockMvcRequestBuilders
+                .post("/ubicacion")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        return objectMapper.readValue(responseBody, Ubicacion.class);
     }
 
-    private void actualizarUbicacion(UbicacionDTO dto, Long ubicacionId, HttpStatus expectedStatus) throws Throwable {
+
+    public Ubicacion actualizarUbicacion(UbicacionDTO dto, Long ubicacionId, HttpStatus expectedStatus) throws Throwable {
         var json = objectMapper.writeValueAsString(dto);
 
-        performRequest(MockMvcRequestBuilders
-                        .put("/ubicacion/" + ubicacionId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()));
+        var mvcResult = performRequest(MockMvcRequestBuilders
+                .put("/ubicacion/" + ubicacionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        return objectMapper.readValue(responseBody, Ubicacion.class);
     }
 
 
     public void eliminar(Long ubicacionId) throws Throwable {
-        performRequest(MockMvcRequestBuilders.delete("/ubicaciones/" + ubicacionId))
+        performRequest(MockMvcRequestBuilders.delete("/ubicacion/" + ubicacionId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

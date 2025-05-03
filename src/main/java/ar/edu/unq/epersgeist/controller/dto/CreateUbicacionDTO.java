@@ -1,19 +1,18 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.TipoUbicacion;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
-public record UbicacionDTO(@NotNull Long id, @NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer energia, @NotNull TipoUbicacion tipo) {
-    public static UbicacionDTO desdeModelo(Ubicacion ubicacion) {
-        return new UbicacionDTO(
-                ubicacion.getId(),
+public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer energia, @NotNull TipoUbicacion tipo) {
+    public static CreateUbicacionDTO desdeModelo(Ubicacion ubicacion) {
+        return new CreateUbicacionDTO(
                 ubicacion.getNombre(),
                 ubicacion.getFlujoDeEnergia(),
                 ubicacion.getTipo()
