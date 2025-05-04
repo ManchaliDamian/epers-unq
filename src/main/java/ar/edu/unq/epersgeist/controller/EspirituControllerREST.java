@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/espiritu")
 public final  class EspirituControllerREST {
 
@@ -37,23 +36,23 @@ public final  class EspirituControllerREST {
         return espiritu.map(value -> ResponseEntity.ok(EspirituDTO.desdeModelo(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/espirituEliminado/{id}")
     public ResponseEntity<String> deleteEspiritu(@PathVariable Long id){
         espirituService.eliminar(id);
         return ResponseEntity.ok().body("El espiritu ha sido eliminado con exito");
     }
 
+//    @PostMapping
+//    public ResponseEntity<EspirituDTO>guardarEspiritu(@Valid @RequestBody EspirituDTO espirituDTO){
+//        Espiritu espiritu = espirituDTO.aModelo();
+//        espirituService.guardar(espiritu);
+//        URI location = URI.create("/espiritu/" + espiritu.getId());
+//        EspirituDTO respuesta = EspirituDTO.desdeModelo(espiritu);
+//        return ResponseEntity.created(location).body(respuesta);
+//    }
+
+
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Void>guardarEspiritu(@Valid @RequestBody EspirituDTO espirituDTO){
-        Espiritu espiritu = espirituDTO.aModelo();
-        espirituService.guardar(espiritu);
-        URI location = URI.create("/espiritu/" + espiritu.getId());
-        return ResponseEntity.created(location).build();
-    }
-
-
-    @GetMapping
     public void createEspiritu(@RequestBody EspirituDTO espirituDTO ){
         espirituService.guardar(espirituDTO.aModelo());
     }

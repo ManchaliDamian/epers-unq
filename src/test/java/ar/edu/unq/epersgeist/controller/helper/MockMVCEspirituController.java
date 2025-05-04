@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.controller.helper;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
@@ -34,34 +35,25 @@ public class MockMVCEspirituController {
         }
     }
 
-//    private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable{
-//        var dto = EspirituDTO.desdeModelo(espiritu);
-//        var json = objectMapper.writeValueAsString(dto);
-//
-//        return Long.parseLong(
-//                performRequest(MockMvcRequestBuilders.post("/espiritu")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(json))
-//                        .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
-//                        .andReturn().getResponse().getContentAsString()
-//        );
-//    }
 
     private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable {
-        var dto = EspirituDTO.desdeModelo(espiritu);
+        var dto = CreateEspirituDTO.desdeModelo(espiritu);
         var json = objectMapper.writeValueAsString(dto);
 
-        var response = performRequest(MockMvcRequestBuilders.post("/espiritu")
+        var response = performRequest(MockMvcRequestBuilders.post("/espiritu/all" )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
                 .andReturn().getResponse();
 
-        String location = response.getHeader("Location");
-        if (location == null || !location.contains("/")) {
-            throw new IllegalStateException("No se pudo obtener el ID desde la cabecera Location");
-        }
-        return Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
+        String responseBody = response.getContentAsString();
+        return objectMapper.readValue(responseBody, Espiritu.class).getId();
+
+//        String location = response.getHeader("Location");
+//        if (location == null || !location.contains("/")) {
+//            throw new IllegalStateException("No se pudo obtener el ID desde la cabecera Location");
+//        }
+//        return Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
     }
 
 
@@ -69,16 +61,20 @@ public class MockMVCEspirituController {
         return guardarEspiritu(espiritu, HttpStatus.CREATED);
     }
 
+    private String getContentAsString(String url) throws Throwable {
+        return performRequest(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+    }
+
 
     public Collection<Espiritu> recuperarTodos() throws Throwable{
-        var json = performRequest(MockMvcRequestBuilders.get("/espiritu/all"))
-                   .andExpect(MockMvcResultMatchers.status().isOk())
-                   .andReturn().getResponse().getContentAsString();
+        var json = getContentAsString("/espiritu/all");
 
         Collection<EspirituDTO> dtos = objectMapper.readValue(json,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class,EspirituDTO.class)
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, EspirituDTO.class)
                 );
-    return dtos.stream().map(EspirituDTO::aModelo).collect(Collectors.toList());
+    return dtos.stream().map(EspirituDTO::aModelo).toList();
     }
 
     public Espiritu recuperarEspiritu(Long espirituId) throws Throwable{

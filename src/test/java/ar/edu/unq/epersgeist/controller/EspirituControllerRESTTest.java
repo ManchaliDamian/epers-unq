@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
+import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -37,7 +38,7 @@ public class EspirituControllerRESTTest {
 
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
 
-   // @Autowired private MockMvcUbicacionController mockMvcUbicacionController;
+    @Autowired private MockMVCUbicacionController mockMvcUbicacionController;
 
     private Ubicacion quilmes;
     private Ubicacion bernal;
@@ -70,33 +71,37 @@ public class EspirituControllerRESTTest {
         espiritu1 = new EspirituAngelical("angelical 1", quilmes);
         espiritu2 = new EspirituAngelical("angelical 2", bernal);
 
-//        espirituId = mockMVCEspirituController.guardarEspiritu(espiritu1);
-//        mockMVCEspirituController.guardarEspiritu(espiritu2);
+        espirituService.guardar(espiritu1);
+        espirituService.guardar(espiritu2);
+
+        espirituId = mockMVCEspirituController.guardarEspiritu(espiritu1);
+        mockMVCEspirituController.guardarEspiritu(espiritu2);
 
 
         //Cambiarlo luego cuando esté MockMVCUbicacion
-        espirituService.guardar(espiritu1);
-        espirituService.guardar(espiritu2);
-        espirituId = espiritu1.getId();
+//        espirituService.guardar(espiritu1);
+//        espirituService.guardar(espiritu2);
+//        espirituId = espiritu1.getId();
         //----------------------------------------
 
     }
 
-    @Test
-    void getEspirituByIdTest() throws Throwable{
-        //Descomentarlo luego
-        //mockMVCUbicacionController.guardarUbicacion(ubicacion1, HttpStatus.CREATED);
 
-        var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(espirituId);
-
-        assertEquals(espiritu1.getNombre(),espirituRecuperado.getNombre());
-
-    }
-//Luego arreglo esto 
 //    @Test
-//    void cantiTotalRecuperarTodosTest() throws Throwable{
-//        assertEquals(mockMVCEspirituController.recuperarTodos().size(), 2);
+//    void getEspirituByIdTest() throws Throwable{
+//        //Descomentarlo luego
+//        var ubicacion = mockMvcUbicacionController.guardarUbicacion(quilmes, HttpStatus.CREATED);
+////        ubicacionService.guardar(ubicacion);
+//        var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(espirituId);
+//
+//        assertEquals(espirituRecuperado.getNombre(), espiritu1.getNombre());
+//
 //    }
+//Luego arreglo esto 
+    @Test
+    void cantiTotalRecuperarTodosTest() throws Throwable{
+        assertEquals(2, mockMVCEspirituController.recuperarTodos().size());
+    }
     //------------------------
 
     @AfterEach
