@@ -21,20 +21,14 @@ import java.util.stream.Collectors;
 public final  class EspirituControllerREST {
 
     private final EspirituService espirituService;
-    private final UbicacionService ubicacionService;
 
-    public EspirituControllerREST(EspirituService espirituService, UbicacionService ubicacionService){
+    public EspirituControllerREST(EspirituService espirituService){
         this.espirituService = espirituService;
-        this.ubicacionService = ubicacionService;
     }
 
     @PostMapping
     public ResponseEntity<EspirituDTO> createEspiritu(@Valid @RequestBody CreateEspirituDTO dto) {
-        Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
-                .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada"));
-
-        Espiritu espiritu = dto.aModelo(ubicacion);
-        Espiritu creado = espirituService.guardar(espiritu);
+        Espiritu creado = espirituService.crear(dto);
 
         return ResponseEntity
                 .created(URI.create("/espiritu/" + creado.getId()))

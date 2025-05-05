@@ -1,8 +1,11 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontrada;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -22,12 +25,22 @@ public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
+    private final RecuperarUbicacionService recuperarUbicacionService;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
+    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO,
+                               RecuperarUbicacionService recuperarUbicacionService) {
         this.espirituDAO = espirituDAO;
         this.mediumDAO = mediumDAO;
+        this.recuperarUbicacionService = recuperarUbicacionService;
     }
 
+    public Espiritu crear(CreateEspirituDTO dto) {
+        Ubicacion ubic = recuperarUbicacionService.recuperar(dto.ubicacionId())
+                .orElseThrow(() -> new UbicacionNoEncontrada(dto.ubicacionId()));
+
+        Espiritu e = dto.aModelo(ubic);
+        return guardar(e);
+    }
     @Override
     public Espiritu guardar(Espiritu espiritu) {
             return espirituDAO.save(espiritu);

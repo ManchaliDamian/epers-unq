@@ -46,11 +46,11 @@ public class MockMVCEspirituController {
                 .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
                 .andReturn().getResponse();
 
-        String responseBody = response.getContentAsString();
-        EspirituDTO responseDto = objectMapper.readValue(responseBody, EspirituDTO.class);
-        Espiritu espirituCreado = responseDto.aModelo();
+        EspirituDTO dto = objectMapper.readValue(
+                response.getContentAsString(), EspirituDTO.class);
 
-        return espirituCreado.getId();
+        Espiritu creado = dto.aModelo();
+        return creado.getId();
 
 
 
