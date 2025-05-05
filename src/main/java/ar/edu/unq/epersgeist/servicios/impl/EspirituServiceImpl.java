@@ -29,8 +29,8 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void guardar(Espiritu espiritu) {
-            espirituDAO.save(espiritu);
+    public Espiritu guardar(Espiritu espiritu) {
+            return espirituDAO.save(espiritu);
     }
 
     @Override

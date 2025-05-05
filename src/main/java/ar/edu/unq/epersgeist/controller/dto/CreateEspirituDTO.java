@@ -1,37 +1,28 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.TipoEspiritu;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import ar.edu.unq.epersgeist.modelo.*;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import static ar.edu.unq.epersgeist.modelo.TipoEspiritu.DEMONIACO;
-import static ar.edu.unq.epersgeist.modelo.TipoEspiritu.ANGELICAL;
 
-//Ver luego que agregar, falta agregar UbicacionDTO
-//A lo último, terminar de agregar el tipo de espiritu
-public record CreateEspirituDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer nivelDeConexion, Long mediumConectadoId, UbicacionDTO ubicacion,@NotNull TipoEspiritu tipo) {
+public record CreateEspirituDTO(@NotBlank String nombre, Long mediumConectadoId, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo) {
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu) {
         return new CreateEspirituDTO(
                 espiritu.getNombre(),
-                espiritu.getNivelDeConexion(),
                 espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
-                UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
+                espiritu.getUbicacion() != null ? espiritu.getUbicacion().getId() : null,
                 espiritu.getTipo()
         );
     }
 
-    public Espiritu aModelo(){
+    public Espiritu aModelo(Ubicacion ubicacion){
         switch (this.tipo()){
             case ANGELICAL -> {
-                return new EspirituAngelical(nombre,ubicacion.aModelo());
+                return new EspirituAngelical(nombre, ubicacion);
             }
             case DEMONIACO -> {
-                return  new EspirituDemoniaco(nombre,ubicacion.aModelo());
+                return new EspirituDemoniaco(nombre, ubicacion);
             }
             default -> throw new IllegalArgumentException("Argumentos no validos");
         }

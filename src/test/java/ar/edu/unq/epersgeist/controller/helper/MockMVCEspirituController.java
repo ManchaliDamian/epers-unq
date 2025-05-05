@@ -36,18 +36,24 @@ public class MockMVCEspirituController {
     }
 
 
-    private Long guardarEspiritu(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable {
-        var dto = CreateEspirituDTO.desdeModelo(espiritu);
-        var json = objectMapper.writeValueAsString(dto);
+    private Long guardar(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable {
+        var createDto = CreateEspirituDTO.desdeModelo(espiritu);
+        var json = objectMapper.writeValueAsString(createDto);
 
-        var response = performRequest(MockMvcRequestBuilders.post("/espiritu/all" )
+        var response = performRequest(MockMvcRequestBuilders.post("/espiritu")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
                 .andReturn().getResponse();
 
         String responseBody = response.getContentAsString();
-        return objectMapper.readValue(responseBody, Espiritu.class).getId();
+        EspirituDTO responseDto = objectMapper.readValue(responseBody, EspirituDTO.class);
+        Espiritu espirituCreado = responseDto.aModelo();
+
+        return espirituCreado.getId();
+
+
+
 
 //        String location = response.getHeader("Location");
 //        if (location == null || !location.contains("/")) {
@@ -57,8 +63,8 @@ public class MockMVCEspirituController {
     }
 
 
-    public Long guardarEspiritu(Espiritu espiritu) throws Throwable {
-        return guardarEspiritu(espiritu, HttpStatus.CREATED);
+    public Long guardar(Espiritu espiritu) throws Throwable {
+        return guardar(espiritu, HttpStatus.CREATED);
     }
 
     private String getContentAsString(String url) throws Throwable {

@@ -1,8 +1,11 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +21,24 @@ import java.util.stream.Collectors;
 public final  class EspirituControllerREST {
 
     private final EspirituService espirituService;
+    private final UbicacionService ubicacionService;
 
-    public EspirituControllerREST(EspirituService espirituService){
+    public EspirituControllerREST(EspirituService espirituService, UbicacionService ubicacionService){
         this.espirituService = espirituService;
+        this.ubicacionService = ubicacionService;
+    }
+
+    @PostMapping
+    public ResponseEntity<EspirituDTO> createEspiritu(@Valid @RequestBody CreateEspirituDTO dto) {
+        Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
+                .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada"));
+
+        Espiritu espiritu = dto.aModelo(ubicacion);
+        Espiritu creado = espirituService.guardar(espiritu);
+
+        return ResponseEntity
+                .created(URI.create("/espiritu/" + creado.getId()))
+                .body(EspirituDTO.desdeModelo(creado));
     }
 
     @GetMapping("/all")
@@ -32,14 +50,14 @@ public final  class EspirituControllerREST {
     @GetMapping("/{id}")
     public ResponseEntity<EspirituDTO> getEspirituById(@PathVariable Long id){
         Optional<Espiritu> espiritu = espirituService.recuperar(id);
-        //No sé qué tan bien estaría esto, pero no rompe.
-        return espiritu.map(value -> ResponseEntity.ok(EspirituDTO.desdeModelo(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return espiritu.map(e -> ResponseEntity.ok(EspirituDTO.desdeModelo(e)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/espirituEliminado/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEspiritu(@PathVariable Long id){
         espirituService.eliminar(id);
-        return ResponseEntity.ok().body("El espiritu ha sido eliminado con exito");
+        return ResponseEntity.ok().build();
     }
 
 //    @PostMapping
@@ -51,11 +69,6 @@ public final  class EspirituControllerREST {
 //        return ResponseEntity.created(location).body(respuesta);
 //    }
 
-
-    @PostMapping
-    public void createEspiritu(@RequestBody EspirituDTO espirituDTO ){
-        espirituService.guardar(espirituDTO.aModelo());
-    }
 
 //Descomentar luego de tener a MediumDTO hecho
 //    @GetMapping("/{idEspiritu}/conectar/{idMedium}")

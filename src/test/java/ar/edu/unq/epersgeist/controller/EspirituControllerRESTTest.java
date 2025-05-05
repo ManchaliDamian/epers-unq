@@ -71,11 +71,8 @@ public class EspirituControllerRESTTest {
         espiritu1 = new EspirituAngelical("angelical 1", quilmes);
         espiritu2 = new EspirituAngelical("angelical 2", bernal);
 
-        espirituService.guardar(espiritu1);
-        espirituService.guardar(espiritu2);
-
-        espirituId = mockMVCEspirituController.guardarEspiritu(espiritu1);
-        mockMVCEspirituController.guardarEspiritu(espiritu2);
+        espirituId = mockMVCEspirituController.guardar(espiritu1);
+        mockMVCEspirituController.guardar(espiritu2);
 
 
         //Cambiarlo luego cuando esté MockMVCUbicacion
