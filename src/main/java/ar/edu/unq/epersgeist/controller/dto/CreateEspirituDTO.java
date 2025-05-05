@@ -6,11 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
-public record CreateEspirituDTO(@NotBlank String nombre, Long mediumConectadoId, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo) {
+public record CreateEspirituDTO(@NotBlank String nombre, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo) {
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu) {
         return new CreateEspirituDTO(
                 espiritu.getNombre(),
-                espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
                 espiritu.getUbicacion() != null ? espiritu.getUbicacion().getId() : null,
                 espiritu.getTipo()
         );

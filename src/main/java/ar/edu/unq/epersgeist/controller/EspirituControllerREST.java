@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -41,7 +42,7 @@ public final  class EspirituControllerREST {
                 .body(EspirituDTO.desdeModelo(creado));
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<EspirituDTO> getAllEspiritus(){
         return espirituService.recuperarTodos().stream()
                  .map(EspirituDTO::desdeModelo).collect(Collectors.toList());
@@ -55,9 +56,16 @@ public final  class EspirituControllerREST {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEspiritu(@PathVariable Long id){
+    public ResponseEntity<Void> deleteEspiritu(@PathVariable Long id){
         espirituService.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/demoniacos")
+    public List<EspirituDTO> espiritusDemoniacos(@RequestParam Direccion direccion, @RequestParam int pagina, @RequestParam int cantidadPorPagina) {
+        return espirituService.espiritusDemoniacos(direccion, pagina, cantidadPorPagina).stream()
+                .map(EspirituDTO::desdeModelo)
+                .toList();
     }
 
 //    @PostMapping

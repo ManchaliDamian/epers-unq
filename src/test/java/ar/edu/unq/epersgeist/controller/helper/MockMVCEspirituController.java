@@ -75,7 +75,7 @@ public class MockMVCEspirituController {
 
 
     public Collection<Espiritu> recuperarTodos() throws Throwable{
-        var json = getContentAsString("/espiritu/all");
+        var json = getContentAsString("/espiritu");
 
         Collection<EspirituDTO> dtos = objectMapper.readValue(json,
                     objectMapper.getTypeFactory().constructCollectionType(List.class, EspirituDTO.class)
@@ -92,27 +92,29 @@ public class MockMVCEspirituController {
         return dto.aModelo();
     }
 
+
+    public int espiritusDemoniacos(Direccion direccion, int pagina,
+                                   int cantidadPorPagina, HttpStatus expectedStatus) throws Throwable {
+        return performRequest(
+                MockMvcRequestBuilders.get("/espiritu/demoniacos")
+                        .param("direccion", direccion.name())
+                        .param("pagina",   String.valueOf(pagina))
+                        .param("cantidadPorPagina", String.valueOf(cantidadPorPagina))
+        )
+                .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
+                .andReturn()
+                .getResponse()
+                .getStatus();
+    }
+
+    public void eliminar(Long espirituId) throws Throwable {
+        performRequest(MockMvcRequestBuilders.delete("/espiritu/" + espirituId))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+
     public void conectarAMedium(Long espirituId, Long mediumId) throws Throwable{
         mockMvc.perform(MockMvcRequestBuilders.put("/espiritu/" + espirituId + "/conectar/" + mediumId))
                .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    public Collection<Espiritu> getEspiritusDemoniacosPaginados(Direccion dir, int pag, int cantPags) throws Throwable{
-
-        var json = performRequest(
-                     MockMvcRequestBuilders
-                         .get("/espiritu/espiritusDemoniacos" + pag + "/" + cantPags + "/ " + dir.name()
-                     )
-                   )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        Collection<EspirituDTO> dtos = objectMapper.readValue(json,
-                objectMapper.getTypeFactory().constructCollectionType(List.class,EspirituDTO.class)
-        );
-
-        return dtos.stream().map(EspirituDTO::aModelo).collect(Collectors.toList());
-
-    }
-
 }

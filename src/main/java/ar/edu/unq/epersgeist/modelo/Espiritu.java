@@ -81,5 +81,4 @@ public abstract class Espiritu {
 
     protected abstract void mover(Ubicacion nuevaUbicacion);
 
-    public abstract TipoEspiritu getTipo();
 }

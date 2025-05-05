@@ -12,6 +12,7 @@ import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +76,6 @@ public class EspirituControllerRESTTest {
         mockMVCEspirituController.guardar(espiritu2);
 
 
-        //Cambiarlo luego cuando esté MockMVCUbicacion
-//        espirituService.guardar(espiritu1);
-//        espirituService.guardar(espiritu2);
-//        espirituId = espiritu1.getId();
-        //----------------------------------------
 
     }
 
@@ -99,6 +95,28 @@ public class EspirituControllerRESTTest {
         assertEquals(2, mockMVCEspirituController.recuperarTodos().size());
     }
 
+    @Test
+    void eliminarTest() throws Throwable{
+        mockMVCEspirituController.eliminar(espirituId);
+
+        Collection<Espiritu> espiritus = mockMVCEspirituController.recuperarTodos();
+        var espiritu = espiritus.stream().findAny().get();
+
+        assertEquals(1, espiritus.size());
+        assertEquals(espiritu.getNombre(), espiritu2.getNombre());
+        assertEquals(espiritu.getTipo(), espiritu2.getTipo());
+        assertEquals(espiritu.getNivelDeConexion(), espiritu2.getNivelDeConexion());
+    }
+
+    @Test
+    public void testGetEspiritusDemoniacosPaginacion() throws Throwable {
+        var dem = new EspirituDemoniaco("Demonio", bernal);
+        mockMVCEspirituController.guardar(dem);
+
+        var status = mockMVCEspirituController.espiritusDemoniacos(
+                Direccion.ASCENDENTE, 1,10, HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK.value(), status);
+    }
 
     @AfterEach
     void eliminarTodo(){
