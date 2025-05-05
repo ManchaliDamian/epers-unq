@@ -89,6 +89,8 @@ public class EspirituControllerRESTTest {
         var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(espirituId);
 
         assertEquals(espirituRecuperado.getNombre(), espiritu1.getNombre());
+        assertEquals(espiritu1.getNivelDeConexion(),espirituRecuperado.getNivelDeConexion());
+        assertEquals(espiritu1.getTipo(), espirituRecuperado.getTipo());
 
     }
 
