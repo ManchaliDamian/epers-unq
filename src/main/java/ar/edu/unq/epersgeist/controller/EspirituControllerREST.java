@@ -35,7 +35,7 @@ public final  class EspirituControllerREST {
                 .body(EspirituDTO.desdeModelo(creado));
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<EspirituDTO> getAllEspiritus(){
         return espirituService.recuperarTodos().stream()
                  .map(EspirituDTO::desdeModelo).collect(Collectors.toList());
@@ -50,8 +50,14 @@ public final  class EspirituControllerREST {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEspiritu(@PathVariable Long id){
+        Optional<Espiritu> existente = espirituService.recuperar(id);
+
+        if (existente.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         espirituService.eliminar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 //    @PostMapping

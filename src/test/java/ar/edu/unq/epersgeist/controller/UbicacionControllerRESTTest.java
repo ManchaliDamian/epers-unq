@@ -1,5 +1,9 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.*;
@@ -41,17 +45,15 @@ public class UbicacionControllerRESTTest {
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
     //@Autowired private MockMvcMediumController mockMVCMediumController;
 
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
-    private Ubicacion quilmesGuardado;
-    private Ubicacion bernalGuardado;
-    private Espiritu espiritu1;
-    private Espiritu espiritu2;
-
-    private Long espirituId;
-    private Long espiritu2Id;
-
-    private Medium medium;
+    private CreateUbicacionDTO quilmes;
+    private CreateUbicacionDTO bernal;
+    private CreateEspirituDTO angel;
+    private CreateEspirituDTO demon;
+    //private CreateMediumDTO medium;
+    private UbicacionDTO bernalGuardado;
+    private UbicacionDTO quilmesGuardado;
+    private EspirituDTO angelGuardado;
+    private EspirituDTO demonGuardado;
 
 
 
@@ -59,17 +61,16 @@ public class UbicacionControllerRESTTest {
     @BeforeEach
     void setUp() throws Throwable {
         serviceEliminarTodo.eliminarTodo();
-        quilmes = new Cementerio("Cementerio 1", 50);
-        bernal = new Santuario("Santuario 1", 50);
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
+        bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
+        quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, Santuario.class);
-        quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, Cementerio.class);
+        angel = new CreateEspirituDTO("angel", null, bernalGuardado.id(), TipoEspiritu.ANGELICAL);
+        demon = new CreateEspirituDTO("demon", null, quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
 
-        /*
-        medium = new Medium("medium",100,20,quilmes);
-
-        mediumService.guardar(medium);
-        */
+        angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
+        demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);
     /*
         espiritu1 = new EspirituAngelical("angelical 1", quilmesGuardado);
         espiritu2 = new EspirituAngelical("angelical 2", bernalGuardado);
@@ -89,30 +90,31 @@ public class UbicacionControllerRESTTest {
 
     @Test
     void getUbicacionByIdTest() throws Throwable{
-        var ubiRecuperada = mockMVCUbicacionController.getUbicacionById(quilmesGuardado.getId());
+        var ubiRecuperada = mockMVCUbicacionController.getUbicacionById(quilmesGuardado.id());
 
-        assertEquals(quilmes.getNombre(),ubiRecuperada.getNombre());
-        assertEquals(quilmes.getFlujoDeEnergia(),ubiRecuperada.getFlujoDeEnergia());
-        assertEquals(quilmes.getTipo(), ubiRecuperada.getTipo());
+        assertEquals(quilmes.nombre(), ubiRecuperada.getNombre());
+        assertEquals(quilmes.flujoDeEnergia(), ubiRecuperada.getFlujoDeEnergia());
+        assertEquals(quilmes.tipo(), ubiRecuperada.getTipo());
     }
-    /*
+
     @Test
     void getEspiritusEnTest() throws Throwable{
-        assertEquals(1, mockMVCUbicacionController.getEspiritusEn(bernalGuardado.getId()).size());
-        assertEquals(1, mockMVCUbicacionController.getEspiritusEn(quilmesGuardado.getId()).size());
+        assertEquals(1, mockMVCUbicacionController.getEspiritusEn(bernalGuardado.id()).size());
+        assertEquals(1, mockMVCUbicacionController.getEspiritusEn(quilmesGuardado.id()).size());
     }
-    */
+
     @Test
     void eliminarTest() throws Throwable{
-        mockMVCUbicacionController.eliminar(quilmesGuardado.getId());
+        mockMVCEspirituController.eliminar(demonGuardado.id());
+        mockMVCUbicacionController.eliminar(quilmesGuardado.id());
 
         Collection<Ubicacion> ubicaciones = mockMVCUbicacionController.getUbicaciones();
         var ubi = ubicaciones.stream().findAny().get();
 
         assertEquals(1, ubicaciones.size());
-        assertEquals(ubi.getNombre(), bernalGuardado.getNombre());
-        assertEquals(ubi.getTipo(), bernalGuardado.getTipo());
-        assertEquals(ubi.getFlujoDeEnergia(), bernalGuardado.getFlujoDeEnergia());
+        assertEquals(ubi.getNombre(), bernalGuardado.nombre());
+        assertEquals(ubi.getTipo(), bernalGuardado.tipo());
+        assertEquals(ubi.getFlujoDeEnergia(), bernalGuardado.flujoDeEnergia());
     }
 
     @AfterEach

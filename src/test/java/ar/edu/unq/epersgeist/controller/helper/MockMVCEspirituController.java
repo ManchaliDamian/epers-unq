@@ -6,6 +6,7 @@ import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,24 +37,17 @@ public class MockMVCEspirituController {
     }
 
 
-    private Long guardar(Espiritu espiritu, HttpStatus expectedStatus) throws Throwable {
-        var createDto = CreateEspirituDTO.desdeModelo(espiritu);
-        var json = objectMapper.writeValueAsString(createDto);
+    public <T> T guardarEspiritu(CreateEspirituDTO dto, HttpStatus expectedStatus,  Class<T> cls) throws Throwable {
+        var json = objectMapper.writeValueAsString(dto);
 
-        var response = performRequest(MockMvcRequestBuilders.post("/espiritu")
+        var response = performRequest(MockMvcRequestBuilders.post("/espiritu" )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().is(expectedStatus.value()))
                 .andReturn().getResponse();
 
-        EspirituDTO dto = objectMapper.readValue(
-                response.getContentAsString(), EspirituDTO.class);
-
-        Espiritu creado = dto.aModelo();
-        return creado.getId();
-
-
-
+        String responseBody = response.getContentAsString();
+        return objectMapper.readValue(responseBody, cls);
 
 //        String location = response.getHeader("Location");
 //        if (location == null || !location.contains("/")) {
@@ -63,8 +57,8 @@ public class MockMVCEspirituController {
     }
 
 
-    public Long guardar(Espiritu espiritu) throws Throwable {
-        return guardar(espiritu, HttpStatus.CREATED);
+    public <T> T guardarEspiritu(CreateEspirituDTO dto,  Class<T> cls) throws Throwable {
+        return guardarEspiritu(dto, HttpStatus.CREATED, cls);
     }
 
     private String getContentAsString(String url) throws Throwable {
@@ -75,12 +69,12 @@ public class MockMVCEspirituController {
 
 
     public Collection<Espiritu> recuperarTodos() throws Throwable{
-        var json = getContentAsString("/espiritu/all");
+        var json = getContentAsString("/espiritu");
 
         Collection<EspirituDTO> dtos = objectMapper.readValue(json,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, EspirituDTO.class)
-                );
-    return dtos.stream().map(EspirituDTO::aModelo).toList();
+                objectMapper.getTypeFactory().constructCollectionType(List.class, EspirituDTO.class)
+        );
+        return dtos.stream().map(EspirituDTO::aModelo).toList();
     }
 
     public Espiritu recuperarEspiritu(Long espirituId) throws Throwable{
@@ -94,16 +88,16 @@ public class MockMVCEspirituController {
 
     public void conectarAMedium(Long espirituId, Long mediumId) throws Throwable{
         mockMvc.perform(MockMvcRequestBuilders.put("/espiritu/" + espirituId + "/conectar/" + mediumId))
-               .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     public Collection<Espiritu> getEspiritusDemoniacosPaginados(Direccion dir, int pag, int cantPags) throws Throwable{
 
         var json = performRequest(
-                     MockMvcRequestBuilders
-                         .get("/espiritu/espiritusDemoniacos" + pag + "/" + cantPags + "/ " + dir.name()
-                     )
-                   )
+                MockMvcRequestBuilders
+                        .get("/espiritu/espiritusDemoniacos" + pag + "/" + cantPags + "/ " + dir.name()
+                        )
+        )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -115,4 +109,8 @@ public class MockMVCEspirituController {
 
     }
 
+    public void eliminar(Long espirituId) throws Throwable {
+        performRequest(MockMvcRequestBuilders.delete("/espiritu/" + espirituId))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 }
