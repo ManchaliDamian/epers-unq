@@ -25,6 +25,6 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 
 
-    @Query("FROM Espiritu e where TYPE(e) = EspirituDemoniaco")
+    @Query("FROM EspirituDemoniaco")
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
 }
