@@ -34,7 +34,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion actualizar(Ubicacion ubicacion){
-        return this.guardar(ubicacion);
+        return ubicacionDAO.save(ubicacion);
     }
 
     @Override

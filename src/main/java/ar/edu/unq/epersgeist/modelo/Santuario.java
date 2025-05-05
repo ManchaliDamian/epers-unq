@@ -11,7 +11,7 @@ import lombok.*;
 public class Santuario extends Ubicacion {
 
     public Santuario(String nombre, Integer flujoDeEnergia)  {
-        super(nombre, flujoDeEnergia);
+        super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO);
     }
 
     @Override

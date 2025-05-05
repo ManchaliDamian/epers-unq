@@ -3,8 +3,8 @@ package ar.edu.unq.epersgeist.controller.helper;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -17,14 +17,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class MockMVCUbicacionController {
@@ -67,7 +62,7 @@ public class MockMVCUbicacionController {
         return dto.aModelo();
     }
 
-    /* descomentar cuando aModelo este definido
+
     public Collection<Espiritu> getEspiritusEn(Long ubicacionId) throws Throwable {
         var json = getContentAsString("/ubicacion/" + ubicacionId + "/espiritus");
 
@@ -78,7 +73,7 @@ public class MockMVCUbicacionController {
 
         return dtos.stream().map(EspirituDTO::aModelo).toList();
     }
-    */
+
 
     /* descomentar cuando mediumDTO este definido
     public Collection<Medium>  getMediumsSinEspiritusEn (Long ubicacionId) throws Throwable {
@@ -93,7 +88,11 @@ public class MockMVCUbicacionController {
     }
     */
 
-    public Ubicacion guardarUbicacion(Ubicacion ubi, HttpStatus expectedStatus) throws Throwable {
+    public <T> T guardarUbicacion(Ubicacion ubi,  Class<T> cls) throws Throwable {
+        return this.guardarUbicacion(ubi, HttpStatus.CREATED, cls);
+    }
+
+    public <T> T guardarUbicacion(Ubicacion ubi, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
         var dto = CreateUbicacionDTO.desdeModelo(ubi);
         var json = objectMapper.writeValueAsString(dto);
 
@@ -105,12 +104,16 @@ public class MockMVCUbicacionController {
                 .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        return objectMapper.readValue(responseBody, Ubicacion.class);
+        return objectMapper.readValue(responseBody, cls);
     }
 
+    public <T> T actualizarUbicacion(Ubicacion ubi, Long ubicacionId, Class<T> cls) throws Throwable {
+        return this.actualizarUbicacion(ubi, ubicacionId, HttpStatus.OK, cls);
+    }
 
-    public Ubicacion actualizarUbicacion(UbicacionDTO dto, Long ubicacionId, HttpStatus expectedStatus) throws Throwable {
-        var json = objectMapper.writeValueAsString(dto);
+    public <T> T actualizarUbicacion(Ubicacion ubi, Long ubicacionId, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
+        var dto = UpdateUbicacionDTO.desdeModelo(ubi);
+        var json = objectMapper.writeValueAsString(ubi);
 
         var mvcResult = performRequest(MockMvcRequestBuilders
                 .put("/ubicacion/" + ubicacionId)
@@ -120,12 +123,12 @@ public class MockMVCUbicacionController {
                 .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        return objectMapper.readValue(responseBody, Ubicacion.class);
+        return objectMapper.readValue(responseBody, cls);
     }
 
 
     public void eliminar(Long ubicacionId) throws Throwable {
         performRequest(MockMvcRequestBuilders.delete("/ubicacion/" + ubicacionId))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }

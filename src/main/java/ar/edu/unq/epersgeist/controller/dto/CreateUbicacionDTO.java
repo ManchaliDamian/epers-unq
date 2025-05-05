@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
-public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer energia, @NotNull TipoUbicacion tipo) {
+public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer flujoDeEnergia, @NotNull TipoUbicacion tipo) {
     public static CreateUbicacionDTO desdeModelo(Ubicacion ubicacion) {
         return new CreateUbicacionDTO(
                 ubicacion.getNombre(),
@@ -21,8 +21,8 @@ public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(
 
     public Ubicacion aModelo() {
         return switch (this.tipo()) {
-            case SANTUARIO -> new Santuario(this.nombre(), this.energia());
-            case CEMENTERIO -> new Cementerio(this.nombre(), this.energia());
+            case SANTUARIO -> new Santuario(this.nombre(), this.flujoDeEnergia());
+            case CEMENTERIO -> new Cementerio(this.nombre(), this.flujoDeEnergia());
         };
     }
 }
