@@ -39,16 +39,16 @@ public class MediumControllerREST {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{id}/espiritus")
-    public ResponseEntity<List<EspirituDTO>> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) String tipo) {
-        return mediumService.recuperar(id)
-                .map(m -> m.getEspiritus().stream()
-                        .filter(e -> tipo == null || e.getTipo().equalsIgnoreCase(tipo))
-                        .map(EspirituDTO::desdeModelo)
-                        .collect(Collectors.toList()))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    //@GetMapping("/{id}/espiritus")
+    //public ResponseEntity<List<EspirituDTO>> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) String tipo) {
+    //    return mediumService.recuperar(id)
+    //            .map(m -> m.getEspiritus().stream()
+    //                    .filter(e -> tipo == null || e.getTipo().equalsIgnoreCase(tipo))
+    //                    .map(EspirituDTO::desdeModelo)
+    //                    .collect(Collectors.toList()))
+    //            .map(ResponseEntity::ok)
+    //            .orElseGet(() -> ResponseEntity.notFound().build());
+    //}
 
     @PutMapping("/{id}")
     public ResponseEntity<MediumDTO> actualizar(@PathVariable Long id, @RequestBody MediumDTO mediumDTO) {
