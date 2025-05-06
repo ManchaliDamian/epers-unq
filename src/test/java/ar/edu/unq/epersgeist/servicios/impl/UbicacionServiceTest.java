@@ -44,10 +44,12 @@ public class UbicacionServiceTest {
     private Espiritu angel;
     private Espiritu demonio;
 
-    private DataService eliminarTodo;
+    private DataService dataService;
 
     @BeforeEach
     void prepare() {
+        dataService = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
+
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
 
@@ -58,8 +60,6 @@ public class UbicacionServiceTest {
 
         serviceU.guardar(santuario);
         serviceU.guardar(cementerio);
-
-        eliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
     }
 
@@ -145,7 +145,7 @@ public class UbicacionServiceTest {
 
     @Test
     void eliminarUbicacion() {
-        serviceU.eliminar(santuario);
+        serviceU.eliminar(santuario.getId());
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }
@@ -160,7 +160,7 @@ public class UbicacionServiceTest {
     @Test
     @AfterEach
     void cleanup() {
-        eliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

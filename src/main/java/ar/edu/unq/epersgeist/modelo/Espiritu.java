@@ -73,9 +73,12 @@ public abstract class Espiritu {
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
     }
 
+    public abstract TipoEspiritu getTipo();
+
     public void atacar(Espiritu objetivo){};
     public abstract void serInvocadoEn(Ubicacion ubicacion);
     public abstract void recuperarConexionEn(Ubicacion ubicacion);
 
     protected abstract void mover(Ubicacion nuevaUbicacion);
+
 }
