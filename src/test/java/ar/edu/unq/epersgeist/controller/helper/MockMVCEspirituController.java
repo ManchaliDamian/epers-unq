@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.controller.helper;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,22 +50,11 @@ public class MockMVCEspirituController {
         String responseBody = response.getContentAsString();
         return objectMapper.readValue(responseBody, cls);
 
-//        String location = response.getHeader("Location");
-//        if (location == null || !location.contains("/")) {
-//            throw new IllegalStateException("No se pudo obtener el ID desde la cabecera Location");
-//        }
-//        return Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
     }
 
 
     public <T> T guardarEspiritu(CreateEspirituDTO dto,  Class<T> cls) throws Throwable {
         return guardarEspiritu(dto, HttpStatus.CREATED, cls);
-    }
-
-    private String getContentAsString(String url) throws Throwable {
-        return performRequest(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
     }
 
 
@@ -77,12 +67,10 @@ public class MockMVCEspirituController {
         return dtos.stream().map(EspirituDTO::aModelo).toList();
     }
 
-    public Espiritu recuperarEspiritu(Long espirituId) throws Throwable{
+    public Espiritu getEspirituById(Long espirituId) throws Throwable{
+        var json = getContentAsString("/espiritu/" + espirituId);
 
-        var json = performRequest(MockMvcRequestBuilders.get("/espiritu/" + espirituId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        var dto = objectMapper.readValue(json,EspirituDTO.class);
+        var dto = objectMapper.readValue(json, EspirituDTO.class);
         return dto.aModelo();
     }
 
@@ -106,6 +94,11 @@ public class MockMVCEspirituController {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
+    private String getContentAsString(String url) throws Throwable {
+        return performRequest(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+    }
 
     public void conectarAMedium(Long espirituId, Long mediumId) throws Throwable{
         mockMvc.perform(MockMvcRequestBuilders.put("/espiritu/" + espirituId + "/conectar/" + mediumId))

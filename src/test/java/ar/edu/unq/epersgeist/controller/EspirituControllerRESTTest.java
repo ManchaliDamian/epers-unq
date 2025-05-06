@@ -77,7 +77,7 @@ public class EspirituControllerRESTTest {
 
     @Test
     void getEspirituByIdTest() throws Throwable{
-        var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(angelGuardado.id());
+        var espirituRecuperado = mockMVCEspirituController.getEspirituById(angelGuardado.id());
 
         assertEquals(espirituRecuperado.getNombre(), angelGuardado.nombre());
         assertEquals(angelGuardado.nivelDeConexion(),espirituRecuperado.getNivelDeConexion());
