@@ -42,7 +42,7 @@ public final  class EspirituControllerREST {
                 .body(EspirituDTO.desdeModelo(creado));
     }
 
-    @GetMapping()
+    @GetMapping
     public List<EspirituDTO> getAllEspiritus(){
         return espirituService.recuperarTodos().stream()
                  .map(EspirituDTO::desdeModelo).collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.interfaces;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EspirituService {
+    Espiritu crear(CreateEspirituDTO dto);
     Espiritu guardar(Espiritu espiritu);
     void actualizar(Espiritu espiritu);
     Optional<Espiritu> recuperar(Long espirituId);

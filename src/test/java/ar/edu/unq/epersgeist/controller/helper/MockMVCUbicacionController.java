@@ -88,12 +88,11 @@ public class MockMVCUbicacionController {
     }
     */
 
-    public <T> T guardarUbicacion(Ubicacion ubi,  Class<T> cls) throws Throwable {
-        return this.guardarUbicacion(ubi, HttpStatus.CREATED, cls);
+    public <T> T guardarUbicacion(CreateUbicacionDTO dto,  Class<T> cls) throws Throwable {
+        return this.guardarUbicacion(dto, HttpStatus.CREATED, cls);
     }
 
-    public <T> T guardarUbicacion(Ubicacion ubi, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
-        var dto = CreateUbicacionDTO.desdeModelo(ubi);
+    public <T> T guardarUbicacion(CreateUbicacionDTO dto, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
         var json = objectMapper.writeValueAsString(dto);
 
         var mvcResult = performRequest(MockMvcRequestBuilders
@@ -107,13 +106,12 @@ public class MockMVCUbicacionController {
         return objectMapper.readValue(responseBody, cls);
     }
 
-    public <T> T actualizarUbicacion(Ubicacion ubi, Long ubicacionId, Class<T> cls) throws Throwable {
-        return this.actualizarUbicacion(ubi, ubicacionId, HttpStatus.OK, cls);
+    public <T> T actualizarUbicacion(UpdateUbicacionDTO dto, Long ubicacionId, Class<T> cls) throws Throwable {
+        return this.actualizarUbicacion(dto, ubicacionId, HttpStatus.OK, cls);
     }
 
-    public <T> T actualizarUbicacion(Ubicacion ubi, Long ubicacionId, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
-        var dto = UpdateUbicacionDTO.desdeModelo(ubi);
-        var json = objectMapper.writeValueAsString(ubi);
+    public <T> T actualizarUbicacion(UpdateUbicacionDTO dto, Long ubicacionId, HttpStatus expectedStatus, Class<T> cls) throws Throwable {
+        var json = objectMapper.writeValueAsString(dto);
 
         var mvcResult = performRequest(MockMvcRequestBuilders
                 .put("/ubicacion/" + ubicacionId)
