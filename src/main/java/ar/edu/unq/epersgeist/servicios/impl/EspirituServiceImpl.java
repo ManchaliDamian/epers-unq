@@ -56,11 +56,6 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void eliminarTodo(){
-        espirituDAO.deleteAll();
-    }
-
-    @Override
     public Medium conectar(Long espirituId, Long mediumId) {
         Espiritu espiritu = espirituDAO.findById(espirituId)
                 .orElseThrow(() -> new EspirituNoEncontrado(espirituId));

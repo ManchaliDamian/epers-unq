@@ -33,7 +33,7 @@ public final  class EspirituControllerREST {
     public ResponseEntity<EspirituDTO> createEspiritu(@Valid @RequestBody CreateEspirituDTO dto) {
         Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
                 .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada"));
-
+    //que de error 400 no 500
         Espiritu espiritu = dto.aModelo(ubicacion);
         Espiritu creado = espirituService.guardar(espiritu);
 
@@ -68,14 +68,6 @@ public final  class EspirituControllerREST {
                 .toList();
     }
 
-//    @PostMapping
-//    public ResponseEntity<EspirituDTO>guardarEspiritu(@Valid @RequestBody EspirituDTO espirituDTO){
-//        Espiritu espiritu = espirituDTO.aModelo();
-//        espirituService.guardar(espiritu);
-//        URI location = URI.create("/espiritu/" + espiritu.getId());
-//        EspirituDTO respuesta = EspirituDTO.desdeModelo(espiritu);
-//        return ResponseEntity.created(location).body(respuesta);
-//    }
 
 
 //Descomentar luego de tener a MediumDTO hecho
