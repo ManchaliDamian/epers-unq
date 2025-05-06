@@ -66,8 +66,8 @@ public class UbicacionControllerRESTTest {
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        angel = new CreateEspirituDTO("angel", null, bernalGuardado.id(), TipoEspiritu.ANGELICAL);
-        demon = new CreateEspirituDTO("demon", null, quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL);
+        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
         demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);

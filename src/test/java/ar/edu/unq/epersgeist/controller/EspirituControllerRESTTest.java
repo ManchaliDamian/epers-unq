@@ -1,6 +1,9 @@
-/*
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.*;
@@ -33,52 +36,39 @@ public class EspirituControllerRESTTest {
     @Autowired private EspirituService espirituService;
     @Autowired private MediumService mediumService;
     @Autowired private UbicacionService ubicacionService;
+    @Autowired private DataService serviceEliminarTodo;
 
     @Autowired private UbicacionDAO ubicacionDAO;
     @Autowired private EspirituDAO espirituDAO;
     @Autowired private MediumDAO mediumDAO;
 
+    @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
+    //@Autowired private MockMvcMediumController mockMVCMediumController;
 
-    @Autowired private MockMVCUbicacionController mockMvcUbicacionController;
-
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
-
-    private Espiritu espiritu1;
-    private Espiritu espiritu2;
-
-    private Long espirituId;
-
-    private Medium medium;
-
-
-    private DataService serviceEliminarTodo;
+    private CreateUbicacionDTO quilmes;
+    private CreateUbicacionDTO bernal;
+    private CreateEspirituDTO angel;
+    private CreateEspirituDTO demon;
+    //private CreateMediumDTO medium;
+    private UbicacionDTO bernalGuardado;
+    private UbicacionDTO quilmesGuardado;
+    private EspirituDTO angelGuardado;
+    private EspirituDTO demonGuardado;
 
     @BeforeEach
     void setUp() throws Throwable {
-        serviceEliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
         serviceEliminarTodo.eliminarTodo();
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
+        bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
+        quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        quilmes = new Santuario("Santuario 1", 50);
-        bernal = new Santuario("Santuario 2", 50);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL);
+        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
 
-        ubicacionService.guardar(quilmes);
-        ubicacionService.guardar(bernal);
-
-        medium = new Medium("medium",100,20,quilmes);
-
-        mediumService.guardar(medium);
-
-        espiritu1 = new EspirituAngelical("angelical 1", quilmes);
-        espiritu2 = new EspirituAngelical("angelical 2", bernal);
-    */
-/* arreglar
-        espirituId = mockMVCEspirituController.guardar(espiritu1);
-        mockMVCEspirituController.guardar(espiritu2);
-        *//*
-
-
+        angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
+        demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);
 
 
 
@@ -87,11 +77,11 @@ public class EspirituControllerRESTTest {
 
     @Test
     void getEspirituByIdTest() throws Throwable{
-        var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(espirituId);
+        var espirituRecuperado = mockMVCEspirituController.recuperarEspiritu(angelGuardado.id());
 
-        assertEquals(espirituRecuperado.getNombre(), espiritu1.getNombre());
-        assertEquals(espiritu1.getNivelDeConexion(),espirituRecuperado.getNivelDeConexion());
-        assertEquals(espiritu1.getTipo(), espirituRecuperado.getTipo());
+        assertEquals(espirituRecuperado.getNombre(), angelGuardado.nombre());
+        assertEquals(angelGuardado.nivelDeConexion(),espirituRecuperado.getNivelDeConexion());
+        assertEquals(angelGuardado.tipo(), espirituRecuperado.getTipo());
 
     }
 
@@ -102,21 +92,19 @@ public class EspirituControllerRESTTest {
 
     @Test
     void eliminarTest() throws Throwable{
-        mockMVCEspirituController.eliminar(espirituId);
+        mockMVCEspirituController.eliminar(angelGuardado.id());
 
         Collection<Espiritu> espiritus = mockMVCEspirituController.recuperarTodos();
         var espiritu = espiritus.stream().findAny().get();
 
         assertEquals(1, espiritus.size());
-        assertEquals(espiritu.getNombre(), espiritu2.getNombre());
-        assertEquals(espiritu.getTipo(), espiritu2.getTipo());
-        assertEquals(espiritu.getNivelDeConexion(), espiritu2.getNivelDeConexion());
+        assertEquals(espiritu.getNombre(), demonGuardado.nombre());
+        assertEquals(espiritu.getTipo(), demonGuardado.tipo());
+        assertEquals(espiritu.getNivelDeConexion(), demonGuardado.nivelDeConexion());
     }
 
     @Test
     public void testGetEspiritusDemoniacosPaginacion() throws Throwable {
-        var dem = new EspirituDemoniaco("Demonio", bernal);
-        mockMVCEspirituController.guardar(dem);
 
         var status = mockMVCEspirituController.espiritusDemoniacos(
                 Direccion.ASCENDENTE, 1,10, HttpStatus.OK);
@@ -129,4 +117,3 @@ public class EspirituControllerRESTTest {
     }
 
 }
-*/
