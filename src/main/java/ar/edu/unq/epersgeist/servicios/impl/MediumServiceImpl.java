@@ -1,5 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -92,6 +94,12 @@ public class MediumServiceImpl implements MediumService {
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
             Optional<Espiritu> espiritu = espirituDAO.findById(espirituId);
+            if (espiritu.isEmpty()) {
+                throw new ExceptionEspirituNoEncontrado(espirituId);
+            }
+            if(espiritu.get().isDeleted()){
+                throw  new ExceptionEspirituEliminado(espirituId);
+            }
             Optional<Medium> medium = mediumDAO.findById(mediumId);
 
             medium.get().invocarA(espiritu.get());

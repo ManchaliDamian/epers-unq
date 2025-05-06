@@ -19,6 +19,7 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     )
     List<Espiritu> recuperarTodos();
 
+
     @Query(
             "FROM Espiritu e where e.deleted = true and e.id = :id"
     )
@@ -39,6 +40,6 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 
 
-    @Query("FROM Espiritu e where TYPE(e) = EspirituDemoniaco")
+    @Query("FROM Espiritu e where TYPE(e) = EspirituDemoniaco and e.deleted = false")
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
 }

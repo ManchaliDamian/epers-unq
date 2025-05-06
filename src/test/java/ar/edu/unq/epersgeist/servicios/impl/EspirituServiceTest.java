@@ -84,6 +84,19 @@ public class EspirituServiceTest {
 
     }
     @Test
+    void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
+
+        serviceM.guardar(medium);
+        serviceE.eliminar(azazel.getId());
+
+        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+
+        Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
+        assertNull(conectado.get().getMediumConectado());
+
+
+    }
+    @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
@@ -213,7 +226,15 @@ public class EspirituServiceTest {
             serviceE.guardar(belcebu);
 
         }
+        @Test
+        void primeraPaginaDescendente_devuelveEspiritusOrdenadoSinEliminado() {
+            serviceE.eliminar(azazel.getId());
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
 
+            assertEquals(2, resultado.size());
+            assertEquals("Mephisto", resultado.get(0).getNombre());
+            assertEquals("Lucifer", resultado.get(1).getNombre());
+        }
         @Test
         void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
             List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
