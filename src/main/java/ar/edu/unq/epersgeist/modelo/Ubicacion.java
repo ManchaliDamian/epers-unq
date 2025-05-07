@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
 
-@Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @EqualsAndHashCode @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_ubicacion")
@@ -21,12 +21,15 @@ public abstract class Ubicacion {
     @Check(constraints = "flujo_de_energia BETWEEN 0 AND 100")
     private Integer flujoDeEnergia;
 
-    public Ubicacion(@NonNull String nombre, @NonNull Integer flujoDeEnergia) {
+    private final TipoUbicacion tipo;
+
+    public Ubicacion(@NonNull String nombre, @NonNull Integer flujoDeEnergia, @NonNull TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
             throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
         }
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
+        this.tipo = tipo;
     }
 
     public void cambiarNombre(String nombre) {

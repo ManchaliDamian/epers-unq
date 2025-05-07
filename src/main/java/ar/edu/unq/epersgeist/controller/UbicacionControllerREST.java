@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -75,27 +76,20 @@ public final class UbicacionControllerREST {
         return ResponseEntity.created(location).body(respuesta);
     }
 
-    //PUT handlers
     @PutMapping("/{id}")
-    public ResponseEntity<UbicacionDTO> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UbicacionDTO dto) {
-        if (!id.equals(dto.id())) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UbicacionDTO> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UpdateUbicacionDTO dto) {
 
-        Optional<Ubicacion> existente = ubicacionService.recuperar(id);
+        Optional<Ubicacion> opt = ubicacionService.recuperar(id);
+        if (opt.isEmpty()) return ResponseEntity.notFound().build(); // 404
 
-        if (existente.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        Ubicacion ubicacion = opt.get();
+        dto.actualizarModelo(ubicacion); // actualiza los atributos
 
-        Ubicacion ubicacion = dto.aModelo();
-        ubicacionService.guardar(ubicacion);
+        Ubicacion guardada = ubicacionService.actualizar(ubicacion);
 
-        Ubicacion ubicacionActualizada = ubicacionService.guardar(dto.aModelo());
-        UbicacionDTO respuesta = UbicacionDTO.desdeModelo(ubicacionActualizada);
-
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(UbicacionDTO.desdeModelo(guardada));
     }
+
 
     //DELETE handlers
     @DeleteMapping("/{id}")

@@ -9,6 +9,7 @@ import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -47,11 +48,10 @@ public class EspirituServiceTest {
     private Ubicacion berazategui;
 
 
-    private DataService serviceEliminarTodo;
+    private DataService dataService;
     @BeforeEach
     void setUp() {
-        serviceEliminarTodo = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
-        serviceEliminarTodo.eliminarTodo();
+        dataService = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
@@ -66,8 +66,8 @@ public class EspirituServiceTest {
 
         serviceE.guardar(azazel);
         serviceE.guardar(belcebu);
-
         serviceE.guardar(angel);
+
     }
 
 
@@ -80,6 +80,19 @@ public class EspirituServiceTest {
 
         Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
         assertEquals(mediumConectado.getId(), conectado.get().getMediumConectado().getId());
+
+    }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
+
+        serviceM.guardar(medium);
+        serviceE.eliminar(azazel.getId());
+
+        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+
+        Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
+        assertNull(conectado.get().getMediumConectado());
+
 
     }
     @Test
@@ -112,14 +125,45 @@ public class EspirituServiceTest {
         assertEquals("Miguel", recuperado.get().getNombre());
         assertEquals(0, recuperado.get().getNivelDeConexion());
     }
+    @Test
+    void testRecuperarEspirituLanzaExceptionPorEliminadoLogico() {
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        serviceE.guardar(nuevoEspiritu);
+        serviceE.eliminar(nuevoEspiritu.getId());
+
+        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
+    }
 
     @Test
     void testRecuperarTodos() {
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertEquals(3, espiritus.size());
+    }
+    @Test
+    void testRecuperarTodosCuandoHayUnEliminadoLogico() {
+        serviceE.eliminar(angel.getId());
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(2, espiritus.size());
 
-        List<Long> idsEsperados = List.of(azazel.getId(), belcebu.getId(), angel.getId());
-        assertTrue(espiritus.stream().allMatch(e -> idsEsperados.contains(e.getId())));
+    }
+    @Test
+    void testRecuperarTodosCuandoTodosEliminadosLogicamente() {
+        serviceE.eliminar(angel.getId());
+        serviceE.eliminar(azazel.getId());
+        serviceE.eliminar(belcebu.getId());
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(0, espiritus.size());
+    }
+    @Test
+    void testRecuperarTodosLosEliminadosLogicamente() {
+        serviceE.eliminar(angel.getId());
+        serviceE.eliminar(azazel.getId());
+
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(1, espiritus.size());
+
+        List<Espiritu> espiritusEliminados = serviceE.recuperarTodosLosEliminados();
+        assertEquals(2, espiritusEliminados.size());
     }
 
     @Test
@@ -136,16 +180,20 @@ public class EspirituServiceTest {
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        Optional<Espiritu> eliminado = serviceE.recuperar(angel.getId());
-        assertTrue(eliminado.isEmpty());
+        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(angel.getId()));
+    }
+    @Test
+    void testRecuperarEliminadoPorId() {
+        serviceE.eliminar(angel.getId());
+        Optional<Espiritu> eliminado = serviceE.recuperarEliminado(angel.getId());
+        assertEquals(eliminado.get().getNombre(), "Gabriel");
+        assertTrue(eliminado.get().isDeleted());
 
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertEquals(2, espiritus.size());
     }
 
     @Test
     void testRecuperarTodosCuandoNoExisten() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
     }
@@ -177,7 +225,15 @@ public class EspirituServiceTest {
             serviceE.guardar(belcebu);
 
         }
+        @Test
+        void primeraPaginaDescendente_devuelveEspiritusOrdenadoSinEliminado() {
+            serviceE.eliminar(azazel.getId());
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
 
+            assertEquals(2, resultado.size());
+            assertEquals("Mephisto", resultado.get(0).getNombre());
+            assertEquals("Lucifer", resultado.get(1).getNombre());
+        }
         @Test
         void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
             List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
@@ -243,6 +299,6 @@ public class EspirituServiceTest {
 
     @AfterEach
     void cleanup() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 }
