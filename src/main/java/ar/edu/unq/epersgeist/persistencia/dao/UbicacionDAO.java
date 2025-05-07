@@ -14,10 +14,10 @@ import java.util.List;
 @Repository
 public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
-    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId")
+    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId and e.deleted = false")
     List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
 
-    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0")
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 and m.deleted = false")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
     //-----------------------------------------------------------------
@@ -41,13 +41,13 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
     @Query(
         "SELECT COUNT(e) FROM Espiritu e " +
-        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId"
+        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId and e.deleted = false"
     )
     int cantTotalDeDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
          "SELECT COUNT(e) FROM Espiritu e " +
-         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL "
+         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL and e.deleted = false"
     )
     int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 

@@ -42,14 +42,8 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        Optional<Medium> mediumOptional = mediumDAO.findById(mediumId);
-        if (mediumOptional.isEmpty()) {
-            throw new MediumNoEncontradoException(mediumId);
-        }
-        if(mediumOptional.get().isDeleted()){
-            throw new MediumEliminadoException(mediumId);
-        }
-        return mediumOptional;
+        return mediumDAO.findById(mediumId)
+                .filter(e -> !e.isDeleted());
     }
 
     @Override

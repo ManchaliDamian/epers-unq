@@ -131,8 +131,8 @@ public class EspirituServiceTest {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
-
-        assertThrows(EspirituEliminadoException.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
+        Optional<Espiritu> resultado = serviceE.recuperar(nuevoEspiritu.getId());
+        assertTrue(resultado.isEmpty());
     }
 
     @Test

@@ -42,6 +42,7 @@ public abstract class Ubicacion {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
             throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
         }
+        this.setDeleted(false);
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;

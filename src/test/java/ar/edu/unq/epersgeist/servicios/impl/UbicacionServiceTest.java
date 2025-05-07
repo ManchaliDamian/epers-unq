@@ -157,8 +157,8 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-    @Test
-    @AfterEach
+
+//    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

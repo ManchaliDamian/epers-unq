@@ -57,6 +57,7 @@ public class Medium {
         if (mana < 0 || mana > manaMax) {
             throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
         }
+        this.setDeleted(false);
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;
