@@ -1,10 +1,12 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.ErrorDTO;
 import ar.edu.unq.epersgeist.modelo.exception.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -25,29 +27,19 @@ public class ExceptionHandlerREST {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    @ExceptionHandler({
-            EspirituNoEncontradoException.class,
-            MediumNoEncontradoException.class,
-            EntityNotFoundException.class
-    })
-    public ResponseEntity<Map<String, String>> handleNotFound(RuntimeException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorDTO> handleNotFoundException(EntityNotFoundException ex) {
+        ErrorDTO errorDto = new ErrorDTO(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
     }
 
-    @ExceptionHandler(EspirituEliminadoException.class)
-    public ResponseEntity<Map<String, String>> handleGone(RuntimeException ex) {
-        return buildErrorResponse(HttpStatus.GONE, ex.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorDTO> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorDTO errorDto = new ErrorDTO(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(errorDto);
     }
 
-    @ExceptionHandler({
-            InvocacionNoPermitidaException.class,
-            ExorcizarNoPermitidoNoEsMismaUbicacion.class,
-            ExorcistaSinAngelesException.class,
-            EspirituOcupadoException.class,
-            EspirituNoEstaEnLaMismaUbicacionException.class,
-            ConectarException.class
-    })
-    public ResponseEntity<Map<String, String>> handleBadRequest(RuntimeException ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
 }
