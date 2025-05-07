@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-public class MediumNoEncontrado extends RuntimeException{
+import jakarta.persistence.EntityNotFoundException;
+
+public class MediumNoEncontrado extends EntityNotFoundException {
     public MediumNoEncontrado(Long mediumId){
         super( "Medium  con id: {" + mediumId
                 + "} no encontrado ");

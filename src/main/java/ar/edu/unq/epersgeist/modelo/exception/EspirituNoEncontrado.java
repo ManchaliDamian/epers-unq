@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-public class EspirituNoEncontrado extends RuntimeException{
+import jakarta.persistence.EntityNotFoundException;
+
+public class EspirituNoEncontrado extends EntityNotFoundException {
     public EspirituNoEncontrado(Long espirituId){
         super( "Espiritu  con id: {" + espirituId
                 + "} no encontrado ");

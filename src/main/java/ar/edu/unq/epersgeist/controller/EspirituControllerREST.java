@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontrada;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public final  class EspirituControllerREST {
     @PostMapping
     public ResponseEntity<EspirituDTO> createEspiritu(@Valid @RequestBody CreateEspirituDTO dto) {
         Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
-                .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada"));
+                .orElseThrow(() -> new UbicacionNoEncontrada(dto.ubicacionId()));
     //que de error 400 no 500
         Espiritu espiritu = dto.aModelo(ubicacion);
         Espiritu creado = espirituService.guardar(espiritu);

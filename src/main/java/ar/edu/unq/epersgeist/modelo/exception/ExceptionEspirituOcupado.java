@@ -2,7 +2,7 @@ package ar.edu.unq.epersgeist.modelo.exception;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 
-public class ExceptionEspirituOcupado extends RuntimeException {
+public class ExceptionEspirituOcupado extends IllegalArgumentException {
   private final Espiritu espiritu;
     public ExceptionEspirituOcupado(Espiritu espiritu) {
         this.espiritu = espiritu;
