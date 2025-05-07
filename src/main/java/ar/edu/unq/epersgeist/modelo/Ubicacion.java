@@ -3,6 +3,10 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 @Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @EqualsAndHashCode @ToString
@@ -22,6 +26,17 @@ public abstract class Ubicacion {
     private Integer flujoDeEnergia;
 
     private final TipoUbicacion tipo;
+
+    //auditoria
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     public Ubicacion(@NonNull String nombre, @NonNull Integer flujoDeEnergia, @NonNull TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {

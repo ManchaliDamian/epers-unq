@@ -4,14 +4,14 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituOcupadoException;
 import ar.edu.unq.epersgeist.modelo.exception.ExorcizarNoPermitidoNoEsMismaUbicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -111,7 +111,7 @@ public class MediumServiceTest {
 
     @Test
     void invocar_espirituInexistente_lanzaExcepcion() {
-        assertThrows(ExceptionEspirituNoEncontrado.class,
+        assertThrows(EspirituNoEncontradoException.class,
                 () -> serviceM.invocar(medium1.getId(), 999L));
     }
 
@@ -130,7 +130,7 @@ public class MediumServiceTest {
     void testInvocarFallaPorqueEspirituYaEstaConectado() {
         demonio.setMediumConectado(medium1);
         serviceE.guardar(demonio);
-        assertThrows(ExceptionEspirituOcupado.class, () -> {
+        assertThrows(EspirituOcupadoException.class, () -> {
             serviceM.invocar(medium1.getId(), demonio.getId());
         });
     }

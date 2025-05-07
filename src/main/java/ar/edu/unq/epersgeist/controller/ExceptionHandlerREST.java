@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,68 +13,41 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerREST {
 
+    private ResponseEntity<Map<String, String>> buildErrorResponse(HttpStatus status, String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("response_code", String.valueOf(status.value()));
+        error.put("description", message);
+        return ResponseEntity.status(status).body(error);
+    }
+
     @ExceptionHandler(NombreDeUbicacionRepetido.class)
-    public ResponseEntity<Map<String, String>>  handleNombreUbicacionRepetido(NombreDeUbicacionRepetido ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "409");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
+    public ResponseEntity<Map<String, String>> handleConflict(RuntimeException ex) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    @ExceptionHandler(MediumNoEncontrado.class)
-    public ResponseEntity<Map<String, String>>  handleMediumNoEncontradoPorId(MediumNoEncontrado ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler({
+            EspirituNoEncontradoException.class,
+            MediumNoEncontradoException.class,
+            EntityNotFoundException.class
+    })
+    public ResponseEntity<Map<String, String>> handleNotFound(RuntimeException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(InvocacionNoPermitidaException.class)
-    public ResponseEntity<Map<String, String>>  handleInvocacionNoPermitida(InvocacionNoPermitidaException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler(EspirituEliminadoException.class)
+    public ResponseEntity<Map<String, String>> handleGone(RuntimeException ex) {
+        return buildErrorResponse(HttpStatus.GONE, ex.getMessage());
     }
 
-    @ExceptionHandler(ExorcizarNoPermitidoNoEsMismaUbicacion.class)
-    public ResponseEntity<Map<String, String>>  handleExorcizarNoPermitidoNoEsMismaUbicacion(ExorcizarNoPermitidoNoEsMismaUbicacion ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler({
+            InvocacionNoPermitidaException.class,
+            ExorcizarNoPermitidoNoEsMismaUbicacion.class,
+            ExorcistaSinAngelesException.class,
+            EspirituOcupadoException.class,
+            EspirituNoEstaEnLaMismaUbicacionException.class,
+            ConectarException.class
+    })
+    public ResponseEntity<Map<String, String>> handleBadRequest(RuntimeException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
-
-    @ExceptionHandler(ExorcistaSinAngelesException.class)
-    public ResponseEntity<Map<String, String>>  handleExorcistaSinAngelesException(ExorcistaSinAngelesException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
-    }
-
-    @ExceptionHandler(ExceptionEspirituOcupado.class)
-    public ResponseEntity<Map<String, String>>  handleExceptionEspirituOcupado(ExceptionEspirituOcupado ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
-    }
-
-    @ExceptionHandler(EspirituNoEstaEnLaMismaUbicacionException.class)
-    public ResponseEntity<Map<String, String>>  handleEspirituNoEstaEnLaMismaUbicacionException(EspirituNoEstaEnLaMismaUbicacionException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
-    }
-
-    @ExceptionHandler(ConectarException.class)
-    public ResponseEntity<Map<String, String>>  handleConectarException(ConectarException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", "400");
-        error.put("description", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
-    }
-
 }

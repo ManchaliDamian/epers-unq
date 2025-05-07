@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.*;
 
@@ -32,6 +34,17 @@ public class Medium {
     @Column(nullable = false)
     @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
+
+    //auditoria
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
 
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -120,7 +133,7 @@ public class Medium {
     }
 
     public void validarInvocar(Espiritu espiritu){
-        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+        if (espiritu.estaConectado()) throw new EspirituOcupadoException(espiritu);
     }
 
     public void mover(Ubicacion ubicacion) {

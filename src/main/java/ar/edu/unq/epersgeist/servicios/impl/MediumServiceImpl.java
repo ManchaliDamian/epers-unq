@@ -1,8 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituEliminadoException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumEliminadoException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -41,13 +42,32 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return mediumDAO.findById(mediumId);
+        Optional<Medium> mediumOptional = mediumDAO.findById(mediumId);
+        if (mediumOptional.isEmpty()) {
+            throw new MediumNoEncontradoException(mediumId);
+        }
+        if(mediumOptional.get().isDeleted()){
+            throw new MediumEliminadoException(mediumId);
+        }
+        return mediumOptional;
     }
 
     @Override
     public void eliminar(Long mediumId) {
-        mediumDAO.deleteById(mediumId);
-
+        Optional<Medium> mediumOptional = mediumDAO.findById(mediumId);
+        if(mediumOptional.isPresent()) {
+            Medium medium = mediumOptional.get();
+            if(medium.isDeleted()) {
+                throw new MediumEliminadoException(mediumId);
+            }
+            else{
+                medium.setDeleted(true);
+                mediumDAO.save(mediumOptional.get());
+            }
+        }
+        else{
+            throw new MediumNoEncontradoException(mediumId);
+        }
     }
 
     @Override
@@ -69,8 +89,8 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-            Medium mediumExorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new MediumNoEncontrado(idMediumExorcista));
-            Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontrado(idMediumAExorcizar));
+            Medium mediumExorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException(idMediumExorcista));
+            Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException(idMediumAExorcizar));
 
             List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
             List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
@@ -95,10 +115,10 @@ public class MediumServiceImpl implements MediumService {
 
             Optional<Espiritu> espiritu = espirituDAO.findById(espirituId);
             if (espiritu.isEmpty()) {
-                throw new ExceptionEspirituNoEncontrado(espirituId);
+                throw new EspirituNoEncontradoException(espirituId);
             }
             if(espiritu.get().isDeleted()){
-                throw  new ExceptionEspirituEliminado(espirituId);
+                throw  new EspirituEliminadoException(espirituId);
             }
             Optional<Medium> medium = mediumDAO.findById(mediumId);
 

@@ -9,7 +9,8 @@ import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituEliminadoException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -88,7 +89,7 @@ public class EspirituServiceTest {
         serviceM.guardar(medium);
         serviceE.eliminar(azazel.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+        assertThrows(EspirituEliminadoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
 
         Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
         assertNull(conectado.get().getMediumConectado());
@@ -131,7 +132,7 @@ public class EspirituServiceTest {
         serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
+        assertThrows(EspirituEliminadoException.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
     }
 
     @Test
@@ -180,7 +181,7 @@ public class EspirituServiceTest {
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(angel.getId()));
+        assertThrows(EspirituEliminadoException.class, () -> serviceE.recuperar(angel.getId()));
     }
     @Test
     void testRecuperarEliminadoPorId() {
@@ -189,6 +190,17 @@ public class EspirituServiceTest {
         assertEquals(eliminado.get().getNombre(), "Gabriel");
         assertTrue(eliminado.get().isDeleted());
 
+    }
+
+    @Test
+    void testEliminarCuandoEstaBorradoLanzaExcepcion(){
+        serviceE.eliminar(angel.getId());
+        assertThrows(EspirituEliminadoException.class, () -> serviceE.eliminar(angel.getId()));
+    }
+
+    @Test
+    void testEliminarCuandoNoExisteLanzaExcepcion(){
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.eliminar(412943L));
     }
 
     @Test

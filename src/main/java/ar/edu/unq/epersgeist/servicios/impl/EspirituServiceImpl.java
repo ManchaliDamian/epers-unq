@@ -3,9 +3,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituEliminadoException;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -46,10 +45,10 @@ public class EspirituServiceImpl implements EspirituService {
     public Optional<Espiritu> recuperar(Long espirituId) {
         Optional<Espiritu> espirituARecuperar = espirituDAO.findById(espirituId);
         if (espirituARecuperar.isEmpty()) {
-            throw new ExceptionEspirituNoEncontrado(espirituId);
+            throw new EspirituNoEncontradoException(espirituId);
         }
         if(espirituARecuperar.get().isDeleted()){
-            throw  new ExceptionEspirituEliminado(espirituId);
+            throw  new EspirituEliminadoException(espirituId);
         }
         return espirituARecuperar;
     }
@@ -58,11 +57,12 @@ public class EspirituServiceImpl implements EspirituService {
     public List<Espiritu> recuperarTodos() {
         return espirituDAO.recuperarTodos();
     }
+
     @Override
     public Optional<Espiritu> recuperarEliminado(Long id) {
         Optional<Espiritu> espirituARecuperarEliminado = espirituDAO.recuperarEliminado(id);
         if (espirituARecuperarEliminado.isEmpty()) {
-            throw new ExceptionEspirituNoEncontrado(id);
+            throw new EspirituNoEncontradoException(id);
         }
         return espirituARecuperarEliminado;
     }
@@ -70,27 +70,31 @@ public class EspirituServiceImpl implements EspirituService {
     public List<Espiritu> recuperarTodosLosEliminados() {
         return espirituDAO.recuperarTodosLosEliminados();
     }
+
     @Override
     public void eliminar(Long espirituId) {
-       Optional<Espiritu> espirituEliminadoLogico = espirituDAO.findById(espirituId);
-       espirituEliminadoLogico.get().setDeleted(true);
-       espirituDAO.save(espirituEliminadoLogico.get());
+        Optional<Espiritu> espirituOptional = espirituDAO.findById(espirituId);
+        if(espirituOptional.isPresent()) {
+            Espiritu espiritu = espirituOptional.get();
+            if(espiritu.isDeleted()) {
+                throw new EspirituEliminadoException(espirituId);
+            }
+            else{
+                espiritu.setDeleted(true);
+                espirituDAO.save(espiritu);
+            }
+        }
+        else {
+            throw new EspirituNoEncontradoException(espirituId);
+        }
     }
-
-    //preguntar si esto sirve...
-//    @Override
-//    public void eliminarTodo(){
-//        espirituDAO.deleteAll();
-//    }
-    // --------------------------
-
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
         Optional<Espiritu> espiritu = this.recuperar(espirituId);
 
         Medium medium = mediumDAO.findById(mediumId)
-                .orElseThrow(() -> new MediumNoEncontrado(mediumId));
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
 
         medium.conectarseAEspiritu(espiritu.get());
 
