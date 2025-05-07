@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -31,8 +32,9 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void guardar(Espiritu espiritu) {
+    public Espiritu guardar(Espiritu espiritu) {
             espirituDAO.save(espiritu);
+            return espiritu;
     }
 
     @Override
@@ -76,10 +78,10 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     //preguntar si esto sirve...
-    @Override
-    public void eliminarTodo(){
-        espirituDAO.deleteAll();
-    }
+//    @Override
+//    public void eliminarTodo(){
+//        espirituDAO.deleteAll();
+//    }
     // --------------------------
 
 
@@ -88,7 +90,7 @@ public class EspirituServiceImpl implements EspirituService {
         Optional<Espiritu> espiritu = this.recuperar(espirituId);
 
         Medium medium = mediumDAO.findById(mediumId)
-                .orElseThrow(() -> new NoSuchElementException("Medium no encontrado con id: " + mediumId));;
+                .orElseThrow(() -> new MediumNoEncontrado(mediumId));
 
         medium.conectarseAEspiritu(espiritu.get());
 
