@@ -54,7 +54,7 @@ public class MediumServiceTest {
     @BeforeEach
     void setUp() {
         eliminarTodo = new DataServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
-        eliminarTodo.eliminarTodo();
+
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         cementerio = new Cementerio("La Plata", 4);

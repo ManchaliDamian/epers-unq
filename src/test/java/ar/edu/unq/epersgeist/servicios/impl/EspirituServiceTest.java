@@ -48,11 +48,10 @@ public class EspirituServiceTest {
     private Ubicacion berazategui;
 
 
-    private DataService serviceEliminarTodo;
+    private DataService dataService;
     @BeforeEach
     void setUp() {
-        serviceEliminarTodo = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
-        serviceEliminarTodo.eliminarTodo();
+        dataService = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
@@ -67,8 +66,8 @@ public class EspirituServiceTest {
 
         serviceE.guardar(azazel);
         serviceE.guardar(belcebu);
-
         serviceE.guardar(angel);
+
     }
 
 
@@ -194,7 +193,7 @@ public class EspirituServiceTest {
 
     @Test
     void testRecuperarTodosCuandoNoExisten() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
     }
@@ -300,6 +299,6 @@ public class EspirituServiceTest {
 
     @AfterEach
     void cleanup() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 }

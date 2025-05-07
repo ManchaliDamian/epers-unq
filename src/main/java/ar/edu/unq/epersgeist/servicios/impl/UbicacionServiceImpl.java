@@ -34,7 +34,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion actualizar(Ubicacion ubicacion){
-        return this.guardar(ubicacion);
+        return ubicacionDAO.save(ubicacion);
     }
 
     @Override
@@ -47,10 +47,6 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionDAO.findAll();
     }
 
-    @Override
-    public void eliminar(Ubicacion ubicacion) {
-            ubicacionDAO.delete(ubicacion);
-    }
 
     @Override
     public void eliminar(Long id) {
@@ -66,10 +62,5 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return ubicacionDAO.findMediumsSinEspiritusByUbicacionId(ubicacionId);
-    }
-
-    @Override
-    public void clearAll() {
-        ubicacionDAO.deleteAll();
     }
 }

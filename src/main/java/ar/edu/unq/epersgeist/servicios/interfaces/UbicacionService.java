@@ -12,9 +12,7 @@ public interface UbicacionService {
     Ubicacion actualizar(Ubicacion ubicacion);
     Optional<Ubicacion> recuperar(Long ubicacionId);
     List<Ubicacion> recuperarTodos();
-    void eliminar(Ubicacion ubicacion);
     void eliminar(Long id);
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
-    void clearAll();
 }
