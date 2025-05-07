@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
@@ -110,7 +111,7 @@ public class MediumServiceTest {
 
     @Test
     void invocar_espirituInexistente_lanzaExcepcion() {
-        assertThrows(NoSuchElementException.class,
+        assertThrows(ExceptionEspirituNoEncontrado.class,
                 () -> serviceM.invocar(medium1.getId(), 999L));
     }
 

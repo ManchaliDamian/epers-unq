@@ -49,7 +49,7 @@ public class EspirituAngelical extends Espiritu{
         ubicacion.moverAngel(this);
     }
 
-    @Override
+
     public TipoEspiritu getTipo(){
         return TipoEspiritu.ANGELICAL;
     }

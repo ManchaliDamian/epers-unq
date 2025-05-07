@@ -10,9 +10,24 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
+    @Query(
+            "FROM Espiritu e where e.deleted = false"
+    )
+    List<Espiritu> recuperarTodos();
+
+
+    @Query(
+            "FROM Espiritu e where e.deleted = true and e.id = :id"
+    )
+    Optional<Espiritu> recuperarEliminado(@Param("id") Long id);
+    @Query(
+            "FROM Espiritu e where e.deleted = true"
+    )
+    List<Espiritu> recuperarTodosLosEliminados();
 
     @Query(
             "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId"
@@ -25,6 +40,6 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 
 
-    @Query("FROM EspirituDemoniaco")
+    @Query("FROM Espiritu e where TYPE(e) = EspirituDemoniaco and e.deleted = false")
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
 }

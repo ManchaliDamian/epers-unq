@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
+import java.util.Date;
+
 @Getter @Setter @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -31,8 +33,22 @@ public abstract class Espiritu {
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
-    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    //auditoria
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdAt;
 
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+
+
+
+    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
+        this.setDeleted(false);
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;;
