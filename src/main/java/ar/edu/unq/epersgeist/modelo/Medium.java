@@ -44,7 +44,7 @@ public class Medium {
     private Date updatedAt;
 
     @Column(nullable = false)
-    private boolean deleted;
+    private boolean deleted = false;
 
 
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

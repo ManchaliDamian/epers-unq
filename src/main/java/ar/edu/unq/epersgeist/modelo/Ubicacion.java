@@ -36,7 +36,7 @@ public abstract class Ubicacion {
     private Date updatedAt;
 
     @Column(nullable = false)
-    private boolean deleted;
+    private boolean deleted = false;
 
     public Ubicacion(@NonNull String nombre, @NonNull Integer flujoDeEnergia, @NonNull TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
