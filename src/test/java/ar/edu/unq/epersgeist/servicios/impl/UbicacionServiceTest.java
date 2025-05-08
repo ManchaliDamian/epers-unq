@@ -20,6 +20,8 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +64,50 @@ public class UbicacionServiceTest {
         medium3 = new Medium("roberto", 200, 150, santuario);
         serviceU.guardar(santuario);
         serviceU.guardar(cementerio);
+
+    }
+
+    @Test
+    void testUpdateATDeUbicacion(){
+        String nuevoNombre = "Nueva ubicacion";
+
+        santuario.setNombre(nuevoNombre);
+        santuario.setFlujoDeEnergia(35);
+        serviceU.actualizar(santuario);
+
+        //Fehca esperada en forma de Date.
+        Date fechaEsperada = new Date();
+
+        // Se obtiene la fecha del espiritu "azazel".
+        Date fechaEspiritu = santuario.getUpdatedAt();
+
+        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // En este paso le doy format a ambos
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(santuario.getNombre(),nuevoNombre);
+        assertEquals(35,santuario.getFlujoDeEnergia());
+
+    }
+
+    @Test
+    void testCreateAtDeUbicacion(){
+        serviceU.guardar(santuario);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = santuario.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
 
     }
 
