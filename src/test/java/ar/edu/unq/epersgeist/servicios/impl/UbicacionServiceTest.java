@@ -20,11 +20,12 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -39,6 +40,8 @@ public class UbicacionServiceTest {
     @Autowired private UbicacionDAO ubicacionDAO;
 
     private Medium medium;
+    private Medium medium2;
+    private Medium medium3;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Espiritu angel;
@@ -57,12 +60,69 @@ public class UbicacionServiceTest {
         demonio = new EspirituDemoniaco("Roberto", santuario);
 
         medium = new Medium("roberto", 200, 150, santuario);
-
+        medium2 = new Medium("roberto", 200, 150, santuario);
+        medium3 = new Medium("roberto", 200, 150, santuario);
         serviceU.guardar(santuario);
         serviceU.guardar(cementerio);
 
     }
 
+    @Test
+    void testUpdateATDeUbicacion(){
+        String nuevoNombre = "Nueva ubicacion";
+
+        santuario.setNombre(nuevoNombre);
+        santuario.setFlujoDeEnergia(35);
+        serviceU.actualizar(santuario);
+
+        //Fehca esperada en forma de Date.
+        Date fechaEsperada = new Date();
+
+        // Se obtiene la fecha del espiritu "azazel".
+        Date fechaEspiritu = santuario.getUpdatedAt();
+
+        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // En este paso le doy format a ambos
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(santuario.getNombre(),nuevoNombre);
+        assertEquals(35,santuario.getFlujoDeEnergia());
+
+    }
+
+    @Test
+    void testCreateAtDeUbicacion(){
+        serviceU.guardar(santuario);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = santuario.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+
+    }
+
+    @Test
+    void recuperarUbicacionEliminada() {
+        serviceU.eliminar(santuario.getId());
+        Optional<Ubicacion> ubicacionEliminada = serviceU.recuperarEliminado(santuario.getId());
+        assertTrue(ubicacionEliminada.get().isDeleted());
+    }
+    @Test
+    void recuperarTodasUbicacionesEliminadas() {
+        serviceU.eliminar(santuario.getId());
+        List<Ubicacion> ubicacionesEliminadas = serviceU.recuperarTodosEliminados();
+        assertEquals(1, ubicacionesEliminadas.size());
+    }
     @Test
     void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
@@ -70,6 +130,14 @@ public class UbicacionServiceTest {
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
+    }
+    @Test
+    void espiritusEnUnaUbicacionExistenteSinEliminados() {
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+        serviceE.eliminar(angel.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
+        assertEquals(1, espiritusEn.size());
     }
 
     @Test
@@ -103,6 +171,22 @@ public class UbicacionServiceTest {
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
+    }
+    @Test
+    void mediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(0, mediums.size());
+    }
+    @Test
+    void hayMediumsConUnMediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        serviceM.guardar(medium2);
+        serviceM.guardar(medium3);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(2, mediums.size());
     }
 
     @Test
@@ -150,12 +234,6 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-    @Test
-    void eliminarUbicacionPorId() {
-        serviceU.eliminar(santuario.getId());
-        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
-        assertEquals(1, ubicaciones.size());
-    }
 
     @Test
     @AfterEach

@@ -4,15 +4,12 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcizarNoPermitidoNoEsMismaUbicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -25,6 +22,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -74,14 +73,76 @@ public class MediumServiceTest {
     }
 
     @Test
+    void testUpdateATDeMedium(){
+        String nuevoNombre = "Nuevo nombre Medium";
+
+        medium1.setNombre(nuevoNombre);
+        medium1.setUbicacion(santuario);
+        serviceM.actualizar(medium1);
+
+        //Fehca esperada en forma de Date.
+        Date fechaEsperada = new Date();
+
+        // Se obtiene la fecha del espiritu "azazel".
+        Date fechaEspiritu = medium1.getUpdatedAt();
+
+        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // En este paso le doy format a ambos
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(medium1.getNombre(),nuevoNombre);
+        assertEquals(medium1.getUbicacion().getNombre(),santuario.getNombre());
+
+    }
+
+    @Test
+    void testCreateAtDeMedium(){
+        serviceM.guardar(medium1);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = medium1.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+
+    }
+
+    @Test
+    void errorAlRecuperarUnMediumEliminado() {
+        serviceM.eliminar(medium1.getId());
+
+        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(medium1.getId()));
+    }
+    @Test
+    void recuperarMediumEliminado() {
+        serviceM.eliminar(medium1.getId());
+        Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
+        assertTrue(recuperadoEliminado.get().isDeleted());
+    }
+    @Test
+    void recuperarTodosLosMediumEliminados() {
+        serviceM.eliminar(medium1.getId());
+        List<Medium> recuperadoEliminado = serviceM.recuperarTodosEliminados();
+        assertEquals(1, recuperadoEliminado.size());
+    }
+    @Test
     void recuperarMedium_inexistente_devuelveOptionalVacio() {
-        Optional<Medium> resultado = serviceM.recuperar(999L);
-        assertTrue(resultado.isEmpty());
+
+        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(999L));
     }
 
     @Test
     void moverMedium_aUbicacionInexistente_lanzaExcepcion() {
-        assertThrows(NoSuchElementException.class,
+        assertThrows(UbicacionNoEncontrada.class,
                 () -> serviceM.mover(medium1.getId(), 999L));
     }
 

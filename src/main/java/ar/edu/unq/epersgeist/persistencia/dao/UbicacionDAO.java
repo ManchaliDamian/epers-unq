@@ -11,13 +11,28 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
-    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId")
+    @Query(
+            "from Ubicacion u where u.deleted = false"
+    )
+    List<Ubicacion> recuperarTodos();
+    @Query(
+            "from Ubicacion u where u.deleted = true"
+    )
+    List<Ubicacion> recuperarTodosEliminados();
+    @Query(
+            "from Ubicacion u where u.id = :id"
+    )
+    Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
+
+    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId and e.deleted = false")
     List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
 
-    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0")
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 and m.deleted = false")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
     //-----------------------------------------------------------------

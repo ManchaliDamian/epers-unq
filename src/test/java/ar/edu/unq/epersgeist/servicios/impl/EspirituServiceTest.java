@@ -10,6 +10,7 @@ import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
+import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -22,6 +23,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +74,50 @@ public class EspirituServiceTest {
 
     }
 
+    @Test
+    void testUpdateATDeEspiritu(){
+        String nuevoNombre = "Nuevo Azazel";
+
+        azazel.setNombre(nuevoNombre);
+        azazel.setUbicacion(berazategui);
+        serviceE.actualizar(azazel);
+
+        //Fehca esperada en forma de Date.
+        Date fechaEsperada = new Date();
+
+        // Se obtiene la fecha del espiritu "azazel".
+        Date fechaEspiritu = azazel.getUpdatedAt();
+
+        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // En este paso le doy format a ambos
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(azazel.getNombre(),nuevoNombre);
+        assertEquals(azazel.getUbicacion().getNombre(),berazategui.getNombre());
+
+    }
+
+    @Test
+    void testCreateAtDeEspiritu(){
+        serviceE.guardar(azazel);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = azazel.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+
+    }
+
 
     @Test
     void testConectarEspirituAMediumSaleBien() {
@@ -88,7 +136,7 @@ public class EspirituServiceTest {
         serviceM.guardar(medium);
         serviceE.eliminar(azazel.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+        assertThrows(ExceptionEspirituNoEncontrado.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
 
         Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
         assertNull(conectado.get().getMediumConectado());
@@ -131,7 +179,7 @@ public class EspirituServiceTest {
         serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
+        assertThrows(ExceptionEspirituNoEncontrado.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
     }
 
     @Test
@@ -180,7 +228,7 @@ public class EspirituServiceTest {
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        assertThrows(ExceptionEspirituEliminado.class, () -> serviceE.recuperar(angel.getId()));
+        assertThrows(ExceptionEspirituNoEncontrado.class, () -> serviceE.recuperar(angel.getId()));
     }
     @Test
     void testRecuperarEliminadoPorId() {

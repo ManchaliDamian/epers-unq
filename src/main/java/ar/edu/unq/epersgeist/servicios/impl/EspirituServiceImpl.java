@@ -44,13 +44,11 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        Optional<Espiritu> espirituARecuperar = espirituDAO.findById(espirituId);
+        Optional<Espiritu> espirituARecuperar = espirituDAO.findById(espirituId).filter(e -> !e.isDeleted());
         if (espirituARecuperar.isEmpty()) {
             throw new ExceptionEspirituNoEncontrado(espirituId);
         }
-        if(espirituARecuperar.get().isDeleted()){
-            throw  new ExceptionEspirituEliminado(espirituId);
-        }
+
         return espirituARecuperar;
     }
 
@@ -72,7 +70,7 @@ public class EspirituServiceImpl implements EspirituService {
     }
     @Override
     public void eliminar(Long espirituId) {
-       Optional<Espiritu> espirituEliminadoLogico = espirituDAO.findById(espirituId);
+       Optional<Espiritu> espirituEliminadoLogico = this.recuperar(espirituId);
        espirituEliminadoLogico.get().setDeleted(true);
        espirituDAO.save(espirituEliminadoLogico.get());
     }
