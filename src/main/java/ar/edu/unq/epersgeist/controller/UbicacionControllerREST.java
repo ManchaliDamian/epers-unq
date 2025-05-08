@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
@@ -46,9 +47,8 @@ public final class UbicacionControllerREST {
 
     @GetMapping("/{id}")
     public ResponseEntity<UbicacionDTO> getUbicacionById(@PathVariable Long id) {
-        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(id);
-        return ubicacion.map(ubi -> ResponseEntity.ok(UbicacionDTO.desdeModelo(ubi)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Ubicacion ubicacion = ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+        return ResponseEntity.ok(UbicacionDTO.desdeModelo(ubicacion));
     }
 
 
@@ -94,11 +94,7 @@ public final class UbicacionControllerREST {
     //DELETE handlers
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
-        Optional<Ubicacion> existente = ubicacionService.recuperar(id);
-
-        if (existente.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
 
         ubicacionService.eliminar(id);
         return ResponseEntity.noContent().build();
