@@ -3,7 +3,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontrada;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,26 +41,44 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
-        return ubicacionDAO.findById(ubicacionId);
+        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
+        if (ubicacionARecuperar.isEmpty()) {
+            throw new MediumNoEncontrado(ubicacionId);
+        }
+        return ubicacionARecuperar;
     }
 
     @Override
     public List<Ubicacion> recuperarTodos() {
-        return ubicacionDAO.findAll();
+        return ubicacionDAO.recuperarTodos();
     }
 
 
     @Override
     public void eliminar(Long id) {
-        ubicacionDAO.deleteById(id);
+        Optional<Ubicacion> ubicacionAEliminar = this.recuperar(id);
+        ubicacionAEliminar.get().setDeleted(true);
+        ubicacionDAO.save(ubicacionAEliminar.get());
+    }
+    @Override
+    public Optional<Ubicacion> recuperarEliminado(Long id) {
+        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.recuperarEliminado(id);
+        if (ubicacionARecuperar.isEmpty()) {
+            throw new UbicacionNoEncontrada(id);
+        }
+        return ubicacionARecuperar;
+    }
+    @Override
+    public List<Ubicacion> recuperarTodosEliminados() {
+        return ubicacionDAO.recuperarTodosEliminados();
     }
 
-
+    //test de que haya espiritus eliminados
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         return ubicacionDAO.findEspiritusByUbicacionId(ubicacionId);
     }
-
+    // test de que haya mediums eliminados
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return ubicacionDAO.findMediumsSinEspiritusByUbicacionId(ubicacionId);
