@@ -85,10 +85,11 @@ public class MediumControllerREST {
     }
 
     @PostMapping
-    public ResponseEntity<MediumDTO> CreateMedium(@Valid @RequestBody CreateMediumDTO dto) {
-        Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
-                .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada"));
-        Medium medium = dto.aModelo(ubicacion);
+    public ResponseEntity<MediumDTO> createMedium(@Valid @RequestBody CreateMediumDTO dto) {
+        Optional<Ubicacion> opt = ubicacionService.recuperar(dto.ubicacionId());
+        if(opt.isEmpty())
+            return ResponseEntity.notFound().build();
+        Medium medium = dto.aModelo(opt.get());
         Medium creado = mediumService.guardar(medium);
         URI location = URI.create("/medium/" + creado.getId());
         MediumDTO respuesta = MediumDTO.desdeModelo(creado);
@@ -131,15 +132,55 @@ public class MediumControllerREST {
         return ResponseEntity.ok("Espiritu invocado con éxito");
     }
 
+    @PostMapping("/{id}/conectar/{espirituId}")
+    public ResponseEntity conectar(@PathVariable Long id, @PathVariable Long espirituId) {
+        Optional<Medium> mediumOpt = mediumService.recuperar(id);
+        Optional<Espiritu> espirituOpt = espirituService.recuperar(espirituId);
+
+        if (mediumOpt.isEmpty() || espirituOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Medium medium = mediumOpt.get();
+            Espiritu espiritu = espirituOpt.get();
+
+            medium.conectarseAEspiritu(espiritu);
+            mediumService.actualizar(medium);
+            return ResponseEntity.ok("Espíritu conectado con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/desvincular/{espirituId}")
+    public ResponseEntity desvincular(@PathVariable Long id, @PathVariable Long espirituId) {
+        Optional<Medium> mediumOpt = mediumService.recuperar(id);
+        Optional<Espiritu> espirituOpt = espirituService.recuperar(espirituId);
+
+        if (mediumOpt.isEmpty() || espirituOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Medium medium = mediumOpt.get();
+        Espiritu espiritu = espirituOpt.get();
+
+        medium.desvincularseDe(espiritu);
+        mediumService.actualizar(medium);
+        return ResponseEntity.ok("Espíritu desvinculado con éxito");
+    }
+
     @PostMapping("/{id}/mover/{ubicacionId}")
     public ResponseEntity mover(@PathVariable Long id, @PathVariable Long ubicacionId) {
-        Optional<Medium> medium = mediumService.recuperar(id);
-        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(id);
+        Optional<Medium> mediumOpt = mediumService.recuperar(id);
+        Optional<Ubicacion> ubicacionOpt = ubicacionService.recuperar(ubicacionId);
 
-        if (ubicacion.isEmpty() || medium.isEmpty())
+        if (mediumOpt.isEmpty() || ubicacionOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
 
         mediumService.mover(id, ubicacionId);
-        return ResponseEntity.ok("Medium movido con éxito");
+        return ResponseEntity.ok("Espíritu movido con éxito");
     }
+
 }
