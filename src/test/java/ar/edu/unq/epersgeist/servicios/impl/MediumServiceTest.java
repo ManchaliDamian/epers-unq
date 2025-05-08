@@ -22,6 +22,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -67,6 +69,50 @@ public class MediumServiceTest {
         serviceM.guardar(medium2);
         serviceE.guardar(demonio);
         serviceE.guardar(angel);
+
+    }
+
+    @Test
+    void testUpdateATDeMedium(){
+        String nuevoNombre = "Nuevo nombre Medium";
+
+        medium1.setNombre(nuevoNombre);
+        medium1.setUbicacion(santuario);
+        serviceM.actualizar(medium1);
+
+        //Fehca esperada en forma de Date.
+        Date fechaEsperada = new Date();
+
+        // Se obtiene la fecha del espiritu "azazel".
+        Date fechaEspiritu = medium1.getUpdatedAt();
+
+        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // En este paso le doy format a ambos
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(medium1.getNombre(),nuevoNombre);
+        assertEquals(medium1.getUbicacion().getNombre(),santuario.getNombre());
+
+    }
+
+    @Test
+    void testCreateAtDeMedium(){
+        serviceM.guardar(medium1);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = medium1.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
 
     }
 
