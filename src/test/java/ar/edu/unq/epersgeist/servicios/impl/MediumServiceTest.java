@@ -4,15 +4,12 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituOcupado;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcizarNoPermitidoNoEsMismaUbicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -74,9 +71,27 @@ public class MediumServiceTest {
     }
 
     @Test
+    void errorAlRecuperarUnMediumEliminado() {
+        serviceM.eliminar(medium1.getId());
+
+        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(medium1.getId()));
+    }
+    @Test
+    void recuperarMediumEliminado() {
+        serviceM.eliminar(medium1.getId());
+        Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
+        assertTrue(recuperadoEliminado.get().isDeleted());
+    }
+    @Test
+    void recuperarTodosLosMediumEliminados() {
+        serviceM.eliminar(medium1.getId());
+        List<Medium> recuperadoEliminado = serviceM.recuperarTodosEliminados();
+        assertEquals(1, recuperadoEliminado.size());
+    }
+    @Test
     void recuperarMedium_inexistente_devuelveOptionalVacio() {
-        Optional<Medium> resultado = serviceM.recuperar(999L);
-        assertTrue(resultado.isEmpty());
+
+        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(999L));
     }
 
     @Test
