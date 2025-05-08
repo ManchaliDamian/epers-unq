@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.*;
 
@@ -33,6 +35,16 @@ public class Medium {
     @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
 
+    //auditoria
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
@@ -44,6 +56,7 @@ public class Medium {
         if (mana < 0 || mana > manaMax) {
             throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
         }
+        this.deleted = false;
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;

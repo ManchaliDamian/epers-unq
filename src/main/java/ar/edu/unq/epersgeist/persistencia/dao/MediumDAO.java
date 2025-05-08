@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface MediumDAO extends JpaRepository<Medium, Long> {
+    @Query(
+            "FROM Medium m where m.deleted = false"
+    )
+    List<Medium> recuperarTodos();
+
     @Query("SELECT e FROM Espiritu e WHERE e.mediumConectado.id = :mediumId")
     List<Espiritu> findEspiritusByMediumId(@Param("mediumId") Long mediumId);
 
