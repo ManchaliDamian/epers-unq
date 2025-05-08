@@ -79,11 +79,9 @@ public final class UbicacionControllerREST {
     @PutMapping("/{id}")
     public ResponseEntity<UbicacionDTO> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UpdateUbicacionDTO dto) {
 
-        Optional<Ubicacion> opt = ubicacionService.recuperar(id);
-        if (opt.isEmpty()) return ResponseEntity.notFound().build(); // 404
+        Ubicacion ubicacion = ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
 
-        Ubicacion ubicacion = opt.get();
-        dto.actualizarModelo(ubicacion); // actualiza los atributos
+        dto.actualizarModelo(ubicacion); // actualiza los atributos de Ubicación
 
         Ubicacion guardada = ubicacionService.actualizar(ubicacion);
 
