@@ -46,6 +46,7 @@ public class Medium {
     @Column(nullable = false)
     private boolean deleted = false;
 
+
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
@@ -133,7 +134,7 @@ public class Medium {
     }
 
     public void validarInvocar(Espiritu espiritu){
-        if (espiritu.estaConectado()) throw new ExceptionEspirituOcupado(espiritu);
+        if (espiritu.estaConectado()) throw new EspirituOcupadoException(espiritu);
     }
 
     public void mover(Ubicacion ubicacion) {

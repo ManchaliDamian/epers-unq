@@ -26,6 +26,7 @@ public abstract class Ubicacion {
     private Integer flujoDeEnergia;
 
     private final TipoUbicacion tipo;
+
     //auditoria
     @CreationTimestamp
     @Column(updatable = false)

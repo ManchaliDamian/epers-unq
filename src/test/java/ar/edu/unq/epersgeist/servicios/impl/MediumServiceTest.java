@@ -117,10 +117,10 @@ public class MediumServiceTest {
     }
 
     @Test
-    void errorAlRecuperarUnMediumEliminado() {
+    void recuperarMediumEliminado_devuelveOptionalVacio() {
         serviceM.eliminar(medium1.getId());
 
-        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(medium1.getId()));
+        assertTrue(serviceM.recuperar(medium1.getId()).isEmpty());
     }
     @Test
     void recuperarMediumEliminado() {
@@ -136,13 +136,13 @@ public class MediumServiceTest {
     }
     @Test
     void recuperarMedium_inexistente_devuelveOptionalVacio() {
-
-        assertThrows(MediumNoEncontrado.class, () -> serviceM.recuperar(999L));
+        Optional<Medium> resultado = serviceM.recuperar(999L);
+        assertTrue(resultado.isEmpty());
     }
 
     @Test
     void moverMedium_aUbicacionInexistente_lanzaExcepcion() {
-        assertThrows(UbicacionNoEncontrada.class,
+        assertThrows(UbicacionNoEncontradaException.class,
                 () -> serviceM.mover(medium1.getId(), 999L));
     }
 
@@ -172,7 +172,7 @@ public class MediumServiceTest {
 
     @Test
     void invocar_espirituInexistente_lanzaExcepcion() {
-        assertThrows(ExceptionEspirituNoEncontrado.class,
+        assertThrows(EspirituNoEncontradoException.class,
                 () -> serviceM.invocar(medium1.getId(), 999L));
     }
 
@@ -191,7 +191,7 @@ public class MediumServiceTest {
     void testInvocarFallaPorqueEspirituYaEstaConectado() {
         demonio.setMediumConectado(medium1);
         serviceE.guardar(demonio);
-        assertThrows(ExceptionEspirituOcupado.class, () -> {
+        assertThrows(EspirituOcupadoException.class, () -> {
             serviceM.invocar(medium1.getId(), demonio.getId());
         });
     }

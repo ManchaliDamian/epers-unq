@@ -3,9 +3,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontrada;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,11 +41,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
-        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
-        if (ubicacionARecuperar.isEmpty()) {
-            throw new MediumNoEncontrado(ubicacionId);
-        }
-        return ubicacionARecuperar;
+        return ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
     @Override
@@ -64,7 +60,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     public Optional<Ubicacion> recuperarEliminado(Long id) {
         Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.recuperarEliminado(id);
         if (ubicacionARecuperar.isEmpty()) {
-            throw new UbicacionNoEncontrada(id);
+            throw new UbicacionNoEncontradaException(id);
         }
         return ubicacionARecuperar;
     }

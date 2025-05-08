@@ -56,13 +56,13 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
     @Query(
         "SELECT COUNT(e) FROM Espiritu e " +
-        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId"
+                "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId and e.deleted = false"
     )
     int cantTotalDeDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
          "SELECT COUNT(e) FROM Espiritu e " +
-         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL "
+         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL and e.deleted = false"
     )
     int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 
