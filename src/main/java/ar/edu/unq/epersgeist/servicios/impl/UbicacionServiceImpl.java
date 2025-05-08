@@ -73,12 +73,12 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionDAO.recuperarTodosEliminados();
     }
 
-    //test de que haya espiritus eliminados
+
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         return ubicacionDAO.findEspiritusByUbicacionId(ubicacionId);
     }
-    // test de que haya mediums eliminados
+
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return ubicacionDAO.findMediumsSinEspiritusByUbicacionId(ubicacionId);
