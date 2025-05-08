@@ -11,8 +11,23 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
+
+    @Query(
+            "from Ubicacion u where u.deleted = false"
+    )
+    List<Ubicacion> recuperarTodos();
+    @Query(
+            "from Ubicacion u where u.deleted = true"
+    )
+    List<Ubicacion> recuperarTodosEliminados();
+    @Query(
+            "from Ubicacion u where u.id = :id"
+    )
+    Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
 
     @Query("from Espiritu e where e.ubicacion.id = :ubicacionId and e.deleted = false")
     List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
@@ -41,13 +56,13 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
     @Query(
         "SELECT COUNT(e) FROM Espiritu e " +
-        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId and e.deleted = false"
+        "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId"
     )
     int cantTotalDeDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
          "SELECT COUNT(e) FROM Espiritu e " +
-         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL and e.deleted = false"
+         "WHERE TYPE(e) = EspirituDemoniaco AND e.ubicacion.id = :ubicacionId AND e.mediumConectado is NULL "
     )
     int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 

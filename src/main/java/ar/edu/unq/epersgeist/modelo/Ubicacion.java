@@ -36,13 +36,13 @@ public abstract class Ubicacion {
     private Date updatedAt;
 
     @Column(nullable = false)
-    private boolean deleted = false;
+    private boolean deleted;
 
     public Ubicacion(@NonNull String nombre, @NonNull Integer flujoDeEnergia, @NonNull TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
             throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
         }
-        this.setDeleted(false);
+        this.deleted = false;
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;

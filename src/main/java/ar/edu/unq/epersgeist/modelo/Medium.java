@@ -44,7 +44,7 @@ public class Medium {
     private Date updatedAt;
 
     @Column(nullable = false)
-    private boolean deleted = false;
+    private boolean deleted;
 
 
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -57,7 +57,7 @@ public class Medium {
         if (mana < 0 || mana > manaMax) {
             throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
         }
-        this.setDeleted(false);
+        this.deleted = false;
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;

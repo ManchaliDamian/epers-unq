@@ -23,8 +23,7 @@ import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -39,6 +38,8 @@ public class UbicacionServiceTest {
     @Autowired private UbicacionDAO ubicacionDAO;
 
     private Medium medium;
+    private Medium medium2;
+    private Medium medium3;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Espiritu angel;
@@ -57,12 +58,25 @@ public class UbicacionServiceTest {
         demonio = new EspirituDemoniaco("Roberto", santuario);
 
         medium = new Medium("roberto", 200, 150, santuario);
-
+        medium2 = new Medium("roberto", 200, 150, santuario);
+        medium3 = new Medium("roberto", 200, 150, santuario);
         serviceU.guardar(santuario);
         serviceU.guardar(cementerio);
 
     }
 
+    @Test
+    void recuperarUbicacionEliminada() {
+        serviceU.eliminar(santuario.getId());
+        Optional<Ubicacion> ubicacionEliminada = serviceU.recuperarEliminado(santuario.getId());
+        assertTrue(ubicacionEliminada.get().isDeleted());
+    }
+    @Test
+    void recuperarTodasUbicacionesEliminadas() {
+        serviceU.eliminar(santuario.getId());
+        List<Ubicacion> ubicacionesEliminadas = serviceU.recuperarTodosEliminados();
+        assertEquals(1, ubicacionesEliminadas.size());
+    }
     @Test
     void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
@@ -70,6 +84,14 @@ public class UbicacionServiceTest {
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
+    }
+    @Test
+    void espiritusEnUnaUbicacionExistenteSinEliminados() {
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+        serviceE.eliminar(angel.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
+        assertEquals(1, espiritusEn.size());
     }
 
     @Test
@@ -103,6 +125,22 @@ public class UbicacionServiceTest {
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
+    }
+    @Test
+    void mediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(0, mediums.size());
+    }
+    @Test
+    void hayMediumsConUnMediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        serviceM.guardar(medium2);
+        serviceM.guardar(medium3);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(2, mediums.size());
     }
 
     @Test
@@ -150,15 +188,9 @@ public class UbicacionServiceTest {
         assertEquals(1, ubicaciones.size());
     }
 
-    @Test
-    void eliminarUbicacionPorId() {
-        serviceU.eliminar(santuario.getId());
-        List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
-        assertEquals(1, ubicaciones.size());
-    }
 
 
-//    @AfterEach
+    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }
