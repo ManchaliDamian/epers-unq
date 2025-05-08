@@ -49,7 +49,18 @@ public class MediumServiceImpl implements MediumService {
         }
         return mediumARecuperar;
     }
-
+    @Override
+    public Optional<Medium> recuperarEliminado(Long mediumId) {
+        Optional<Medium> mediumARecuperar = mediumDAO.recuperarEliminado(mediumId);
+        if (mediumARecuperar.isEmpty()) {
+            throw new MediumNoEncontrado(mediumId);
+        }
+        return mediumARecuperar;
+    }
+    @Override
+    public List<Medium> recuperarTodosEliminados(){
+        return mediumDAO.recuperarTodosEliminados();
+    }
     @Override
     public void eliminar(Long mediumId) {
         Optional<Medium> mediumEliminadoLogico = this.recuperar(mediumId);
