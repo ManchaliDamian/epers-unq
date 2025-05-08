@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-public class MediumEliminadoException extends Throwable {
+public class MediumEliminadoException extends RuntimeException {
     public MediumEliminadoException(Long mediumId) {
-        super("Medium Eliminado con ID:" + mediumId);
+        super("Medium eliminado con ID:" + mediumId);
     }
 }

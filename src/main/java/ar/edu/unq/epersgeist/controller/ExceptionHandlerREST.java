@@ -15,31 +15,31 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlerREST {
 
-    private ResponseEntity<Map<String, String>> buildErrorResponse(HttpStatus status, String message) {
-        Map<String, String> error = new HashMap<>();
-        error.put("response_code", String.valueOf(status.value()));
-        error.put("description", message);
-        return ResponseEntity.status(status).body(error);
-    }
-
     @ExceptionHandler(NombreDeUbicacionRepetido.class)
-    public ResponseEntity<Map<String, String>> handleConflict(RuntimeException ex) {
-        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO handleConflict(RuntimeException ex) {
+        return new ErrorDTO(ex.getMessage(), HttpStatus.CONFLICT.value());
     }
 
+    @ExceptionHandler({
+            EspirituEliminadoException.class,
+            MediumEliminadoException.class,
+    })
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO handleGone(RuntimeException ex) {
+        return new ErrorDTO(ex.getMessage(), HttpStatus.CONFLICT.value());
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorDTO> handleNotFoundException(EntityNotFoundException ex) {
-        ErrorDTO errorDto = new ErrorDTO(ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
+    public ErrorDTO handleNotFoundException(EntityNotFoundException ex) {
+        return new ErrorDTO(ex.getMessage(), HttpStatus.NOT_FOUND.value());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorDTO> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ErrorDTO errorDto = new ErrorDTO(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(errorDto);
+    public ErrorDTO handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ErrorDTO(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
-
 }
+

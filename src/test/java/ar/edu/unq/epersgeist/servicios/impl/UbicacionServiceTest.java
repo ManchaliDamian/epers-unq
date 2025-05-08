@@ -235,7 +235,7 @@ public class UbicacionServiceTest {
     }
 
 
-    @Test
+
     @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
