@@ -96,7 +96,7 @@ public class MediumServiceTest {
 
     @Test
     void moverMedium_aUbicacionInexistente_lanzaExcepcion() {
-        assertThrows(NoSuchElementException.class,
+        assertThrows(UbicacionNoEncontrada.class,
                 () -> serviceM.mover(medium1.getId(), 999L));
     }
 

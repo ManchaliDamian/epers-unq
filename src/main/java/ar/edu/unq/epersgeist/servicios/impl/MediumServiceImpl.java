@@ -1,10 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituEliminado;
-import ar.edu.unq.epersgeist.modelo.exception.ExceptionEspirituNoEncontrado;
+import ar.edu.unq.epersgeist.modelo.exception.*;
 
-import ar.edu.unq.epersgeist.modelo.exception.MediumEliminadoException;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontrado;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -130,7 +127,9 @@ public class MediumServiceImpl implements MediumService {
     public void mover(Long mediumId, Long ubicacionId) {
         Optional<Medium> medium = this.recuperar(mediumId);
         Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId);
-
+        if (ubicacion.isEmpty()) {
+            throw new UbicacionNoEncontrada(ubicacionId);
+        }
         medium.get().mover(ubicacion.get());
 
         mediumDAO.save(medium.get());
