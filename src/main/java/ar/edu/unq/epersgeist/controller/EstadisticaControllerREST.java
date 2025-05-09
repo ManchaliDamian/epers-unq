@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.EstadisticaDTO;
+import ar.edu.unq.epersgeist.controller.dto.ReporteSantuarioCorruptoDTO;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,10 @@ public final class EstadisticaControllerREST {
     }
 
     @GetMapping
-    public ResponseEntity<EstadisticaDTO> obtenerSantuarioMasCorrupto() {
+    public ResponseEntity<ReporteSantuarioCorruptoDTO> obtenerSantuarioMasCorrupto() {
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
 
-        EstadisticaDTO dto = EstadisticaDTO.desdeModelo(reporte);
+        ReporteSantuarioCorruptoDTO dto = ReporteSantuarioCorruptoDTO.desdeModelo(reporte);
         return ResponseEntity.ok(dto);
     }
 }

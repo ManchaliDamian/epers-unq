@@ -41,54 +41,62 @@ public class EspirituServiceImpl implements EspirituService {
         return espirituDAO.save(espiritu);
     }
 
-    @Override
-    public Optional<Espiritu> recuperar(Long espirituId) {
-        Optional<Espiritu> espirituARecuperar = espirituDAO.findById(espirituId).filter(e -> !e.isDeleted());
-        if (espirituARecuperar.isEmpty()) {
+    private Espiritu getEspiritu(Long espirituId) {
+        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
+        return espiritu;
+    }
 
-        return espirituARecuperar;
+    private Medium getMedium(Long mediumId) {
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        if(medium.isDeleted()) {
+            throw new EspirituNoEncontradoException(mediumId);
+        }
+        return medium;
+    }
+
+    @Override
+    public Optional<Espiritu> recuperar(Long espirituId) {
+        return espirituDAO.findById(espirituId)
+                .filter(e -> !e.isDeleted());
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
         return espirituDAO.recuperarTodos();
     }
+
     @Override
     public Optional<Espiritu> recuperarEliminado(Long id) {
-        Optional<Espiritu> espirituARecuperarEliminado = espirituDAO.recuperarEliminado(id);
-        if (espirituARecuperarEliminado.isEmpty()) {
-            throw new EspirituNoEncontradoException(id);
-        }
-        return espirituARecuperarEliminado;
+        return espirituDAO.recuperarEliminado(id);
     }
+
     @Override
     public List<Espiritu> recuperarTodosLosEliminados() {
         return espirituDAO.recuperarTodosLosEliminados();
     }
+
     @Override
     public void eliminar(Long espirituId) {
-        Optional<Espiritu> espirituEliminadoLogico = this.recuperar(espirituId);
-        espirituEliminadoLogico.get().setDeleted(true);
-        espirituDAO.save(espirituEliminadoLogico.get());
+        Espiritu espiritu = this.getEspiritu(espirituId);
+        espiritu.setDeleted(true);
+        espirituDAO.save(espiritu);
     }
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
-        Optional<Espiritu> espiritu = this.recuperar(espirituId);
+        Espiritu espiritu = this.getEspiritu(espirituId);
 
-        Optional<Medium> medium = mediumDAO.findById(mediumId).filter(e -> !e.isDeleted());
-        if (medium.isEmpty()) {
-            throw new MediumNoEncontradoException(mediumId);
-        }
+        Medium medium = this.getMedium(mediumId);
 
-        medium.get().conectarseAEspiritu(espiritu.get());
+        medium.conectarseAEspiritu(espiritu);
 
-        espirituDAO.save(espiritu.get());
-        mediumDAO.save(medium.get());
+        espirituDAO.save(espiritu);
+        mediumDAO.save(medium);
 
-        return medium.get();
+        return medium;
     }
 
     @Override

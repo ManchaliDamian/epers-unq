@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.controller;
 import ar.edu.unq.epersgeist.controller.dto.CreateMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateMediumDTO;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -17,15 +19,13 @@ class MediumControllerRESTTest {
 
     private MediumService mediumService;
     private UbicacionService ubicacionService;
-    private EspirituService espirituService;
     private MediumControllerREST controller;
 
     @BeforeEach
     void setUp() {
         mediumService = mock(MediumService.class);
         ubicacionService = mock(UbicacionService.class);
-        espirituService = mock(EspirituService.class);
-        controller = new MediumControllerREST(mediumService, ubicacionService, espirituService);
+        controller = new MediumControllerREST(mediumService, ubicacionService);
     }
 
     @Test
@@ -55,9 +55,8 @@ class MediumControllerRESTTest {
     void obtenerMediumPorIdNoEncontrado() {
         when(mediumService.recuperar(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getMediumById(1L);
+        assertThrows(MediumNoEncontradoException.class, () -> controller.getMediumById(1L));
 
-        assertEquals(404, response.getStatusCodeValue());
         verify(mediumService, times(1)).recuperar(1L);
     }
     
@@ -80,9 +79,8 @@ class MediumControllerRESTTest {
         UpdateMediumDTO dto = mock(UpdateMediumDTO.class);
         when(mediumService.recuperar(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.updateById(1L, dto);
+        assertThrows(MediumNoEncontradoException.class, () -> controller.updateById(1L, dto));
 
-        assertEquals(404, response.getStatusCodeValue());
         verify(mediumService, times(1)).recuperar(1L);
     }
 
@@ -94,7 +92,6 @@ class MediumControllerRESTTest {
         ResponseEntity<?> response = controller.eliminar(1L);
 
         assertEquals(204, response.getStatusCodeValue());
-        verify(mediumService, times(1)).recuperar(1L);
         verify(mediumService, times(1)).eliminar(1L);
     }
 
@@ -103,43 +100,24 @@ class MediumControllerRESTTest {
         CreateMediumDTO dto = mock(CreateMediumDTO.class);
         when(ubicacionService.recuperar(dto.ubicacionId())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.createMedium(dto);
+        assertThrows(UbicacionNoEncontradaException.class, () -> controller.createMedium(dto));
 
-        assertEquals(404, response.getStatusCodeValue());
         verify(ubicacionService, times(1)).recuperar(dto.ubicacionId());
     }
 
     @Test
-    void exorcizarMediumEmisorNoEncontrado() {
-        when(mediumService.recuperar(1L)).thenReturn(Optional.empty());
-        when(mediumService.recuperar(2L)).thenReturn(Optional.of(new Medium()));
+    void exorcizarMedium() {
+        controller.exorcizar(1L, 2L);
 
-        ResponseEntity<?> response = controller.exorcizar(1L, 2L);
-
-        assertEquals(404, response.getStatusCodeValue());
-        verify(mediumService, times(1)).recuperar(1L);
-        verify(mediumService, times(1)).recuperar(2L);
-    }
-
-    @Test
-    void exorcizarMediumReceptorNoEncontrado() {
-        when(mediumService.recuperar(1L)).thenReturn(Optional.of(new Medium()));
-        when(mediumService.recuperar(2L)).thenReturn(Optional.empty());
-
-        ResponseEntity<?> response = controller.exorcizar(1L, 2L);
-
-        assertEquals(404, response.getStatusCodeValue());
-        verify(mediumService, times(1)).recuperar(1L);
-        verify(mediumService, times(1)).recuperar(2L);
+        verify(mediumService, times(1)).exorcizar(1L, 2L);
     }
 
     @Test
     void descansarMediumNoEncontrado() {
         when(mediumService.recuperar(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.descansar(1L);
+        assertThrows(MediumNoEncontradoException.class, () -> controller.mover(1L, 2L));
 
-        assertEquals(404, response.getStatusCodeValue());
         verify(mediumService, times(1)).recuperar(1L);
     }
     @Test
@@ -147,9 +125,8 @@ class MediumControllerRESTTest {
         when(mediumService.recuperar(1L)).thenReturn(Optional.of(new Medium()));
         when(ubicacionService.recuperar(2L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.mover(1L, 2L);
+        assertThrows(UbicacionNoEncontradaException.class, () -> controller.mover(1L, 2L));
 
-        assertEquals(404, response.getStatusCodeValue());
         verify(mediumService, times(1)).recuperar(1L);
         verify(ubicacionService, times(1)).recuperar(2L);
     }

@@ -9,13 +9,13 @@ public class ReporteSantuarioMasCorrupto {
 
     private String nombreSantuario;
     private int totalDemonios;
-    private int demoniosLibres;
+    private int cantDemoniosLibres;
     private Medium mediumMayorDemoniacos;
 
-    public ReporteSantuarioMasCorrupto(String nombreSantuario,int totalDemonios,int demoniosLibres,Medium mediumMayorDemoniacos){
+    public ReporteSantuarioMasCorrupto(String nombreSantuario,int totalDemonios,int cantDemoniosLibres,Medium mediumMayorDemoniacos){
         this.nombreSantuario = nombreSantuario;
         this.totalDemonios = totalDemonios;
-        this.demoniosLibres = demoniosLibres;
+        this.cantDemoniosLibres = cantDemoniosLibres;
         this.mediumMayorDemoniacos = mediumMayorDemoniacos;
     }
 }

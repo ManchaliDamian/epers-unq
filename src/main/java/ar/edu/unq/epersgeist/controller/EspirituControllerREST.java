@@ -2,9 +2,11 @@ package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateEspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
@@ -74,23 +76,18 @@ public final  class EspirituControllerREST {
     @PutMapping("/{id}")
     public ResponseEntity<EspirituDTO> updateById(@PathVariable Long id, @Valid @RequestBody UpdateEspirituDTO dto) {
 
-        Optional<Espiritu> opt = espirituService.recuperar(id);
+        Espiritu espiritu = espirituService.recuperar(id).orElseThrow(() -> new EspirituNoEncontradoException(id));
 
-        if (opt.isEmpty())
-            return ResponseEntity.notFound().build();
+        dto.actualizarModelo(espiritu);
 
-        Espiritu medium = opt.get();
-        dto.actualizarModelo(medium);
-
-        Espiritu guardado = espirituService.actualizar(medium);
+        Espiritu guardado = espirituService.actualizar(espiritu);
 
         return ResponseEntity.ok(EspirituDTO.desdeModelo(guardado));
     }
 
-//Descomentar luego de tener a MediumDTO hecho
-//    @GetMapping("/{idEspiritu}/conectar/{idMedium}")
-//    public ResponseEntity<EspirituDTO> conectarEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idMedium){
-//        Medium medium = espirituService.conectar(idEspiritu,idMedium);
-//        return ResponseEntity.ok(MediumDTO.desdeModelo(medium));
-//    }
+    @PutMapping("/{idEspiritu}/conectar/{idMedium}")
+    public ResponseEntity<MediumDTO> conectarEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idMedium){
+        Medium medium = espirituService.conectar(idEspiritu,idMedium);
+        return ResponseEntity.ok(MediumDTO.desdeModelo(medium));
+    }
 }

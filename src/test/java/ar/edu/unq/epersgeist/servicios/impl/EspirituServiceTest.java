@@ -169,12 +169,12 @@ public class EspirituServiceTest {
         assertEquals(0, recuperado.get().getNivelDeConexion());
     }
     @Test
-    void testRecuperarEspirituLanzaExceptionPorEliminadoLogico() {
+    void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
 
-        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
+        assertTrue(serviceE.recuperar(nuevoEspiritu.getId()).isEmpty());
     }
 
     @Test
@@ -223,7 +223,7 @@ public class EspirituServiceTest {
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.recuperar(angel.getId()));
+        assertTrue(serviceE.recuperar(angel.getId()).isEmpty());
     }
 
     @Test

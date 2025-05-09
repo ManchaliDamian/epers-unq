@@ -41,11 +41,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
-        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
-        if (ubicacionARecuperar.isEmpty()) {
-            throw new MediumNoEncontradoException(ubicacionId);
-        }
-        return ubicacionARecuperar;
+        return ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
     @Override
@@ -56,17 +52,13 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
-        Optional<Ubicacion> ubicacionAEliminar = this.recuperar(id);
-        ubicacionAEliminar.get().setDeleted(true);
-        ubicacionDAO.save(ubicacionAEliminar.get());
+        Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+        ubicacionAEliminar.setDeleted(true);
+        ubicacionDAO.save(ubicacionAEliminar);
     }
     @Override
     public Optional<Ubicacion> recuperarEliminado(Long id) {
-        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.recuperarEliminado(id);
-        if (ubicacionARecuperar.isEmpty()) {
-            throw new UbicacionNoEncontradaException(id);
-        }
-        return ubicacionARecuperar;
+        return ubicacionDAO.recuperarEliminado(id);
     }
     @Override
     public List<Ubicacion> recuperarTodosEliminados() {

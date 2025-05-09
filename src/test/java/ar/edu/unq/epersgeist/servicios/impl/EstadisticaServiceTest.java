@@ -89,7 +89,7 @@ public class EstadisticaServiceTest {
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
         assertEquals(santuario1.getNombre(),reporte.getNombreSantuario());
         assertEquals(2, reporte.getTotalDemonios());
-        assertEquals(2,reporte.getDemoniosLibres());
+        assertEquals(2,reporte.getCantDemoniosLibres());
     }
 
     @Test

@@ -21,15 +21,6 @@ public class ExceptionHandlerREST {
         return new ErrorDTO(ex.getMessage(), HttpStatus.CONFLICT.value());
     }
 
-    @ExceptionHandler({
-            EspirituEliminadoException.class,
-            MediumEliminadoException.class,
-    })
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorDTO handleGone(RuntimeException ex) {
-        return new ErrorDTO(ex.getMessage(), HttpStatus.CONFLICT.value());
-    }
-
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFoundException(EntityNotFoundException ex) {
