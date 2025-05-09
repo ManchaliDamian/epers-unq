@@ -25,12 +25,10 @@ public class MediumControllerREST {
 
     private final MediumService mediumService;
     private final UbicacionService ubicacionService;
-    private final EspirituService espirituService;
 
-    public MediumControllerREST(MediumService mediumService, UbicacionService ubicacionService, EspirituService espirituService) {
+    public MediumControllerREST(MediumService mediumService, UbicacionService ubicacionService) {
         this.mediumService = mediumService;
         this.ubicacionService = ubicacionService;
-        this.espirituService = espirituService;
     }
 
     @GetMapping

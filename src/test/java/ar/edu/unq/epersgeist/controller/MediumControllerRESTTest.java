@@ -19,15 +19,13 @@ class MediumControllerRESTTest {
 
     private MediumService mediumService;
     private UbicacionService ubicacionService;
-    private EspirituService espirituService;
     private MediumControllerREST controller;
 
     @BeforeEach
     void setUp() {
         mediumService = mock(MediumService.class);
         ubicacionService = mock(UbicacionService.class);
-        espirituService = mock(EspirituService.class);
-        controller = new MediumControllerREST(mediumService, ubicacionService, espirituService);
+        controller = new MediumControllerREST(mediumService, ubicacionService);
     }
 
     @Test
