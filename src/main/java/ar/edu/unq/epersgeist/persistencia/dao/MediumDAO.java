@@ -16,7 +16,6 @@ public interface MediumDAO extends JpaRepository<Medium, Long> {
             "FROM Medium m where m.deleted = false"
     )
     List<Medium> recuperarTodos();
-
     @Query(
             "FROM Medium m where m.deleted = true and m.id = :id"
     )

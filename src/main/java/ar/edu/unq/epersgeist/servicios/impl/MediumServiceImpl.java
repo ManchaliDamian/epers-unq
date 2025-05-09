@@ -126,7 +126,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Optional<Medium> medium = this.recuperar(mediumId);
-        Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId);
+        Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId).filter(e -> !e.isDeleted());
         if (ubicacion.isEmpty()) {
             throw new UbicacionNoEncontradaException(ubicacionId);
         }

@@ -74,27 +74,21 @@ public class EspirituServiceImpl implements EspirituService {
         espirituDAO.save(espirituEliminadoLogico.get());
     }
 
-    //preguntar si esto sirve...
-//    @Override
-//    public void eliminarTodo(){
-//        espirituDAO.deleteAll();
-//    }
-    // --------------------------
-
-
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
         Optional<Espiritu> espiritu = this.recuperar(espirituId);
 
-        Medium medium = mediumDAO.findById(mediumId)
-                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Optional<Medium> medium = mediumDAO.findById(mediumId).filter(e -> !e.isDeleted());
+        if (medium.isEmpty()) {
+            throw new MediumNoEncontradoException(mediumId);
+        }
 
-        medium.conectarseAEspiritu(espiritu.get());
+        medium.get().conectarseAEspiritu(espiritu.get());
 
         espirituDAO.save(espiritu.get());
-        mediumDAO.save(medium);
+        mediumDAO.save(medium.get());
 
-        return medium;
+        return medium.get();
     }
 
     @Override
