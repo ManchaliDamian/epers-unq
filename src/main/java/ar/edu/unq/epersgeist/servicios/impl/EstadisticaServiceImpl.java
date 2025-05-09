@@ -5,8 +5,8 @@ import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import ar.edu.unq.epersgeist.modelo.exception.NoHaySantuarioCorruptoException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class EstadisticaServiceImpl implements EstadisticaService {
                         .obtenerSantuariosOrdenadosPorCorrupcion(PageRequest.of(0, 1))
                         .stream()
                         .findFirst()
-                        .orElseThrow(() -> new RuntimeException("No hay santuarios registrados"));
+                        .orElseThrow(NoHaySantuarioCorruptoException::new);
 
             long ubicacionId = santuarioMasCorrupto.getId();
 
