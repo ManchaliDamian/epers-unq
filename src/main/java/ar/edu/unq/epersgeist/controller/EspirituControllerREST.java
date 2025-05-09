@@ -2,9 +2,11 @@ package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.UpdateEspirituDTO;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -51,9 +53,9 @@ public final  class EspirituControllerREST {
 
     @GetMapping("/{id}")
     public ResponseEntity<EspirituDTO> getEspirituById(@PathVariable Long id){
-        Optional<Espiritu> espiritu = espirituService.recuperar(id);
-        return espiritu.map(e -> ResponseEntity.ok(EspirituDTO.desdeModelo(e)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Espiritu espiritu = espirituService.recuperar(id).orElseThrow(() -> new EspirituNoEncontradoException(id));
+        return ResponseEntity.ok(EspirituDTO.desdeModelo(espiritu));
+
     }
 
     @DeleteMapping("/{id}")
@@ -69,7 +71,21 @@ public final  class EspirituControllerREST {
                 .toList();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<EspirituDTO> updateById(@PathVariable Long id, @Valid @RequestBody UpdateEspirituDTO dto) {
 
+        Optional<Espiritu> opt = espirituService.recuperar(id);
+
+        if (opt.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Espiritu medium = opt.get();
+        dto.actualizarModelo(medium);
+
+        Espiritu guardado = espirituService.actualizar(medium);
+
+        return ResponseEntity.ok(EspirituDTO.desdeModelo(guardado));
+    }
 
 //Descomentar luego de tener a MediumDTO hecho
 //    @GetMapping("/{idEspiritu}/conectar/{idMedium}")
