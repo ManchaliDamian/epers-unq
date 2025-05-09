@@ -1,13 +1,11 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 //import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,14 +56,14 @@ public final class UbicacionControllerREST {
         List<EspirituDTO> espirituDTOS = espiritus.stream().map(EspirituDTO::desdeModelo).toList();
         return ResponseEntity.ok(espirituDTOS);
     }
-/*
+
     @GetMapping("/{id}/mediumsSinEspiritus")
     public ResponseEntity<List<MediumDTO>> getMediumsSinEspiritusEn (@PathVariable Long id){
         List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(id);
         List<MediumDTO> mediumDTOS = mediumsSinEspiritusEn.stream().map(MediumDTO::desdeModelo).toList();
         return ResponseEntity.ok(mediumDTOS);
     }
-*/
+
     //POST handlers
     @PostMapping
     public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {

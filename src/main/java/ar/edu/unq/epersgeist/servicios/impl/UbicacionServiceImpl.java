@@ -52,17 +52,13 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
-        Optional<Ubicacion> ubicacionAEliminar = this.recuperar(id);
-        ubicacionAEliminar.get().setDeleted(true);
-        ubicacionDAO.save(ubicacionAEliminar.get());
+        Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+        ubicacionAEliminar.setDeleted(true);
+        ubicacionDAO.save(ubicacionAEliminar);
     }
     @Override
     public Optional<Ubicacion> recuperarEliminado(Long id) {
-        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.recuperarEliminado(id);
-        if (ubicacionARecuperar.isEmpty()) {
-            throw new UbicacionNoEncontradaException(id);
-        }
-        return ubicacionARecuperar;
+        return ubicacionDAO.recuperarEliminado(id);
     }
     @Override
     public List<Ubicacion> recuperarTodosEliminados() {

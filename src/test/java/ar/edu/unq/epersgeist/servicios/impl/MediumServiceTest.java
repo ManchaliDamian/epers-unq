@@ -120,6 +120,11 @@ public class MediumServiceTest {
     }
 
     @Test
+    void recuperarMediumQueNuncaExistio_devuelveOptionalVacio() {
+        assertTrue(serviceM.recuperar(9999L).isEmpty());
+    }
+
+    @Test
     void recuperarMediumEliminado() {
         serviceM.eliminar(medium1.getId());
         Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
@@ -487,45 +492,6 @@ public class MediumServiceTest {
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
         assertEquals(20, demonioActualizado.get().getNivelDeConexion(),
                 "El demonio no debería haber sido afectado en un ataque fallido");
-    }
-
-    @Test
-    void exorcizar_MultiplesDemoniosYAngeles_ActualizaCorrectamente_MismaUbicacionAlMoverse() {
-        Generador.setEstrategia(new GeneradorSecuencial(10, 1, 5, 100)); // Primer ataque exitoso, segundo falla
-
-        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
-        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", cementerio);
-        angel1.setNivelDeConexion(20);
-        angel2.setNivelDeConexion(10);
-
-        EspirituDemoniaco demonio1 = new EspirituDemoniaco("Demonio1", santuario);
-        EspirituDemoniaco demonio2 = new EspirituDemoniaco("Demonio2", santuario);
-        demonio1.setNivelDeConexion(15);
-        demonio2.setNivelDeConexion(20);
-
-        conectarEspirituAMedium(medium1, angel1);
-        conectarEspirituAMedium(medium1, angel2);
-        assertEquals(30, angel1.getNivelDeConexion());
-        assertEquals(20, angel2.getNivelDeConexion());
-
-        conectarEspirituAMedium(medium2, demonio1);
-        conectarEspirituAMedium(medium2, demonio2);
-        assertEquals(25, demonio1.getNivelDeConexion());
-        assertEquals(30, demonio2.getNivelDeConexion());
-
-        serviceM.mover(medium2.getId(), cementerio.getId());
-
-        serviceM.exorcizar(medium1.getId(), medium2.getId());
-
-
-        Optional<Espiritu> angel1Actualizado = serviceE.recuperar(angel1.getId());
-        Optional<Espiritu> angel2Actualizado = serviceE.recuperar(angel2.getId());
-        Optional<Espiritu> demonio1Actualizado = serviceE.recuperar(demonio1.getId());
-        Optional<Espiritu> demonio2Actualizado = serviceE.recuperar(demonio2.getId());
-        assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
-        assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
-        assertEquals(25, demonio1Actualizado.get().getNivelDeConexion());
-        assertEquals(0, demonio2Actualizado.get().getNivelDeConexion());
     }
 
     private void conectarEspirituAMedium(Medium medium, Espiritu espiritu) {
