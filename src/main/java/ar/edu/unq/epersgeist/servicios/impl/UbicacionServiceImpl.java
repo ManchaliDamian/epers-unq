@@ -41,11 +41,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
-        Optional<Ubicacion> ubicacionARecuperar = ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
-        if (ubicacionARecuperar.isEmpty()) {
-            throw new MediumNoEncontradoException(ubicacionId);
-        }
-        return ubicacionARecuperar;
+        return ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
     @Override

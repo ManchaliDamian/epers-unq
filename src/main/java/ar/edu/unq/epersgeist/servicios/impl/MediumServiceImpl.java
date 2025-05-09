@@ -38,32 +38,34 @@ public class MediumServiceImpl implements MediumService {
         return mediumDAO.save(unMedium);
     }
 
-    @Override
-    public Optional<Medium> recuperar(Long mediumId) {
-        Optional<Medium> mediumARecuperar = mediumDAO.findById(mediumId).filter(e -> !e.isDeleted());
-        if (mediumARecuperar.isEmpty()) {
+    private Medium getMedium(Long mediumId) {
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        if(medium.isDeleted()) {
             throw new MediumNoEncontradoException(mediumId);
         }
-        return mediumARecuperar;
+        return medium;
+    }
+
+    @Override
+    public Optional<Medium> recuperar(Long mediumId) {
+        return mediumDAO.findById(mediumId)
+                .filter(e -> !e.isDeleted());
     }
     @Override
     public Optional<Medium> recuperarEliminado(Long mediumId) {
-        Optional<Medium> mediumARecuperar = mediumDAO.recuperarEliminado(mediumId);
-        if (mediumARecuperar.isEmpty()) {
-            throw new MediumNoEncontradoException(mediumId);
-        }
-        return mediumARecuperar;
+        return mediumDAO.recuperarEliminado(mediumId);
     }
+
     @Override
     public List<Medium> recuperarTodosEliminados(){
         return mediumDAO.recuperarTodosEliminados();
     }
+
     @Override
     public void eliminar(Long mediumId) {
-        Optional<Medium> mediumEliminadoLogico = this.recuperar(mediumId);
-        mediumEliminadoLogico.get().setDeleted(true);
-        mediumDAO.save(mediumEliminadoLogico.get());
-
+        Medium medium = this.getMedium(mediumId);
+        medium.setDeleted(true);
+        mediumDAO.save(medium);
     }
 
     @Override
@@ -74,30 +76,24 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void descansar(Long mediumId) {
-        Optional<Medium> medium = this.recuperar(mediumId);
-
-        medium.get().descansar();
-
-        mediumDAO.save(medium.get());
-
+        Medium medium = this.getMedium(mediumId);
+        medium.descansar();
+        mediumDAO.save(medium);
     }
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-        Optional<Medium> mediumExorcista = this.recuperar(idMediumExorcista);
-        Optional<Medium> mediumAExorcizar = this.recuperar(idMediumAExorcizar);
+        Medium mediumExorcista = this.getMedium(idMediumExorcista);
+        Medium mediumAExorcizar = this.getMedium(idMediumAExorcizar);
 
-        List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(mediumExorcista.get().getId());
-        List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(mediumAExorcizar.get().getId());
+        List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
+        List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
-
-        mediumExorcista.get().exorcizarA(angeles, demonios, mediumAExorcizar.get().getUbicacion());
-
-
-        mediumDAO.save(mediumExorcista.get());
-        mediumDAO.save(mediumAExorcizar.get());
+        mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
 
 
+        mediumDAO.save(mediumExorcista);
+        mediumDAO.save(mediumAExorcizar);
     }
 
     @Override
@@ -108,16 +104,19 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituDAO.findById(espirituId).filter(e -> !e.isDeleted());
+        Optional<Espiritu> espiritu = espirituDAO.findById(espirituId);
         if (espiritu.isEmpty()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
+        if(espiritu.get().isDeleted()){
+            throw  new EspirituNoEncontradoException(espirituId);
+        }
 
-        Optional<Medium> medium = this.recuperar(mediumId);
+        Medium medium = this.getMedium(mediumId);
 
-        medium.get().invocarA(espiritu.get());
+        medium.invocarA(espiritu.get());
 
-        mediumDAO.save(medium.get());
+        mediumDAO.save(medium);
         espirituDAO.save(espiritu.get());
 
         return espiritu.get();
@@ -125,14 +124,13 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
-        Optional<Medium> medium = this.recuperar(mediumId);
+        Medium medium = this.getMedium(mediumId);
         Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId).filter(e -> !e.isDeleted());
         if (ubicacion.isEmpty()) {
             throw new UbicacionNoEncontradaException(ubicacionId);
         }
-        medium.get().mover(ubicacion.get());
 
-        mediumDAO.save(medium.get());
-
+        medium.mover(ubicacion.get());
+        mediumDAO.save(medium);
     }
 }
