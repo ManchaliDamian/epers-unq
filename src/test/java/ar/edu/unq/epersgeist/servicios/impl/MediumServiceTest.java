@@ -49,10 +49,10 @@ public class MediumServiceTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
 
-    private DataService eliminarTodo;
+    private DataService dataService;
     @BeforeEach
     void setUp() {
-        eliminarTodo = new DataServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionDAO,mediumDAO, espirituDAO);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
@@ -229,7 +229,7 @@ public class MediumServiceTest {
 
     @Test
     void testEliminarTodosLosMediums() {
-        eliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
         List<Medium> vacio = serviceM.recuperarTodos();
         assertTrue(vacio.isEmpty());
     }
@@ -545,6 +545,6 @@ public class MediumServiceTest {
 
    @AfterEach
    void cleanUp() {
-        eliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
    }
 }

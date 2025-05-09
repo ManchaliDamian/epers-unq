@@ -37,8 +37,8 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void actualizar(Espiritu espiritu){
-        espirituDAO.save(espiritu);
+    public Espiritu actualizar(Espiritu espiritu){
+        return espirituDAO.save(espiritu);
     }
 
     @Override
