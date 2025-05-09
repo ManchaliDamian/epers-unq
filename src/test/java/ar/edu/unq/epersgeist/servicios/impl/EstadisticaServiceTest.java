@@ -40,12 +40,11 @@ public class EstadisticaServiceTest {
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
 
-    private DataService serviceEliminarTodo;
+    private DataService dataService;
 
     @BeforeEach
      void setUp(){
-        serviceEliminarTodo = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
-        serviceEliminarTodo.eliminarTodo();
+        dataService = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
             cementerio = new Cementerio("Quilmes",1);
 
@@ -134,7 +133,7 @@ public class EstadisticaServiceTest {
 
     @AfterEach
     void eliminarTodo(){
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

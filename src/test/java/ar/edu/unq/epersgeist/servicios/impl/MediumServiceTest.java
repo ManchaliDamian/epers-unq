@@ -80,16 +80,12 @@ public class MediumServiceTest {
         medium1.setUbicacion(santuario);
         serviceM.actualizar(medium1);
 
-        //Fehca esperada en forma de Date.
         Date fechaEsperada = new Date();
 
-        // Se obtiene la fecha del espiritu "azazel".
         Date fechaEspiritu = medium1.getUpdatedAt();
 
-        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        // En este paso le doy format a ambos
         String esperadaFormateada = sdf.format(fechaEsperada);
         String obtenidaFormateada = sdf.format(fechaEspiritu);
 
@@ -526,13 +522,8 @@ public class MediumServiceTest {
         Optional<Espiritu> angel2Actualizado = serviceE.recuperar(angel2.getId());
         Optional<Espiritu> demonio1Actualizado = serviceE.recuperar(demonio1.getId());
         Optional<Espiritu> demonio2Actualizado = serviceE.recuperar(demonio2.getId());
-        // valores anteriores pero rompian... revisar
-        //        assertEquals(30, angel1Actualizado.getNivelDeConexion());
-        //        assertEquals(15, angel2Actualizado.getNivelDeConexion());
-        //        assertEquals(10, demonio1Actualizado.getNivelDeConexion());
         assertEquals(25, angel1Actualizado.get().getNivelDeConexion());
         assertEquals(20, angel2Actualizado.get().getNivelDeConexion());
-        //Volvió a cambiar valores porque al tener santuario en angel aumenta su conexion y ganan el segundo ataque
         assertEquals(25, demonio1Actualizado.get().getNivelDeConexion());
         assertEquals(0, demonio2Actualizado.get().getNivelDeConexion());
     }

@@ -9,7 +9,6 @@ import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituEliminadoException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -82,16 +81,12 @@ public class EspirituServiceTest {
         azazel.setUbicacion(berazategui);
         serviceE.actualizar(azazel);
 
-        //Fehca esperada en forma de Date.
         Date fechaEsperada = new Date();
 
-        // Se obtiene la fecha del espiritu "azazel".
         Date fechaEspiritu = azazel.getUpdatedAt();
 
-        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        // En este paso le doy format a ambos
         String esperadaFormateada = sdf.format(fechaEsperada);
         String obtenidaFormateada = sdf.format(fechaEspiritu);
 
