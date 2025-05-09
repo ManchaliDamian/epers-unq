@@ -92,7 +92,8 @@ public class MockMVCMediumController {
                 .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        return objectMapper.readValue(responseBody, Medium.class);
+        var mediumDTO = objectMapper.readValue(responseBody, MediumDTO.class);
+        return mediumDTO.aModelo();
     }
 
     public int exorcizar(Long mediumEmisorId, Long mediumReceptorId) throws Throwable {

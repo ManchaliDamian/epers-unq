@@ -94,7 +94,6 @@ public class MediumControllerREST {
         URI location = URI.create("/medium/" + creado.getId());
         MediumDTO respuesta = MediumDTO.desdeModelo(creado);
         return ResponseEntity.created(location).body(respuesta);
-
     }
 
     @PostMapping("/{mediumEmisorId}/exorcizar/{mediumReceptorId}")
@@ -130,44 +129,6 @@ public class MediumControllerREST {
 
         mediumService.invocar(id, espirituId);
         return ResponseEntity.ok("Espiritu invocado con éxito");
-    }
-
-    @PostMapping("/{id}/conectar/{espirituId}")
-    public ResponseEntity conectar(@PathVariable Long id, @PathVariable Long espirituId) {
-        Optional<Medium> mediumOpt = mediumService.recuperar(id);
-        Optional<Espiritu> espirituOpt = espirituService.recuperar(espirituId);
-
-        if (mediumOpt.isEmpty() || espirituOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        try {
-            Medium medium = mediumOpt.get();
-            Espiritu espiritu = espirituOpt.get();
-
-            medium.conectarseAEspiritu(espiritu);
-            mediumService.actualizar(medium);
-            return ResponseEntity.ok("Espíritu conectado con éxito");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/{id}/desvincular/{espirituId}")
-    public ResponseEntity desvincular(@PathVariable Long id, @PathVariable Long espirituId) {
-        Optional<Medium> mediumOpt = mediumService.recuperar(id);
-        Optional<Espiritu> espirituOpt = espirituService.recuperar(espirituId);
-
-        if (mediumOpt.isEmpty() || espirituOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Medium medium = mediumOpt.get();
-        Espiritu espiritu = espirituOpt.get();
-
-        medium.desvincularseDe(espiritu);
-        mediumService.actualizar(medium);
-        return ResponseEntity.ok("Espíritu desvinculado con éxito");
     }
 
     @PostMapping("/{id}/mover/{ubicacionId}")
