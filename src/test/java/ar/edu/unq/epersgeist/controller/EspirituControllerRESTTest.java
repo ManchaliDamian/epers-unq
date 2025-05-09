@@ -1,16 +1,13 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.*;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
+import ar.edu.unq.epersgeist.controller.helper.MockMVCMediumController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.impl.DataServiceImpl;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -27,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,13 +40,13 @@ public class EspirituControllerRESTTest {
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
-    //@Autowired private MockMvcMediumController mockMVCMediumController;
+    @Autowired private MockMVCMediumController mockMVCMediumController;
 
     private CreateUbicacionDTO quilmes;
     private CreateUbicacionDTO bernal;
     private CreateEspirituDTO angel;
     private CreateEspirituDTO demon;
-    //private CreateMediumDTO medium;
+    private CreateMediumDTO medium;
     private UbicacionDTO bernalGuardado;
     private UbicacionDTO quilmesGuardado;
     private EspirituDTO angelGuardado;
