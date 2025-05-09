@@ -44,11 +44,8 @@ public abstract class Espiritu {
     @Column(nullable = false)
     private boolean deleted = false;
 
-
-
-
     public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
-        this.setDeleted(false);
+
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;;
