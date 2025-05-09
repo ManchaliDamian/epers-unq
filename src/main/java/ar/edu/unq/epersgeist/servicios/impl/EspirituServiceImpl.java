@@ -3,9 +3,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Direccion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituEliminadoException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
-import ar.edu.unq.epersgeist.modelo.exception.MediumEliminadoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -33,31 +32,34 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Espiritu guardar(Espiritu espiritu) {
-            espirituDAO.save(espiritu);
-            return espiritu;
+        espirituDAO.save(espiritu);
+        return espiritu;
     }
 
     @Override
     public void actualizar(Espiritu espiritu){
-            espirituDAO.save(espiritu);
+        espirituDAO.save(espiritu);
     }
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return espirituDAO.findById(espirituId)
-                .filter(e -> !e.isDeleted());
+        Optional<Espiritu> espirituARecuperar = espirituDAO.findById(espirituId).filter(e -> !e.isDeleted());
+        if (espirituARecuperar.isEmpty()) {
+            throw new EspirituNoEncontradoException(espirituId);
+        }
+
+        return espirituARecuperar;
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
         return espirituDAO.recuperarTodos();
     }
-
     @Override
     public Optional<Espiritu> recuperarEliminado(Long id) {
         Optional<Espiritu> espirituARecuperarEliminado = espirituDAO.recuperarEliminado(id);
         if (espirituARecuperarEliminado.isEmpty()) {
-            throw new EspirituEliminadoException(id);
+            throw new EspirituNoEncontradoException(id);
         }
         return espirituARecuperarEliminado;
     }
@@ -65,41 +67,33 @@ public class EspirituServiceImpl implements EspirituService {
     public List<Espiritu> recuperarTodosLosEliminados() {
         return espirituDAO.recuperarTodosLosEliminados();
     }
-
     @Override
     public void eliminar(Long espirituId) {
-        Espiritu espiritu = this.getEspiritu(espirituId);
-        espiritu.setDeleted(true);
-        espirituDAO.save(espiritu);
+        Optional<Espiritu> espirituEliminadoLogico = this.recuperar(espirituId);
+        espirituEliminadoLogico.get().setDeleted(true);
+        espirituDAO.save(espirituEliminadoLogico.get());
     }
+
+    //preguntar si esto sirve...
+//    @Override
+//    public void eliminarTodo(){
+//        espirituDAO.deleteAll();
+//    }
+    // --------------------------
+
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
-        Espiritu espiritu = this.getEspiritu(espirituId);
+        Optional<Espiritu> espiritu = this.recuperar(espirituId);
 
-        Medium medium = this.getMedium(mediumId);
+        Medium medium = mediumDAO.findById(mediumId)
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
 
-        medium.conectarseAEspiritu(espiritu);
+        medium.conectarseAEspiritu(espiritu.get());
 
-        espirituDAO.save(espiritu);
+        espirituDAO.save(espiritu.get());
         mediumDAO.save(medium);
 
-        return medium;
-    }
-
-    private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
-        if(espiritu.isDeleted()) {
-            throw new EspirituEliminadoException(espirituId);
-        }
-        return espiritu;
-    }
-
-    private Medium getMedium(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
-        if(medium.isDeleted()) {
-            throw new MediumEliminadoException(mediumId);
-        }
         return medium;
     }
 

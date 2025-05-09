@@ -136,7 +136,7 @@ public class EspirituServiceTest {
         serviceM.guardar(medium);
         serviceE.eliminar(azazel.getId());
 
-        assertThrows(EspirituEliminadoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
 
         Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
         assertNull(conectado.get().getMediumConectado());
@@ -174,12 +174,12 @@ public class EspirituServiceTest {
         assertEquals(0, recuperado.get().getNivelDeConexion());
     }
     @Test
-    void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
+    void testRecuperarEspirituLanzaExceptionPorEliminadoLogico() {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
-        Optional<Espiritu> resultado = serviceE.recuperar(nuevoEspiritu.getId());
-        assertTrue(resultado.isEmpty());
+
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.recuperar(nuevoEspiritu.getId()));
     }
 
     @Test
@@ -228,8 +228,9 @@ public class EspirituServiceTest {
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        assertTrue(serviceE.recuperar(angel.getId()).isEmpty());
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.recuperar(angel.getId()));
     }
+
     @Test
     void testRecuperarEliminadoPorId() {
         serviceE.eliminar(angel.getId());
@@ -242,7 +243,7 @@ public class EspirituServiceTest {
     @Test
     void testEliminarCuandoEstaBorradoLanzaExcepcion(){
         serviceE.eliminar(angel.getId());
-        assertThrows(EspirituEliminadoException.class, () -> serviceE.eliminar(angel.getId()));
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.eliminar(angel.getId()));
     }
 
     @Test

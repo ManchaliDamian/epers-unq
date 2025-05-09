@@ -120,7 +120,7 @@ public class MediumServiceTest {
     void recuperarMediumEliminado_devuelveOptionalVacio() {
         serviceM.eliminar(medium1.getId());
 
-        assertTrue(serviceM.recuperar(medium1.getId()).isEmpty());
+        assertThrows(MediumNoEncontradoException.class, () -> serviceM.recuperar(medium1.getId()).isEmpty());
     }
     @Test
     void recuperarMediumEliminado() {
@@ -136,8 +136,8 @@ public class MediumServiceTest {
     }
     @Test
     void recuperarMedium_inexistente_devuelveOptionalVacio() {
-        Optional<Medium> resultado = serviceM.recuperar(999L);
-        assertTrue(resultado.isEmpty());
+
+        assertThrows(MediumNoEncontradoException.class, () -> serviceM.recuperar(999L));
     }
 
     @Test

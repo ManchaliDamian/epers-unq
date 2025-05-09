@@ -75,16 +75,12 @@ public class UbicacionServiceTest {
         santuario.setFlujoDeEnergia(35);
         serviceU.actualizar(santuario);
 
-        //Fehca esperada en forma de Date.
         Date fechaEsperada = new Date();
 
-        // Se obtiene la fecha del espiritu "azazel".
         Date fechaEspiritu = santuario.getUpdatedAt();
 
-        // Acá lo que hago es formatear de esta manera, para tener año, mes y día
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        // En este paso le doy format a ambos
         String esperadaFormateada = sdf.format(fechaEsperada);
         String obtenidaFormateada = sdf.format(fechaEspiritu);
 
