@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
@@ -30,11 +31,11 @@ public final class UbicacionControllerREST {
 
     // GET handlers
     @GetMapping
-    public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) String tipo) {
+    public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) TipoUbicacion tipo) {
         Stream<Ubicacion> stream = ubicacionService.recuperarTodos().stream();
 
         if (tipo != null) {
-            stream = stream.filter(ubicacion -> ubicacion.getTipo().equalsIgnoreCase(tipo));
+            stream = stream.filter(ubicacion -> ubicacion.getTipo() == tipo);
         }
 
         return stream

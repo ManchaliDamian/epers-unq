@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
@@ -43,12 +44,18 @@ public class MediumControllerREST {
     }
 
     @GetMapping("/{id}/espiritus")
-    public List<EspirituDTO> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) String tipo) {
+    public List<EspirituDTO> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) TipoEspiritu tipo) {
         Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
+
+        //Otra opción sin necesidad del tipo
         return medium.getEspiritus().stream()
-                        .filter(e -> tipo == null || e.getTipo().equalsIgnoreCase(tipo))
-                        .map(EspirituDTO::desdeModelo)
-                        .collect(Collectors.toList());
+                .map(EspirituDTO::desdeModelo)
+                .collect(Collectors.toList());
+
+//        return medium.getEspiritus().stream()
+//                        .filter(e -> tipo == null || e.getTipo() == tipo)
+//                        .map(EspirituDTO::desdeModelo)
+//                        .collect(Collectors.toList());
     }
 
     @PutMapping("/{id}")
