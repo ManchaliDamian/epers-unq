@@ -210,6 +210,33 @@ public class EspirituServiceTest {
     }
 
     @Test
+    void testRecuperarAngelesExistentes(){
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(1, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosExistentes(){
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(2, demonios.size());
+    }
+
+    @Test
+    void testRecuperarAngelesNoExistentes(){
+        serviceE.eliminar(angel.getId());
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(0, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosNoExistentes(){
+        serviceE.eliminar(belcebu.getId());
+        serviceE.eliminar(azazel.getId());
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(0, demonios.size());
+    }
+
+    @Test
     void testActualizar() {
         String nuevoNombre = "Lucifer";
         azazel.setNombre(nuevoNombre);

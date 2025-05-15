@@ -213,6 +213,33 @@ public class UbicacionServiceTest {
     }
 
     @Test
+    void recuperarSantuariosExistentes(){
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(1, santuarios.size());
+    }
+
+    @Test
+    void recuperarCementeriosExistentes(){
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(1, cementerios.size());
+    }
+
+    @Test
+    void recuperarSantuariosNoExistentes(){
+        serviceU.eliminar(santuario.getId());
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(0, santuarios.size());
+    }
+
+    @Test
+    void recuperarCementeriosNoExistentes(){
+        serviceU.eliminar(cementerio.getId());
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(0, cementerios.size());
+    }
+
+
+    @Test
     void actualizarUnaUbicacion(){
         Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         q.get().cambiarNombre("Avellaneda");
