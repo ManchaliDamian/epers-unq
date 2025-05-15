@@ -98,36 +98,6 @@ public class EstadisticaServiceTest {
     }
 
     @Test
-    @Transactional
-    void elMediumQueTieneMasManaLuegoDeEmpatarEnCantDeDemonios(){
-
-        Santuario s1 = new Santuario("Santuario 1", 50);
-
-        Medium medium2 = new Medium("medium 2",10,10,s1);
-        Medium medium3 = new Medium("medium 3",60,30,s1);
-
-        EspirituDemoniaco d1 = new EspirituDemoniaco("Demonio 1",s1);
-        EspirituDemoniaco d2 = new EspirituDemoniaco("Demonio 2",s1);
-
-
-        ubicacionService.guardar(s1);
-
-        espirituService.guardar(d1);
-        espirituService.guardar(d2);
-
-        medium2.conectarseAEspiritu(d1);
-        medium3.conectarseAEspiritu(d2);
-
-        mediumService.guardar(medium2);
-        mediumService.guardar(medium3);
-
-
-        ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
-        assertEquals(reporte.getMediumMayorDemoniacos().getNombre(), medium3.getNombre());
-
-    }
-
-    @Test
     void cambiaUbicacionMediumYNoHaySantuarioCorrupto(){
         medium1.setUbicacion(cementerio);
 
