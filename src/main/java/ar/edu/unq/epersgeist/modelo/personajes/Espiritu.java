@@ -1,5 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.personajes;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;

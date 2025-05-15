@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 
 public class EspirituOcupadoException extends IllegalArgumentException {
   private final Espiritu espiritu;

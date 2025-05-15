@@ -1,5 +1,6 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.ubicaciones;
 
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import lombok.Getter;
 import lombok.Setter;
 
