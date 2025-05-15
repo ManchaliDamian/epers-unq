@@ -50,7 +50,7 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
             "SELECT m FROM Medium m LEFT JOIN m.espiritus e " +
                     "WHERE m.ubicacion.id = :ubicacionId AND TYPE(e) = EspirituDemoniaco " +
                     "GROUP BY m " +
-                    "ORDER BY COUNT(e) DESC, m.mana DESC"
+                    "ORDER BY COUNT(e) DESC"
     )
     List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId, Pageable pageable);
 
