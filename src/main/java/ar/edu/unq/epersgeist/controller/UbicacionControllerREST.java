@@ -83,7 +83,6 @@ public final class UbicacionControllerREST {
     //DELETE handlers
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
-        ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
