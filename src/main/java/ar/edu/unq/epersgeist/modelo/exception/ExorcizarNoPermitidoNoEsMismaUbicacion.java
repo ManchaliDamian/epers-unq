@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 
 public class ExorcizarNoPermitidoNoEsMismaUbicacion extends IllegalArgumentException {
     public ExorcizarNoPermitidoNoEsMismaUbicacion(Ubicacion ubicacion, Medium medium) {

@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.interfaces;
 
-import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
-import org.springframework.stereotype.Repository;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.ReporteSantuarioMasCorrupto;
 
 public interface EstadisticaService {
     ReporteSantuarioMasCorrupto santuarioCorrupto();

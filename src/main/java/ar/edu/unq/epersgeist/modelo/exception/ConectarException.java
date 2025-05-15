@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 public class ConectarException extends IllegalArgumentException {
     public ConectarException(Espiritu espiritu, Medium medium) {

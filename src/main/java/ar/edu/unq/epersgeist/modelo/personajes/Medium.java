@@ -1,6 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

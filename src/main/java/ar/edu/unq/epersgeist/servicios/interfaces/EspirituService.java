@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.interfaces;
 
-import ar.edu.unq.epersgeist.modelo.Direccion;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 import java.util.List;
 import java.util.Optional;

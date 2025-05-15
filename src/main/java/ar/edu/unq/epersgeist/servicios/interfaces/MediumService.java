@@ -1,8 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.interfaces;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import org.springframework.stereotype.Repository;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 import java.util.List;
 import java.util.Optional;
