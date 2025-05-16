@@ -52,11 +52,11 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
 
     @Query(
             "SELECT m FROM Medium m  " +
-                    "LEFT JOIN m.espiritus e ON TYPE(e) = EspirituDemoniaco and e.deleted = false " +
+                    "JOIN m.espiritus e ON m.id = e.mediumConectado.id AND e.deleted = false AND TYPE(e) = EspirituDemoniaco " +
                     "WHERE m.ubicacion.id = :ubicacionId " +
-                    "AND m.deleted = false and m.ubicacion.deleted = false " +
-                    "GROUP BY m HAVING COUNT(e) > 0 " +
-                    "ORDER BY COUNT(e) DESC, m.mana DESC"
+                    "AND m.deleted = false AND m.ubicacion.deleted = false " +
+                    "GROUP BY m " +
+                    "ORDER BY COUNT(e) DESC"
     )
     List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
