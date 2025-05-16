@@ -2,7 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;

@@ -5,7 +5,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
