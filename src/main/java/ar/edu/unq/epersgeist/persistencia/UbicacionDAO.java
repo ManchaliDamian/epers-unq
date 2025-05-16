@@ -56,7 +56,7 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
                     "WHERE m.ubicacion.id = :ubicacionId " +
                     "AND m.deleted = false and m.ubicacion.deleted = false " +
                     "GROUP BY m HAVING COUNT(e) > 0 " +
-                    "ORDER BY COUNT(e) DESC "
+                    "ORDER BY COUNT(e) DESC, m.mana DESC"
     )
     List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
