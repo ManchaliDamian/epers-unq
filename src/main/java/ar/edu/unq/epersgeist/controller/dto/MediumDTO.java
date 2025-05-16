@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public record MediumDTO(
         Long id,
         @NotBlank String nombre,
-        Ubicacion ubicacion,
+        UbicacionDTO ubicacion,
         Integer manaMax,
         Integer mana,
         Set<EspirituDTO> espiritus
@@ -25,7 +25,7 @@ public record MediumDTO(
         return new MediumDTO(
                 medium.getId(),
                 medium.getNombre(),
-                medium.getUbicacion(),
+                UbicacionDTO.desdeModelo(medium.getUbicacion()),
                 medium.getManaMax(),
                 medium.getMana(),
                 espiritusDTO
@@ -33,7 +33,7 @@ public record MediumDTO(
     }
 
     public Medium aModelo() {
-        Medium medium = new Medium(nombre, manaMax, mana, ubicacion);
+        Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo());
 
         if (espiritus != null) {
             for (EspirituDTO dto : espiritus) {

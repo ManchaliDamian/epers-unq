@@ -2,7 +2,7 @@ package ar.edu.unq.epersgeist.controller.helper;
 
 import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
