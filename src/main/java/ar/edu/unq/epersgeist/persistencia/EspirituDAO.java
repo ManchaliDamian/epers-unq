@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -30,12 +30,12 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     List<Espiritu> recuperarTodosLosEliminados();
 
     @Query(
-            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId and e.deleted = false"
     )
     List<EspirituAngelical> recuperarAngelesDe(@Param("mediumId") Long mediumId);
 
     @Query(
-            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId and e.deleted = false"
     )
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 

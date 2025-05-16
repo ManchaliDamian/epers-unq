@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -20,26 +20,30 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
             "from Ubicacion u where u.deleted = false"
     )
     List<Ubicacion> recuperarTodos();
+
     @Query(
             "from Ubicacion u where u.deleted = true"
     )
     List<Ubicacion> recuperarTodosEliminados();
+
     @Query(
-            "from Ubicacion u where u.id = :id"
+            "from Ubicacion u where u.id = :id and u.deleted = true"
     )
     Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
 
-    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId and e.deleted = false")
+    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId " +
+            "and e.deleted = false and e.ubicacion.deleted = false")
     List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
 
-    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 and m.deleted = false")
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 " +
+            "and m.deleted = false and m.ubicacion.deleted = false")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
     //-----------------------------------------------------------------
 
     @Query(
             "SELECT u FROM Ubicacion u JOIN Espiritu e ON u.id = e.ubicacion.id " +
-                    "WHERE TYPE(u) = Santuario " +
+                    "WHERE TYPE(u) = Santuario AND u.deleted = false AND e.deleted = false " +
                     "GROUP BY u " +
                     "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
                     "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC"
@@ -47,12 +51,14 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
 
     @Query(
-            "SELECT m FROM Medium m LEFT JOIN m.espiritus e " +
-                    "WHERE m.ubicacion.id = :ubicacionId AND TYPE(e) = EspirituDemoniaco " +
-                    "GROUP BY m " +
-                    "ORDER BY COUNT(e) DESC"
+            "SELECT m FROM Medium m  " +
+                    "LEFT JOIN m.espiritus e ON TYPE(e) = EspirituDemoniaco and e.deleted = false " +
+                    "WHERE m.ubicacion.id = :ubicacionId " +
+                    "AND m.deleted = false and m.ubicacion.deleted = false " +
+                    "GROUP BY m HAVING COUNT(e) > 0 " +
+                    "ORDER BY COUNT(e) DESC "
     )
-    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId, Pageable pageable);
+    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
         "SELECT COUNT(e) FROM Espiritu e " +
