@@ -45,28 +45,20 @@ public class MediumControllerREST {
 
     @GetMapping("/{id}/espiritus")
     public List<EspirituDTO> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) TipoEspiritu tipo) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-
-        //Otra opción sin necesidad del tipo
-        return medium.getEspiritus().stream()
-                .map(EspirituDTO::desdeModelo)
-                .collect(Collectors.toList());
-
-//        return medium.getEspiritus().stream()
-//                        .filter(e -> tipo == null || e.getTipo() == tipo)
-//                        .map(EspirituDTO::desdeModelo)
-//                        .collect(Collectors.toList());
+        mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
+        var espiritus = switch (tipo){
+            case ANGELICAL -> mediumService.angeles(id);
+            case DEMONIACO -> mediumService.demonios(id);
+            case null -> mediumService.espiritus(id);
+        };
+        return espiritus.stream().map(EspirituDTO::desdeModelo).toList();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MediumDTO> updateById(@PathVariable Long id, @Valid @RequestBody UpdateMediumDTO dto) {
-
         Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-
         dto.actualizarModelo(medium);
-
         Medium guardado = mediumService.actualizar(medium);
-
         return ResponseEntity.ok(MediumDTO.desdeModelo(guardado));
     }
 
@@ -94,8 +86,6 @@ public class MediumControllerREST {
 
     @PutMapping("/{id}/descansar")
     public ResponseEntity<String> descansar(@PathVariable Long id) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));;
-
         mediumService.descansar(id);
         return ResponseEntity.ok("Medium descansado con éxito");
     }
@@ -108,9 +98,6 @@ public class MediumControllerREST {
 
     @PutMapping("/{id}/mover/{ubicacionId}")
     public ResponseEntity<String> mover(@PathVariable Long id, @PathVariable Long ubicacionId) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-        Ubicacion ubicacion = ubicacionService.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-
         mediumService.mover(id, ubicacionId);
         return ResponseEntity.ok("Espíritu movido con éxito");
     }

@@ -5,7 +5,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
@@ -207,6 +207,33 @@ public class EspirituServiceTest {
 
         List<Espiritu> espiritusEliminados = serviceE.recuperarTodosLosEliminados();
         assertEquals(2, espiritusEliminados.size());
+    }
+
+    @Test
+    void testRecuperarAngelesExistentes(){
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(1, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosExistentes(){
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(2, demonios.size());
+    }
+
+    @Test
+    void testRecuperarAngelesNoExistentes(){
+        serviceE.eliminar(angel.getId());
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(0, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosNoExistentes(){
+        serviceE.eliminar(belcebu.getId());
+        serviceE.eliminar(azazel.getId());
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(0, demonios.size());
     }
 
     @Test

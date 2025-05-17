@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
@@ -65,6 +67,16 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public List<Espiritu> recuperarTodos() {
         return espirituDAO.recuperarTodos();
+    }
+
+    @Override
+    public List<EspirituAngelical> recuperarAngeles() {
+        return espirituDAO.recuperarAngeles();
+    }
+
+    @Override
+    public List<EspirituDemoniaco> recuperarDemonios() {
+        return espirituDAO.recuperarDemonios();
     }
 
     @Override

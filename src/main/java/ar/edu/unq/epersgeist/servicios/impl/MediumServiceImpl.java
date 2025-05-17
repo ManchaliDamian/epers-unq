@@ -105,6 +105,16 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
+    public List<EspirituAngelical> angeles(Long mediumId) {
+        return espirituDAO.recuperarAngelesDe(mediumId);
+    }
+
+    @Override
+    public List<EspirituDemoniaco> demonios(Long mediumId) {
+        return espirituDAO.recuperarDemoniosDe(mediumId);
+    }
+
+    @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
         Optional<Espiritu> espiritu = espirituDAO.findById(espirituId);

@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.interfaces;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 import java.util.List;
@@ -15,6 +17,8 @@ public interface MediumService {
     void descansar(Long mediumId);
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
     List<Espiritu> espiritus(Long mediumId);
+    List<EspirituAngelical> angeles(Long mediumId);
+    List<EspirituDemoniaco> demonios(Long mediumId);
     Espiritu invocar(Long mediumId, Long espirituId);
     void mover(Long mediumId, Long ubicacionId);
     Optional<Medium> recuperarEliminado(Long mediumId);

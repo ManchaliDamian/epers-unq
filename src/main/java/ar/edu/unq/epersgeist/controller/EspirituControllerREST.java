@@ -4,7 +4,8 @@ import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateEspirituDTO;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Direccion;
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/espiritu")
@@ -46,9 +46,13 @@ public final  class EspirituControllerREST {
     }
 
     @GetMapping
-    public List<EspirituDTO> getAllEspiritus(){
-        return espirituService.recuperarTodos().stream()
-                 .map(EspirituDTO::desdeModelo).collect(Collectors.toList());
+    public List<EspirituDTO> getEspiritus(@RequestParam(required = false) TipoEspiritu tipo){
+        var espiritus = switch (tipo){
+            case ANGELICAL -> espirituService.recuperarAngeles();
+            case DEMONIACO -> espirituService.recuperarDemonios();
+            case null -> espirituService.recuperarTodos();
+        };
+        return espiritus.stream().map(EspirituDTO::desdeModelo).toList();
     }
 
     @GetMapping("/{id}")
@@ -73,13 +77,9 @@ public final  class EspirituControllerREST {
 
     @PutMapping("/{id}")
     public ResponseEntity<EspirituDTO> updateById(@PathVariable Long id, @Valid @RequestBody UpdateEspirituDTO dto) {
-
         Espiritu espiritu = espirituService.recuperar(id).orElseThrow(() -> new EspirituNoEncontradoException(id));
-
         dto.actualizarModelo(espiritu);
-
         Espiritu guardado = espirituService.actualizar(espiritu);
-
         return ResponseEntity.ok(EspirituDTO.desdeModelo(guardado));
     }
 

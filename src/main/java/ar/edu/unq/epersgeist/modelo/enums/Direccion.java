@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.ubicaciones;
+package ar.edu.unq.epersgeist.modelo.enums;
 
 public enum Direccion {
     ASCENDENTE ,

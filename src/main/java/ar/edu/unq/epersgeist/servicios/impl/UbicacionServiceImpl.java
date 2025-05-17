@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
@@ -48,6 +50,16 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionDAO.recuperarTodos();
     }
 
+    @Override
+    public List<Cementerio> recuperarCementerios() {
+        return ubicacionDAO.recuperarCementerios();
+    }
+
+    @Override
+    public List<Santuario> recuperarSantuarios() {
+        return ubicacionDAO.recuperarSantuarios();
+    }
+
 
     @Override
     public void eliminar(Long id) {
@@ -55,15 +67,16 @@ public class UbicacionServiceImpl implements UbicacionService {
         ubicacionAEliminar.setDeleted(true);
         ubicacionDAO.save(ubicacionAEliminar);
     }
+
     @Override
     public Optional<Ubicacion> recuperarEliminado(Long id) {
         return ubicacionDAO.recuperarEliminado(id);
     }
+
     @Override
     public List<Ubicacion> recuperarTodosEliminados() {
         return ubicacionDAO.recuperarTodosEliminados();
     }
-
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
