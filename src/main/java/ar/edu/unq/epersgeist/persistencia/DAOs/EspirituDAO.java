@@ -29,18 +29,21 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
             "FROM Espiritu e where e.deleted = true and e.id = :id"
     )
     Optional<Espiritu> recuperarEliminado(@Param("id") Long id);
+
     @Query(
             "FROM Espiritu e where e.deleted = true"
     )
     List<Espiritu> recuperarTodosLosEliminados();
 
     @Query(
-            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId " +
+                    "and e.deleted = false and e.mediumConectado.deleted = false"
     )
     List<EspirituAngelical> recuperarAngelesDe(@Param("mediumId") Long mediumId);
 
     @Query(
-            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId " +
+                    "and e.deleted = false and e.mediumConectado.deleted = false"
     )
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 

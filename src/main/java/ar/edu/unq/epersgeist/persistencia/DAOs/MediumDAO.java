@@ -25,6 +25,7 @@ public interface MediumDAO extends JpaRepository<Medium, Long> {
     )
     List<Medium> recuperarTodosEliminados();
 
-    @Query("SELECT e FROM Espiritu e WHERE e.mediumConectado.id = :mediumId")
+    @Query("SELECT e FROM Espiritu e WHERE e.mediumConectado.id = :mediumId " +
+            "and e.deleted = false and e.mediumConectado.deleted = false")
     List<Espiritu> findEspiritusByMediumId(@Param("mediumId") Long mediumId);
 }
