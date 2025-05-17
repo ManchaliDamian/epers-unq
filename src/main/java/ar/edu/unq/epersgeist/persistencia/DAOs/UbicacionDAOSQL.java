@@ -1,3 +1,5 @@
+package ar.edu.unq.epersgeist.persistencia.DAOs;
+
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
