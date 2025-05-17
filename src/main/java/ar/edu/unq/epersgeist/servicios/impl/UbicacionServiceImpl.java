@@ -7,7 +7,7 @@ import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -38,14 +38,16 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     List<Ubicacion> recuperarTodosEliminados();
 
     @Query(
-            "from Ubicacion u where u.id = :id"
+            "from Ubicacion u where u.id = :id and u.deleted = true"
     )
     Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
 
-    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId and e.deleted = false")
+    @Query("from Espiritu e where e.ubicacion.id = :ubicacionId " +
+            "and e.deleted = false and e.ubicacion.deleted = false")
     List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
 
-    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 and m.deleted = false")
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 " +
+            "and m.deleted = false and m.ubicacion.deleted = false")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
     //-----------------------------------------------------------------
@@ -59,12 +61,14 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
 
     @Query(
-            "SELECT m FROM Medium m LEFT JOIN m.espiritus e " +
-                    "WHERE m.ubicacion.id = :ubicacionId AND TYPE(e) = EspirituDemoniaco " +
+            "SELECT m FROM Medium m  " +
+                    "JOIN m.espiritus e ON m.id = e.mediumConectado.id AND e.deleted = false AND TYPE(e) = EspirituDemoniaco " +
+                    "WHERE m.ubicacion.id = :ubicacionId " +
+                    "AND m.deleted = false AND m.ubicacion.deleted = false " +
                     "GROUP BY m " +
                     "ORDER BY COUNT(e) DESC"
     )
-    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId, Pageable pageable);
+    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
         "SELECT COUNT(e) FROM EspirituDemoniaco e " +

@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
