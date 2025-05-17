@@ -2,7 +2,6 @@ package ar.edu.unq.epersgeist.controller.dto;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Set;

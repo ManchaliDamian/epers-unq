@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

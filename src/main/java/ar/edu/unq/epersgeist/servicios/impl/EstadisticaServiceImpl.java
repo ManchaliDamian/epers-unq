@@ -2,8 +2,8 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.data.domain.PageRequest;
 import ar.edu.unq.epersgeist.modelo.exception.NoHaySantuarioCorruptoException;

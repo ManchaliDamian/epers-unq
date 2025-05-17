@@ -1,10 +1,11 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,30 +16,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
+public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPA, Long>{
 
     @Query(
-            "from Ubicacion u where u.deleted = false"
+            "from UbicacionJPA u where u.deleted = false"
     )
     List<Ubicacion> recuperarTodos();
 
     @Query(
-            "from Santuario s where s.deleted = false"
+            "from SantuarioJPA s where s.deleted = false"
     )
     List<Santuario>  recuperarSantuarios();
 
     @Query(
-            "from Cementerio c where c.deleted = false"
+            "from CementerioJPA c where c.deleted = false"
     )
     List<Cementerio>  recuperarCementerios();
 
     @Query(
-            "from Ubicacion u where u.deleted = true"
+            "from UbicacionJPA u where u.deleted = true"
     )
     List<Ubicacion> recuperarTodosEliminados();
 
     @Query(
-            "from Ubicacion u where u.id = :id"
+            "from UbicacionJPA u where u.id = :id"
     )
     Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
 
@@ -51,7 +52,7 @@ public interface UbicacionDAO extends JpaRepository<Ubicacion, Long> {
     //-----------------------------------------------------------------
 
     @Query(
-            "SELECT s FROM Santuario s JOIN Espiritu e ON s.id = e.ubicacion.id " +
+            "SELECT s FROM SantuarioJPA s JOIN Espiritu e ON s.id = e.ubicacion.id " +
                     "GROUP BY s " +
                     "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
                     "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC"

@@ -5,7 +5,7 @@ import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;

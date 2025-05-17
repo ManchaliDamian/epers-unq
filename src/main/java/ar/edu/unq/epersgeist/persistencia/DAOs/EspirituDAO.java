@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;

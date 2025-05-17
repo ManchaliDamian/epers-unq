@@ -2,11 +2,11 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
 import java.text.SimpleDateFormat;

@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.persistence.*;
 import lombok.*;
 
