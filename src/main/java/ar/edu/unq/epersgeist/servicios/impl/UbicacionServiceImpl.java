@@ -9,7 +9,6 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -82,7 +81,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
-        if (!ubicacionRepository.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionDAO.findMediumByUbicacionId(id).isEmpty()) {
+        if (!ubicacionRepository.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionRepository.findMediumByUbicacionId(id).isEmpty()) {
             throw new UbicacionNoEliminableException(id);
         }
         Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));

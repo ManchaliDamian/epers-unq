@@ -73,16 +73,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public Optional<Ubicacion> recuperarEliminado(Long id){
-        return ubiSql.recuperarEliminado(id);
-    }
-
-    @Override
-    public  List<Ubicacion> recuperarTodosEliminados(){
-        return ubiSql.recuperarTodosEliminados();
-    }
-
-    @Override
     public List<Espiritu> findEspiritusByUbicacionId(Long id){
         return ubiSql.findEspiritusByUbicacionId(id);
     }
@@ -90,6 +80,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public List<Medium> findMediumsSinEspiritusByUbicacionId(Long id){
         return ubiSql.findMediumsSinEspiritusByUbicacionId(id);
+    }
+
+    @Override
+    public List<Medium> findMediumByUbicacionId(Long ubicacionId){
+        return ubiSql.findMediumByUbicacionId(ubicacionId);
     }
     //----------------------------------------------------------------
 

@@ -15,9 +15,7 @@ public interface UbicacionRepository {
     List<Ubicacion> recuperarTodos();
     List<Cementerio> recuperarCementerios();
     List<Santuario> recuperarSantuarios();
-    Optional<Ubicacion> recuperarEliminado(Long id);
-    List<Ubicacion> recuperarTodosEliminados();
     List<Espiritu> findEspiritusByUbicacionId(Long id);
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long id);
-
+    List<Medium> findMediumByUbicacionId(Long ubicacionId);
 }
