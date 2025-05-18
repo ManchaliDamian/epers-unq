@@ -1,9 +1,10 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 //import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
@@ -13,7 +14,6 @@ import jakarta.validation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,16 +31,13 @@ public final class UbicacionControllerREST {
 
     // GET handlers
     @GetMapping
-    public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) String tipo) {
-        Stream<Ubicacion> stream = ubicacionService.recuperarTodos().stream();
-
-        if (tipo != null) {
-            stream = stream.filter(ubicacion -> ubicacion.getTipo().equalsIgnoreCase(tipo));
-        }
-
-        return stream
-                .map(UbicacionDTO::desdeModelo)
-                .collect(Collectors.toList());
+    public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) TipoUbicacion tipo) {
+        var ubicaciones = switch (tipo) {
+            case SANTUARIO -> ubicacionService.recuperarSantuarios();
+            case CEMENTERIO -> ubicacionService.recuperarCementerios();
+            case null -> ubicacionService.recuperarTodos();
+        };
+        return ubicaciones.stream().map(UbicacionDTO::desdeModelo).toList();
     }
 
     @GetMapping("/{id}")
@@ -76,13 +73,9 @@ public final class UbicacionControllerREST {
 
     @PutMapping("/{id}")
     public ResponseEntity<UbicacionDTO> actualizarUbicacion(@PathVariable Long id, @Valid @RequestBody UpdateUbicacionDTO dto) {
-
         Ubicacion ubicacion = ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-
         dto.actualizarModelo(ubicacion); // actualiza los atributos de Ubicación
-
         Ubicacion guardada = ubicacionService.actualizar(ubicacion);
-
         return ResponseEntity.ok(UbicacionDTO.desdeModelo(guardada));
     }
 
@@ -90,8 +83,6 @@ public final class UbicacionControllerREST {
     //DELETE handlers
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
-        ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-
         ubicacionService.eliminar(id);
         return ResponseEntity.noContent().build();
     }

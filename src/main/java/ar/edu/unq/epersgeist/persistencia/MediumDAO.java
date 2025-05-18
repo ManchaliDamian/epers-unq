@@ -1,7 +1,7 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,6 +25,7 @@ public interface MediumDAO extends JpaRepository<Medium, Long> {
     )
     List<Medium> recuperarTodosEliminados();
 
-    @Query("SELECT e FROM Espiritu e WHERE e.mediumConectado.id = :mediumId")
+    @Query("SELECT e FROM Espiritu e WHERE e.mediumConectado.id = :mediumId " +
+            "and e.deleted = false and e.mediumConectado.deleted = false")
     List<Espiritu> findEspiritusByMediumId(@Param("mediumId") Long mediumId);
 }

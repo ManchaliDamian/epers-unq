@@ -1,18 +1,18 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
-import ar.edu.unq.epersgeist.modelo.Cementerio;
-import ar.edu.unq.epersgeist.modelo.Santuario;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -25,7 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +44,7 @@ public class MediumServiceTest {
     private Medium medium1;
     private Medium medium2;
     private Espiritu demonio;
+    private Espiritu demonCementerio;
     private Espiritu angel;
     private Ubicacion santuario;
     private Ubicacion cementerio;
@@ -64,10 +64,12 @@ public class MediumServiceTest {
         medium1 = new Medium("Pablo", 100, 50, cementerio);
         medium2 = new Medium("Fidol", 100, 50, santuario);
         demonio = new EspirituDemoniaco("Jose", santuario);
+        demonCementerio = new EspirituDemoniaco("Juan", cementerio);
         angel = new EspirituAngelical( "kici", cementerio);
         serviceM.guardar(medium1);
         serviceM.guardar(medium2);
         serviceE.guardar(demonio);
+        serviceE.guardar(demonCementerio);
         serviceE.guardar(angel);
 
     }
@@ -127,13 +129,13 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumEliminado() {
         serviceM.eliminar(medium1.getId());
-        Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
+        Optional<Medium> recuperadoEliminado = dataService.recuperarEliminadoMedium(medium1.getId());
         assertTrue(recuperadoEliminado.get().isDeleted());
     }
     @Test
     void recuperarTodosLosMediumEliminados() {
         serviceM.eliminar(medium1.getId());
-        List<Medium> recuperadoEliminado = serviceM.recuperarTodosEliminados();
+        List<Medium> recuperadoEliminado = dataService.recuperarTodosMediumsEliminados();
         assertEquals(1, recuperadoEliminado.size());
     }
     @Test
@@ -227,6 +229,12 @@ public class MediumServiceTest {
         List<Medium> restantes = serviceM.recuperarTodos();
         assertEquals(1, restantes.size());
     }
+    @Test
+    void testEliminarMediumConEspiritusLanzaException() {
+        serviceE.conectar(angel.getId(), medium1.getId());
+
+        assertThrows(MediumNoEliminableException.class, () -> serviceM.eliminar(medium1.getId()) );
+    }
 
     @Test
     void testEliminarTodosLosMediums() {
@@ -251,6 +259,44 @@ public class MediumServiceTest {
         List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
 
         assertEquals(0, espiritusDelMedium.size());
+    }
+
+    @Test
+    void testAngelesDeUnMedium() {
+        medium1.conectarseAEspiritu(angel);
+        medium1.conectarseAEspiritu(demonCementerio);
+        serviceM.guardar(medium1);
+
+        List<EspirituAngelical> angelesDelMedium = serviceM.angeles(medium1.getId());
+
+        assertEquals(1, angelesDelMedium.size());
+        assertTrue(angelesDelMedium.stream().anyMatch(e -> e.getId().equals(angel.getId())));
+    }
+
+    @Test
+    void testNoHayAngelesDeUnMedium() {
+        List<EspirituAngelical> angelesDelMedium = serviceM.angeles(medium1.getId());
+
+        assertEquals(0, angelesDelMedium.size());
+    }
+
+    @Test
+    void testDemoniosDeUnMedium() {
+        medium1.conectarseAEspiritu(angel);
+        medium1.conectarseAEspiritu(demonCementerio);
+        serviceM.guardar(medium1);
+
+        List<EspirituDemoniaco> demoniosDelMedium = serviceM.demonios(medium1.getId());
+
+        assertEquals(1, demoniosDelMedium.size());
+        assertTrue(demoniosDelMedium.stream().anyMatch(e -> e.getId().equals(demonCementerio.getId())));
+    }
+
+    @Test
+    void testNoHayDemoniosDeUnMedium() {
+        List<EspirituDemoniaco> demoniosDelMedium = serviceM.demonios(medium1.getId());
+
+        assertEquals(0, demoniosDelMedium.size());
     }
 
     @Test

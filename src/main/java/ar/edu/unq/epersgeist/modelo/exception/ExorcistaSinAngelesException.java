@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.exception;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 public class ExorcistaSinAngelesException extends IllegalArgumentException{
     public ExorcistaSinAngelesException(Medium medium) {

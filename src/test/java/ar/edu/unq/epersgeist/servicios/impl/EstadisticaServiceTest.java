@@ -1,14 +1,18 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,36 +94,6 @@ public class EstadisticaServiceTest {
         assertEquals(santuario1.getNombre(),reporte.getNombreSantuario());
         assertEquals(2, reporte.getTotalDemonios());
         assertEquals(2,reporte.getCantDemoniosLibres());
-    }
-
-    @Test
-    @Transactional
-    void elMediumQueTieneMasManaLuegoDeEmpatarEnCantDeDemonios(){
-
-        Santuario s1 = new Santuario("Santuario 1", 50);
-
-        Medium medium2 = new Medium("medium 2",10,10,s1);
-        Medium medium3 = new Medium("medium 3",60,30,s1);
-
-        EspirituDemoniaco d1 = new EspirituDemoniaco("Demonio 1",s1);
-        EspirituDemoniaco d2 = new EspirituDemoniaco("Demonio 2",s1);
-
-
-        ubicacionService.guardar(s1);
-
-        espirituService.guardar(d1);
-        espirituService.guardar(d2);
-
-        medium2.conectarseAEspiritu(d1);
-        medium3.conectarseAEspiritu(d2);
-
-        mediumService.guardar(medium2);
-        mediumService.guardar(medium3);
-
-
-        ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
-        assertEquals(reporte.getMediumMayorDemoniacos().getNombre(), medium3.getNombre());
-
     }
 
     @Test

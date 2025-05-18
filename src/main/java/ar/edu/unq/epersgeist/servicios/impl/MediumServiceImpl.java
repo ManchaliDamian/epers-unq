@@ -1,12 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exception.*;
 
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,19 +54,14 @@ public class MediumServiceImpl implements MediumService {
         return mediumDAO.findById(mediumId)
                 .filter(e -> !e.isDeleted());
     }
-    @Override
-    public Optional<Medium> recuperarEliminado(Long mediumId) {
-        return mediumDAO.recuperarEliminado(mediumId);
-    }
-
-    @Override
-    public List<Medium> recuperarTodosEliminados(){
-        return mediumDAO.recuperarTodosEliminados();
-    }
 
     @Override
     public void eliminar(Long mediumId) {
+
         Medium medium = this.getMedium(mediumId);
+        if (!medium.getEspiritus().isEmpty()) {
+            throw new MediumNoEliminableException(mediumId);
+        }
         medium.setDeleted(true);
         mediumDAO.save(medium);
     }
@@ -99,6 +97,16 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
         return mediumDAO.findEspiritusByMediumId(mediumId);
+    }
+
+    @Override
+    public List<EspirituAngelical> angeles(Long mediumId) {
+        return espirituDAO.recuperarAngelesDe(mediumId);
+    }
+
+    @Override
+    public List<EspirituDemoniaco> demonios(Long mediumId) {
+        return espirituDAO.recuperarDemoniosDe(mediumId);
     }
 
     @Override

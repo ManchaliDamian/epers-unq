@@ -1,13 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.*;
-
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.Cementerio;
-import ar.edu.unq.epersgeist.modelo.Santuario;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -15,9 +15,9 @@ import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 
 
 import java.text.SimpleDateFormat;
@@ -110,13 +110,13 @@ public class UbicacionServiceTest {
     @Test
     void recuperarUbicacionEliminada() {
         serviceU.eliminar(santuario.getId());
-        Optional<Ubicacion> ubicacionEliminada = serviceU.recuperarEliminado(santuario.getId());
+        Optional<Ubicacion> ubicacionEliminada = dataService.recuperarEliminadoUbicacion(santuario.getId());
         assertTrue(ubicacionEliminada.get().isDeleted());
     }
     @Test
     void recuperarTodasUbicacionesEliminadas() {
         serviceU.eliminar(santuario.getId());
-        List<Ubicacion> ubicacionesEliminadas = serviceU.recuperarTodosEliminados();
+        List<Ubicacion> ubicacionesEliminadas = dataService.recuperarTodosEliminadosDeUbicacion();
         assertEquals(1, ubicacionesEliminadas.size());
     }
     @Test
@@ -214,6 +214,33 @@ public class UbicacionServiceTest {
     }
 
     @Test
+    void recuperarSantuariosExistentes(){
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(1, santuarios.size());
+    }
+
+    @Test
+    void recuperarCementeriosExistentes(){
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(1, cementerios.size());
+    }
+
+    @Test
+    void recuperarSantuariosNoExistentes(){
+        serviceU.eliminar(santuario.getId());
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(0, santuarios.size());
+    }
+
+    @Test
+    void recuperarCementeriosNoExistentes(){
+        serviceU.eliminar(cementerio.getId());
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(0, cementerios.size());
+    }
+
+
+    @Test
     void actualizarUnaUbicacion(){
         Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         q.get().cambiarNombre("Avellaneda");
@@ -229,7 +256,20 @@ public class UbicacionServiceTest {
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnEspirituEnEsaUbicacion() {
 
+        serviceE.guardar(angel);
+
+        assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
+    }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnMediumEnEsaUbicacion() {
+
+        serviceM.guardar(medium);
+
+        assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
+    }
 
 
     @AfterEach

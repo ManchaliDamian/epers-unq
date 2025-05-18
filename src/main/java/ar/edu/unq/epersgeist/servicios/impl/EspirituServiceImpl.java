@@ -1,12 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.Direccion;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -69,18 +71,21 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Optional<Espiritu> recuperarEliminado(Long id) {
-        return espirituDAO.recuperarEliminado(id);
+    public List<EspirituAngelical> recuperarAngeles() {
+        return espirituDAO.recuperarAngeles();
     }
 
     @Override
-    public List<Espiritu> recuperarTodosLosEliminados() {
-        return espirituDAO.recuperarTodosLosEliminados();
+    public List<EspirituDemoniaco> recuperarDemonios() {
+        return espirituDAO.recuperarDemonios();
     }
 
     @Override
     public void eliminar(Long espirituId) {
         Espiritu espiritu = this.getEspiritu(espirituId);
+        if (espiritu.getMediumConectado() != null) {
+            throw new EspirituNoEliminableException(espirituId);
+        }
         espiritu.setDeleted(true);
         espirituDAO.save(espiritu);
     }

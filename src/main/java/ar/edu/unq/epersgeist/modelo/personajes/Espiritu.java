@@ -1,12 +1,15 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.personajes;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 
 import java.util.Date;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor(force = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
@@ -33,6 +36,8 @@ public abstract class Espiritu {
     @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
 
+    private final TipoEspiritu tipo;
+
     //auditoria
     @CreationTimestamp
     @Column(updatable = false)
@@ -44,11 +49,12 @@ public abstract class Espiritu {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
 
         this.nivelDeConexion = 0;
         this.nombre = nombre;
-        this.ubicacion = ubicacion;;
+        this.ubicacion = ubicacion;
+        this.tipo = tipo;
     }
 
     public void conectarA(Medium medium){
@@ -85,8 +91,6 @@ public abstract class Espiritu {
     public void aumentarNivelDeConexion(int aumento){
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
     }
-
-    public abstract TipoEspiritu getTipo();
 
     public void atacar(Espiritu objetivo){};
     public abstract void serInvocadoEn(Ubicacion ubicacion);

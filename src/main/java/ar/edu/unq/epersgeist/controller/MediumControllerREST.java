@@ -1,13 +1,12 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import jakarta.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,23 +44,21 @@ public class MediumControllerREST {
     }
 
     @GetMapping("/{id}/espiritus")
-    public List<EspirituDTO> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) String tipo) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-        return medium.getEspiritus().stream()
-                        .filter(e -> tipo == null || e.getTipo().equalsIgnoreCase(tipo))
-                        .map(EspirituDTO::desdeModelo)
-                        .collect(Collectors.toList());
+    public List<EspirituDTO> recuperarEspiritus(@PathVariable Long id, @RequestParam(required = false) TipoEspiritu tipo) {
+        mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
+        var espiritus = switch (tipo){
+            case ANGELICAL -> mediumService.angeles(id);
+            case DEMONIACO -> mediumService.demonios(id);
+            case null -> mediumService.espiritus(id);
+        };
+        return espiritus.stream().map(EspirituDTO::desdeModelo).toList();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MediumDTO> updateById(@PathVariable Long id, @Valid @RequestBody UpdateMediumDTO dto) {
-
         Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-
         dto.actualizarModelo(medium);
-
         Medium guardado = mediumService.actualizar(medium);
-
         return ResponseEntity.ok(MediumDTO.desdeModelo(guardado));
     }
 
@@ -90,8 +86,6 @@ public class MediumControllerREST {
 
     @PutMapping("/{id}/descansar")
     public ResponseEntity<String> descansar(@PathVariable Long id) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));;
-
         mediumService.descansar(id);
         return ResponseEntity.ok("Medium descansado con éxito");
     }
@@ -104,9 +98,6 @@ public class MediumControllerREST {
 
     @PutMapping("/{id}/mover/{ubicacionId}")
     public ResponseEntity<String> mover(@PathVariable Long id, @PathVariable Long ubicacionId) {
-        Medium medium = mediumService.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-        Ubicacion ubicacion = ubicacionService.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-
         mediumService.mover(id, ubicacionId);
         return ResponseEntity.ok("Espíritu movido con éxito");
     }

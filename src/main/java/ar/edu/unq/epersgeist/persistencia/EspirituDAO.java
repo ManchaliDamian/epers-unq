@@ -1,8 +1,8 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,27 +19,35 @@ public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
     )
     List<Espiritu> recuperarTodos();
 
+    @Query("FROM EspirituDemoniaco e where e.deleted = false")
+    List<EspirituDemoniaco> recuperarDemonios();
+
+    @Query("FROM EspirituAngelical e where e.deleted = false")
+    List<EspirituAngelical> recuperarAngeles();
 
     @Query(
             "FROM Espiritu e where e.deleted = true and e.id = :id"
     )
     Optional<Espiritu> recuperarEliminado(@Param("id") Long id);
+
     @Query(
             "FROM Espiritu e where e.deleted = true"
     )
     List<Espiritu> recuperarTodosLosEliminados();
 
     @Query(
-            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituAngelical e where e.mediumConectado.id = :mediumId " +
+                    "and e.deleted = false and e.mediumConectado.deleted = false"
     )
     List<EspirituAngelical> recuperarAngelesDe(@Param("mediumId") Long mediumId);
 
     @Query(
-            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId"
+            "FROM EspirituDemoniaco e where e.mediumConectado.id = :mediumId " +
+                    "and e.deleted = false and e.mediumConectado.deleted = false"
     )
     List<EspirituDemoniaco> recuperarDemoniosDe(@Param("mediumId") Long mediumId);
 
 
-    @Query("FROM Espiritu e where TYPE(e) = EspirituDemoniaco and e.deleted = false")
+    @Query("FROM EspirituDemoniaco e where e.deleted = false")
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
 }

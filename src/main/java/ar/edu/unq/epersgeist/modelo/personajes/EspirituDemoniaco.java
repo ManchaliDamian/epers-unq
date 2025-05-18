@@ -1,5 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.personajes;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +11,7 @@ import lombok.*;
 public class EspirituDemoniaco extends Espiritu{
 
     public EspirituDemoniaco( String nombre, Ubicacion ubicacion) {
-        super(nombre, ubicacion);
+        super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
     }
 
     @Override
@@ -25,8 +27,5 @@ public class EspirituDemoniaco extends Espiritu{
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
     }
-    
-    public TipoEspiritu getTipo(){
-        return TipoEspiritu.DEMONIACO;
-    }
+
 }

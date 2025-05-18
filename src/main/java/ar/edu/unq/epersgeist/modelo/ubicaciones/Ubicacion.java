@@ -1,5 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.ubicaciones;
 
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -64,5 +66,4 @@ public abstract class Ubicacion {
     public abstract void moverAngel(Espiritu espiritu);
     public abstract void moverDemonio(Espiritu espiritu);
 
-    public abstract TipoUbicacion getTipo();
 }

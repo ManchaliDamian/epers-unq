@@ -1,5 +1,7 @@
-package ar.edu.unq.epersgeist.modelo;
+package ar.edu.unq.epersgeist.modelo.personajes;
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +14,7 @@ import lombok.*;
 public class EspirituAngelical extends Espiritu{
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion) {
-        super( nombre, ubicacion);
+        super( nombre, ubicacion, TipoEspiritu.ANGELICAL);
     }
 
     @Override
@@ -47,11 +49,6 @@ public class EspirituAngelical extends Espiritu{
     @Override
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverAngel(this);
-    }
-
-
-    public TipoEspiritu getTipo(){
-        return TipoEspiritu.ANGELICAL;
     }
 
 }
