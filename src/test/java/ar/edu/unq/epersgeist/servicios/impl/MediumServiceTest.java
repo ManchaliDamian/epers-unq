@@ -129,13 +129,13 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumEliminado() {
         serviceM.eliminar(medium1.getId());
-        Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
+        Optional<Medium> recuperadoEliminado = dataService.recuperarEliminadoMedium(medium1.getId());
         assertTrue(recuperadoEliminado.get().isDeleted());
     }
     @Test
     void recuperarTodosLosMediumEliminados() {
         serviceM.eliminar(medium1.getId());
-        List<Medium> recuperadoEliminado = serviceM.recuperarTodosEliminados();
+        List<Medium> recuperadoEliminado = dataService.recuperarTodosMediumsEliminados();
         assertEquals(1, recuperadoEliminado.size());
     }
     @Test

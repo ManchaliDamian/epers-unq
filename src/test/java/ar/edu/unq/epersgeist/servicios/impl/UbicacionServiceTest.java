@@ -110,13 +110,13 @@ public class UbicacionServiceTest {
     @Test
     void recuperarUbicacionEliminada() {
         serviceU.eliminar(santuario.getId());
-        Optional<Ubicacion> ubicacionEliminada = serviceU.recuperarEliminado(santuario.getId());
+        Optional<Ubicacion> ubicacionEliminada = dataService.recuperarEliminadoUbicacion(santuario.getId());
         assertTrue(ubicacionEliminada.get().isDeleted());
     }
     @Test
     void recuperarTodasUbicacionesEliminadas() {
         serviceU.eliminar(santuario.getId());
-        List<Ubicacion> ubicacionesEliminadas = serviceU.recuperarTodosEliminados();
+        List<Ubicacion> ubicacionesEliminadas = dataService.recuperarTodosEliminadosDeUbicacion();
         assertEquals(1, ubicacionesEliminadas.size());
     }
     @Test

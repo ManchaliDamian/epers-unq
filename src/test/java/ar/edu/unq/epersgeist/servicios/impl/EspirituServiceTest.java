@@ -134,7 +134,7 @@ public class EspirituServiceTest {
 
         assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
 
-        Optional<Espiritu> conectado = serviceE.recuperarEliminado(azazel.getId());
+        Optional<Espiritu> conectado = dataService.recuperarEliminadoEspiritu(azazel.getId());
         assertNull(conectado.get().getMediumConectado());
 
 
@@ -206,7 +206,7 @@ public class EspirituServiceTest {
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertEquals(1, espiritus.size());
 
-        List<Espiritu> espiritusEliminados = serviceE.recuperarTodosLosEliminados();
+        List<Espiritu> espiritusEliminados = dataService.recuperarTodosLosEspiritusEliminados();
         assertEquals(2, espiritusEliminados.size());
     }
 
@@ -263,7 +263,7 @@ public class EspirituServiceTest {
     @Test
     void testRecuperarEliminadoPorId() {
         serviceE.eliminar(angel.getId());
-        Optional<Espiritu> eliminado = serviceE.recuperarEliminado(angel.getId());
+        Optional<Espiritu> eliminado = dataService.recuperarEliminadoEspiritu(angel.getId());
         assertEquals(eliminado.get().getNombre(), "Gabriel");
         assertTrue(eliminado.get().isDeleted());
 

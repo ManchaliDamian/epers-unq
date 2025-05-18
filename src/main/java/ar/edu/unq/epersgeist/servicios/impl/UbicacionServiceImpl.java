@@ -72,15 +72,7 @@ public class UbicacionServiceImpl implements UbicacionService {
         ubicacionDAO.save(ubicacionAEliminar);
     }
 
-    @Override
-    public Optional<Ubicacion> recuperarEliminado(Long id) {
-        return ubicacionDAO.recuperarEliminado(id);
-    }
 
-    @Override
-    public List<Ubicacion> recuperarTodosEliminados() {
-        return ubicacionDAO.recuperarTodosEliminados();
-    }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {

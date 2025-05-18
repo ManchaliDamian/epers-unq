@@ -81,16 +81,6 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Optional<Espiritu> recuperarEliminado(Long id) {
-        return espirituDAO.recuperarEliminado(id);
-    }
-
-    @Override
-    public List<Espiritu> recuperarTodosLosEliminados() {
-        return espirituDAO.recuperarTodosLosEliminados();
-    }
-
-    @Override
     public void eliminar(Long espirituId) {
         Espiritu espiritu = this.getEspiritu(espirituId);
         if (!(espiritu.getMediumConectado() == null)) {

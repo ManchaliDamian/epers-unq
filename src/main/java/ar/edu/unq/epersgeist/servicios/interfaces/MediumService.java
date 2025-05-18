@@ -21,6 +21,5 @@ public interface MediumService {
     List<EspirituDemoniaco> demonios(Long mediumId);
     Espiritu invocar(Long mediumId, Long espirituId);
     void mover(Long mediumId, Long ubicacionId);
-    Optional<Medium> recuperarEliminado(Long mediumId);
-    List<Medium> recuperarTodosEliminados();
+
 }
