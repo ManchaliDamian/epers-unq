@@ -7,10 +7,13 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
@@ -23,18 +26,26 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Ubicacion guardar(Ubicacion ubicacion){
-//        UbicacionJPA ubiJPA = switch(ubicacion.getTipo()){
-//            case SANTUARIO -> new SantuarioJPA(ubicacion.getNombre(),
-//                                               ubicacion.getFlujoDeEnergia());
-//            case CEMENTERIO -> new SantuarioJPA(ubicacion.getNombre(),
-//                                                ubicacion.getFlujoDeEnergia());
-//            case null       -> throw new UbicacionNoEncontradaException(ubicacion.getId());
-//        };
-//        ubiSql.save(ubiJPA);
-//
-//        ubiDaoNeo.save(ubicacion);
-//        return ubicacion;
-        return null;
+
+        if (ubicacion.getTipo() == null) {
+            throw new UbicacionNoEncontradaException(ubicacion.getId());
+        }
+        //Parte SQL
+        UbicacionJPA ubiJPA = switch(ubicacion.getTipo()){
+            case SANTUARIO -> new SantuarioJPA(ubicacion.getNombre(),
+                                               ubicacion.getFlujoDeEnergia());
+            case CEMENTERIO -> new CementerioJPA(ubicacion.getNombre(),
+                                                ubicacion.getFlujoDeEnergia());
+        };
+        ubiSql.save(ubiJPA);
+
+        //Parte Neo
+
+        UbicacionNeo ubiNeo = new UbicacionNeo(ubicacion.getNombre(),
+                                               ubicacion.getFlujoDeEnergia(),
+                                               ubicacion.getTipo());
+        ubiDaoNeo.save(ubiNeo);
+        return ubicacion;
     }
     
     @Override

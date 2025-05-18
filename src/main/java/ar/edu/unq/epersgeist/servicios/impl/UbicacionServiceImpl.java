@@ -49,30 +49,17 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
 
-//    @Override
-//    public Optional<Ubicacion> recuperar(Long ubicacionId) {
-//        return ubicacionDAO.findById(ubicacionId).filter(u -> !u.isDeleted());
-//    }
-
     @Override
     public List<Ubicacion> recuperarTodos() {
         return ubicacionRepository.recuperarTodos();
     }
 
-//    @Override
-//    public List<Ubicacion> recuperarTodos() {
-//        return ubicacionDAO.recuperarTodos();
-//    }
 
     @Override
     public List<Cementerio> recuperarCementerios() {
         return ubicacionRepository.recuperarCementerios();
     }
 
-//    @Override
-//    public List<Cementerio> recuperarCementerios() {
-//        return ubicacionDAO.recuperarCementerios();
-//    }
 
     @Override
     public List<Santuario> recuperarSantuarios() {
@@ -88,14 +75,6 @@ public class UbicacionServiceImpl implements UbicacionService {
         ubicacionAEliminar.setDeleted(true);
         ubicacionRepository.guardar(ubicacionAEliminar);
     }
-
-
-//    @Override
-//    public void eliminar(Long id) {
-//        Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-//        ubicacionAEliminar.setDeleted(true);
-//        ubicacionDAO.save(ubicacionAEliminar);
-//    }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {

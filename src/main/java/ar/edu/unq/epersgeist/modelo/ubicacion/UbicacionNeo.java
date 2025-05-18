@@ -30,8 +30,7 @@ public class UbicacionNeo {
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeo> conexiones = new HashSet<>();
 
-    public UbicacionNeo(Long id, String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
-        this.id = id;
+    public UbicacionNeo( String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo=tipo;
