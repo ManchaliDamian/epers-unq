@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEsPosibleEliminar;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
@@ -63,6 +64,9 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
+        if (!ubicacionDAO.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionDAO.findMediumByUbicacionId(id).isEmpty()) {
+            throw new UbicacionNoEsPosibleEliminar(id);
+        }
         Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionAEliminar.setDeleted(true);
         ubicacionDAO.save(ubicacionAEliminar);

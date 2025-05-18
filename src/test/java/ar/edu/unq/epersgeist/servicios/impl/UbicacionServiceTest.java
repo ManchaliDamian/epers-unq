@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEsPosibleEliminar;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
@@ -255,7 +256,20 @@ public class UbicacionServiceTest {
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnEspirituEnEsaUbicacion() {
 
+        serviceE.guardar(angel);
+
+        assertThrows(UbicacionNoEsPosibleEliminar.class, () -> serviceU.eliminar(santuario.getId()));
+    }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnMediumEnEsaUbicacion() {
+
+        serviceM.guardar(medium);
+
+        assertThrows(UbicacionNoEsPosibleEliminar.class, () -> serviceU.eliminar(santuario.getId()));
+    }
 
 
     @AfterEach

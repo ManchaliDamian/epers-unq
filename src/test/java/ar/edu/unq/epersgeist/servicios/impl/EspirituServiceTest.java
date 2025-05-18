@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEsPosibleEliminar;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -252,7 +253,13 @@ public class EspirituServiceTest {
 
         assertTrue(serviceE.recuperar(angel.getId()).isEmpty());
     }
+    @Test
+    void eliminarEspirituConMediumConectadoLanzaException() {
+        serviceM.guardar(medium);
+        serviceE.conectar(angel.getId(), medium.getId());
 
+        assertThrows(EspirituNoEsPosibleEliminar.class, () -> serviceE.eliminar(angel.getId()));
+    }
     @Test
     void testRecuperarEliminadoPorId() {
         serviceE.eliminar(angel.getId());

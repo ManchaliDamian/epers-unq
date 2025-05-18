@@ -229,6 +229,12 @@ public class MediumServiceTest {
         List<Medium> restantes = serviceM.recuperarTodos();
         assertEquals(1, restantes.size());
     }
+    @Test
+    void testEliminarMediumConEspiritusLanzaException() {
+        serviceE.conectar(angel.getId(), medium1.getId());
+
+        assertThrows(MediumNoEsPosibleEliminar.class, () -> serviceM.eliminar(medium1.getId()) );
+    }
 
     @Test
     void testEliminarTodosLosMediums() {

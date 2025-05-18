@@ -66,7 +66,11 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void eliminar(Long mediumId) {
+
         Medium medium = this.getMedium(mediumId);
+        if (!medium.getEspiritus().isEmpty()) {
+            throw new MediumNoEsPosibleEliminar(mediumId);
+        }
         medium.setDeleted(true);
         mediumDAO.save(medium);
     }
