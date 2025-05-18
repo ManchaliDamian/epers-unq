@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.ubicacion;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -24,12 +25,12 @@ public class UbicacionNeo {
     private String nombre;
     private Integer flujoDeEnergia;
 
-    private String tipo;
+    private TipoUbicacion tipo;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeo> conexiones = new HashSet<>();
 
-    public UbicacionNeo(Long id, String nombre, Integer flujoDeEnergia, String tipo) {
+    public UbicacionNeo(Long id, String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
         this.id = id;
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
