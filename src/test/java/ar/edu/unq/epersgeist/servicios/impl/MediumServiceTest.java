@@ -233,7 +233,7 @@ public class MediumServiceTest {
     void testEliminarMediumConEspiritusLanzaException() {
         serviceE.conectar(angel.getId(), medium1.getId());
 
-        assertThrows(MediumNoEsPosibleEliminar.class, () -> serviceM.eliminar(medium1.getId()) );
+        assertThrows(MediumNoEliminableException.class, () -> serviceM.eliminar(medium1.getId()) );
     }
 
     @Test

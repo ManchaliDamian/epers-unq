@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEsPosibleEliminar;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
@@ -83,8 +83,8 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public void eliminar(Long espirituId) {
         Espiritu espiritu = this.getEspiritu(espirituId);
-        if (!(espiritu.getMediumConectado() == null)) {
-            throw new EspirituNoEsPosibleEliminar(espirituId);
+        if (espiritu.getMediumConectado() != null) {
+            throw new EspirituNoEliminableException(espirituId);
         }
         espiritu.setDeleted(true);
         espirituDAO.save(espiritu);

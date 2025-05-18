@@ -19,5 +19,4 @@ public interface UbicacionService {
     void eliminar(Long id);
     List<Espiritu> espiritusEn(Long ubicacionId);
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
-
 }

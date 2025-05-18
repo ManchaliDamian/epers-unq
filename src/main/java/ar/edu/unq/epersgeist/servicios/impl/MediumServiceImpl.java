@@ -60,7 +60,7 @@ public class MediumServiceImpl implements MediumService {
 
         Medium medium = this.getMedium(mediumId);
         if (!medium.getEspiritus().isEmpty()) {
-            throw new MediumNoEsPosibleEliminar(mediumId);
+            throw new MediumNoEliminableException(mediumId);
         }
         medium.setDeleted(true);
         mediumDAO.save(medium);

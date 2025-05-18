@@ -1,12 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEsPosibleEliminar;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
+import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -32,7 +32,7 @@ public class UbicacionServiceImpl implements UbicacionService {
         try {
             return ubicacionDAO.save(ubicacion);
         } catch (DataIntegrityViolationException e) {
-            throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
+            throw new NombreDeUbicacionRepetidoException(ubicacion.getNombre());
         }
     }
 
@@ -61,18 +61,15 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionDAO.recuperarSantuarios();
     }
 
-
     @Override
     public void eliminar(Long id) {
         if (!ubicacionDAO.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionDAO.findMediumByUbicacionId(id).isEmpty()) {
-            throw new UbicacionNoEsPosibleEliminar(id);
+            throw new UbicacionNoEliminableException(id);
         }
         Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionAEliminar.setDeleted(true);
         ubicacionDAO.save(ubicacionAEliminar);
     }
-
-
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
