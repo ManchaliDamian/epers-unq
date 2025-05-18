@@ -14,7 +14,7 @@ import lombok.*;
 public class EspirituAngelical extends Espiritu{
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion) {
-        super( nombre, ubicacion);
+        super( nombre, ubicacion, TipoEspiritu.ANGELICAL);
     }
 
     @Override
@@ -49,11 +49,6 @@ public class EspirituAngelical extends Espiritu{
     @Override
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverAngel(this);
-    }
-
-
-    public TipoEspiritu getTipo(){
-        return TipoEspiritu.ANGELICAL;
     }
 
 }

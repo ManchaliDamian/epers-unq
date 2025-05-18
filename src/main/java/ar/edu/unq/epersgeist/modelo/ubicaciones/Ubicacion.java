@@ -66,5 +66,4 @@ public abstract class Ubicacion {
     public abstract void moverAngel(Espiritu espiritu);
     public abstract void moverDemonio(Espiritu espiritu);
 
-    public abstract TipoUbicacion getTipo();
 }

@@ -11,7 +11,7 @@ import lombok.*;
 public class EspirituDemoniaco extends Espiritu{
 
     public EspirituDemoniaco( String nombre, Ubicacion ubicacion) {
-        super(nombre, ubicacion);
+        super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
     }
 
     @Override
@@ -27,8 +27,5 @@ public class EspirituDemoniaco extends Espiritu{
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
     }
-    
-    public TipoEspiritu getTipo(){
-        return TipoEspiritu.DEMONIACO;
-    }
+
 }
