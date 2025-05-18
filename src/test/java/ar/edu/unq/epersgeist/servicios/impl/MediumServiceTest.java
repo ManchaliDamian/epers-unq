@@ -129,13 +129,13 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumEliminado() {
         serviceM.eliminar(medium1.getId());
-        Optional<Medium> recuperadoEliminado = serviceM.recuperarEliminado(medium1.getId());
+        Optional<Medium> recuperadoEliminado = dataService.recuperarEliminadoMedium(medium1.getId());
         assertTrue(recuperadoEliminado.get().isDeleted());
     }
     @Test
     void recuperarTodosLosMediumEliminados() {
         serviceM.eliminar(medium1.getId());
-        List<Medium> recuperadoEliminado = serviceM.recuperarTodosEliminados();
+        List<Medium> recuperadoEliminado = dataService.recuperarTodosMediumsEliminados();
         assertEquals(1, recuperadoEliminado.size());
     }
     @Test
@@ -228,6 +228,12 @@ public class MediumServiceTest {
         serviceM.eliminar(medium1.getId());
         List<Medium> restantes = serviceM.recuperarTodos();
         assertEquals(1, restantes.size());
+    }
+    @Test
+    void testEliminarMediumConEspiritusLanzaException() {
+        serviceE.conectar(angel.getId(), medium1.getId());
+
+        assertThrows(MediumNoEsPosibleEliminar.class, () -> serviceM.eliminar(medium1.getId()) );
     }
 
     @Test
