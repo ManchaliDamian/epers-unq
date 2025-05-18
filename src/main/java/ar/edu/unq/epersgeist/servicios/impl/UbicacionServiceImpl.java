@@ -1,11 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetido;
+
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
@@ -33,7 +35,7 @@ public class UbicacionServiceImpl implements UbicacionService {
         try {
             return ubicacionRepository.guardar(ubicacion);
         } catch (DataIntegrityViolationException e) {
-            throw new NombreDeUbicacionRepetido(ubicacion.getNombre());
+            throw new NombreDeUbicacionRepetidoException(ubicacion.getNombre());
         }
     }
 
@@ -80,6 +82,9 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
+        if (!ubicacionRepository.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionDAO.findMediumByUbicacionId(id).isEmpty()) {
+            throw new UbicacionNoEliminableException(id);
+        }
         Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionAEliminar.setDeleted(true);
         ubicacionRepository.guardar(ubicacionAEliminar);
@@ -92,16 +97,6 @@ public class UbicacionServiceImpl implements UbicacionService {
 //        ubicacionAEliminar.setDeleted(true);
 //        ubicacionDAO.save(ubicacionAEliminar);
 //    }
-
-    @Override
-    public Optional<Ubicacion> recuperarEliminado(Long id) {
-        return ubicacionRepository.recuperarEliminado(id);
-    }
-
-    @Override
-    public List<Ubicacion> recuperarTodosEliminados() {
-        return ubicacionRepository.recuperarTodosEliminados();
-    }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {

@@ -52,19 +52,14 @@ public class MediumServiceImpl implements MediumService {
         return mediumDAO.findById(mediumId)
                 .filter(e -> !e.isDeleted());
     }
-    @Override
-    public Optional<Medium> recuperarEliminado(Long mediumId) {
-        return mediumDAO.recuperarEliminado(mediumId);
-    }
-
-    @Override
-    public List<Medium> recuperarTodosEliminados(){
-        return mediumDAO.recuperarTodosEliminados();
-    }
 
     @Override
     public void eliminar(Long mediumId) {
+
         Medium medium = this.getMedium(mediumId);
+        if (!medium.getEspiritus().isEmpty()) {
+            throw new MediumNoEliminableException(mediumId);
+        }
         medium.setDeleted(true);
         mediumDAO.save(medium);
     }

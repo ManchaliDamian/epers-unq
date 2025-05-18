@@ -52,6 +52,11 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPA, Long>{
             "and m.deleted = false and m.ubicacion.deleted = false")
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
+    @Query("from Medium m where m.ubicacion.id = :ubicacionId " +
+            "and m.deleted = false and m.ubicacion.deleted = false")
+    List<Medium> findMediumByUbicacionId(Long ubicacionId);
+
+
     //-----------------------------------------------------------------
 
     @Query(
