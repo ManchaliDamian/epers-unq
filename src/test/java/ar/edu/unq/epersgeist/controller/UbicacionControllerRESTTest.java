@@ -11,6 +11,7 @@ import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -36,7 +37,7 @@ public class UbicacionControllerRESTTest {
     @Autowired private UbicacionService ubicacionService;
     @Autowired private DataService serviceEliminarTodo;
 
-    @Autowired private UbicacionDAO ubicacionDAO;
+    @Autowired private UbicacionRepository ubicacionDAO;
     @Autowired private EspirituDAO espirituDAO;
     @Autowired private MediumDAO mediumDAO;
 

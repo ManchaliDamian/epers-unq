@@ -37,8 +37,9 @@ public class UbicacionServiceTest {
 
     @Autowired private MediumDAO mediumDAO;
     @Autowired private EspirituDAO espirituDAO;
-    @Autowired private UbicacionRepository ubicacionDAO;
-
+    @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private UbicacionDAONeo ubicacionDAONeo;
+    @Autowired private UbicacionDAOSQL ubicacionDAOSQL;
     private Medium medium;
     private Medium medium2;
     private Medium medium3;
@@ -51,7 +52,7 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        dataService = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl( ubicacionDAOSQL,ubicacionDAONeo, mediumDAO, espirituDAO);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);

@@ -38,7 +38,8 @@ public class EspirituServiceTest {
 
     @Autowired private EspirituDAO espirituDAO;
     @Autowired private MediumDAO mediumDAO;
-    @Autowired private UbicacionDAO ubicacionDao;
+    @Autowired private UbicacionDAOSQL ubicacionDAO;
+    @Autowired private UbicacionDAONeo ubicacionDAONeo;
 
     private Espiritu azazel;
     private Espiritu belcebu;
@@ -53,7 +54,7 @@ public class EspirituServiceTest {
     private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionDAO, ubicacionDAONeo, mediumDAO, espirituDAO);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);

@@ -1,10 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
@@ -16,12 +19,14 @@ import java.util.Optional;
 @Service
 @Transactional
 public class DataServiceImpl implements DataService {
-    private final UbicacionRepository ubicacionDAO;
+    private final UbicacionDAOSQL ubicacionSQL;
+    private final UbicacionDAONeo ubiNeo;
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
-
-    public DataServiceImpl(UbicacionRepository ubicacionDAO, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
-        this.ubicacionDAO = ubicacionDAO;
+    private UbicacionMapper ubicacionMapper;
+    public DataServiceImpl(UbicacionDAOSQL ubicacionDAO, UbicacionDAONeo ubiNeo, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
+        this.ubiNeo = ubiNeo;
+        this.ubicacionSQL = ubicacionDAO;
         this.mediumDAO = mediumDAO;
         this.espirituDAO = espirituDAO;
     }
@@ -29,7 +34,8 @@ public class DataServiceImpl implements DataService {
     public void eliminarTodo() {
         espirituDAO.deleteAll();
         mediumDAO.deleteAll();
-        ubicacionDAO.deleteAll();
+        ubicacionSQL.deleteAll();
+        ubiNeo.deleteAll();
     }
 
 
@@ -50,11 +56,16 @@ public class DataServiceImpl implements DataService {
     }
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {
-        return ubicacionDAO.recuperarEliminado(id);
+        return ubicacionSQL.recuperarEliminado(id)
+                .map(ubicacionMapper::aModelo);
+
     }
 
-
     public List<Ubicacion> recuperarTodosEliminadosDeUbicacion() {
-        return ubicacionDAO.recuperarTodosEliminados();
+        List<UbicacionJPA> ubicacionesEliminadas = ubicacionSQL.recuperarTodosEliminados();
+
+        return ubicacionesEliminadas.stream()
+                .map(ubicacionMapper::aModelo)
+                .toList();
     }
 }

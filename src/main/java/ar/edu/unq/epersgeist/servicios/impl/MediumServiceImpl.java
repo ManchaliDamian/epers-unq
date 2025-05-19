@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +21,9 @@ public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
-    private final UbicacionDAO ubicacionDAO;
+    private final UbicacionRepository ubicacionDAO;
 
-    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO) {
+    public MediumServiceImpl(MediumDAO unMediumDAO, EspirituDAO espirituDAO, UbicacionRepository ubicacionDAO) {
         this.mediumDAO = unMediumDAO;
         this.espirituDAO = espirituDAO;
         this.ubicacionDAO = ubicacionDAO;
@@ -131,7 +132,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Optional<Ubicacion> ubicacion = ubicacionDAO.findById(ubicacionId).filter(e -> !e.isDeleted());
+        Optional<Ubicacion> ubicacion = ubicacionDAO.recuperar(ubicacionId).filter(e -> !e.isDeleted());
         if (ubicacion.isEmpty()) {
             throw new UbicacionNoEncontradaException(ubicacionId);
         }

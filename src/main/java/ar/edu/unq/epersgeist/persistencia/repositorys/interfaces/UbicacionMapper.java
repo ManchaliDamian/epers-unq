@@ -17,10 +17,21 @@ public interface UbicacionMapper {
     @Mapping(target = "createdAt", ignore = true)
     void actualizarJPADesdeModelo(Ubicacion origen, @MappingTarget UbicacionJPA destino);
 
-    // Mapea un Ubicacion (modelo de dominio) a UbicacionNeo
-    UbicacionNeo aNeo(Ubicacion origen);
 
-
+    default Ubicacion aModelo(UbicacionJPA jpa) {
+        return switch (jpa.getTipo()) {
+            case SANTUARIO -> {
+                Santuario santuario = new Santuario(jpa.getNombre(), jpa.getFlujoDeEnergia());
+                santuario.setId(jpa.getId());
+                yield santuario;
+            }
+            case CEMENTERIO -> {
+                Cementerio cementerio = new Cementerio(jpa.getNombre(), jpa.getFlujoDeEnergia());
+                cementerio.setId(jpa.getId());
+                yield cementerio;
+            }
+        };
+    }
 
 //
 //    // Conversión manual combinando SQL + NEO

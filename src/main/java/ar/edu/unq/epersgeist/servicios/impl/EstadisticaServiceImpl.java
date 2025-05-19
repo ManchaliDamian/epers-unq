@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EstadisticaServiceImpl implements EstadisticaService {
 
-    private final UbicacionDAO ubicacionDAO;
+    private final UbicacionDAOSQL ubicacionDAO;
 
-    public EstadisticaServiceImpl(UbicacionDAO ubicacionDAO){
+    public EstadisticaServiceImpl(UbicacionDAOSQL ubicacionDAO){
         this.ubicacionDAO = ubicacionDAO;
     }
 

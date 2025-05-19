@@ -36,13 +36,13 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPA, Long>{
     @Query(
             "from UbicacionJPA u where u.deleted = true"
     )
-    List<Ubicacion> recuperarTodosEliminados();
+    List<UbicacionJPA> recuperarTodosEliminados();
 
     @Query(
             "from UbicacionJPA u where u.id = :id" +
             "from Ubicacion u where u.id = :id and u.deleted = true"
     )
-    Optional<Ubicacion> recuperarEliminado(@Param("id") Long id);
+    Optional<UbicacionJPA> recuperarEliminado(@Param("id") Long id);
 
     @Query("from Espiritu e where e.ubicacion.id = :ubicacionId " +
             "and e.deleted = false and e.ubicacion.deleted = false")
