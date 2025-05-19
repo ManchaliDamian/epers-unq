@@ -3,9 +3,12 @@ package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
+import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
+import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
@@ -22,7 +25,10 @@ public abstract class Espiritu {
 
     @ManyToOne
     @JoinColumn(name = "ubicacion_id")
-    private Ubicacion ubicacion;
+    private UbicacionJPA ubicacion;
+
+    @Transient
+    private Ubicacion ubicacionModelo;
 
     @Column(nullable = false)
     @ColumnDefault("0")
@@ -53,8 +59,11 @@ public abstract class Espiritu {
 
         this.nivelDeConexion = 0;
         this.nombre = nombre;
-        this.ubicacion = ubicacion;
+
+        this.ubicacionModelo = ubicacion;
         this.tipo = tipo;
+
+
     }
 
     public void conectarA(Medium medium){

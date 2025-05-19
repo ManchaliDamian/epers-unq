@@ -86,7 +86,7 @@ public class MediumServiceImpl implements MediumService {
         List<EspirituAngelical> angeles = espirituDAO.recuperarAngelesDe(idMediumExorcista);
         List<EspirituDemoniaco> demonios = espirituDAO.recuperarDemoniosDe(idMediumAExorcizar);
 
-        mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
+        mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacionModelo());
 
 
         mediumDAO.save(mediumExorcista);

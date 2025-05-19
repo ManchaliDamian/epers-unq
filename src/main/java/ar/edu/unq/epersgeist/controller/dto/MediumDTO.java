@@ -24,7 +24,7 @@ public record MediumDTO(
         return new MediumDTO(
                 medium.getId(),
                 medium.getNombre(),
-                UbicacionDTO.desdeModelo(medium.getUbicacion()),
+                UbicacionDTO.desdeModelo(medium.getUbicacionModelo()),
                 medium.getManaMax(),
                 medium.getMana(),
                 espiritusDTO

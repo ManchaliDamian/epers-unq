@@ -7,11 +7,10 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
-import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionMapper;
+import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -121,17 +120,20 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public List<Ubicacion> recuperarTodos(){
-        return ubiSql.recuperarTodos(); //Duda si es con Sql o con Neo4j o ambas.
+        List<UbicacionJPA> ubicaciones = ubiSql.recuperarTodos();
+        return ubiMapper.toModelListUbicacion(ubicaciones);     //Duda si es con Sql o con Neo4j o ambas.
     }
 
     @Override
     public List<Cementerio> recuperarCementerios(){
-        return ubiSql.recuperarCementerios();
+        List<CementerioJPA> ubicaciones = ubiSql.recuperarCementerios();
+        return ubiMapper.toModelListCementerio(ubicaciones);
     }
 
     @Override
     public List<Santuario> recuperarSantuarios(){
-        return ubiSql.recuperarSantuarios();
+        List<SantuarioJPA> ubicaciones = ubiSql.recuperarSantuarios();
+        return ubiMapper.toModelListSantuarios(ubicaciones);
     }
 
     @Override

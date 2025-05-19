@@ -78,7 +78,7 @@ public class EspirituServiceTest {
         String nuevoNombre = "Nuevo Azazel";
 
         azazel.setNombre(nuevoNombre);
-        azazel.setUbicacion(berazategui);
+        azazel.setUbicacionModelo(berazategui);
         serviceE.actualizar(azazel);
 
         Date fechaEsperada = new Date();
@@ -141,7 +141,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.guardar(medium);
-        azazel.setUbicacion(berazategui);
+        azazel.setUbicacionModelo(berazategui);
         serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {

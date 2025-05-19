@@ -30,13 +30,13 @@ public class Cementerio extends Ubicacion {
 
     @Override
     public void moverAngel(Espiritu espiritu) {
-        espiritu.setUbicacion(this);
+        espiritu.setUbicacionModelo(this);
         espiritu.perderNivelDeConexion(5);
     }
 
     @Override
     public void moverDemonio(Espiritu espiritu) {
-        espiritu.setUbicacion(this);
+        espiritu.setUbicacionModelo(this);
     }
 
     @Override

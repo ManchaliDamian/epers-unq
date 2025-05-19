@@ -78,7 +78,7 @@ public class MediumServiceTest {
         String nuevoNombre = "Nuevo nombre Medium";
 
         medium1.setNombre(nuevoNombre);
-        medium1.setUbicacion(santuario);
+        medium1.setUbicacionModelo(santuario);
         serviceM.actualizar(medium1);
 
         Date fechaEsperada = new Date();
@@ -200,9 +200,9 @@ public class MediumServiceTest {
     @Test
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
-        demonio.setUbicacion(cementerio);
+        demonio.setUbicacionModelo(cementerio);
         serviceM.guardar(medium1);
-        demonio.setUbicacion(santuario);
+        demonio.setUbicacionModelo(santuario);
         serviceE.guardar(demonio);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
@@ -353,7 +353,7 @@ public class MediumServiceTest {
     @Test
     void descansar_conDemonio_recuperanConexiones() {
         demonio.setNivelDeConexion(10);
-        demonio.setUbicacion(cementerio);
+        demonio.setUbicacionModelo(cementerio);
         medium1.conectarseAEspiritu(demonio);//50*0.2=10, 10+10=20
 
         serviceE.guardar(demonio);
@@ -370,7 +370,7 @@ public class MediumServiceTest {
     @Test
     void descansar_conAngel_recuperanConexiones() {
         angel.setNivelDeConexion(10);
-        angel.setUbicacion(santuario);
+        angel.setUbicacionModelo(santuario);
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
 
         serviceE.guardar(angel);
@@ -389,7 +389,7 @@ public class MediumServiceTest {
     void descansar_conVariosEspiritus() {
         angel.setNivelDeConexion(10);
         demonio.setNivelDeConexion(30);
-        angel.setUbicacion(santuario);
+        angel.setUbicacionModelo(santuario);
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
         medium2.conectarseAEspiritu(demonio);
 

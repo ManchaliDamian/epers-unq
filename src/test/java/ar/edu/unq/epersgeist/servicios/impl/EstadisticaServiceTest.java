@@ -99,7 +99,7 @@ public class EstadisticaServiceTest {
 
     @Test
     void cambiaUbicacionMediumYNoHaySantuarioCorrupto(){
-        medium1.setUbicacion(cementerio);
+        medium1.setUbicacionModelo(cementerio);
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
 

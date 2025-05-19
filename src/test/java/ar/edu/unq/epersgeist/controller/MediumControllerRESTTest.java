@@ -36,7 +36,7 @@ class MediumControllerRESTTest {
     @Test
     void obtenerTodosLosMediums() {
         when(mediumService.recuperarTodos()).thenReturn(List.of(medium));
-        when(medium.getUbicacion()).thenReturn(ubicacion);
+        when(medium.getUbicacionModelo()).thenReturn(ubicacion);
 
         List<?> result = controller.getAllMediums();
 
@@ -48,7 +48,7 @@ class MediumControllerRESTTest {
     @Test
     void obtenerMediumPorIdEncontrado() {
         when(mediumService.recuperar(1L)).thenReturn(Optional.of(medium));
-        when(medium.getUbicacion()).thenReturn(ubicacion);
+        when(medium.getUbicacionModelo()).thenReturn(ubicacion);
 
         ResponseEntity<?> response = controller.getMediumById(1L);
 
@@ -68,7 +68,7 @@ class MediumControllerRESTTest {
     @Test
     void actualizarMedium() {
         UpdateMediumDTO dto = mock(UpdateMediumDTO.class);
-        when(medium.getUbicacion()).thenReturn(ubicacion);
+        when(medium.getUbicacionModelo()).thenReturn(ubicacion);
         when(medium.getId()).thenReturn(1L);
         when(mediumService.actualizar(medium)).thenReturn(medium);
         when(mediumService.recuperar(medium.getId())).thenReturn(Optional.of(medium));

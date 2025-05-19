@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
+import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -27,7 +30,10 @@ public class Medium {
 
     @ManyToOne
     @JoinColumn(name = "ubicacion_id")
-    private Ubicacion ubicacion;
+    private UbicacionJPA ubicacion;
+
+    @Transient
+    private Ubicacion ubicacionModelo;
 
     @Column(nullable = false)
     private Integer manaMax;
@@ -47,7 +53,6 @@ public class Medium {
     @Column(nullable = false)
     private boolean deleted = false;
 
-
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Espiritu> espiritus = new HashSet<>();
 
@@ -62,7 +67,9 @@ public class Medium {
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;
-        this.ubicacion = ubicacion;
+        // creamos la ubicacion a JPa para que se guarde en la BD
+        this.ubicacionModelo = ubicacion;
+
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
@@ -77,7 +84,7 @@ public class Medium {
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
-        return !this.ubicacion.equals(espiritu.getUbicacion());
+        return !this.ubicacionModelo.equals(espiritu.getUbicacionModelo());
     }
 
     public void desvincularseDe(Espiritu espiritu) {
@@ -86,10 +93,10 @@ public class Medium {
         }
     }
     public boolean esMismaUbicacionParaExorcizar(Ubicacion ubicacion){
-        if (this.getUbicacion() == null) {
+        if (this.getUbicacionModelo() == null) {
             return ubicacion == null;
         }
-        return this.getUbicacion().equals(ubicacion);
+        return this.getUbicacionModelo().equals(ubicacion);
 
     }
     public void exorcizarA(List<EspirituAngelical> angeles, List<EspirituDemoniaco> demonios, Ubicacion ubicacion){
@@ -115,8 +122,8 @@ public class Medium {
     }
 
     public void descansar() {
-        this.recuperarMana(ubicacion.getCantidadRecuperada());
-        espiritus.forEach(e -> e.recuperarConexionEn(ubicacion));
+        this.recuperarMana(ubicacionModelo.getCantidadRecuperada());
+        espiritus.forEach(e -> e.recuperarConexionEn(ubicacionModelo));
     }
 
     public void recuperarMana(int cantidad) {
@@ -127,7 +134,7 @@ public class Medium {
         this.validarInvocar(espiritu);
 
         if (this.getMana() >= 10) {
-            espiritu.serInvocadoEn(this.ubicacion);
+            espiritu.serInvocadoEn(this.ubicacionModelo);
             this.mana -= 10;
         }
 
@@ -139,7 +146,7 @@ public class Medium {
     }
 
     public void mover(Ubicacion ubicacion) {
-        this.setUbicacion(ubicacion);
+        this.setUbicacionModelo(ubicacion);
         this.espiritus.forEach(e -> {
                 e.mover(ubicacion);
         });
