@@ -10,4 +10,9 @@ import java.util.Optional;
 public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeo, Long> {
 
     Optional<UbicacionNeo> findByNombre(@Param("nombre") String nombre);
+
+    @Query("" +
+            "MATCH (u:Ubicacion {id: $id})-[r]-(:Ubicacion)" +
+            "RETURN COUNT(r) > 0 AS tieneConexiones")
+    boolean tieneConexiones(@Param("id") Long id);
 }

@@ -19,10 +19,10 @@ import java.util.Set;
 public class UbicacionNeo {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     private TipoUbicacion tipo;
+    private boolean deleted = false;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeo> conexiones = new HashSet<>();

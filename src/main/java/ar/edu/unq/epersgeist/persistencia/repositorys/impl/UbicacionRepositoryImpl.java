@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositorys.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -55,7 +56,24 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     
     @Override
     public Ubicacion actualizar(Ubicacion ubicacion){
-        return null;
+        // --- SQL ---
+        UbicacionJPA existente = ubiSql.findById(ubicacion.getId())
+                .filter(u -> !u.isDeleted())
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacion.getId()));
+
+        // Actualizar los campos usando MapStruct
+        ubiMapper.actualizarJPADesdeModelo(ubicacion, existente);
+        ubiSql.save(existente);
+
+//        // --- Neo4j ---
+//        UbicacionNeo existenteNeo = ubiDaoNeo.findById(ubicacion.getId()).orElse(null);
+//        if (existenteNeo != null) {
+//            UbicacionNeo actualizado = ubiMapper.aNeo(ubicacion);
+//            actualizado.setConexiones(existenteNeo.getConexiones()); // conservar conexiones si es necesario
+//            ubiDaoNeo.save(actualizado);
+//        }
+
+        return ubicacion;
     }
 
     @Override
@@ -77,7 +95,26 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Optional<UbicacionJPA> recuperarSql(Long ubicacionId){
         return ubiSql.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
+    public Optional<UbicacionNeo> recuperarNeo(Long ubicacionId){
+        return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
+    }
+    @Override
+    public void eliminar(Long id) {
+        if (!ubiSql.findEspiritusByUbicacionId(id).isEmpty()
+                || !ubiSql.findMediumByUbicacionId(id).isEmpty()
+                || !ubiDaoNeo.tieneConexiones(id)) {
+            throw new UbicacionNoEliminableException(id);
+        }
+        UbicacionJPA ubicacionSQLAEliminar = this.recuperarSql(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+        ubicacionSQLAEliminar.setDeleted(true);
 
+        UbicacionNeo ubicacionNeoAEliminar = this.recuperarNeo(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+        ubicacionNeoAEliminar.setDeleted(true);
+
+
+        ubiSql.save(ubicacionSQLAEliminar);
+        ubiDaoNeo.save(ubicacionNeoAEliminar);
+    }
     //-------------------------------------------------------------------------
 
     //De acá para abajo duda sobre cuales serian también para neo4j

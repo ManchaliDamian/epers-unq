@@ -3,6 +3,8 @@ package ar.edu.unq.epersgeist.persistencia.repositorys.interfaces;
 import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,10 +12,13 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface UbicacionMapper {
 
-    // Conversión automática entre JPA y DTO
-    UbicacionDTO toDTO(UbicacionJPA ubicacionJPA);
+    // Actualiza un UbicacionJPA desde el modelo de dominio
+    @Mapping(target = "id", ignore = true) // No pisar el ID
+    @Mapping(target = "createdAt", ignore = true)
+    void actualizarJPADesdeModelo(Ubicacion origen, @MappingTarget UbicacionJPA destino);
 
-    UbicacionJPA toJPA(UbicacionDTO dto); // opcional, solo si necesitás convertir de vuelta
+    // Mapea un Ubicacion (modelo de dominio) a UbicacionNeo
+    UbicacionNeo aNeo(Ubicacion origen);
 
 
 

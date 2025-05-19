@@ -68,12 +68,8 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void eliminar(Long id) {
-        if (!ubicacionRepository.findEspiritusByUbicacionId(id).isEmpty() || !ubicacionRepository.findMediumByUbicacionId(id).isEmpty()) {
-            throw new UbicacionNoEliminableException(id);
-        }
-        Ubicacion ubicacionAEliminar = this.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-        ubicacionAEliminar.setDeleted(true);
-        ubicacionRepository.guardar(ubicacionAEliminar);
+        ubicacionRepository.eliminar(id);
+
     }
 
     @Override

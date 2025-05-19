@@ -11,6 +11,7 @@ public interface UbicacionRepository {
     Ubicacion guardar(Ubicacion ubicacion);
     Ubicacion actualizar(Ubicacion ubicacion);
     Optional<Ubicacion> recuperar(Long ubicacionId);
+    void eliminar(Long id);
     List<Ubicacion> recuperarTodos();
     List<Cementerio> recuperarCementerios();
     List<Santuario> recuperarSantuarios();
