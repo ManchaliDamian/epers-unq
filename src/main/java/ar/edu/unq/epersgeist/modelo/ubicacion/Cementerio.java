@@ -8,8 +8,9 @@ import lombok.*;
 @Getter @Setter @NoArgsConstructor @ToString
 public class Cementerio extends Ubicacion {
 
-    public Cementerio(String nombre, Integer flujoDeEnergia) {
+    public Cementerio( String nombre, Integer flujoDeEnergia) {
         super(nombre, flujoDeEnergia, TipoUbicacion.CEMENTERIO);
+
     }
 
     @Override

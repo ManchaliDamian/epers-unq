@@ -6,7 +6,9 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiSql;
-
+    @Autowired
+    private UbicacionMapper ubiMapper;
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiSql){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiSql = ubiSql;
@@ -40,11 +43,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubiSql.save(ubiJPA);
 
         //Parte Neo
+        // se agrega el id del jpa para tener sincronizacion con la bd relacional y el tipo
+        UbicacionNeo ubiNeo = new UbicacionNeo(ubiJPA.getId(), ubiJPA.getTipo());
 
-        UbicacionNeo ubiNeo = new UbicacionNeo(ubicacion.getNombre(),
-                                               ubicacion.getFlujoDeEnergia(),
-                                               ubicacion.getTipo());
         ubiDaoNeo.save(ubiNeo);
+
+        // guardar la id en modelo para retornarlo
+        ubicacion.setId(ubiJPA.getId());
         return ubicacion;
     }
     
@@ -55,11 +60,20 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
-        //return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
-        return null;
+        Optional<UbicacionJPA> ubicacionJPA = this.recuperarSql(ubicacionId);
+
+        if (ubicacionJPA.isEmpty()) {
+            throw new UbicacionNoEncontradaException(ubicacionId);
+        }
+
+        Ubicacion ubicacion = switch (ubicacionJPA.get().getTipo()) {
+            case SANTUARIO -> new Santuario(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
+            case CEMENTERIO -> new Cementerio(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
+        };
+        ubicacion.setId(ubicacionId);
+        return Optional.of(ubicacion);
     }
 
-    @Override
     public Optional<UbicacionJPA> recuperarSql(Long ubicacionId){
         return ubiSql.findById(ubicacionId).filter(u -> !u.isDeleted());
     }

@@ -11,7 +11,6 @@ public interface UbicacionRepository {
     Ubicacion guardar(Ubicacion ubicacion);
     Ubicacion actualizar(Ubicacion ubicacion);
     Optional<Ubicacion> recuperar(Long ubicacionId);
-    Optional<UbicacionJPA> recuperarSql(Long ubicacionId);
     List<Ubicacion> recuperarTodos();
     List<Cementerio> recuperarCementerios();
     List<Santuario> recuperarSantuarios();

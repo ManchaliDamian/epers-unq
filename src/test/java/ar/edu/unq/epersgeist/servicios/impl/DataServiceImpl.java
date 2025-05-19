@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +16,11 @@ import java.util.Optional;
 @Service
 @Transactional
 public class DataServiceImpl implements DataService {
-    private final UbicacionDAO ubicacionDAO;
+    private final UbicacionRepository ubicacionDAO;
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
 
-    public DataServiceImpl(UbicacionDAO ubicacionDAO, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
+    public DataServiceImpl(UbicacionRepository ubicacionDAO, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
         this.ubicacionDAO = ubicacionDAO;
         this.mediumDAO = mediumDAO;
         this.espirituDAO = espirituDAO;

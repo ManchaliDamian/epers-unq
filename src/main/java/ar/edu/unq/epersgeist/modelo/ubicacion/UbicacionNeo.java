@@ -22,17 +22,13 @@ public class UbicacionNeo {
     @GeneratedValue
     private Long id;
 
-    private String nombre;
-    private Integer flujoDeEnergia;
-
     private TipoUbicacion tipo;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeo> conexiones = new HashSet<>();
 
-    public UbicacionNeo( String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
-        this.nombre = nombre;
-        this.flujoDeEnergia = flujoDeEnergia;
+    public UbicacionNeo( Long id ,TipoUbicacion tipo) {
+        this.id = id;
         this.tipo=tipo;
     }
 }

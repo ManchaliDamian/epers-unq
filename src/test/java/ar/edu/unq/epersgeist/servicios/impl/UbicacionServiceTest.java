@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -36,7 +37,7 @@ public class UbicacionServiceTest {
 
     @Autowired private MediumDAO mediumDAO;
     @Autowired private EspirituDAO espirituDAO;
-    @Autowired private UbicacionDAO ubicacionDAO;
+    @Autowired private UbicacionRepository ubicacionDAO;
 
     private Medium medium;
     private Medium medium2;

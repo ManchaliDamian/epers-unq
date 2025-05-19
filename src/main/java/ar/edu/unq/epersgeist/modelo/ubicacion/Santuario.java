@@ -10,8 +10,9 @@ import lombok.*;
 @Getter @Setter @NoArgsConstructor @ToString
 public class Santuario extends Ubicacion {
 
-    public Santuario(String nombre, Integer flujoDeEnergia)  {
+    public Santuario( String nombre, Integer flujoDeEnergia)  {
         super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO);
+
     }
 
     @Override
