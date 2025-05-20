@@ -1,13 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.mapper.EspirituMapper;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.UbicacionJPA;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,10 @@ public class DataServiceImpl implements DataService {
     private final UbicacionDAONeo ubiNeo;
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
+    @Autowired
     private UbicacionMapper ubicacionMapper;
+    @Autowired
+    private EspirituMapper espirituMapper;
     public DataServiceImpl(UbicacionDAOSQL ubicacionDAO, UbicacionDAONeo ubiNeo, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
         this.ubiNeo = ubiNeo;
         this.ubicacionSQL = ubicacionDAO;
@@ -46,11 +51,11 @@ public class DataServiceImpl implements DataService {
     }
 
     public Optional<Espiritu> recuperarEliminadoEspiritu(Long id) {
-        return espirituDAO.recuperarEliminado(id);
+        return espirituMapper.toModel(espirituDAO.recuperarEliminado(id));
     }
 
     public List<Espiritu> recuperarTodosLosEspiritusEliminados() {
-        return espirituDAO.recuperarTodosLosEliminados();
+        return this.espirituMapper.toModelList(espirituDAO.recuperarTodosLosEliminados());
     }
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {

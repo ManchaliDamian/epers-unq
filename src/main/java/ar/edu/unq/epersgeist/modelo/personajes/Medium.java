@@ -2,8 +2,7 @@ package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
-import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.UbicacionJPA;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.ToString;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -84,7 +82,7 @@ public class Medium {
     }
 
     private boolean noEsMismaUbicacion(Espiritu espiritu) {
-        return !this.ubicacionModelo.equals(espiritu.getUbicacionModelo());
+        return !this.ubicacionModelo.equals(espiritu.getUbicacion());
     }
 
     public void desvincularseDe(Espiritu espiritu) {

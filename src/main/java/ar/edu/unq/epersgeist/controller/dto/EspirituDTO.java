@@ -13,7 +13,7 @@ public record EspirituDTO(Long id, String nombre,Integer nivelDeConexion, Long m
                 espiritu.getNombre(),
                 espiritu.getNivelDeConexion(),
                 espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
-                UbicacionDTO.desdeModelo(espiritu.getUbicacionModelo()),
+                UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
                 espiritu.getTipo()
         );
     }

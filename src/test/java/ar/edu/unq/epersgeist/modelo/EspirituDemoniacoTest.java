@@ -112,7 +112,7 @@ public class EspirituDemoniacoTest {
     void espirituDemoniacoPuedeMoverseAUnaUbicacion() {
         mediumDemon.conectarseAEspiritu(demonio);
         mediumDemon.mover(cementerio);
-        assertEquals(cementerio, demonio.getUbicacionModelo());
+        assertEquals(cementerio, demonio.getUbicacion());
     }
 
     @Test
@@ -121,14 +121,14 @@ public class EspirituDemoniacoTest {
         mediumDemon.conectarseAEspiritu(demonio);//82
         mediumDemon.mover(santuario);
         assertEquals(72, demonio.getNivelDeConexion());
-        assertEquals("Quilmes", demonio.getUbicacionModelo().getNombre());
+        assertEquals("Quilmes", demonio.getUbicacion().getNombre());
     }
 
     @Test
     public void invocarDemonioACementerioCambiaSuUbicacion(){
         demonio.serInvocadoEn(cementerio);
 
-        assertEquals(cementerio, demonio.getUbicacionModelo());
+        assertEquals(cementerio, demonio.getUbicacion());
     }
 }
 

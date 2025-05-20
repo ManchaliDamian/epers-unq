@@ -92,7 +92,7 @@ public class MediumTest {
     @Test
     void desvincularseDe(){
         when(espirituAngelicalMock.estaConectado()).thenReturn(false);
-        when(espirituAngelicalMock.getUbicacionModelo()).thenReturn(cementerio);
+        when(espirituAngelicalMock.getUbicacion()).thenReturn(cementerio);
         mediumBernal.conectarseAEspiritu(espirituNoConectado);
         mediumBernal.conectarseAEspiritu(espirituAngelicalMock);
 

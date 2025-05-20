@@ -64,21 +64,21 @@ class UbicacionTest {
     @Test
     void testCementerioInvocarDemonio() {
         cementerio.invocarDemonio(espirituDemonio);
-        assertEquals(cementerio, espirituDemonio.getUbicacionModelo());
+        assertEquals(cementerio, espirituDemonio.getUbicacion());
     }
 
     @Test
     void testCementerioMoverAngel() {
         espirituAngel.setNivelDeConexion(100);
         cementerio.moverAngel(espirituAngel);
-        assertEquals(cementerio, espirituAngel.getUbicacionModelo());
+        assertEquals(cementerio, espirituAngel.getUbicacion());
         assertEquals(95, espirituAngel.getNivelDeConexion());
     }
 
     @Test
     void testCementerioMoverDemonio() {
         cementerio.moverDemonio(espirituDemonio);
-        assertEquals(cementerio, espirituDemonio.getUbicacionModelo());
+        assertEquals(cementerio, espirituDemonio.getUbicacion());
         assertEquals(0, espirituDemonio.getNivelDeConexion());
     }
 
@@ -97,7 +97,7 @@ class UbicacionTest {
     @Test
     void testSantuarioInvocarAngel() {
         santuario.invocarAngel(espirituAngel);
-        assertEquals(santuario, espirituAngel.getUbicacionModelo());
+        assertEquals(santuario, espirituAngel.getUbicacion());
     }
 
     @Test
@@ -110,7 +110,7 @@ class UbicacionTest {
     @Test
     void testSantuarioMoverAngel() {
         santuario.moverAngel(espirituAngel);
-        assertEquals(santuario, espirituAngel.getUbicacionModelo());
+        assertEquals(santuario, espirituAngel.getUbicacion());
         assertEquals(0, espirituAngel.getNivelDeConexion());
     }
 
@@ -118,7 +118,7 @@ class UbicacionTest {
     void testSantuarioMoverDemonio() {
         espirituDemonio.setNivelDeConexion(100);
         santuario.moverDemonio(espirituDemonio);
-        assertEquals(santuario, espirituDemonio.getUbicacionModelo());
+        assertEquals(santuario, espirituDemonio.getUbicacion());
         assertEquals(90, espirituDemonio.getNivelDeConexion());
     }
 

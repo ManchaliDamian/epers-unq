@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.mapper.EspirituMapper;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -40,7 +41,7 @@ public class EspirituServiceTest {
     @Autowired private MediumDAO mediumDAO;
     @Autowired private UbicacionDAOSQL ubicacionDAO;
     @Autowired private UbicacionDAONeo ubicacionDAONeo;
-
+    @Autowired private EspirituMapper espirituMapper;
     private Espiritu azazel;
     private Espiritu belcebu;
     private Espiritu angel;
@@ -78,7 +79,7 @@ public class EspirituServiceTest {
         String nuevoNombre = "Nuevo Azazel";
 
         azazel.setNombre(nuevoNombre);
-        azazel.setUbicacionModelo(berazategui);
+        azazel.setUbicacion(berazategui);
         serviceE.actualizar(azazel);
 
         Date fechaEsperada = new Date();
@@ -141,7 +142,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.guardar(medium);
-        azazel.setUbicacionModelo(berazategui);
+        azazel.setUbicacion(berazategui);
         serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {

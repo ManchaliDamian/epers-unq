@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.persistencia.UbicacionJPA;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import jakarta.persistence.*;

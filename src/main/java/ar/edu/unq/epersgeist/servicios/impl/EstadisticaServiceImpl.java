@@ -2,8 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.SantuarioJPA;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.SantuarioJPA;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.data.domain.PageRequest;

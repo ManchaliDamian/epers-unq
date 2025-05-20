@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.mapper.EspirituMapper;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -9,8 +10,10 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
+import ar.edu.unq.epersgeist.persistencia.EspirituJPA.EspirituJPA;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +28,8 @@ public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
+    @Autowired
+    private EspirituMapper mapper;
 
     public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
         this.espirituDAO = espirituDAO;
@@ -33,21 +38,25 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Espiritu guardar(Espiritu espiritu) {
-        espirituDAO.save(espiritu);
-        return espiritu;
+        EspirituJPA espirituAGuardar = this.mapper.toJPA(espiritu);
+        EspirituJPA guardado = espirituDAO.save(espirituAGuardar);
+        return this.mapper.toModel(guardado);
     }
 
     @Override
     public Espiritu actualizar(Espiritu espiritu){
-        return espirituDAO.save(espiritu);
+        EspirituJPA espirituAGuardar = this.mapper.toJPA(espiritu);
+        EspirituJPA guardado = espirituDAO.save(espirituAGuardar);
+        return this.mapper.toModel(guardado);
     }
 
     private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+       EspirituJPA espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
-        return espiritu;
+        return this.mapper.toModel(espiritu);
     }
 
     private Medium getMedium(Long mediumId) {
@@ -60,23 +69,24 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return espirituDAO.findById(espirituId)
+        Optional<EspirituJPA> recuperado = espirituDAO.findById(espirituId)
                 .filter(e -> !e.isDeleted());
+        return this.mapper.toModel(recuperado);
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return espirituDAO.recuperarTodos();
+        return this.mapper.toModelList(espirituDAO.recuperarTodos());
     }
 
     @Override
     public List<EspirituAngelical> recuperarAngeles() {
-        return espirituDAO.recuperarAngeles();
+        return this.mapper.toModelListAngeles(espirituDAO.recuperarAngeles());
     }
 
     @Override
     public List<EspirituDemoniaco> recuperarDemonios() {
-        return espirituDAO.recuperarDemonios();
+        return this.mapper.toModelListDemoniaco(espirituDAO.recuperarDemonios());
     }
 
     @Override
@@ -86,7 +96,8 @@ public class EspirituServiceImpl implements EspirituService {
             throw new EspirituNoEliminableException(espirituId);
         }
         espiritu.setDeleted(true);
-        espirituDAO.save(espiritu);
+        EspirituJPA eliminado = this.mapper.toJPA(espiritu);
+        espirituDAO.save(eliminado);
     }
 
     @Override
@@ -96,8 +107,8 @@ public class EspirituServiceImpl implements EspirituService {
         Medium medium = this.getMedium(mediumId);
 
         medium.conectarseAEspiritu(espiritu);
-
-        espirituDAO.save(espiritu);
+        EspirituJPA aGuardar = this.mapper.toJPA(espiritu);
+        espirituDAO.save(aGuardar);
         mediumDAO.save(medium);
 
         return medium;
@@ -115,7 +126,7 @@ public class EspirituServiceImpl implements EspirituService {
         Sort.Direction sortDirection = dir == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(pagina-1, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
 
-        return espirituDAO.recuperarDemoniacosPaginados(pageable);
+        return this.mapper.toModelList(espirituDAO.recuperarDemoniacosPaginados(pageable));
     }
 
 }

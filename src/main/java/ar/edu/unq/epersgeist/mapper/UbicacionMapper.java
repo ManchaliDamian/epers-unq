@@ -1,6 +1,9 @@
 package ar.edu.unq.epersgeist.mapper;
 
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.CementerioJPA;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.SantuarioJPA;
+import ar.edu.unq.epersgeist.persistencia.UbicacionJPA.UbicacionJPA;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -17,6 +20,8 @@ public interface UbicacionMapper {
     void actualizarJPADesdeModelo(Ubicacion origen, @MappingTarget UbicacionJPA destino);
     Santuario aModelo(SantuarioJPA jpa);
     Cementerio aModelo(CementerioJPA jpa);
+
+
 
 
     default UbicacionJPA toJpa(Ubicacion ubicacion) {
