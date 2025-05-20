@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -10,8 +11,10 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -34,11 +37,9 @@ public class MediumServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumDAO mediumRepository;
-
-    @Autowired private EspirituDAO espirituDAO;
-    @Autowired private UbicacionDAOSQL ubicacionDAO;
-    @Autowired private UbicacionDAONeo ubicacionDAONeo;
+    @Autowired private MediumRepository mediumRepository;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private UbicacionRepository ubicacionRepository;
 
     private Medium medium1;
     private Medium medium2;
@@ -51,25 +52,25 @@ public class MediumServiceTest {
     private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionDAO,ubicacionDAONeo, mediumRepository, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         cementerio = new Cementerio("La Plata", 4);
         santuario = new Santuario("Quilmes",70);
-        serviceU.guardar(santuario);
-        serviceU.guardar(cementerio);
+        santuario = serviceU.guardar(santuario);
+        cementerio =serviceU.guardar(cementerio);
 
         medium1 = new Medium("Pablo", 100, 50, cementerio);
         medium2 = new Medium("Fidol", 100, 50, santuario);
         demonio = new EspirituDemoniaco("Jose", santuario);
         demonCementerio = new EspirituDemoniaco("Juan", cementerio);
         angel = new EspirituAngelical( "kici", cementerio);
-        serviceM.guardar(medium1);
-        serviceM.guardar(medium2);
-        serviceE.guardar(demonio);
-        serviceE.guardar(demonCementerio);
-        serviceE.guardar(angel);
+        medium1 = serviceM.guardar(medium1);
+        medium2 = serviceM.guardar(medium2);
+        demonio = serviceE.guardar(demonio);
+        demonCementerio = serviceE.guardar(demonCementerio);
+        angel = serviceE.guardar(angel);
 
     }
 

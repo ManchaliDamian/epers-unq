@@ -7,9 +7,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 public class EspirituDemoniaco extends Espiritu{
+
+    protected EspirituDemoniaco() {
+        super(TipoEspiritu.DEMONIACO);
+    }
 
     public EspirituDemoniaco(String nombre, Ubicacion ubicacion) {
         super(nombre, ubicacion, TipoEspiritu.DEMONIACO);

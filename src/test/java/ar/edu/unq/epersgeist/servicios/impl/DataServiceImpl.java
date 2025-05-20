@@ -1,11 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
@@ -17,49 +19,44 @@ import java.util.Optional;
 @Service
 @Transactional
 public class DataServiceImpl implements DataService {
-    private final UbicacionDAOSQL ubicacionSQL;
-    private final UbicacionDAONeo ubiNeo;
-    private final MediumDAO mediumRepository;
-    private final EspirituDAO espirituDAO;
-    private UbicacionMapper ubicacionMapper;
-    public DataServiceImpl(UbicacionDAOSQL ubicacionDAO, UbicacionDAONeo ubiNeo, MediumDAO mediumRepository, EspirituDAO espirituDAO) {
-        this.ubiNeo = ubiNeo;
-        this.ubicacionSQL = ubicacionDAO;
+    private final UbicacionRepository ubicacionRepository;
+    private final MediumRepository mediumRepository;
+    private final EspirituRepository espirituRepository;
+
+    public DataServiceImpl(UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository) {
+        this.ubicacionRepository = ubicacionRepository;
         this.mediumRepository = mediumRepository;
-        this.espirituDAO = espirituDAO;
+        this.espirituRepository = espirituRepository;
     }
 
     public void eliminarTodo() {
-        espirituDAO.deleteAll();
+        espirituRepository.deleteAll();
         mediumRepository.deleteAll();
-        ubicacionSQL.deleteAll();
-        ubiNeo.deleteAll();
+        ubicacionRepository.deleteAll();
     }
 
 
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {
-        return mediumDAO.recuperarEliminado(mediumId);
+        return mediumRepository.recuperarEliminado(mediumId);
     }
 
     public List<Medium> recuperarTodosMediumsEliminados(){
-        return mediumDAO.recuperarTodosEliminados();
+        return mediumRepository.recuperarTodosLosEliminados();
     }
 
     public Optional<Espiritu> recuperarEliminadoEspiritu(Long id) {
-        return espirituDAO.recuperarEliminado(id);
+        return espirituRepository.recuperarEliminado(id);
     }
 
     public List<Espiritu> recuperarTodosLosEspiritusEliminados() {
-        return espirituDAO.recuperarTodosLosEliminados();
+        return espirituRepository.recuperarTodosLosEliminados();
     }
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {
-        return ubicacionSQL.recuperarEliminado(id)
-                .map(ubicacionMapper::aModelo);
-
+        return ubicacionRepository.recuperarEliminado(id);
     }
 
     public List<Ubicacion> recuperarTodosEliminadosDeUbicacion() {
-        return ubicacionSQL.recuperarTodosEliminados();
+        return ubicacionRepository.recuperarTodosEliminados();
     }
 }

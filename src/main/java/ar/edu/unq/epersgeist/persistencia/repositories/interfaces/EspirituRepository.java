@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+
 public interface EspirituRepository {
     Espiritu save(Espiritu espiritu);
     List<Espiritu> recuperarTodos();
@@ -21,5 +21,6 @@ public interface EspirituRepository {
     List<EspirituAngelical> recuperarAngelesDe(Long mediumId);
     List<EspirituDemoniaco> recuperarDemoniosDe(Long mediumId);
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
+    void deleteAll();
 }
 

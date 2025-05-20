@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.mapper.EspirituMapper;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -13,7 +12,9 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -37,11 +38,9 @@ public class EspirituServiceTest {
     @Autowired private UbicacionService serviceU;
     @Autowired private MediumService serviceM;
 
-    @Autowired private EspirituDAO espirituDAO;
-    @Autowired private MediumDAO mediumRepository;
-    @Autowired private UbicacionDAOSQL ubicacionDAO;
-    @Autowired private UbicacionDAONeo ubicacionDAONeo;
-    @Autowired private EspirituMapper espirituMapper;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private MediumRepository mediumRepository;
+    @Autowired private UbicacionRepository ubicacionRepository;
     private Espiritu azazel;
     private Espiritu belcebu;
     private Espiritu angel;
@@ -55,22 +54,22 @@ public class EspirituServiceTest {
     private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionDAO, ubicacionDAONeo, mediumRepository, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
 
-        serviceU.guardar(quilmes);
-        serviceU.guardar(berazategui);
+        quilmes = serviceU.guardar(quilmes);
+        berazategui = serviceU.guardar(berazategui);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
         angel = new EspirituAngelical( "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
-        serviceE.guardar(azazel);
-        serviceE.guardar(belcebu);
-        serviceE.guardar(angel);
+        azazel = serviceE.guardar(azazel);
+        belcebu = serviceE.guardar(belcebu);
+        angel = serviceE.guardar(angel);
 
     }
 

@@ -10,6 +10,7 @@ import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -25,9 +26,9 @@ import java.util.Optional;
 public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituRepository espirituRepository;
-    private final MediumDAO mediumRepository;
+    private final MediumRepository mediumRepository;
 
-    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumDAO mediumRepository) {
+    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumRepository mediumRepository) {
         this.espirituRepository = espirituRepository;
         this.mediumRepository = mediumRepository;
     }

@@ -37,7 +37,7 @@ public abstract class EspirituJPADTO {
     @JoinColumn(name = "medium_id")
     private MediumJPADTO mediumConectado;
 
-    private final TipoEspiritu tipo;
+    private TipoEspiritu tipo;
 
     //auditoria
     @CreationTimestamp

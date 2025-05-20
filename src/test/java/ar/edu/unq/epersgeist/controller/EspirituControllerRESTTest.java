@@ -38,7 +38,7 @@ public class EspirituControllerRESTTest {
     @Autowired private DataService serviceEliminarTodo;
 
     @Autowired private UbicacionRepository ubicacionRepository;
-    @Autowired private EspirituDAO espirituDAO;
+
     @Autowired private MediumDAO mediumRepository;
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;

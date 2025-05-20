@@ -9,8 +9,9 @@ import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -36,10 +37,6 @@ public class UbicacionControllerRESTTest {
     @Autowired private MediumService mediumService;
     @Autowired private UbicacionService ubicacionService;
     @Autowired private DataService serviceEliminarTodo;
-
-    @Autowired private UbicacionRepository ubicacionDAO;
-    @Autowired private EspirituDAO espirituDAO;
-    @Autowired private MediumDAO mediumRepository;
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;

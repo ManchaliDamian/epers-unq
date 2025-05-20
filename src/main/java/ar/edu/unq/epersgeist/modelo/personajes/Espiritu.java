@@ -31,8 +31,10 @@ public abstract class Espiritu {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
+    }
 
-
+    protected Espiritu(@NonNull TipoEspiritu tipo) {
+        this.tipo = tipo;
     }
 
     public void conectarA(Medium medium){

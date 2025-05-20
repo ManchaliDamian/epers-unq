@@ -6,8 +6,9 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
@@ -24,11 +25,9 @@ public class EstadisticaServiceTest {
     @Autowired private MediumService mediumService;
     @Autowired private EspirituService espirituService;
 
-    @Autowired private UbicacionRepository ubicacionDAO;
-    @Autowired private EspirituDAO espirituDAO;
-    @Autowired private MediumDAO mediumRepository;
-    @Autowired private UbicacionDAOSQL ubiSQL;
-    @Autowired private UbicacionDAONeo ubiNeo;
+    @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private MediumRepository mediumRepository;
     private Medium medium1;
 
     private Cementerio cementerio;
@@ -49,7 +48,7 @@ public class EstadisticaServiceTest {
 
     @BeforeEach
      void setUp(){
-        dataService = new DataServiceImpl(ubiSQL,ubiNeo, mediumRepository, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
             cementerio = new Cementerio("Quilmes",1);
 

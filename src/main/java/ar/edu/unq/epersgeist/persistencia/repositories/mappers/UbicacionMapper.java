@@ -20,9 +20,9 @@ public interface UbicacionMapper {
             case SANTUARIO -> toDomainSantuario((SantuarioJPADTO) jpa);
         };
     }
-    List<Ubicacion> toModelListUbicacion(List<UbicacionJPADTO> lista);
-    List<Cementerio> toModelListCementerio(List<CementerioJPADTO> cementerios);
-    List<Santuario> toModelListSantuarios(List<SantuarioJPADTO> santuarios);
+    List<Ubicacion> toDomainList(List<UbicacionJPADTO> ubicacionJPADTOS);
+    List<Cementerio> toDomainListCementerio(List<CementerioJPADTO> cementerios);
+    List<Santuario> toDomainListSantuarios(List<SantuarioJPADTO> santuarios);
 
     //toJpa
     default UbicacionJPADTO toJpa(Ubicacion ubicacion){
@@ -46,6 +46,7 @@ public interface UbicacionMapper {
 
     //toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
+
 
 }
 

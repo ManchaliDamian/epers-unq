@@ -19,6 +19,7 @@ public interface EspirituMapper {
     //toDomain
     EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
     EspirituDemoniaco toDomainDemonio(EspirituDemoniacoJPADTO jpa);
+
     default Espiritu toDomain(EspirituJPADTO jpa){
         return switch (jpa.getTipo()){
             case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) jpa);
@@ -33,12 +34,22 @@ public interface EspirituMapper {
             case DEMONIACO -> toJpaDemonio((EspirituDemoniaco)espiritu);
         };
     }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "mediumConectado", ignore = true)
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "mediumConectado", ignore = true)
     EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
 
     default List<EspirituJPADTO> toJPAList(List<Espiritu> espiritus) {
         return espiritus.stream().map(this::toJpa).collect(Collectors.toList());
     }
+
+    List<Espiritu> toDomainList(List<EspirituJPADTO> espirituJPADTOS);
+    List<EspirituDemoniaco> toDomainListDemoniaco(List<EspirituDemoniacoJPADTO> espirituDemoniacoJPADTOS);
+    List<EspirituAngelical> toDomainListAngelical(List<EspirituAngelicalJPADTO> espirituAngelicalJPADTOS);
 
 /*
     default List<Espiritu> toModelList(List<EspirituJPADTO> jpas) {

@@ -7,6 +7,8 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -35,11 +37,11 @@ public class UbicacionServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumDAO mediumRepository;
-    @Autowired private EspirituDAO espirituDAO;
+    @Autowired private MediumRepository mediumRepository;
+    @Autowired private EspirituRepository espirituRepository;
     @Autowired private UbicacionRepository ubicacionRepository;
-    @Autowired private UbicacionDAONeo ubicacionDAONeo;
-    @Autowired private UbicacionDAOSQL ubicacionDAOSQL;
+
+
     private Medium medium;
     private Medium medium2;
     private Medium medium3;
@@ -52,7 +54,7 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        dataService = new DataServiceImpl( ubicacionDAOSQL,ubicacionDAONeo, mediumRepository, espirituDAO);
+        dataService = new DataServiceImpl( ubicacionRepository, mediumRepository, espirituRepository);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
@@ -63,8 +65,8 @@ public class UbicacionServiceTest {
         medium = new Medium("roberto", 200, 150, santuario);
         medium2 = new Medium("roberto", 200, 150, santuario);
         medium3 = new Medium("roberto", 200, 150, santuario);
-        serviceU.guardar(santuario);
-        serviceU.guardar(cementerio);
+        santuario = serviceU.guardar(santuario);
+        cementerio = serviceU.guardar(cementerio);
 
     }
 
