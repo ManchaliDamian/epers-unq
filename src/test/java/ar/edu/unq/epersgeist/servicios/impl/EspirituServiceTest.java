@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.mapper.EspirituMapper;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -40,7 +41,7 @@ public class EspirituServiceTest {
     @Autowired private MediumDAO mediumRepository;
     @Autowired private UbicacionDAOSQL ubicacionDAO;
     @Autowired private UbicacionDAONeo ubicacionDAONeo;
-
+    @Autowired private EspirituMapper espirituMapper;
     private Espiritu azazel;
     private Espiritu belcebu;
     private Espiritu angel;

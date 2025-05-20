@@ -10,6 +10,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring", uses = {UbicacionMapper.class})
 public interface EspirituMapper {
     //toDomain
@@ -31,6 +35,23 @@ public interface EspirituMapper {
     }
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
     EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
+
+    default List<EspirituJPADTO> toJPAList(List<Espiritu> espiritus) {
+        return espiritus.stream().map(this::toJpa).collect(Collectors.toList());
+    }
+
+/*
+    default List<Espiritu> toModelList(List<EspirituJPADTO> jpas) {
+        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
+    }
+    default List<EspirituAngelical> toModelListAngeles(List<EspirituAngelicalJPADTO> jpas) {
+        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
+    }
+    default List<EspirituDemoniaco> toModelListDemoniaco(List<EspirituDemoniacoJPADTO> jpas) {
+        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
+    }
+*/
+
 
     // Actualiza un EspirituJPA desde el modelo de dominio
     default EspirituJPADTO actualizarJpaCon(EspirituJPADTO espirituJPADTO, Espiritu espiritu){

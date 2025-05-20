@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.DTOs.personajes;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import jakarta.validation.constraints.NotBlank;

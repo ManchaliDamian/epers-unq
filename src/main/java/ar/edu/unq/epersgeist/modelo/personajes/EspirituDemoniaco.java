@@ -28,4 +28,5 @@ public class EspirituDemoniaco extends Espiritu{
     protected void mover(Ubicacion ubicacion) {
         ubicacion.moverDemonio(this);
     }
+
 }

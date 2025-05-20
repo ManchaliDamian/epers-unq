@@ -38,11 +38,11 @@ public class DataServiceImpl implements DataService {
 
 
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {
-        return mediumRepository.recuperarEliminado(mediumId);
+        return mediumDAO.recuperarEliminado(mediumId);
     }
 
     public List<Medium> recuperarTodosMediumsEliminados(){
-        return mediumRepository.recuperarTodosEliminados();
+        return mediumDAO.recuperarTodosEliminados();
     }
 
     public Optional<Espiritu> recuperarEliminadoEspiritu(Long id) {
@@ -55,15 +55,11 @@ public class DataServiceImpl implements DataService {
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {
         return ubicacionSQL.recuperarEliminado(id)
-                .map(ubicacionMapper::toDomain);
+                .map(ubicacionMapper::aModelo);
 
     }
 
     public List<Ubicacion> recuperarTodosEliminadosDeUbicacion() {
-        List<UbicacionJPADTO> ubicacionesEliminadas = ubicacionSQL.recuperarTodosEliminados();
-
-        return ubicacionesEliminadas.stream()
-                .map(ubicacionMapper::toDomain)
-                .toList();
+        return ubicacionSQL.recuperarTodosEliminados();
     }
 }
