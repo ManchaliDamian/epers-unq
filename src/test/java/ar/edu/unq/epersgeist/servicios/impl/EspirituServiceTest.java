@@ -37,7 +37,7 @@ public class EspirituServiceTest {
     @Autowired private MediumService serviceM;
 
     @Autowired private EspirituDAO espirituDAO;
-    @Autowired private MediumDAO mediumDAO;
+    @Autowired private MediumDAO mediumRepository;
     @Autowired private UbicacionDAOSQL ubicacionDAO;
     @Autowired private UbicacionDAONeo ubicacionDAONeo;
 
@@ -54,7 +54,7 @@ public class EspirituServiceTest {
     private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionDAO, ubicacionDAONeo, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl(ubicacionDAO, ubicacionDAONeo, mediumRepository, espirituDAO);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
@@ -78,7 +78,7 @@ public class EspirituServiceTest {
         String nuevoNombre = "Nuevo Azazel";
 
         azazel.setNombre(nuevoNombre);
-        azazel.setUbicacionModelo(berazategui);
+        azazel.setUbicacion(berazategui);
         serviceE.actualizar(azazel);
 
         Date fechaEsperada = new Date();
@@ -141,7 +141,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         serviceM.guardar(medium);
-        azazel.setUbicacionModelo(berazategui);
+        azazel.setUbicacion(berazategui);
         serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {

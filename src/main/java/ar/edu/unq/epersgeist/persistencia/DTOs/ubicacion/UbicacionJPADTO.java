@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import jakarta.persistence.*;
@@ -13,8 +13,8 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_ubicacion")
 
-@Entity
-public abstract class UbicacionJPA {
+@Entity(name = "Ubicacion")
+public abstract class UbicacionJPADTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,7 @@ public abstract class UbicacionJPA {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    public UbicacionJPA(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
+    public UbicacionJPADTO(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;

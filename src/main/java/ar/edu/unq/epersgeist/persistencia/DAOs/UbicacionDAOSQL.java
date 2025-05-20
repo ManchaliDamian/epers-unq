@@ -2,7 +2,9 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.*;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,32 +15,32 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPA, Long>{
+public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
 
     @Query(
-            "from UbicacionJPA u where u.deleted = false"
+            "from Ubicacion u where u.deleted = false"
     )
-    List<UbicacionJPA> recuperarTodos();
+    List<UbicacionJPADTO> recuperarTodos();
 
     @Query(
-            "from SantuarioJPA s where s.deleted = false"
+            "from Santuario s where s.deleted = false"
     )
-    List<SantuarioJPA>  recuperarSantuarios();
+    List<SantuarioJPADTO>  recuperarSantuarios();
 
     @Query(
-            "from CementerioJPA c where c.deleted = false"
+            "from Cementerio c where c.deleted = false"
     )
-    List<CementerioJPA>  recuperarCementerios();
+    List<CementerioJPADTO>  recuperarCementerios();
 
     @Query(
-            "from UbicacionJPA u where u.deleted = true"
+            "from Ubicacion u where u.deleted = true"
     )
-    List<UbicacionJPA> recuperarTodosEliminados();
+    List<UbicacionJPADTO> recuperarTodosEliminados();
 
     @Query(
-            "from UbicacionJPA u where u.id = :id and u.deleted = true"
+            "from Ubicacion u where u.id = :id and u.deleted = true"
     )
-    Optional<UbicacionJPA> recuperarEliminado(@Param("id") Long id);
+    Optional<UbicacionJPADTO> recuperarEliminado(@Param("id") Long id);
 
     @Query("from Espiritu e where e.ubicacion.id = :ubicacionId " +
             "and e.deleted = false and e.ubicacion.deleted = false")
@@ -56,12 +58,12 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPA, Long>{
     //-----------------------------------------------------------------
 
     @Query(
-            "SELECT s FROM SantuarioJPA s JOIN Espiritu e ON s.id = e.ubicacion.id " +
+            "SELECT s FROM Santuario s JOIN Espiritu e ON s.id = e.ubicacion.id " +
                     "GROUP BY s " +
                     "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
                     "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC"
     )
-    List<SantuarioJPA> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
+    List<SantuarioJPADTO> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
 
     @Query(
             "SELECT m FROM Medium m  " +

@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EspirituDAO extends JpaRepository<Espiritu, Long> {
+public interface EspirituDAO extends JpaRepository<EspirituJPADTO, Long> {
     @Query(
             "FROM Espiritu e where e.deleted = false"
     )

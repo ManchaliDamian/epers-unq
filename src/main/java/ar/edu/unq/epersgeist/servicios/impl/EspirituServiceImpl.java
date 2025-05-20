@@ -9,6 +9,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -23,27 +24,26 @@ import java.util.Optional;
 @Transactional
 public class EspirituServiceImpl implements EspirituService {
 
-    private final EspirituDAO espirituDAO;
-    private final MediumDAO mediumDAO;
+    private final EspirituRepository espirituRepository;
+    private final MediumDAO mediumRepository;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
-        this.espirituDAO = espirituDAO;
-        this.mediumDAO = mediumDAO;
+    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumDAO mediumRepository) {
+        this.espirituRepository = espirituRepository;
+        this.mediumRepository = mediumRepository;
     }
 
     @Override
     public Espiritu guardar(Espiritu espiritu) {
-        espirituDAO.save(espiritu);
-        return espiritu;
+        return espirituRepository.save(espiritu);
     }
 
     @Override
     public Espiritu actualizar(Espiritu espiritu){
-        return espirituDAO.save(espiritu);
+        return espirituRepository.save(espiritu);
     }
 
     private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        Espiritu espiritu = espirituRepository.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
@@ -51,7 +51,7 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Medium medium = mediumRepository.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
         if(medium.isDeleted()) {
             throw new EspirituNoEncontradoException(mediumId);
         }
@@ -60,23 +60,23 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return espirituDAO.findById(espirituId)
+        return espirituRepository.findById(espirituId)
                 .filter(e -> !e.isDeleted());
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return espirituDAO.recuperarTodos();
+        return espirituRepository.recuperarTodos();
     }
 
     @Override
     public List<EspirituAngelical> recuperarAngeles() {
-        return espirituDAO.recuperarAngeles();
+        return espirituRepository.recuperarAngeles();
     }
 
     @Override
     public List<EspirituDemoniaco> recuperarDemonios() {
-        return espirituDAO.recuperarDemonios();
+        return espirituRepository.recuperarDemonios();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class EspirituServiceImpl implements EspirituService {
             throw new EspirituNoEliminableException(espirituId);
         }
         espiritu.setDeleted(true);
-        espirituDAO.save(espiritu);
+        espirituRepository.save(espiritu);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class EspirituServiceImpl implements EspirituService {
 
         medium.conectarseAEspiritu(espiritu);
 
-        espirituDAO.save(espiritu);
-        mediumDAO.save(medium);
+        espirituRepository.save(espiritu);
+        mediumRepository.save(medium);
 
         return medium;
     }
@@ -115,7 +115,7 @@ public class EspirituServiceImpl implements EspirituService {
         Sort.Direction sortDirection = dir == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(pagina-1, cantidadPorPagina, Sort.by(sortDirection, "nivelDeConexion"));
 
-        return espirituDAO.recuperarDemoniacosPaginados(pageable);
+        return espirituRepository.recuperarDemoniacosPaginados(pageable);
     }
 
 }

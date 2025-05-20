@@ -32,12 +32,12 @@ public class Santuario extends Ubicacion {
 
     @Override
     public void moverAngel(Espiritu espiritu) {
-        espiritu.setUbicacionModelo(this);
+        espiritu.setUbicacion(this);
     }
 
     @Override
     public void moverDemonio(Espiritu espiritu) {
-        espiritu.setUbicacionModelo(this);
+        espiritu.setUbicacion(this);
         espiritu.perderNivelDeConexion(10);
     }
 

@@ -1,0 +1,68 @@
+package ar.edu.unq.epersgeist.persistencia.DTOs.personajes;
+
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Check;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.*;
+
+@Getter @Setter @NoArgsConstructor @ToString
+
+@Entity(name = "Medium")
+public class MediumJPADTO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @ManyToOne
+    @JoinColumn(name = "ubicacion_id")
+    private UbicacionJPADTO ubicacion;
+
+    @Column(nullable = false)
+    private Integer manaMax;
+
+    @Column(nullable = false)
+    @Check(constraints = "mana BETWEEN 0 AND mana_max")
+    private Integer mana;
+
+    //auditoria
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<EspirituJPADTO> espiritus = new HashSet<>();
+
+    public MediumJPADTO(@NotBlank String nombre, Integer manaMax, Integer mana, @NotNull UbicacionJPADTO ubicacion) {
+        if (manaMax < 0) {
+            throw new IllegalArgumentException("manaMax no puede ser negativo.");
+        }
+        if (mana < 0 || mana > manaMax) {
+            throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
+        }
+        this.deleted = false;
+        this.nombre = nombre;
+        this.manaMax = manaMax;
+        this.mana = mana;
+        this.ubicacion = ubicacion;
+    }
+}

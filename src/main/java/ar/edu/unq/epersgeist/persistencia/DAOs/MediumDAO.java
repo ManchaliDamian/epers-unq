@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MediumDAO extends JpaRepository<Medium, Long> {
+public interface MediumDAO extends JpaRepository<MediumJPADTO, Long> {
     @Query(
             "FROM Medium m where m.deleted = false"
     )

@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.persistencia.repositorys.interfaces;
+package ar.edu.unq.epersgeist.persistencia.repositories.interfaces;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;

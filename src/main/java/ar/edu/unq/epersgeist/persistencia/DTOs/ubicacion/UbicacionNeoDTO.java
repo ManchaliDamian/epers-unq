@@ -1,8 +1,7 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import lombok.*;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -16,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Node
-public class UbicacionNeo {
+public class UbicacionNeoDTO {
 
     @Id
     private Long id;
@@ -25,9 +24,9 @@ public class UbicacionNeo {
     private boolean deleted = false;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
-    private Set<UbicacionNeo> conexiones = new HashSet<>();
+    private Set<UbicacionNeoDTO> conexiones = new HashSet<>();
 
-    public UbicacionNeo( Long id ,TipoUbicacion tipo) {
+    public UbicacionNeoDTO(Long id , TipoUbicacion tipo) {
         this.id = id;
         this.tipo=tipo;
     }

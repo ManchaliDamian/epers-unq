@@ -89,7 +89,7 @@ public class EspirituAngelicalTest {
     void espirituAngelicalPuedeMoverseAUnaUbicacion() {
         mediumConectado.conectarseAEspiritu(angel);
         mediumConectado.mover(cementerio);
-        assertEquals(cementerio, angel.getUbicacionModelo());
+        assertEquals(cementerio, angel.getUbicacion());
     }
 
     @Test
@@ -98,13 +98,13 @@ public class EspirituAngelicalTest {
         mediumConectado.conectarseAEspiritu(angel);//100
         mediumConectado.mover(cementerio);
         assertEquals(95, angel.getNivelDeConexion());
-        assertEquals("Bernal", angel.getUbicacionModelo().getNombre());
+        assertEquals("Bernal", angel.getUbicacion().getNombre());
     }
 
     @Test
     public void invocarAngelASantuarioCambiaSuUbicacion(){
         angel.serInvocadoEn(santuario);
 
-        assertEquals(santuario, angel.getUbicacionModelo());
+        assertEquals(santuario, angel.getUbicacion());
     }
 }

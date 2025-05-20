@@ -8,7 +8,7 @@ import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
-import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class EstadisticaServiceTest {
 
     @Autowired private UbicacionRepository ubicacionDAO;
     @Autowired private EspirituDAO espirituDAO;
-    @Autowired private MediumDAO mediumDAO;
+    @Autowired private MediumDAO mediumRepository;
     @Autowired private UbicacionDAOSQL ubiSQL;
     @Autowired private UbicacionDAONeo ubiNeo;
     private Medium medium1;
@@ -49,7 +49,7 @@ public class EstadisticaServiceTest {
 
     @BeforeEach
      void setUp(){
-        dataService = new DataServiceImpl(ubiSQL,ubiNeo, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl(ubiSQL,ubiNeo, mediumRepository, espirituDAO);
 
             cementerio = new Cementerio("Quilmes",1);
 
@@ -99,7 +99,7 @@ public class EstadisticaServiceTest {
 
     @Test
     void cambiaUbicacionMediumYNoHaySantuarioCorrupto(){
-        medium1.setUbicacionModelo(cementerio);
+        medium1.setUbicacion(cementerio);
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
 

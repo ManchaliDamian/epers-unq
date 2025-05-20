@@ -17,7 +17,7 @@ public abstract class Ubicacion {
     private Integer flujoDeEnergia;
     private TipoUbicacion tipo;
 
-    // auditoría
+    //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;

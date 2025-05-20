@@ -1,0 +1,55 @@
+package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
+
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
+@Mapper(componentModel = "spring", uses = {UbicacionMapper.class})
+public interface EspirituMapper {
+    //toDomain
+    EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
+    EspirituDemoniaco toDomainDemonio(EspirituDemoniacoJPADTO jpa);
+    default Espiritu toDomain(EspirituJPADTO jpa){
+        return switch (jpa.getTipo()){
+            case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) jpa);
+            case DEMONIACO -> toDomainDemonio((EspirituDemoniacoJPADTO) jpa);
+        };
+    }
+
+    //toJpa
+    default EspirituJPADTO toJpa(Espiritu espiritu){
+        return switch (espiritu.getTipo()){
+            case ANGELICAL -> toJpaAngel((EspirituAngelical)espiritu);
+            case DEMONIACO -> toJpaDemonio((EspirituDemoniaco)espiritu);
+        };
+    }
+    EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
+    EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
+
+    // Actualiza un EspirituJPA desde el modelo de dominio
+    default EspirituJPADTO actualizarJpaCon(EspirituJPADTO espirituJPADTO, Espiritu espiritu){
+        return switch (espiritu.getTipo()){
+            case ANGELICAL -> actualizarEspirituAngelicalJpaCon((EspirituAngelicalJPADTO) espirituJPADTO, (EspirituAngelical) espiritu);
+            case DEMONIACO -> actualizarEspirituDemoniacoJpaCon((EspirituDemoniacoJPADTO) espirituJPADTO, (EspirituDemoniaco) espiritu);
+        };
+    }
+
+    @Mapping(target = "id", ignore = true)
+    EspirituAngelicalJPADTO actualizarEspirituAngelicalJpaCon(
+            @MappingTarget EspirituAngelicalJPADTO espirituJPADTO,
+            EspirituAngelical espiritu
+    );
+
+    @Mapping(target = "id", ignore = true)
+    EspirituDemoniacoJPADTO actualizarEspirituDemoniacoJpaCon(
+            @MappingTarget EspirituDemoniacoJPADTO espirituJPADTO,
+            EspirituDemoniaco espiritu
+    );
+
+}

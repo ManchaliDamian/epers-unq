@@ -1,12 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.ubicacion.UbicacionJPA;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
-import ar.edu.unq.epersgeist.mapper.UbicacionMapper;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,30 +19,30 @@ import java.util.Optional;
 public class DataServiceImpl implements DataService {
     private final UbicacionDAOSQL ubicacionSQL;
     private final UbicacionDAONeo ubiNeo;
-    private final MediumDAO mediumDAO;
+    private final MediumDAO mediumRepository;
     private final EspirituDAO espirituDAO;
     private UbicacionMapper ubicacionMapper;
-    public DataServiceImpl(UbicacionDAOSQL ubicacionDAO, UbicacionDAONeo ubiNeo, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
+    public DataServiceImpl(UbicacionDAOSQL ubicacionDAO, UbicacionDAONeo ubiNeo, MediumDAO mediumRepository, EspirituDAO espirituDAO) {
         this.ubiNeo = ubiNeo;
         this.ubicacionSQL = ubicacionDAO;
-        this.mediumDAO = mediumDAO;
+        this.mediumRepository = mediumRepository;
         this.espirituDAO = espirituDAO;
     }
 
     public void eliminarTodo() {
         espirituDAO.deleteAll();
-        mediumDAO.deleteAll();
+        mediumRepository.deleteAll();
         ubicacionSQL.deleteAll();
         ubiNeo.deleteAll();
     }
 
 
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {
-        return mediumDAO.recuperarEliminado(mediumId);
+        return mediumRepository.recuperarEliminado(mediumId);
     }
 
     public List<Medium> recuperarTodosMediumsEliminados(){
-        return mediumDAO.recuperarTodosEliminados();
+        return mediumRepository.recuperarTodosEliminados();
     }
 
     public Optional<Espiritu> recuperarEliminadoEspiritu(Long id) {
@@ -55,15 +55,15 @@ public class DataServiceImpl implements DataService {
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {
         return ubicacionSQL.recuperarEliminado(id)
-                .map(ubicacionMapper::aModelo);
+                .map(ubicacionMapper::toDomain);
 
     }
 
     public List<Ubicacion> recuperarTodosEliminadosDeUbicacion() {
-        List<UbicacionJPA> ubicacionesEliminadas = ubicacionSQL.recuperarTodosEliminados();
+        List<UbicacionJPADTO> ubicacionesEliminadas = ubicacionSQL.recuperarTodosEliminados();
 
         return ubicacionesEliminadas.stream()
-                .map(ubicacionMapper::aModelo)
+                .map(ubicacionMapper::toDomain)
                 .toList();
     }
 }

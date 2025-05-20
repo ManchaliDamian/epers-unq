@@ -9,8 +9,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @ToString
-@Entity
-@DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion) {

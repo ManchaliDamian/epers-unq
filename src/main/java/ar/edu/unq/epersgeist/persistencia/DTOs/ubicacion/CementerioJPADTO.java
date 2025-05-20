@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.ubicacion;
+package ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import jakarta.persistence.DiscriminatorValue;
@@ -10,11 +10,11 @@ import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor
 @ToString
-@Entity
+@Entity(name = "Cementerio")
 @DiscriminatorValue("CEMENTERIO")
-public class CementerioJPA extends UbicacionJPA {
+public class CementerioJPADTO extends UbicacionJPADTO {
 
-    public CementerioJPA(String nombre, Integer flujoDeEnergia) {
+    public CementerioJPADTO(String nombre, Integer flujoDeEnergia) {
         super(nombre, flujoDeEnergia, TipoUbicacion.CEMENTERIO);
     }
 }

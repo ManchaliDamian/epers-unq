@@ -7,7 +7,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
-import ar.edu.unq.epersgeist.persistencia.repositorys.interfaces.UbicacionRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -35,7 +35,7 @@ public class UbicacionServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumDAO mediumDAO;
+    @Autowired private MediumDAO mediumRepository;
     @Autowired private EspirituDAO espirituDAO;
     @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private UbicacionDAONeo ubicacionDAONeo;
@@ -52,7 +52,7 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        dataService = new DataServiceImpl( ubicacionDAOSQL,ubicacionDAONeo, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl( ubicacionDAOSQL,ubicacionDAONeo, mediumRepository, espirituDAO);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
