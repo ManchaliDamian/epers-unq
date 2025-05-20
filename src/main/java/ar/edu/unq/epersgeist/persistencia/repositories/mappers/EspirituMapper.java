@@ -35,11 +35,11 @@ public interface EspirituMapper {
         };
     }
 
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "mediumConectado", ignore = true)
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
 
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "mediumConectado", ignore = true)
     EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
 
