@@ -22,4 +22,6 @@ public interface UbicacionRepository {
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long id);
     List<Medium> findMediumByUbicacionId(Long ubicacionId);
     void deleteAll();
+    boolean estanConectadas(Long idOrigen,Long idDestino);
+    List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino);
 }
