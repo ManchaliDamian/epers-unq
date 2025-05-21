@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +18,9 @@ import java.util.Optional;
 public class MediumRepositoryImpl implements MediumRepository {
 
     private MediumDAO mediumDAO;
-    private MediumMapper mediumMapper;
-    private EspirituMapper espirituMapper;
+    private final MediumMapper mediumMapper;
+
+    private final EspirituMapper espirituMapper;
 
     public MediumRepositoryImpl(MediumDAO mediumDAO, @Qualifier("mediumMapperImpl") MediumMapper mediumMapper, EspirituMapper espirituMapper) {
         this.mediumDAO = mediumDAO;

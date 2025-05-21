@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {UbicacionMapper.class})
+
 public interface EspirituMapper {
     //toDomain
     EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
@@ -36,11 +36,11 @@ public interface EspirituMapper {
     }
 
 
-    @Mapping(target = "mediumConectado", ignore = true)
+
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
 
 
-    @Mapping(target = "mediumConectado", ignore = true)
+
     EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
 
     default List<EspirituJPADTO> toJPAList(List<Espiritu> espiritus) {
@@ -72,15 +72,15 @@ public interface EspirituMapper {
         };
     }
 
-    @Mapping(target = "id", ignore = true)
+
     EspirituAngelicalJPADTO actualizarEspirituAngelicalJpaCon(
-            @MappingTarget EspirituAngelicalJPADTO espirituJPADTO,
+            EspirituAngelicalJPADTO espirituJPADTO,
             EspirituAngelical espiritu
     );
 
-    @Mapping(target = "id", ignore = true)
+
     EspirituDemoniacoJPADTO actualizarEspirituDemoniacoJpaCon(
-            @MappingTarget EspirituDemoniacoJPADTO espirituJPADTO,
+            EspirituDemoniacoJPADTO espirituJPADTO,
             EspirituDemoniaco espiritu
     );
 

@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {EspirituMapper.class, UbicacionMapper.class})
+
 public interface MediumMapper {
 
     MediumJPADTO toJpa(Medium medium);

@@ -15,6 +15,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -28,9 +29,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiDaoSQL;
-    private UbicacionMapper mapperU;
-    private MediumMapper mapperM;
-    private EspirituMapper mapperE;
+    private final UbicacionMapper mapperU;
+
+    private final MediumMapper mapperM;
+
+    private final EspirituMapper mapperE;
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
@@ -63,10 +66,9 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .filter(u -> !u.isDeleted())
                 .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacion.getId()));
 
-        ubiJPA = mapperU.actualizarJpaCon(ubiJPA, ubicacion);
+        ubiJPA = mapperU.actualizarJPA(ubiJPA, ubicacion);
 
         ubiDaoSQL.save(ubiJPA);
-        ubicacion.setId(ubiJPA.getId());
 
         // --- Neo4j ---
         ubiDaoNeo.save(mapperU.toNeo(ubicacion));

@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository {
@@ -74,7 +76,11 @@ public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistenci
 
     @Override
     public List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable) {
-        return mapper.toDomainList(this.espirituDAO.recuperarDemoniacosPaginados(pageable));
+        List<EspirituDemoniaco> lista = mapper.toDomainListDemoniaco(this.espirituDAO.recuperarDemoniacosPaginados(pageable));
+        List<Espiritu> listaEspiritus = lista.stream()
+                .map(e -> (Espiritu) e)
+                .collect(Collectors.toList());
+        return listaEspiritus;
     }
 
     @Override

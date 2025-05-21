@@ -49,5 +49,5 @@ public interface EspirituDAO extends JpaRepository<EspirituJPADTO, Long> {
 
 
     @Query("FROM EspirituDemoniaco e where e.deleted = false")
-    List<EspirituJPADTO> recuperarDemoniacosPaginados(Pageable pageable);
+    List<EspirituDemoniacoJPADTO> recuperarDemoniacosPaginados(Pageable pageable);
 }
