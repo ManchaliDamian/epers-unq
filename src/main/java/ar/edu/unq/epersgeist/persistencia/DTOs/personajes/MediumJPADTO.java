@@ -38,12 +38,14 @@ public class MediumJPADTO {
     @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
 
-    //auditoria
     @CreationTimestamp
-    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @Column(nullable = false)

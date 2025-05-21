@@ -182,7 +182,7 @@ public class MediumServiceTest {
     @Test
     void invocar_actualizaUbicacionEspirituEnDB() {
         Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario);
-        serviceE.guardar(nuevoDemonio);
+        nuevoDemonio = serviceE.guardar(nuevoDemonio);
 
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
 

@@ -39,12 +39,14 @@ public abstract class EspirituJPADTO {
 
     private TipoEspiritu tipo;
 
-    //auditoria
     @CreationTimestamp
-    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @Column(nullable = false)

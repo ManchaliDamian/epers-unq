@@ -165,8 +165,8 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
-        serviceE.guardar(angel);
-        serviceM.guardar(medium);
+        angel = serviceE.guardar(angel);
+        medium = serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
