@@ -6,6 +6,8 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -32,6 +34,7 @@ public interface UbicacionMapper {
             default -> throw new IllegalStateException("Unexpected value: " + ubicacion);
         };
     }
+
     SantuarioJPADTO toJpa(Santuario santuario);
     CementerioJPADTO toJpa(Cementerio cementerio);
     // Actualiza un UbicacionJPA desde el modelo de dominio

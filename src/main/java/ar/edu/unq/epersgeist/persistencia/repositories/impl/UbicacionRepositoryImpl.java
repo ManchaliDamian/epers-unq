@@ -11,9 +11,12 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -25,24 +28,30 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiDaoSQL;
-    private UbicacionMapper mapper;
+    private UbicacionMapper mapperU;
+    private MediumMapper mapperM;
+    private EspirituMapper mapperE;
 
-    public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql, @Qualifier("ubicacionMapperImpl") UbicacionMapper mapper){
+    public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
+                                   MediumMapper mapperM, EspirituMapper mapperE,
+                                   @Qualifier("ubicacionMapperImpl") UbicacionMapper mapperU){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
-        this.mapper = mapper;
+        this.mapperU = mapperU;
+        this.mapperE = mapperE;
+        this.mapperM = mapperM;
     }
 
     @Override
     public Ubicacion guardar(Ubicacion ubicacion){
         // SQL
-        UbicacionJPADTO ubiJPA = mapper.toJpa(ubicacion);
+        UbicacionJPADTO ubiJPA = mapperU.toJpa(ubicacion);
         ubiDaoSQL.save(ubiJPA);
 
         ubicacion.setId(ubiJPA.getId());
 
         // Neo
-        ubiDaoNeo.save(mapper.toNeo(ubicacion));
+        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
 
         return ubicacion;
     }
@@ -54,13 +63,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .filter(u -> !u.isDeleted())
                 .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacion.getId()));
 
-        ubiJPA = mapper.actualizarJpaCon(ubiJPA, ubicacion);
+        ubiJPA = mapperU.actualizarJpaCon(ubiJPA, ubicacion);
 
         ubiDaoSQL.save(ubiJPA);
         ubicacion.setId(ubiJPA.getId());
 
         // --- Neo4j ---
-        ubiDaoNeo.save(mapper.toNeo(ubicacion));
+        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
         return ubicacion;
     }
 
@@ -110,50 +119,70 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public List<Ubicacion> recuperarTodos(){
         List<UbicacionJPADTO> ubicaciones = ubiDaoSQL.recuperarTodos();
-        return mapper.toDomainList(ubicaciones);     //Duda si es con Sql o con Neo4j o ambas.
+        return mapperU.toDomainList(ubicaciones);     //Duda si es con Sql o con Neo4j o ambas.
     }
 
     @Override
     public List<Cementerio> recuperarCementerios(){
         List<CementerioJPADTO> ubicaciones = ubiDaoSQL.recuperarCementerios();
-        return mapper.toDomainListCementerio(ubicaciones);
+        return mapperU.toDomainListCementerio(ubicaciones);
     }
 
     @Override
     public List<Santuario> recuperarSantuarios(){
         List<SantuarioJPADTO> ubicaciones = ubiDaoSQL.recuperarSantuarios();
-        return mapper.toDomainListSantuarios(ubicaciones);
+        return mapperU.toDomainListSantuarios(ubicaciones);
     }
 
     @Override
     public Optional<Ubicacion> recuperarEliminado(Long id) {
-        return this.ubiDaoSQL.recuperarEliminado(id).map(ubicacionJPADTO -> mapper.toDomain(ubicacionJPADTO));
+        return this.ubiDaoSQL.recuperarEliminado(id).map(ubicacionJPADTO -> mapperU.toDomain(ubicacionJPADTO));
     }
 
     @Override
     public List<Ubicacion> recuperarTodosEliminados() {
-        return mapper.toDomainList(this.ubiDaoSQL.recuperarTodosEliminados());
+        return mapperU.toDomainList(this.ubiDaoSQL.recuperarTodosEliminados());
     }
 
     @Override
     public List<Espiritu> findEspiritusByUbicacionId(Long id){
-        return ubiDaoSQL.findEspiritusByUbicacionId(id);
+        return mapperE.toDomainList(this.ubiDaoSQL.findEspiritusByUbicacionId(id));
     }
 
     @Override
     public List<Medium> findMediumsSinEspiritusByUbicacionId(Long id){
-        return ubiDaoSQL.findMediumsSinEspiritusByUbicacionId(id);
+        return mapperM.toDomainList(ubiDaoSQL.findMediumsSinEspiritusByUbicacionId(id));
     }
 
     @Override
     public List<Medium> findMediumByUbicacionId(Long ubicacionId){
-        return ubiDaoSQL.findMediumByUbicacionId(ubicacionId);
+        return mapperM.toDomainList(ubiDaoSQL.findMediumByUbicacionId(ubicacionId));
     }
 
     @Override
     public void deleteAll() {
         this.ubiDaoNeo.deleteAll();
         this.ubiDaoSQL.deleteAll();
+    }
+
+    @Override
+    public List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion(PageRequest of) {
+        return mapperU.toDomainListSantuarios(ubiDaoSQL.obtenerSantuariosOrdenadosPorCorrupcion(of));
+    }
+
+    @Override
+    public List<Medium> mediumConMayorDemoniacosEn(long ubicacionId) {
+        return mapperM.toDomainList(ubiDaoSQL.mediumConMayorDemoniacosEn(ubicacionId));
+    }
+
+    @Override
+    public int cantTotalDeDemoniacosEn(long ubicacionId) {
+        return ubiDaoSQL.cantTotalDeDemoniacosEn(ubicacionId);
+    }
+
+    @Override
+    public int cantTotalDeDemoniacosLibresEn(long ubicacionId) {
+        return ubiDaoSQL.cantTotalDeDemoniacosLibresEn(ubicacionId);
     }
     //----------------------------------------------------------------
 

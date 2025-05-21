@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
@@ -44,15 +46,15 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
 
     @Query("from Espiritu e where e.ubicacion.id = :ubicacionId " +
             "and e.deleted = false and e.ubicacion.deleted = false")
-    List<Espiritu> findEspiritusByUbicacionId(Long ubicacionId);
+    List<EspirituJPADTO> findEspiritusByUbicacionId(Long ubicacionId);
 
     @Query("from Medium m where m.ubicacion.id = :ubicacionId and size(m.espiritus) = 0 " +
             "and m.deleted = false and m.ubicacion.deleted = false")
-    List<Medium> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
+    List<MediumJPADTO> findMediumsSinEspiritusByUbicacionId(Long ubicacionId);
 
     @Query("from Medium m where m.ubicacion.id = :ubicacionId " +
             "and m.deleted = false and m.ubicacion.deleted = false")
-    List<Medium> findMediumByUbicacionId(Long ubicacionId);
+    List<MediumJPADTO> findMediumByUbicacionId(Long ubicacionId);
 
 
     //-----------------------------------------------------------------
@@ -73,7 +75,7 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
                     "GROUP BY m " +
                     "ORDER BY COUNT(e) DESC"
     )
-    List<Medium> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
+    List<MediumJPADTO> mediumConMayorDemoniacosEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query("SELECT COUNT(e) FROM Espiritu e " +
             "WHERE TYPE(e) = EspirituDemoniaco " +

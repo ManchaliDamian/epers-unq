@@ -87,7 +87,7 @@ public class EstadisticaServiceTest {
     @Test
     void elSantuarioMasCorrupto(){
         medium1.conectarseAEspiritu(demoniaco1);
-        mediumService.guardar(medium1);
+        medium1 = mediumService.guardar(medium1);
         mediumService.mover(medium1.getId(), santuario1.getId());
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();

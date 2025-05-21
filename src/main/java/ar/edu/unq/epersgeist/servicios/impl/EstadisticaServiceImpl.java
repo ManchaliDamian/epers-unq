@@ -2,8 +2,11 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
+import ar.edu.unq.epersgeist.persistencia.repositories.impl.UbicacionRepositoryImpl;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.data.domain.PageRequest;
 import ar.edu.unq.epersgeist.modelo.exception.NoHaySantuarioCorruptoException;
@@ -16,16 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EstadisticaServiceImpl implements EstadisticaService {
 
-    private final UbicacionDAOSQL ubicacionDAO;
+    private final UbicacionRepository ubicacionRepository;
 
-    public EstadisticaServiceImpl(UbicacionDAOSQL ubicacionDAO){
-        this.ubicacionDAO = ubicacionDAO;
+    public EstadisticaServiceImpl(UbicacionRepository ubicacionRepository){
+        this.ubicacionRepository = ubicacionRepository;
     }
 
     @Override
     public ReporteSantuarioMasCorrupto santuarioCorrupto(){
-            SantuarioJPADTO santuarioMasCorrupto =
-                ubicacionDAO
+            Santuario santuarioMasCorrupto =
+                    ubicacionRepository
                         .obtenerSantuariosOrdenadosPorCorrupcion(PageRequest.of(0, 1))
                         .stream()
                         .findFirst()
@@ -33,14 +36,14 @@ public class EstadisticaServiceImpl implements EstadisticaService {
 
             long ubicacionId = santuarioMasCorrupto.getId();
 
-        Medium mediumMayorCantDemoniacos = ubicacionDAO
+        Medium mediumMayorCantDemoniacos = ubicacionRepository
                 .mediumConMayorDemoniacosEn(ubicacionId)
                 .stream()
                 .findFirst()
                 .orElse(null);
 
-        int cantTotalDeDemoniacos = ubicacionDAO.cantTotalDeDemoniacosEn(ubicacionId);
-            int cantTotalDeDemoniacosLibres = ubicacionDAO.cantTotalDeDemoniacosLibresEn(ubicacionId);
+        int cantTotalDeDemoniacos = ubicacionRepository.cantTotalDeDemoniacosEn(ubicacionId);
+            int cantTotalDeDemoniacosLibres = ubicacionRepository.cantTotalDeDemoniacosLibresEn(ubicacionId);
             return new ReporteSantuarioMasCorrupto(santuarioMasCorrupto.getNombre()
                                                    ,cantTotalDeDemoniacos
                                                    ,cantTotalDeDemoniacosLibres
