@@ -75,18 +75,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
-        Optional<UbicacionJPADTO> ubicacionJPA = this.recuperarSql(ubicacionId);
-
-        if (ubicacionJPA.isEmpty()) {
-            throw new UbicacionNoEncontradaException(ubicacionId);
-        }
-
-        Ubicacion ubicacion = switch (ubicacionJPA.get().getTipo()) {
-            case SANTUARIO -> new Santuario(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
-            case CEMENTERIO -> new Cementerio(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
-        };
-        ubicacion.setId(ubicacionId);
-        return Optional.of(ubicacion);
+        return this.ubiDaoSQL.findById(ubicacionId).map(ubi -> mapperU.toDomain(ubi));
     }
 
     public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
