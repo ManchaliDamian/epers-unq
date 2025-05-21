@@ -6,6 +6,8 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> {
 
@@ -14,4 +16,9 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
             "MATCH (u:Ubicacion {id: $id})-[r]-(:Ubicacion)" +
             "RETURN COUNT(r) > 0 AS tieneConexiones")
     boolean tieneConexiones(@Param("id") Long id);
+
+    @Query(
+        "MATCH (u: Ubicacion) DETACH DELETE u"
+    )
+    void deleteAll();
 }
