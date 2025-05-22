@@ -174,7 +174,7 @@ public class UbicacionServiceTest {
     }
     @Test
     void mediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());

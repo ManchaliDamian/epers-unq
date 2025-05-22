@@ -70,14 +70,14 @@ public interface UbicacionMapper {
             @MappingTarget Cementerio cementerio,
             CementerioJPADTO cementerioJPADTO
     );
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "updatedAt", ignore = true)
     SantuarioJPADTO actualizarJpaCon(
             @MappingTarget SantuarioJPADTO santuarioJPADTO,
             Santuario santuario
     );
 
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "updatedAt", ignore = true)
     CementerioJPADTO actualizarJpaCon(
             @MappingTarget CementerioJPADTO cementerioJPADTO,
