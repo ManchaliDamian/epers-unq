@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {UbicacionMapper.class})
 public interface EspirituMapper {
     //toDomain
+    @Mapping(target = "mediumConectado.espiritus", ignore = true)
     EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
+
+    @Mapping(target = "mediumConectado.espiritus", ignore = true)
     EspirituDemoniaco toDomainDemonio(EspirituDemoniacoJPADTO jpa);
 
     default Espiritu toDomain(EspirituJPADTO jpa){
@@ -36,11 +39,13 @@ public interface EspirituMapper {
     }
 
 
-    @Mapping(target = "mediumConectado", ignore = true)
+    @Mapping(target = "mediumConectado.id", source = "mediumConectado.id")
+    @Mapping(target = "mediumConectado.espiritus", ignore = true)
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
 
 
-    @Mapping(target = "mediumConectado", ignore = true)
+    @Mapping(target = "mediumConectado.id", source = "mediumConectado.id")
+    @Mapping(target = "mediumConectado.espiritus", ignore = true)
     EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu);
 
     default List<EspirituJPADTO> toJPAList(List<Espiritu> espiritus) {
