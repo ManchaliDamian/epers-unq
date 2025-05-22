@@ -133,7 +133,7 @@ public class UbicacionServiceTest {
     }
     @Test
     void espiritusEnUnaUbicacionExistenteSinEliminados() {
-        serviceE.guardar(angel);
+       angel = serviceE.guardar(angel);
         serviceE.guardar(demonio);
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
