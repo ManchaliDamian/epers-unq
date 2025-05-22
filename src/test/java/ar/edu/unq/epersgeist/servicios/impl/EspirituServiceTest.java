@@ -118,7 +118,8 @@ public class EspirituServiceTest {
     void testConectarEspirituAMediumSaleBien() {
 
         medium = serviceM.guardar(medium);
-
+        medium.getEspiritus();
+        azazel.getMediumConectado();
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
         Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());

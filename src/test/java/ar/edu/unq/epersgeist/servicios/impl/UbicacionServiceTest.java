@@ -76,7 +76,7 @@ public class UbicacionServiceTest {
 
         santuario.setNombre(nuevoNombre);
         santuario.setFlujoDeEnergia(35);
-        serviceU.actualizar(santuario);
+        santuario = serviceU.actualizar(santuario);
 
         Date fechaEsperada = new Date();
 
@@ -150,7 +150,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
@@ -180,7 +180,7 @@ public class UbicacionServiceTest {
     }
     @Test
     void hayMediumsConUnMediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         serviceM.guardar(medium2);
         serviceM.guardar(medium3);

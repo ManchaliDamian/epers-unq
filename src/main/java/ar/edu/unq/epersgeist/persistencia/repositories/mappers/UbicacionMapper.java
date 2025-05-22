@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ import java.util.List;
 public interface UbicacionMapper {
 
     //toDomain
+    @Mapping(source = "updatedAt", target = "updatedAt")
     Santuario toDomainSantuario(SantuarioJPADTO jpa);
+    @Mapping(source = "updatedAt", target = "updatedAt")
     Cementerio toDomainCementerio(CementerioJPADTO jpa);
     default Ubicacion toDomain(UbicacionJPADTO jpa){
         return switch (jpa.getTipo()){
@@ -39,13 +42,26 @@ public interface UbicacionMapper {
     CementerioJPADTO toJpa(Cementerio cementerio);
     // Actualiza un UbicacionJPA desde el modelo de dominio
 
-    default UbicacionJPADTO actualizarJpaCon(UbicacionJPADTO ubiJPA, Ubicacion ubicacion){
+    default UbicacionJPADTO actualizarJpa(UbicacionJPADTO ubiJPA, Ubicacion ubicacion){
         return switch (ubicacion){
-            case Cementerio c -> actualizarJpaCon(ubiJPA, c);
-            case Santuario s -> actualizarJpaCon(ubiJPA, s);
+            case Cementerio c -> actualizarJpaCon((CementerioJPADTO) ubiJPA, c);
+            case Santuario s -> actualizarJpaCon((SantuarioJPADTO) ubiJPA, s);
             default -> throw new IllegalStateException("Unexpected value: " + ubicacion);
         };
     }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    SantuarioJPADTO actualizarJpaCon(
+            @MappingTarget SantuarioJPADTO santuarioJPADTO,
+            Santuario santuario
+    );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    CementerioJPADTO actualizarJpaCon(
+            @MappingTarget CementerioJPADTO cementerioJPADTO,
+            Cementerio cementerio
+    );
 
     //toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);

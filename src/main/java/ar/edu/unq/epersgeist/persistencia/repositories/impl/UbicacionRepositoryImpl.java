@@ -63,14 +63,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .filter(u -> !u.isDeleted())
                 .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacion.getId()));
 
-        ubiJPA = mapperU.actualizarJpaCon(ubiJPA, ubicacion);
+        ubiJPA = mapperU.actualizarJpa(ubiJPA, ubicacion);
+        UbicacionJPADTO guardado =  ubiDaoSQL.save(ubiJPA);
+        Ubicacion ubiActualizada = mapperU.toDomain(guardado);
 
-        ubiDaoSQL.save(ubiJPA);
-        ubicacion.setId(ubiJPA.getId());
 
         // --- Neo4j ---
-        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
-        return ubicacion;
+        ubiDaoNeo.save(mapperU.toNeo(ubiActualizada));
+        return ubiActualizada;
     }
 
     @Override
