@@ -140,9 +140,9 @@ public class EspirituServiceTest {
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
-        serviceE.guardar(azazel);
+        azazel = serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
