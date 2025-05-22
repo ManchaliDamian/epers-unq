@@ -46,14 +46,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Ubicacion guardar(Ubicacion ubicacion){
         // SQL
         UbicacionJPADTO ubiJPA = mapperU.toJpa(ubicacion);
-        ubiDaoSQL.save(ubiJPA);
+        ubiJPA = ubiDaoSQL.save(ubiJPA);
+        Ubicacion ubiActualizada = mapperU.actualizarModelo(ubicacion, ubiJPA);
 
-        ubicacion.setId(ubiJPA.getId());
 
         // Neo
-        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
+        ubiDaoNeo.save(mapperU.toNeo(ubiActualizada));
 
-        return ubicacion;
+        return ubiActualizada;
     }
 
     @Override

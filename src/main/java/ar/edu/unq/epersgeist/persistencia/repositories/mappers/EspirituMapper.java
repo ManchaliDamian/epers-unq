@@ -24,7 +24,7 @@ public interface EspirituMapper {
         return switch (jpa.getTipo()){
             case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) jpa);
             case DEMONIACO -> toDomainDemonio((EspirituDemoniacoJPADTO) jpa);
-        };
+           };
     }
 
     //toJpa

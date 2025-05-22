@@ -16,8 +16,10 @@ public interface UbicacionMapper {
 
     //toDomain
     @Mapping(source = "updatedAt", target = "updatedAt")
+    @Mapping(source = "createdAt", target = "createdAt")
     Santuario toDomainSantuario(SantuarioJPADTO jpa);
     @Mapping(source = "updatedAt", target = "updatedAt")
+    @Mapping(source = "createdAt", target = "createdAt")
     Cementerio toDomainCementerio(CementerioJPADTO jpa);
     default Ubicacion toDomain(UbicacionJPADTO jpa){
         return switch (jpa.getTipo()){
@@ -49,6 +51,25 @@ public interface UbicacionMapper {
             default -> throw new IllegalStateException("Unexpected value: " + ubicacion);
         };
     }
+    default Ubicacion actualizarModelo(Ubicacion ubi, UbicacionJPADTO ubiJPA){
+        return switch (ubiJPA){
+            case CementerioJPADTO c -> actualizarModeloCon((Cementerio) ubi, c);
+            case SantuarioJPADTO s -> actualizarModeloCon((Santuario) ubi, s);
+            default -> throw new IllegalStateException("Unexpected value: " + ubiJPA);
+        };
+    }
+
+    @Mapping(target = "updatedAt", ignore = true)
+    Santuario actualizarModeloCon(
+            @MappingTarget Santuario santuario,
+            SantuarioJPADTO santuarioJPADTO
+    );
+
+    @Mapping(target = "updatedAt", ignore = true)
+    Cementerio actualizarModeloCon(
+            @MappingTarget Cementerio cementerio,
+            CementerioJPADTO cementerioJPADTO
+    );
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     SantuarioJPADTO actualizarJpaCon(

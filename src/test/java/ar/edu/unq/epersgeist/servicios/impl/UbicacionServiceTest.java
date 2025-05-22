@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -95,7 +96,7 @@ public class UbicacionServiceTest {
 
     @Test
     void testCreateAtDeUbicacion(){
-        serviceU.guardar(santuario);
+
 
         Date fechaEsperada = new Date();
 
