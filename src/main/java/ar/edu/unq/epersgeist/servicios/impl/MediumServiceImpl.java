@@ -43,7 +43,7 @@ public class MediumServiceImpl implements MediumService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
         if(medium.isDeleted()) {
             throw new MediumNoEncontradoException(mediumId);
         }
@@ -52,7 +52,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return mediumRepository.findById(mediumId)
+        return mediumRepository.recuperar(mediumId)
                 .filter(e -> !e.isDeleted());
     }
 
@@ -113,7 +113,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituRepository.findById(espirituId);
+        Optional<Espiritu> espiritu = espirituRepository.recuperar(espirituId);
         if (espiritu.isEmpty()) {
             throw new EspirituNoEncontradoException(espirituId);
         }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MediumRepository {
     Medium save(Medium medium);
-    Optional<Medium> findById(Long mediumId);
+    Optional<Medium> recuperar(Long mediumId);
     List<Medium> recuperarTodos();
     Optional<Medium> recuperarEliminado(Long id);
     List<Medium> recuperarTodosLosEliminados();

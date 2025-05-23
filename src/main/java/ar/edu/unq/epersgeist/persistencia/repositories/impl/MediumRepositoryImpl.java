@@ -20,7 +20,7 @@ public class MediumRepositoryImpl implements MediumRepository {
     private MediumMapper mediumMapper;
     private EspirituMapper espirituMapper;
 
-    public MediumRepositoryImpl(MediumDAO mediumDAO, @Qualifier("mediumMapperImpl") MediumMapper mediumMapper, EspirituMapper espirituMapper) {
+    public MediumRepositoryImpl(MediumDAO mediumDAO, MediumMapper mediumMapper, EspirituMapper espirituMapper) {
         this.mediumDAO = mediumDAO;
         this.mediumMapper = mediumMapper;
         this.espirituMapper = espirituMapper;
@@ -33,7 +33,7 @@ public class MediumRepositoryImpl implements MediumRepository {
     }
 
     @Override
-    public Optional<Medium> findById(Long mediumId) {
+    public Optional<Medium> recuperar(Long mediumId) {
         return this.mediumDAO.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
     }
 

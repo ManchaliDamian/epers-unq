@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface EspirituRepository {
     Espiritu save(Espiritu espiritu);
     List<Espiritu> recuperarTodos();
-    Optional<Espiritu> findById(Long espirituId);
+    Optional<Espiritu> recuperar(Long espirituId);
     List<EspirituDemoniaco> recuperarDemonios();
     List<EspirituAngelical> recuperarAngeles();
     Optional<Espiritu> recuperarEliminado(Long id);

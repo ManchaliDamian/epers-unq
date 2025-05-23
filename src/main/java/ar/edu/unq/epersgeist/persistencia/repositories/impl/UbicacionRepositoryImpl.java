@@ -34,7 +34,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   @Qualifier("ubicacionMapperImpl") UbicacionMapper mapperU){
+                                   UbicacionMapper mapperU){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;

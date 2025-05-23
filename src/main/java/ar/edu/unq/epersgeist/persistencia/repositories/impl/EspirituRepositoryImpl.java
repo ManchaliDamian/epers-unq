@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository {
+public class EspirituRepositoryImpl implements EspirituRepository {
 
     private EspirituDAO espirituDAO;
     private EspirituMapper mapper;
 
-    public EspirituRepositoryImpl(EspirituDAO espirituDAO, @Qualifier("espirituMapperImpl") EspirituMapper mapper){
+    public EspirituRepositoryImpl(EspirituDAO espirituDAO, EspirituMapper mapper){
         this.espirituDAO = espirituDAO;
         this.mapper = mapper;
     }
@@ -38,7 +38,7 @@ public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistenci
     }
 
     @Override
-    public Optional<Espiritu> findById(Long espirituId) {
+    public Optional<Espiritu> recuperar(Long espirituId) {
         return this.espirituDAO.findById(espirituId).map(espirituJPADTO -> mapper.toDomain(espirituJPADTO));
     }
 

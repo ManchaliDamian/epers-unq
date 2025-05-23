@@ -44,7 +44,7 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituRepository.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        Espiritu espiritu = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
@@ -52,7 +52,7 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
         if(medium.isDeleted()) {
             throw new EspirituNoEncontradoException(mediumId);
         }
@@ -61,7 +61,7 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return espirituRepository.findById(espirituId)
+        return espirituRepository.recuperar(espirituId)
                 .filter(e -> !e.isDeleted());
     }
 

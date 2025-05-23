@@ -167,7 +167,7 @@ public class MediumServiceTest {
     void testInvocar() {
 
         Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
-        Medium actualizado = mediumRepository.findById(medium1.getId()).get();
+        Medium actualizado = serviceM.recuperar(medium1.getId()).get();
         assertEquals(0, invocado.getNivelDeConexion());
         assertEquals(40, actualizado.getMana());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
