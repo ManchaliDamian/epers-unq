@@ -9,10 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {EspirituMapper.class, UbicacionMapper.class})
 public interface MediumMapper {
-    @Mapping(target = "espiritus", ignore = true)
     MediumJPADTO toJpa(Medium medium);
-    @Mapping(target = "espiritus", ignore = true)
     Medium toDomain(MediumJPADTO mediumJPADTO);
-    @Mapping(target = "espiritus", ignore = true)
     List<Medium> toDomainList(List<MediumJPADTO> mediumList);
 }

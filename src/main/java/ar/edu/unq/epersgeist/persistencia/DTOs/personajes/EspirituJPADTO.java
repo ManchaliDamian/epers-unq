@@ -10,8 +10,8 @@ import org.hibernate.annotations.*;
 
 import java.util.Date;
 
-@Getter @Setter @NoArgsConstructor(force = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
+@Getter @Setter @ToString
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 @Entity(name = "Espiritu")

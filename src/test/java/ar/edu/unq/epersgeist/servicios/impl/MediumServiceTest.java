@@ -152,15 +152,15 @@ public class MediumServiceTest {
     @Test
     void moverMedium_conEspiritus_actualizaUbicacionesEnCascada() {
         medium1.conectarseAEspiritu(angel);
-        serviceM.guardar(medium1);
+        medium1 = serviceM.guardar(medium1);
 
         serviceM.mover(medium1.getId(), santuario.getId());
 
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
         Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
 
-        assertEquals(santuario, mediumActualizado.get().getUbicacion());
-        assertEquals(santuario, angelActualizado.get().getUbicacion());
+        assertEquals(santuario.getId(), mediumActualizado.get().getUbicacion().getId());
+        assertEquals(santuario.getId(), angelActualizado.get().getUbicacion().getId());
     }
 
     @Test
@@ -187,7 +187,7 @@ public class MediumServiceTest {
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
 
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(nuevoDemonio.getId());
-        assertEquals(cementerio, demonioActualizado.get().getUbicacion());
+        assertEquals(cementerio.getId(), demonioActualizado.get().getUbicacion().getId());
     }
 
     @Test
@@ -357,8 +357,8 @@ public class MediumServiceTest {
         demonio.setUbicacion(cementerio);
         medium1.conectarseAEspiritu(demonio);//50*0.2=10, 10+10=20
 
-        serviceE.guardar(demonio);
-        serviceM.guardar(medium1);
+        demonio = serviceE.guardar(demonio);
+        medium1 = serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId()); //52, 50
 
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
@@ -394,9 +394,9 @@ public class MediumServiceTest {
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
         medium2.conectarseAEspiritu(demonio);
 
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
-        serviceM.guardar(medium2);
+        angel = serviceE.guardar(angel);
+        demonio = serviceE.guardar(demonio);
+        medium2 = serviceM.guardar(medium2);
 
         serviceM.descansar(medium2.getId());
 
