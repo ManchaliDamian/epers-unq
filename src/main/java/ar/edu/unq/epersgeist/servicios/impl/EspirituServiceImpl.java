@@ -99,7 +99,7 @@ public class EspirituServiceImpl implements EspirituService {
         medium.conectarseAEspiritu(espiritu);
 
         espirituRepository.save(espiritu);
-        mediumRepository.save(medium);
+        medium = mediumRepository.save(medium);
 
         return medium;
     }

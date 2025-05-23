@@ -389,12 +389,10 @@ public class MediumServiceTest {
         angel.setNivelDeConexion(10);
         demonio.setNivelDeConexion(30);
         angel.setUbicacion(santuario);
-        medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
-        medium2.conectarseAEspiritu(demonio);
-
-        angel = serviceE.guardar(angel);
-        demonio = serviceE.guardar(demonio);
-        medium2 = serviceM.guardar(medium2);
+        angel = serviceE.actualizar(angel);
+        demonio = serviceE.actualizar(demonio);
+        medium2 = serviceE.conectar(angel.getId(), medium2.getId());
+        medium2 = serviceE.conectar(demonio.getId(), medium2.getId());
 
         serviceM.descansar(medium2.getId());
 
@@ -512,9 +510,13 @@ public class MediumServiceTest {
 
         angel.setNivelDeConexion(20);
         demonio.setNivelDeConexion(10);
+        angel = serviceE.actualizar(angel);
+        demonio = serviceE.actualizar(demonio);
 
-        conectarEspirituAMedium(medium1, angel);
-        conectarEspirituAMedium(medium2, demonio);
+        medium1 = serviceE.conectar(angel.getId(), medium1.getId());
+        medium2 = serviceE.conectar(demonio.getId(), medium2.getId());
+//        conectarEspirituAMedium(medium1, angel);
+//        conectarEspirituAMedium(medium2, demonio);
 
         serviceM.mover(medium2.getId(), cementerio.getId());
 
