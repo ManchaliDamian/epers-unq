@@ -282,10 +282,8 @@ public class MediumServiceTest {
 
     @Test
     void testDemoniosDeUnMedium() {
-        medium1.conectarseAEspiritu(angel);
-        medium1.conectarseAEspiritu(demonCementerio);
-        serviceM.guardar(medium1);
-
+        medium1 = serviceE.conectar(angel.getId(), medium1.getId());
+        medium1 = serviceE.conectar(demonCementerio.getId(), medium1.getId());
         List<EspirituDemoniaco> demoniosDelMedium = serviceM.demonios(medium1.getId());
 
         assertEquals(1, demoniosDelMedium.size());
