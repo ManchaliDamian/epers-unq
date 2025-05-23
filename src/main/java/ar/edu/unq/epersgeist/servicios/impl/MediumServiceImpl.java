@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -93,6 +92,9 @@ public class MediumServiceImpl implements MediumService {
 
         mediumRepository.save(mediumExorcista);
         mediumRepository.save(mediumAExorcizar);
+
+        angeles.forEach(espirituRepository::save);
+        demonios.forEach(espirituRepository::save);
     }
 
     @Override
