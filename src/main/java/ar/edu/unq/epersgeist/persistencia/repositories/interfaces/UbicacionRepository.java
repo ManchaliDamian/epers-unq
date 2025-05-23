@@ -4,9 +4,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

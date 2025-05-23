@@ -7,7 +7,6 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

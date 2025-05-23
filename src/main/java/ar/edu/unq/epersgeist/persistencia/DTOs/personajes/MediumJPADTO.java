@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.DTOs.personajes;
 
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

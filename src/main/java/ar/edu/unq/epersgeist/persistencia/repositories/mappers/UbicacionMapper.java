@@ -14,7 +14,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UbicacionMapper {
 
-    //toDomain
     @Mapping(source = "updatedAt", target = "updatedAt")
     @Mapping(source = "createdAt", target = "createdAt")
     Santuario toDomainSantuario(SantuarioJPADTO jpa);
@@ -31,7 +30,6 @@ public interface UbicacionMapper {
     List<Cementerio> toDomainListCementerio(List<CementerioJPADTO> cementerios);
     List<Santuario> toDomainListSantuarios(List<SantuarioJPADTO> santuarios);
 
-    //toJpa
     default UbicacionJPADTO toJpa(Ubicacion ubicacion){
         return switch (ubicacion){
             case Cementerio c -> toJpa(c);
@@ -42,7 +40,6 @@ public interface UbicacionMapper {
 
     SantuarioJPADTO toJpa(Santuario santuario);
     CementerioJPADTO toJpa(Cementerio cementerio);
-    // Actualiza un UbicacionJPA desde el modelo de dominio
 
     default UbicacionJPADTO actualizarJpa(UbicacionJPADTO ubiJPA, Ubicacion ubicacion){
         return switch (ubicacion){
@@ -84,7 +81,6 @@ public interface UbicacionMapper {
             Cementerio cementerio
     );
 
-    //toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
 
 

@@ -7,9 +7,7 @@ import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

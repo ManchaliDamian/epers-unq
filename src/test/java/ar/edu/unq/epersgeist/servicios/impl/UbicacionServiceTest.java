@@ -5,9 +5,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
-import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;

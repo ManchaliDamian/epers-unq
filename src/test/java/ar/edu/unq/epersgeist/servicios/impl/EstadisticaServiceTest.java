@@ -89,8 +89,6 @@ public class EstadisticaServiceTest {
     void elSantuarioMasCorrupto(){
 
         medium1 = espirituService.conectar(demoniaco1.getId(), medium1.getId());
-//        medium1.conectarseAEspiritu(demoniaco1);
-//        medium1 = mediumService.actualizar(medium1);
         mediumService.mover(medium1.getId(), santuario1.getId());
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
