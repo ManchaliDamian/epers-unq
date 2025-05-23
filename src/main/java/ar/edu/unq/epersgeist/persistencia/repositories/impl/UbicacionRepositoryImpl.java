@@ -69,26 +69,17 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubiJPA = mapperU.actualizarJPA(ubiJPA, ubicacion);
 
         ubiDaoSQL.save(ubiJPA);
+        Ubicacion ubiActualizada = mapperU.toDomain(ubiJPA);
 
         // --- Neo4j ---
-        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
-        return ubicacion;
+        ubiDaoNeo.save(mapperU.toNeo(ubiActualizada));
+        return ubiActualizada;
     }
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
         Optional<UbicacionJPADTO> ubicacionJPA = this.recuperarSql(ubicacionId);
-
-        if (ubicacionJPA.isEmpty()) {
-            throw new UbicacionNoEncontradaException(ubicacionId);
-        }
-
-        Ubicacion ubicacion = switch (ubicacionJPA.get().getTipo()) {
-            case SANTUARIO -> new Santuario(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
-            case CEMENTERIO -> new Cementerio(ubicacionJPA.get().getNombre(), ubicacionJPA.get().getFlujoDeEnergia());
-        };
-        ubicacion.setId(ubicacionId);
-        return Optional.of(ubicacion);
+        return ubicacionJPA.map(mapperU::toDomain);
     }
 
     public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
@@ -138,7 +129,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperarEliminado(Long id) {
-        return this.ubiDaoSQL.recuperarEliminado(id).map(ubicacionJPADTO -> mapperU.toDomain(ubicacionJPADTO));
+        return this.ubiDaoSQL.recuperarEliminado(id).map(mapperU::toDomain);
     }
 
     @Override

@@ -14,15 +14,15 @@ import java.util.Optional;
 @Repository
 public interface MediumDAO extends JpaRepository<MediumJPADTO, Long> {
     @Query(
-            "FROM Medium m where m.deleted = false"
+            "FROM Medium m LEFT JOIN FETCH m.espiritus where m.deleted = false"
     )
     List<MediumJPADTO> recuperarTodos();
-    @Query(
-            "FROM Medium m where m.deleted = true and m.id = :id"
-    )
+
+    @Query("FROM Medium m LEFT JOIN FETCH m.espiritus WHERE m.deleted = true AND m.id = :id")
+
     Optional<MediumJPADTO> recuperarEliminado(@Param("id") Long id);
     @Query(
-            "FROM Medium m where m.deleted = true"
+            "FROM Medium m LEFT JOIN FETCH m.espiritus where m.deleted = true"
     )
     List<MediumJPADTO> recuperarTodosLosEliminados();
 

@@ -35,7 +35,6 @@ public class DataServiceImpl implements DataService {
         ubicacionRepository.deleteAll();
     }
 
-
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {
         return mediumRepository.recuperarEliminado(mediumId);
     }

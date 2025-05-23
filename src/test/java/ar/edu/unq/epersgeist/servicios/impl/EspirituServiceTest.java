@@ -128,7 +128,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
 
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceE.eliminar(azazel.getId());
 
         assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
@@ -140,9 +140,9 @@ public class EspirituServiceTest {
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
-        serviceE.guardar(azazel);
+        azazel = serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
@@ -151,7 +151,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -263,7 +263,7 @@ public class EspirituServiceTest {
     void testRecuperarEliminadoPorId() {
         serviceE.eliminar(angel.getId());
         Optional<Espiritu> eliminado = dataService.recuperarEliminadoEspiritu(angel.getId());
-        assertEquals(eliminado.get().getNombre(), "Gabriel");
+        assertEquals("Gabriel", eliminado.get().getNombre());
         assertTrue(eliminado.get().isDeleted());
 
     }

@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,6 @@ public interface EspirituMapper {
     }
 
 
-
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
 
 
@@ -48,6 +48,14 @@ public interface EspirituMapper {
     }
 
     List<Espiritu> toDomainList(List<EspirituJPADTO> espirituJPADTOS);
+
+
+    EspirituDemoniacoJPADTO toJpaDemonio(EspirituDemoniaco espiritu, Map<Object, Object> context);
+
+    List<Espiritu> toDomainList(List<EspirituJPADTO> espirituJPADTOS, Map<Object, Object> context);
+
+    List<EspirituJPADTO> toJPAList(List<Espiritu> espiritus, Map<Object, Object> context);
+
     List<EspirituDemoniaco> toDomainListDemoniaco(List<EspirituDemoniacoJPADTO> espirituDemoniacoJPADTOS);
     List<EspirituAngelical> toDomainListAngelical(List<EspirituAngelicalJPADTO> espirituAngelicalJPADTOS);
 

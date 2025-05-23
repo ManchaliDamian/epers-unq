@@ -36,7 +36,7 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Optional<Medium> findById(Long mediumId) {
-        return this.mediumDAO.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
+        return this.mediumDAO.findById(mediumId).map(mediumMapper::toDomain);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Optional<Medium> recuperarEliminado(Long id) {
-        return this.mediumDAO.recuperarEliminado(id).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
+        return this.mediumDAO.recuperarEliminado(id).map(mediumMapper::toDomain);
     }
 
     @Override

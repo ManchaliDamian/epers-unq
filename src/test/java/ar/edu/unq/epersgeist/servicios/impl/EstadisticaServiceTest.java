@@ -53,12 +53,12 @@ public class EstadisticaServiceTest {
             cementerio = new Cementerio("Quilmes",1);
 
             santuario1 = new Santuario("santuario 1",50);
-            santuario2 = new Santuario("santuario21",50);
+            santuario2 = new Santuario("santuario 2",50);
 
 
-            angelical1 = new EspirituAngelical("agelical 1", santuario1);
-            angelical2 = new EspirituAngelical("agelical 1", santuario2);
-            angelical3 = new EspirituAngelical("agelical 1", santuario2);
+            angelical1 = new EspirituAngelical("angelical 1", santuario1);
+            angelical2 = new EspirituAngelical("angelical 2", santuario2);
+            angelical3 = new EspirituAngelical("angelical 3", santuario2);
 
             demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
             demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);

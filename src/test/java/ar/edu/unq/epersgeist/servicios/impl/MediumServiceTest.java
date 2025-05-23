@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -159,15 +160,15 @@ public class MediumServiceTest {
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
         Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
 
-        assertEquals(santuario, mediumActualizado.get().getUbicacion());
-        assertEquals(santuario, angelActualizado.get().getUbicacion());
+        assertEquals(santuario.getId(), mediumActualizado.get().getUbicacion().getId());
+        assertEquals(santuario.getId(), angelActualizado.get().getUbicacion().getId());
     }
 
     @Test
     void testInvocar() {
 
         Espiritu invocado = serviceM.invocar(medium1.getId(), demonio.getId());
-        Medium actualizado = mediumRepository.findById(medium1.getId()).get();
+        Medium actualizado = serviceM.recuperar(medium1.getId()).get();
         assertEquals(0, invocado.getNivelDeConexion());
         assertEquals(40, actualizado.getMana());
         assertEquals("La Plata", invocado.getUbicacion().getNombre());
@@ -187,7 +188,7 @@ public class MediumServiceTest {
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
 
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(nuevoDemonio.getId());
-        assertEquals(cementerio, demonioActualizado.get().getUbicacion());
+        assertEquals(cementerio.getId(), demonioActualizado.get().getUbicacion().getId());
     }
 
     @Test
@@ -356,7 +357,6 @@ public class MediumServiceTest {
         demonio.setNivelDeConexion(10);
         demonio.setUbicacion(cementerio);
         medium1.conectarseAEspiritu(demonio);//50*0.2=10, 10+10=20
-
         serviceE.guardar(demonio);
         serviceM.guardar(medium1);
         serviceM.descansar(medium1.getId()); //52, 50
@@ -394,9 +394,9 @@ public class MediumServiceTest {
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
         medium2.conectarseAEspiritu(demonio);
 
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
-        serviceM.guardar(medium2);
+        angel = serviceE.guardar(angel);
+        demonio = serviceE.guardar(demonio);
+        medium2 = serviceM.guardar(medium2);
 
         serviceM.descansar(medium2.getId());
 
@@ -450,16 +450,23 @@ public class MediumServiceTest {
     void exorcizar_DosAngelesDerrotanUnDemonio_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
-        EspirituAngelical angel1 = new EspirituAngelical("Ángel1", cementerio);
-        EspirituAngelical angel2 = new EspirituAngelical("Ángel2", cementerio);
+        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio);
+        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio);
         angel1.setNivelDeConexion(20); // 30 al conectarse, daño = 15
         angel2.setNivelDeConexion(30); // 40 al conectarse, daño = 20
 
         demonio.setNivelDeConexion(25); // 35 al conectarse
 
-        conectarEspirituAMedium(medium1, angel1);
-        conectarEspirituAMedium(medium1, angel2);
-        conectarEspirituAMedium(medium2, demonio);
+        medium1.conectarseAEspiritu(angel1);
+        medium1.conectarseAEspiritu(angel2);
+        medium1 = serviceM.guardar(medium1);
+        angel1 = serviceE.guardar(angel1);
+        angel2 = serviceE.guardar(angel2);
+
+        medium2.conectarseAEspiritu(demonio);
+        medium2 = serviceM.guardar(medium2);
+        demonio = serviceE.guardar(demonio);
+
 
         serviceM.mover(medium2.getId(), cementerio.getId());
 

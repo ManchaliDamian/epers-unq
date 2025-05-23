@@ -17,6 +17,7 @@ public abstract class Espiritu {
     private Long id;
     private Ubicacion ubicacion;
     protected Integer nivelDeConexion;
+    @EqualsAndHashCode.Include
     private String nombre;
     private Medium mediumConectado;
     private final TipoEspiritu tipo;

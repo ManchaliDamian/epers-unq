@@ -77,10 +77,9 @@ public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistenci
     @Override
     public List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable) {
         List<EspirituDemoniaco> lista = mapper.toDomainListDemoniaco(this.espirituDAO.recuperarDemoniacosPaginados(pageable));
-        List<Espiritu> listaEspiritus = lista.stream()
+        return lista.stream()
                 .map(e -> (Espiritu) e)
                 .collect(Collectors.toList());
-        return listaEspiritus;
     }
 
     @Override

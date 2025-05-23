@@ -78,6 +78,7 @@ public class MediumServiceImpl implements MediumService {
         Medium medium = this.getMedium(mediumId);
         medium.descansar();
         mediumRepository.save(medium);
+        medium.getEspiritus().forEach(espirituRepository::save);
     }
 
     @Override
@@ -90,9 +91,10 @@ public class MediumServiceImpl implements MediumService {
 
         mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
 
-
         mediumRepository.save(mediumExorcista);
         mediumRepository.save(mediumAExorcizar);
+        angeles.forEach(espirituRepository::save);
+        demonios.forEach(espirituRepository::save);
     }
 
     @Override
@@ -113,14 +115,10 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituRepository.findById(espirituId);
+        Optional<Espiritu> espiritu = espirituRepository.findById(espirituId).filter(e-> !e.isDeleted());
         if (espiritu.isEmpty()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
-        if(espiritu.get().isDeleted()){
-            throw  new EspirituNoEncontradoException(espirituId);
-        }
-
         Medium medium = this.getMedium(mediumId);
 
         medium.invocarA(espiritu.get());
@@ -134,12 +132,13 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId).filter(e -> !e.isDeleted());
+        Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId);
         if (ubicacion.isEmpty()) {
             throw new UbicacionNoEncontradaException(ubicacionId);
         }
 
         medium.mover(ubicacion.get());
         mediumRepository.save(medium);
+        medium.getEspiritus().forEach(espirituRepository::save);
     }
 }

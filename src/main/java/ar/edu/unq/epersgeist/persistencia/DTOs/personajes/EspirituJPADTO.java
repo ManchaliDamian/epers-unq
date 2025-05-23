@@ -10,9 +10,10 @@ import org.hibernate.annotations.*;
 
 import java.util.Date;
 
-@Getter @Setter @NoArgsConstructor(force = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
+@Getter @Setter @ToString
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@EqualsAndHashCode
 
 @Entity(name = "Espiritu")
 public abstract class EspirituJPADTO {
@@ -28,7 +29,7 @@ public abstract class EspirituJPADTO {
     @Column(nullable = false)
     @ColumnDefault("0")
     @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
-    protected Integer nivelDeConexion;
+    private Integer nivelDeConexion;
 
     @Column(nullable = false)
     private String nombre;
@@ -37,6 +38,7 @@ public abstract class EspirituJPADTO {
     @JoinColumn(name = "medium_id")
     private MediumJPADTO mediumConectado;
 
+    @Enumerated(EnumType.STRING)
     private TipoEspiritu tipo;
 
     @CreationTimestamp
