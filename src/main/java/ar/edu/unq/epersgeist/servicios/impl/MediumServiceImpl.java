@@ -13,6 +13,7 @@ import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,13 +83,14 @@ public class MediumServiceImpl implements MediumService {
 
         List<EspirituAngelical> angeles = espirituRepository.recuperarAngelesDe(idMediumExorcista);
         List<EspirituDemoniaco> demonios = espirituRepository.recuperarDemoniosDe(idMediumAExorcizar);
-
+        List<EspirituAngelical> angelesCopy = new ArrayList<>(angeles);
+        List<EspirituDemoniaco> demoniosCopy = new ArrayList<>(demonios);
         mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
 
         mediumRepository.save(mediumExorcista);
         mediumRepository.save(mediumAExorcizar);
-        angeles.forEach(espirituRepository::save);
-        demonios.forEach(espirituRepository::save);
+        angelesCopy.forEach(espirituRepository::save);
+        demoniosCopy.forEach(espirituRepository::save);
     }
 
     @Override
