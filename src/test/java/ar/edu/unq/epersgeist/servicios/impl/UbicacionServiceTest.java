@@ -94,7 +94,7 @@ public class UbicacionServiceTest {
 
     @Test
     void testCreateAtDeUbicacion(){
-        serviceU.guardar(santuario);
+        santuario = serviceU.guardar(santuario);
 
         Date fechaEsperada = new Date();
 

@@ -49,6 +49,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubiDaoSQL.save(ubiJPA);
 
         ubicacion.setId(ubiJPA.getId());
+        ubicacion.setCreatedAt(ubiJPA.getCreatedAt());
 
         // Neo
         ubiDaoNeo.save(mapperU.toNeo(ubicacion));
