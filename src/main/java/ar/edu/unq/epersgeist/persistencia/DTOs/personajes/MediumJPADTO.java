@@ -53,14 +53,13 @@ public class MediumJPADTO {
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<EspirituJPADTO> espiritus = new HashSet<>();
 
-    public MediumJPADTO(@NotBlank String nombre, Integer manaMax, Integer mana, @NotNull UbicacionJPADTO ubicacion) {
+    public MediumJPADTO(@NotBlank String nombre, @NotNull Integer manaMax, @NotNull Integer mana, @NotNull UbicacionJPADTO ubicacion) {
         if (manaMax < 0) {
             throw new IllegalArgumentException("manaMax no puede ser negativo.");
         }
         if (mana < 0 || mana > manaMax) {
             throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
         }
-        this.deleted = false;
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;

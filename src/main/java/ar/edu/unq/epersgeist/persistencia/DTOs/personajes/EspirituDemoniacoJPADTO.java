@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @ToString
-@Entity(name = "EspirituDemoniaco")
 @DiscriminatorValue("DEMONIACO")
+@Entity(name = "EspirituDemoniaco")
 public class EspirituDemoniacoJPADTO extends EspirituJPADTO {
 
     public EspirituDemoniacoJPADTO(String nombre, UbicacionJPADTO ubicacion) {
