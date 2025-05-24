@@ -113,15 +113,13 @@ public class EspirituServiceTest {
 
     }
 
-
     @Test
     void testConectarEspirituAMediumSaleBien() {
-
         medium = serviceM.guardar(medium);
-
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
         Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
+
         assertEquals(mediumConectado.getId(), conectado.get().getMediumConectado().getId());
 
     }

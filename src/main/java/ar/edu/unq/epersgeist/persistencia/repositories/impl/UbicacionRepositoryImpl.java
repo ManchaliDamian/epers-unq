@@ -15,7 +15,6 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -29,15 +28,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiDaoSQL;
-    private final UbicacionMapper mapperU;
-
-    private final MediumMapper mapperM;
-
-    private final EspirituMapper mapperE;
+    private UbicacionMapper mapperU;
+    private MediumMapper mapperM;
+    private EspirituMapper mapperE;
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   @Qualifier("ubicacionMapperImpl") UbicacionMapper mapperU){
+                                   UbicacionMapper mapperU){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;
@@ -67,7 +64,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacion.getId()));
 
         ubiJPA = mapperU.actualizarJPA(ubiJPA, ubicacion);
-
         ubiDaoSQL.save(ubiJPA);
         Ubicacion ubiActualizada = mapperU.toDomain(ubiJPA);
 
@@ -78,8 +74,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
-        Optional<UbicacionJPADTO> ubicacionJPA = this.recuperarSql(ubicacionId);
-        return ubicacionJPA.map(mapperU::toDomain);
+        return ubiDaoSQL.findById(ubicacionId).filter(ubi -> !ubi.isDeleted()).map(mapperU::toDomain);
     }
 
     public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
@@ -112,7 +107,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public List<Ubicacion> recuperarTodos(){
         List<UbicacionJPADTO> ubicaciones = ubiDaoSQL.recuperarTodos();
-        return mapperU.toDomainList(ubicaciones);     //Duda si es con Sql o con Neo4j o ambas.
+        return mapperU.toDomainList(ubicaciones);
     }
 
     @Override
@@ -177,6 +172,5 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public int cantTotalDeDemoniacosLibresEn(long ubicacionId) {
         return ubiDaoSQL.cantTotalDeDemoniacosLibresEn(ubicacionId);
     }
-    //----------------------------------------------------------------
 
 }

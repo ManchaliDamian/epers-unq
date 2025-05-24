@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface MediumDAO extends JpaRepository<MediumJPADTO, Long> {
     @Query(
-            "FROM Medium m LEFT JOIN FETCH m.espiritus where m.deleted = false"
+            "FROM Medium m where m.deleted = false"
     )
     List<MediumJPADTO> recuperarTodos();
 

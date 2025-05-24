@@ -7,8 +7,6 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,11 +16,10 @@ import java.util.Optional;
 public class MediumRepositoryImpl implements MediumRepository {
 
     private MediumDAO mediumDAO;
-    private final MediumMapper mediumMapper;
+    private MediumMapper mediumMapper;
+    private EspirituMapper espirituMapper;
 
-    private final EspirituMapper espirituMapper;
-
-    public MediumRepositoryImpl(MediumDAO mediumDAO, @Qualifier("mediumMapperImpl") MediumMapper mediumMapper, EspirituMapper espirituMapper) {
+    public MediumRepositoryImpl(MediumDAO mediumDAO, MediumMapper mediumMapper, EspirituMapper espirituMapper) {
         this.mediumDAO = mediumDAO;
         this.mediumMapper = mediumMapper;
         this.espirituMapper = espirituMapper;
@@ -35,8 +32,8 @@ public class MediumRepositoryImpl implements MediumRepository {
     }
 
     @Override
-    public Optional<Medium> findById(Long mediumId) {
-        return this.mediumDAO.findById(mediumId).map(mediumMapper::toDomain);
+    public Optional<Medium> recuperar(Long mediumId) {
+        return this.mediumDAO.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
     }
 
     @Override
@@ -46,7 +43,7 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Optional<Medium> recuperarEliminado(Long id) {
-        return this.mediumDAO.recuperarEliminado(id).map(mediumMapper::toDomain);
+        return this.mediumDAO.recuperarEliminado(id).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
     }
 
     @Override

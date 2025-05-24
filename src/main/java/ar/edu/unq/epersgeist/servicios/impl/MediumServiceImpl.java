@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -43,16 +42,12 @@ public class MediumServiceImpl implements MediumService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
-        if(medium.isDeleted()) {
-            throw new MediumNoEncontradoException(mediumId);
-        }
-        return medium;
+        return mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
     }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return mediumRepository.findById(mediumId)
+        return mediumRepository.recuperar(mediumId)
                 .filter(e -> !e.isDeleted());
     }
 
@@ -78,7 +73,6 @@ public class MediumServiceImpl implements MediumService {
         Medium medium = this.getMedium(mediumId);
         medium.descansar();
         mediumRepository.save(medium);
-        medium.getEspiritus().forEach(espirituRepository::save);
     }
 
     @Override
@@ -115,7 +109,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituRepository.findById(espirituId).filter(e-> !e.isDeleted());
+        Optional<Espiritu> espiritu = espirituRepository.recuperar(espirituId);
         if (espiritu.isEmpty()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
@@ -139,6 +133,5 @@ public class MediumServiceImpl implements MediumService {
 
         medium.mover(ubicacion.get());
         mediumRepository.save(medium);
-        medium.getEspiritus().forEach(espirituRepository::save);
     }
 }

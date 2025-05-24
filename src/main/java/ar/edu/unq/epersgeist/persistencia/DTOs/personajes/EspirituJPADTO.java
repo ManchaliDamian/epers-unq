@@ -17,7 +17,6 @@ import java.util.Date;
 
 @Entity(name = "Espiritu")
 public abstract class EspirituJPADTO {
-    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

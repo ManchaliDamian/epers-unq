@@ -10,8 +10,8 @@ import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor
 @ToString
-@Entity(name = "Cementerio")
 @DiscriminatorValue("CEMENTERIO")
+@Entity(name = "Cementerio")
 public class CementerioJPADTO extends UbicacionJPADTO {
 
     public CementerioJPADTO(String nombre, Integer flujoDeEnergia) {

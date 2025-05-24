@@ -75,19 +75,6 @@ public class MockMVCUbicacionController {
     }
 
 
-    /* descomentar cuando mediumDTO este definido
-    public Collection<Medium>  getMediumsSinEspiritusEn (Long ubicacionId) throws Throwable {
-        var json = getContentAsString("/ubicacion/" + ubicacionId + "/mediumsSinEspiritus");
-
-        Collection<EspirituDTO> dtos = objectMapper.readValue(
-                json,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, MediumDTO.class)
-        );
-
-        return dtos.stream().map(MediumDTO::aModelo).toList();
-    }
-    */
-
     public <T> T guardarUbicacion(CreateUbicacionDTO dto,  Class<T> cls) throws Throwable {
         return this.guardarUbicacion(dto, HttpStatus.CREATED, cls);
     }

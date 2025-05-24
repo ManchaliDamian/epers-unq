@@ -3,8 +3,7 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @ToString

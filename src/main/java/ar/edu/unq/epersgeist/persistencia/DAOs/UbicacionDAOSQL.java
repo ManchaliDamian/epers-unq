@@ -1,7 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs;
 
-import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
@@ -57,7 +55,6 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
     List<MediumJPADTO> findMediumByUbicacionId(Long ubicacionId);
 
 
-    //-----------------------------------------------------------------
 
     @Query(
             "SELECT s FROM Santuario s JOIN Espiritu e ON s.id = e.ubicacion.id " +
