@@ -165,8 +165,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion(PageRequest of) {
-        return mapperU.toDomainListSantuarios(ubiDaoSQL.obtenerSantuariosOrdenadosPorCorrupcion(of));
+    public List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion() {
+        return mapperU.toDomainListSantuarios(ubiDaoSQL.obtenerSantuariosOrdenadosPorCorrupcion());
     }
 
     @Override

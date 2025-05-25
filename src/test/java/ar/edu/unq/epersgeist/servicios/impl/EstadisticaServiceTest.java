@@ -29,6 +29,7 @@ public class EstadisticaServiceTest {
     @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private EspirituRepository espirituRepository;
     @Autowired private MediumRepository mediumRepository;
+    @Autowired private DataService dataService;
     private Medium medium1;
 
     private Cementerio cementerio;
@@ -45,43 +46,40 @@ public class EstadisticaServiceTest {
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
 
-    private DataService dataService;
 
     @BeforeEach
      void setUp(){
-        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
-            cementerio = new Cementerio("Quilmes",1);
+        cementerio = new Cementerio("Quilmes",1);
 
-            santuario1 = new Santuario("santuario 1",50);
-            santuario2 = new Santuario("santuario 2",50);
-
-
-            angelical1 = new EspirituAngelical("angelical 1", santuario1);
-            angelical2 = new EspirituAngelical("angelical 2", santuario2);
-            angelical3 = new EspirituAngelical("angelical 3", santuario2);
-
-            demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
-            demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
-            demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2);
+        santuario1 = new Santuario("santuario 1",50);
+        santuario2 = new Santuario("santuario 2",50);
 
 
-            medium1 = new Medium("medium 1",100,50,santuario1);
+        angelical1 = new EspirituAngelical("angelical 1", santuario1);
+        angelical2 = new EspirituAngelical("angelical 2", santuario2);
+        angelical3 = new EspirituAngelical("angelical 3", santuario2);
 
-            ubicacionService.guardar(cementerio);
-            ubicacionService.guardar(santuario1);
-            ubicacionService.guardar(santuario2);
+        demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
+        demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
+        demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2);
 
-            medium1 = mediumService.guardar(medium1);
 
-            demoniaco1 = espirituService.guardar(demoniaco1);
-            espirituService.guardar(demoniaco2);
-            espirituService.guardar(demoniaco3);
+        medium1 = new Medium("medium 1",100,50,santuario1);
 
-            espirituService.guardar(angelical1);
-            espirituService.guardar(angelical2);
-            espirituService.guardar(angelical3);
+        ubicacionService.guardar(cementerio);
+        ubicacionService.guardar(santuario1);
+        ubicacionService.guardar(santuario2);
 
+        medium1 = mediumService.guardar(medium1);
+
+        demoniaco1 = espirituService.guardar(demoniaco1);
+        espirituService.guardar(demoniaco2);
+        espirituService.guardar(demoniaco3);
+
+        espirituService.guardar(angelical1);
+        espirituService.guardar(angelical2);
+        espirituService.guardar(angelical3);
 
     }
 

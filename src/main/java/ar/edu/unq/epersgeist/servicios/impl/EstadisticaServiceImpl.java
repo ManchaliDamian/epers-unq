@@ -29,7 +29,7 @@ public class EstadisticaServiceImpl implements EstadisticaService {
     public ReporteSantuarioMasCorrupto santuarioCorrupto(){
             Santuario santuarioMasCorrupto =
                     ubicacionRepository
-                        .obtenerSantuariosOrdenadosPorCorrupcion(PageRequest.of(0, 1))
+                        .obtenerSantuariosOrdenadosPorCorrupcion()
                         .stream()
                         .findFirst()
                         .orElseThrow(NoHaySantuarioCorruptoException::new);
