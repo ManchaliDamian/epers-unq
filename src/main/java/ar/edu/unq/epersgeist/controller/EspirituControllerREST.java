@@ -8,7 +8,7 @@ import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;

@@ -3,11 +3,12 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
-import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
 import java.text.SimpleDateFormat;
@@ -35,9 +36,10 @@ public class UbicacionServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumDAO mediumDAO;
-    @Autowired private EspirituDAO espirituDAO;
-    @Autowired private UbicacionDAO ubicacionDAO;
+    @Autowired private MediumRepository mediumRepository;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private UbicacionRepository ubicacionRepository;
+
 
     private Medium medium;
     private Medium medium2;
@@ -51,7 +53,7 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        dataService = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
+        dataService = new DataServiceImpl( ubicacionRepository, mediumRepository, espirituRepository);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
@@ -62,8 +64,8 @@ public class UbicacionServiceTest {
         medium = new Medium("roberto", 200, 150, santuario);
         medium2 = new Medium("roberto", 200, 150, santuario);
         medium3 = new Medium("roberto", 200, 150, santuario);
-        serviceU.guardar(santuario);
-        serviceU.guardar(cementerio);
+        santuario = serviceU.guardar(santuario);
+        cementerio = serviceU.guardar(cementerio);
 
     }
 
@@ -73,7 +75,7 @@ public class UbicacionServiceTest {
 
         santuario.setNombre(nuevoNombre);
         santuario.setFlujoDeEnergia(35);
-        serviceU.actualizar(santuario);
+        santuario = serviceU.actualizar(santuario);
 
         Date fechaEsperada = new Date();
 
@@ -85,14 +87,14 @@ public class UbicacionServiceTest {
         String obtenidaFormateada = sdf.format(fechaEspiritu);
 
         assertEquals(esperadaFormateada, obtenidaFormateada);
-        assertEquals(santuario.getNombre(),nuevoNombre);
+        assertEquals(nuevoNombre, santuario.getNombre());
         assertEquals(35,santuario.getFlujoDeEnergia());
 
     }
 
     @Test
     void testCreateAtDeUbicacion(){
-        serviceU.guardar(santuario);
+        santuario = serviceU.guardar(santuario);
 
         Date fechaEsperada = new Date();
 
@@ -129,7 +131,7 @@ public class UbicacionServiceTest {
     }
     @Test
     void espiritusEnUnaUbicacionExistenteSinEliminados() {
-        serviceE.guardar(angel);
+        angel = serviceE.guardar(angel);
         serviceE.guardar(demonio);
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
@@ -147,7 +149,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
@@ -162,22 +164,22 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
-        serviceE.guardar(angel);
-        serviceM.guardar(medium);
+        angel = serviceE.guardar(angel);
+        medium = serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
     }
     @Test
     void mediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
     }
     @Test
     void hayMediumsConUnMediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         serviceM.guardar(medium2);
         serviceM.guardar(medium3);

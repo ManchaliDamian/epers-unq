@@ -1,11 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
+
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,45 +17,43 @@ import java.util.Optional;
 @Service
 @Transactional
 public class DataServiceImpl implements DataService {
-    private final UbicacionDAO ubicacionDAO;
-    private final MediumDAO mediumDAO;
-    private final EspirituDAO espirituDAO;
+    private final UbicacionRepository ubicacionRepository;
+    private final MediumRepository mediumRepository;
+    private final EspirituRepository espirituRepository;
 
-    public DataServiceImpl(UbicacionDAO ubicacionDAO, MediumDAO mediumDAO, EspirituDAO espirituDAO) {
-        this.ubicacionDAO = ubicacionDAO;
-        this.mediumDAO = mediumDAO;
-        this.espirituDAO = espirituDAO;
+    public DataServiceImpl(UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository) {
+        this.ubicacionRepository = ubicacionRepository;
+        this.mediumRepository = mediumRepository;
+        this.espirituRepository = espirituRepository;
     }
 
     public void eliminarTodo() {
-        espirituDAO.deleteAll();
-        mediumDAO.deleteAll();
-        ubicacionDAO.deleteAll();
+        espirituRepository.deleteAll();
+        mediumRepository.deleteAll();
+        ubicacionRepository.deleteAll();
     }
 
-
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {
-        return mediumDAO.recuperarEliminado(mediumId);
+        return mediumRepository.recuperarEliminado(mediumId);
     }
 
     public List<Medium> recuperarTodosMediumsEliminados(){
-        return mediumDAO.recuperarTodosEliminados();
+        return mediumRepository.recuperarTodosLosEliminados();
     }
 
     public Optional<Espiritu> recuperarEliminadoEspiritu(Long id) {
-        return espirituDAO.recuperarEliminado(id);
+        return espirituRepository.recuperarEliminado(id);
     }
 
     public List<Espiritu> recuperarTodosLosEspiritusEliminados() {
-        return espirituDAO.recuperarTodosLosEliminados();
+        return espirituRepository.recuperarTodosLosEliminados();
     }
 
     public Optional<Ubicacion> recuperarEliminadoUbicacion(Long id) {
-        return ubicacionDAO.recuperarEliminado(id);
+        return ubicacionRepository.recuperarEliminado(id);
     }
 
-
     public List<Ubicacion> recuperarTodosEliminadosDeUbicacion() {
-        return ubicacionDAO.recuperarTodosEliminados();
+        return ubicacionRepository.recuperarTodosEliminados();
     }
 }

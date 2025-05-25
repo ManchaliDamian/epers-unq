@@ -4,7 +4,7 @@ import ar.edu.unq.epersgeist.controller.dto.UpdateMediumDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.BeforeEach;

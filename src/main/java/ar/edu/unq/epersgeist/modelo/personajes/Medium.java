@@ -1,55 +1,31 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+
+import lombok.*;
+
 
 import java.util.*;
 
-@Getter @Setter @NoArgsConstructor @ToString
-
-@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class Medium {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String nombre;
-
-    @ManyToOne
-    @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
-
-    @Column(nullable = false)
     private Integer manaMax;
-
-    @Column(nullable = false)
-    @Check(constraints = "mana BETWEEN 0 AND mana_max")
     private Integer mana;
+    private final Set<Espiritu> espiritus = new HashSet<>();
 
     //auditoria
-    @CreationTimestamp
-    @Column(updatable = false)
     private Date createdAt;
-
-    @UpdateTimestamp
     private Date updatedAt;
-
-    @Column(nullable = false)
     private boolean deleted = false;
-
-
-    @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Espiritu> espiritus = new HashSet<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         if (manaMax < 0) {
@@ -58,7 +34,6 @@ public class Medium {
         if (mana < 0 || mana > manaMax) {
             throw new IllegalArgumentException("mana debe estar entre 0 y manaMax.");
         }
-        this.deleted = false;
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = mana;

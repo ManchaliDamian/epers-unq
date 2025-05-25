@@ -1,17 +1,17 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
-import jakarta.persistence.*;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
-@Entity
-@DiscriminatorValue("ANGELICAL")
 public class EspirituAngelical extends Espiritu{
+
+    protected EspirituAngelical() {
+        super(TipoEspiritu.ANGELICAL);
+    }
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion) {
         super( nombre, ubicacion, TipoEspiritu.ANGELICAL);

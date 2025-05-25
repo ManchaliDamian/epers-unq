@@ -4,18 +4,15 @@ import ar.edu.unq.epersgeist.controller.dto.*;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
-//import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin

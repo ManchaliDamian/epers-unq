@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

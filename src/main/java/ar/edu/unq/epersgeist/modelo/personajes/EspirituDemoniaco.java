@@ -1,16 +1,19 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
-import jakarta.persistence.*;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import lombok.*;
 
-@Getter @Setter @NoArgsConstructor @ToString
-@Entity
-@DiscriminatorValue("DEMONIACO")
+@Getter
+@Setter
+@ToString
 public class EspirituDemoniaco extends Espiritu{
 
-    public EspirituDemoniaco( String nombre, Ubicacion ubicacion) {
+    protected EspirituDemoniaco() {
+        super(TipoEspiritu.DEMONIACO);
+    }
+
+    public EspirituDemoniaco(String nombre, Ubicacion ubicacion) {
         super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
     }
 

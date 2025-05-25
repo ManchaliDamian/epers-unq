@@ -1,59 +1,40 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
-
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import jakarta.persistence.*;
-import org.hibernate.annotations.*;
 
 import java.util.Date;
 
-@Getter @Setter @NoArgsConstructor(force = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) @ToString
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
-@Entity
+@Getter
+@Setter
+@NoArgsConstructor(force = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+
 public abstract class Espiritu {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "ubicacion_id")
     private Ubicacion ubicacion;
-
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    @Check(constraints = "nivel_de_conexion BETWEEN 0 AND 100")
     protected Integer nivelDeConexion;
-
-    @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String nombre;
-
-    @ManyToOne
-    @JoinColumn(name = "medium_id")
     private Medium mediumConectado;
-
     private final TipoEspiritu tipo;
 
     //auditoria
-    @CreationTimestamp
-    @Column(updatable = false)
     private Date createdAt;
-
-    @UpdateTimestamp
     private Date updatedAt;
-
-    @Column(nullable = false)
     private boolean deleted = false;
 
-    public Espiritu (@NonNull String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
-
+    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        this.tipo = tipo;
+    }
+
+    protected Espiritu(@NonNull TipoEspiritu tipo) {
         this.tipo = tipo;
     }
 

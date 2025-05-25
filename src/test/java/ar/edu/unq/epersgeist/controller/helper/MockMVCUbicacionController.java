@@ -5,7 +5,7 @@ import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,19 +74,6 @@ public class MockMVCUbicacionController {
         return dtos.stream().map(EspirituDTO::aModelo).toList();
     }
 
-
-    /* descomentar cuando mediumDTO este definido
-    public Collection<Medium>  getMediumsSinEspiritusEn (Long ubicacionId) throws Throwable {
-        var json = getContentAsString("/ubicacion/" + ubicacionId + "/mediumsSinEspiritus");
-
-        Collection<EspirituDTO> dtos = objectMapper.readValue(
-                json,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, MediumDTO.class)
-        );
-
-        return dtos.stream().map(MediumDTO::aModelo).toList();
-    }
-    */
 
     public <T> T guardarUbicacion(CreateUbicacionDTO dto,  Class<T> cls) throws Throwable {
         return this.guardarUbicacion(dto, HttpStatus.CREATED, cls);

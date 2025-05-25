@@ -1,19 +1,16 @@
-package ar.edu.unq.epersgeist.modelo.ubicaciones;
+package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @ToString
-@Entity
-@DiscriminatorValue("CEMENTERIO")
 public class Cementerio extends Ubicacion {
 
-    public Cementerio(String nombre, Integer flujoDeEnergia) {
+    public Cementerio( String nombre, Integer flujoDeEnergia) {
         super(nombre, flujoDeEnergia, TipoUbicacion.CEMENTERIO);
+
     }
 
     @Override
