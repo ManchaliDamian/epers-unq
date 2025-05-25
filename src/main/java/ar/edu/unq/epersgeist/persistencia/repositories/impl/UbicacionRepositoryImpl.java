@@ -15,9 +15,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -141,11 +139,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public List<Medium> findMediumsSinEspiritusByUbicacionId(Long id){
         return mapperM.toDomainList(ubiDaoSQL.findMediumsSinEspiritusByUbicacionId(id));
-    }
-
-    @Override
-    public List<Medium> findMediumByUbicacionId(Long ubicacionId){
-        return mapperM.toDomainList(ubiDaoSQL.findMediumByUbicacionId(ubicacionId));
     }
 
     @Override
