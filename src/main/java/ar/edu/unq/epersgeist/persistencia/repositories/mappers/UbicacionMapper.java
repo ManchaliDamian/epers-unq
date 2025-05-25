@@ -5,9 +5,6 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
