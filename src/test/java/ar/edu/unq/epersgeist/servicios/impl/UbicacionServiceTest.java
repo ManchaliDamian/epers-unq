@@ -273,6 +273,35 @@ public class UbicacionServiceTest {
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
 
+    //-------------------------------------------------------------------------------------
+
+    //Dudoso para probar cuando anden los test.
+    @Test
+    void verificarQueNoEstanConectadosTest(){
+        Ubicacion santuarioCualquiera = new Santuario("Santuario", 50);
+        UbicacionService cualquierServicU = null;
+        Ubicacion santMal = cualquierServicU.guardar(santuarioCualquiera);
+
+        Long idDestino = santMal.getId();
+        Long idOrigen = santuario.getId();
+        assertFalse(serviceU.estanConectadas(idOrigen,idDestino));
+    }
+
+    @Test
+    void verificarQueEstanConectadosDosUbicaciones(){
+        Long idOrigen = santuario.getId();
+        Long idDestino = cementerio.getId();
+        assertTrue(serviceU.estanConectadas(idOrigen,idDestino));
+    }
+
+    @Test
+    void caminoMasCortoEntreDosUbicacionesTest(){
+        List<Ubicacion> ubicaciones = serviceU.caminoMasCorto(santuario.getId(),cementerio.getId());
+        assertEquals(ubicaciones.size(),1);
+        assertEquals(ubicaciones.getFirst().getNombre(),santuario.getNombre());
+    }
+
+    //-------------------------------------------------------------------------------------
 
     @AfterEach
     void cleanup() {

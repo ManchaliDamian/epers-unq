@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -79,4 +80,19 @@ public class UbicacionServiceImpl implements UbicacionService {
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return ubicacionRepository.findMediumsSinEspiritusByUbicacionId(ubicacionId);
     }
+
+    @Override
+    public boolean estanConectadas(Long idOrigen, Long idDestino){
+        return ubicacionRepository.estanConectadas(idOrigen,idDestino);
+    }
+
+    @Override
+    public  List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino){
+        List<Ubicacion> elCaminoMasCorto = ubicacionRepository.caminoMasCortoEntre(idOrigen,idDestino);
+        if(this.estanConectadas(idOrigen, idDestino)){
+            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
+        }
+        return elCaminoMasCorto;
+    }
+
 }

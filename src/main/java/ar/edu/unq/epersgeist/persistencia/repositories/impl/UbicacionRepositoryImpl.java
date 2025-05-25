@@ -149,6 +149,16 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
+    public boolean estanConectadas(Long idOrigen,Long idDestino){
+        return ubiDaoNeo.estanConectados(idOrigen,idDestino);
+    }
+
+    @Override
+    public List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino){
+        return ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino);
+    }
+
+    @Override
     public void deleteAll() {
         this.ubiDaoNeo.deleteAll();
         this.ubiDaoSQL.deleteAll();
