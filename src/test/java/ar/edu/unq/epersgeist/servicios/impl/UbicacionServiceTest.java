@@ -274,17 +274,21 @@ public class UbicacionServiceTest {
 
     //-------------------------------------------------------------------------------------
 
-    //Dudoso para probar cuando anden los test.
     @Test
-    void verificarQueNoEstanConectadosTest(){
-        Ubicacion santuarioCualquiera = new Santuario("Santuario", 50);
-        UbicacionService cualquierServicU = null;
-        Ubicacion santMal = cualquierServicU.guardar(santuarioCualquiera);
-
-        Long idDestino = santMal.getId();
-        Long idOrigen = santuario.getId();
-        assertFalse(serviceU.estanConectadas(idOrigen,idDestino));
+    void estanConectadas_esFalse_entreNodosNoEnlazados() {
+            assertFalse(serviceU.estanConectadas(santuario.getId(), cementerio.getId()),
+                    "Dos nodos sin relación no deberian estar conectados");
     }
+
+    @Test
+    void caminoMasCorto_deberiaDevolverListaVacia_siNoHayRuta() {
+        List<Ubicacion> camino = serviceU.caminoMasCorto(santuario.getId(), cementerio.getId());
+        assertTrue(camino.isEmpty(),
+                "Sin relación entre " + santuario.getId() + " y "
+                        + cementerio.getId() + ", el camino más corto debe ser vacío");
+    }
+
+    //Dudoso para probar cuando anden los test.
 
     @Test
     void verificarQueEstanConectadosDosUbicaciones(){

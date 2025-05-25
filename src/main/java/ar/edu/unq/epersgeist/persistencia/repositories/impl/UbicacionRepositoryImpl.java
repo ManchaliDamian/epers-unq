@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UbicacionRepositoryImpl implements UbicacionRepository {
@@ -147,8 +148,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino){
-        return ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino);
+    public List<Ubicacion> caminoMasCortoEntre(Long idOrigen, Long idDestino) {
+        return ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino)
+                .stream()
+                .map(mapperU::fromNeo)
+                .collect(Collectors.toList());
     }
 
     @Override
