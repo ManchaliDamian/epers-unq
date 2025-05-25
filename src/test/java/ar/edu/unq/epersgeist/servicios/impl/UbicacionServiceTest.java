@@ -39,6 +39,7 @@ public class UbicacionServiceTest {
     @Autowired private MediumRepository mediumRepository;
     @Autowired private EspirituRepository espirituRepository;
     @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private DataService dataService;
 
 
     private Medium medium;
@@ -49,11 +50,9 @@ public class UbicacionServiceTest {
     private Espiritu angel;
     private Espiritu demonio;
 
-    private DataService dataService;
 
     @BeforeEach
     void prepare() {
-        dataService = new DataServiceImpl( ubicacionRepository, mediumRepository, espirituRepository);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);

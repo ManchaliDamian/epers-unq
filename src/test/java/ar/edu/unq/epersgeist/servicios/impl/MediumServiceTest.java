@@ -40,6 +40,7 @@ public class MediumServiceTest {
     @Autowired private MediumRepository mediumRepository;
     @Autowired private EspirituRepository espirituRepository;
     @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private DataService dataService;
 
     private Medium medium1;
     private Medium medium2;
@@ -49,10 +50,8 @@ public class MediumServiceTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
 
-    private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 

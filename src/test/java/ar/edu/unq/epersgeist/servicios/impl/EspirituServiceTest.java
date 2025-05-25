@@ -41,6 +41,8 @@ public class EspirituServiceTest {
     @Autowired private EspirituRepository espirituRepository;
     @Autowired private MediumRepository mediumRepository;
     @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private DataService dataService;
+
     private Espiritu azazel;
     private Espiritu belcebu;
     private Espiritu angel;
@@ -50,11 +52,8 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private Ubicacion berazategui;
 
-
-    private DataService dataService;
     @BeforeEach
     void setUp() {
-        dataService = new DataServiceImpl(ubicacionRepository, mediumRepository, espirituRepository);
 
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
@@ -98,7 +97,6 @@ public class EspirituServiceTest {
 
     @Test
     void testCreateAtDeEspiritu(){
-        serviceE.guardar(azazel);
 
         Date fechaEsperada = new Date();
 

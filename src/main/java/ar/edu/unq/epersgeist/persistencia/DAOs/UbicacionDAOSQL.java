@@ -62,7 +62,7 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
                     "ORDER BY SUM(CASE WHEN TYPE(e) = EspirituDemoniaco THEN 1 ELSE 0 END) - " +
                     "SUM(CASE WHEN TYPE(e) = EspirituAngelical THEN 1 ELSE 0 END) DESC"
     )
-    List<SantuarioJPADTO> obtenerSantuariosOrdenadosPorCorrupcion(Pageable pageable);
+    List<SantuarioJPADTO> obtenerSantuariosOrdenadosPorCorrupcion();
 
     @Query(
             "SELECT m FROM Medium m  " +
