@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Entity(name = "Ubicacion")
 public abstract class UbicacionJPADTO {
-
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,7 +43,10 @@ public abstract class UbicacionJPADTO {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    public UbicacionJPADTO(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
+    public UbicacionJPADTO(@NonNull String nombre, @NonNull Integer flujoDeEnergia, @NonNull TipoUbicacion tipo) {
+        if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
+            throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
+        }
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;

@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -14,6 +13,7 @@ import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,16 +43,12 @@ public class MediumServiceImpl implements MediumService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
-        if(medium.isDeleted()) {
-            throw new MediumNoEncontradoException(mediumId);
-        }
-        return medium;
+        return mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
     }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return mediumRepository.findById(mediumId)
+        return mediumRepository.recuperar(mediumId)
                 .filter(e -> !e.isDeleted());
     }
 
@@ -87,12 +83,14 @@ public class MediumServiceImpl implements MediumService {
 
         List<EspirituAngelical> angeles = espirituRepository.recuperarAngelesDe(idMediumExorcista);
         List<EspirituDemoniaco> demonios = espirituRepository.recuperarDemoniosDe(idMediumAExorcizar);
-
+        List<EspirituAngelical> angelesCopy = new ArrayList<>(angeles);
+        List<EspirituDemoniaco> demoniosCopy = new ArrayList<>(demonios);
         mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
-
 
         mediumRepository.save(mediumExorcista);
         mediumRepository.save(mediumAExorcizar);
+        angelesCopy.forEach(espirituRepository::save);
+        demoniosCopy.forEach(espirituRepository::save);
     }
 
     @Override
@@ -113,14 +111,10 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituRepository.findById(espirituId);
+        Optional<Espiritu> espiritu = espirituRepository.recuperar(espirituId);
         if (espiritu.isEmpty()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
-        if(espiritu.get().isDeleted()){
-            throw  new EspirituNoEncontradoException(espirituId);
-        }
-
         Medium medium = this.getMedium(mediumId);
 
         medium.invocarA(espiritu.get());
@@ -134,7 +128,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId).filter(e -> !e.isDeleted());
+        Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId);
         if (ubicacion.isEmpty()) {
             throw new UbicacionNoEncontradaException(ubicacionId);
         }

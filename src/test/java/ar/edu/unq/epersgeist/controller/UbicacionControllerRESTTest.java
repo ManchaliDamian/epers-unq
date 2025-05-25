@@ -10,9 +10,6 @@ import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -36,17 +33,15 @@ public class UbicacionControllerRESTTest {
     @Autowired private EspirituService espirituService;
     @Autowired private MediumService mediumService;
     @Autowired private UbicacionService ubicacionService;
-    @Autowired private DataService serviceEliminarTodo;
+    @Autowired private DataService dataService;
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
-    //@Autowired private MockMvcMediumController mockMVCMediumController;
 
     private CreateUbicacionDTO quilmes;
     private CreateUbicacionDTO bernal;
     private CreateEspirituDTO angel;
     private CreateEspirituDTO demon;
-    //private CreateMediumDTO medium;
     private UbicacionDTO bernalGuardado;
     private UbicacionDTO quilmesGuardado;
     private EspirituDTO angelGuardado;
@@ -57,7 +52,7 @@ public class UbicacionControllerRESTTest {
 
     @BeforeEach
     void setUp() throws Throwable {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
         quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
         bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
@@ -68,15 +63,7 @@ public class UbicacionControllerRESTTest {
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
         demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);
-    /*
-        espiritu1 = new EspirituAngelical("angelical 1", quilmesGuardado);
-        espiritu2 = new EspirituAngelical("angelical 2", bernalGuardado);
 
-
-        espirituId = mockMVCEspirituController.guardarEspiritu(espiritu1);
-        espiritu2Id = mockMVCEspirituController.guardarEspiritu(espiritu2);
-
-     */
     }
 
     @Test
@@ -116,7 +103,7 @@ public class UbicacionControllerRESTTest {
 
     @AfterEach
     void eliminarTodo(){
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

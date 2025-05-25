@@ -6,13 +6,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.Map;
 
-@Mapper(componentModel = "spring", uses = {EspirituMapper.class, UbicacionMapper.class})
+
 public interface MediumMapper {
 
     MediumJPADTO toJpa(Medium medium);
 
     Medium toDomain(MediumJPADTO mediumJPADTO);
+
+    // --- Métodos internos con contexto ---
+    MediumJPADTO toJpa(Medium medium, Map<Object, Object> context);
+
+    Medium toDomain(MediumJPADTO mediumJPADTO, Map<Object, Object> context);
 
     List<Medium> toDomainList(List<MediumJPADTO> mediumList);
 }

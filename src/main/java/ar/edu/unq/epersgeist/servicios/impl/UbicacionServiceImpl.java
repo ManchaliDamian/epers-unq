@@ -21,9 +21,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UbicacionServiceImpl implements UbicacionService {
-    @Autowired
-    private UbicacionRepository ubicacionRepository;
 
+    private final UbicacionRepository ubicacionRepository;
 
     public UbicacionServiceImpl(UbicacionRepository ubicacionRepository) {
         this.ubicacionRepository = ubicacionRepository;

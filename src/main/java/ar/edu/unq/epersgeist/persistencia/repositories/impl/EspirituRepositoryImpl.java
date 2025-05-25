@@ -7,21 +7,19 @@ import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository {
+public class EspirituRepositoryImpl implements EspirituRepository {
 
     private EspirituDAO espirituDAO;
     private EspirituMapper mapper;
 
-    public EspirituRepositoryImpl(EspirituDAO espirituDAO, @Qualifier("espirituMapperImpl") EspirituMapper mapper){
+    public EspirituRepositoryImpl(EspirituDAO espirituDAO, EspirituMapper mapper){
         this.espirituDAO = espirituDAO;
         this.mapper = mapper;
     }
@@ -38,7 +36,7 @@ public class EspirituRepositoryImpl implements ar.edu.unq.epersgeist.persistenci
     }
 
     @Override
-    public Optional<Espiritu> findById(Long espirituId) {
+    public Optional<Espiritu> recuperar(Long espirituId) {
         return this.espirituDAO.findById(espirituId).map(espirituJPADTO -> mapper.toDomain(espirituJPADTO));
     }
 

@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -40,7 +41,7 @@ public class EstadisticaServiceTest {
     private EspirituAngelical angelical2;
     private EspirituAngelical angelical3;
 
-    private EspirituDemoniaco demoniaco1;
+    private Espiritu demoniaco1;
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
 
@@ -53,12 +54,12 @@ public class EstadisticaServiceTest {
             cementerio = new Cementerio("Quilmes",1);
 
             santuario1 = new Santuario("santuario 1",50);
-            santuario2 = new Santuario("santuario21",50);
+            santuario2 = new Santuario("santuario 2",50);
 
 
-            angelical1 = new EspirituAngelical("agelical 1", santuario1);
-            angelical2 = new EspirituAngelical("agelical 1", santuario2);
-            angelical3 = new EspirituAngelical("agelical 1", santuario2);
+            angelical1 = new EspirituAngelical("angelical 1", santuario1);
+            angelical2 = new EspirituAngelical("angelical 2", santuario2);
+            angelical3 = new EspirituAngelical("angelical 3", santuario2);
 
             demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
             demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
@@ -71,9 +72,9 @@ public class EstadisticaServiceTest {
             ubicacionService.guardar(santuario1);
             ubicacionService.guardar(santuario2);
 
-            mediumService.guardar(medium1);
+            medium1 = mediumService.guardar(medium1);
 
-            espirituService.guardar(demoniaco1);
+            demoniaco1 = espirituService.guardar(demoniaco1);
             espirituService.guardar(demoniaco2);
             espirituService.guardar(demoniaco3);
 
@@ -86,14 +87,14 @@ public class EstadisticaServiceTest {
 
     @Test
     void elSantuarioMasCorrupto(){
-        medium1.conectarseAEspiritu(demoniaco1);
-        mediumService.guardar(medium1);
+
+        medium1 = espirituService.conectar(demoniaco1.getId(), medium1.getId());
         mediumService.mover(medium1.getId(), santuario1.getId());
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
         assertEquals(santuario1.getNombre(),reporte.getNombreSantuario());
         assertEquals(2, reporte.getTotalDemonios());
-        assertEquals(2,reporte.getCantDemoniosLibres());
+        assertEquals(1,reporte.getCantDemoniosLibres());
     }
 
     @Test

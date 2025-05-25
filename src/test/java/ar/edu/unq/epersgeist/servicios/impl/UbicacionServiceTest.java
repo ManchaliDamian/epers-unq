@@ -5,7 +5,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
@@ -76,7 +75,7 @@ public class UbicacionServiceTest {
 
         santuario.setNombre(nuevoNombre);
         santuario.setFlujoDeEnergia(35);
-        serviceU.actualizar(santuario);
+        santuario = serviceU.actualizar(santuario);
 
         Date fechaEsperada = new Date();
 
@@ -88,14 +87,14 @@ public class UbicacionServiceTest {
         String obtenidaFormateada = sdf.format(fechaEspiritu);
 
         assertEquals(esperadaFormateada, obtenidaFormateada);
-        assertEquals(santuario.getNombre(),nuevoNombre);
+        assertEquals(nuevoNombre, santuario.getNombre());
         assertEquals(35,santuario.getFlujoDeEnergia());
 
     }
 
     @Test
     void testCreateAtDeUbicacion(){
-        serviceU.guardar(santuario);
+        santuario = serviceU.guardar(santuario);
 
         Date fechaEsperada = new Date();
 
@@ -132,7 +131,7 @@ public class UbicacionServiceTest {
     }
     @Test
     void espiritusEnUnaUbicacionExistenteSinEliminados() {
-        serviceE.guardar(angel);
+        angel = serviceE.guardar(angel);
         serviceE.guardar(demonio);
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
@@ -150,7 +149,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
@@ -165,22 +164,22 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
-        serviceE.guardar(angel);
-        serviceM.guardar(medium);
+        angel = serviceE.guardar(angel);
+        medium = serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
     }
     @Test
     void mediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
     }
     @Test
     void hayMediumsConUnMediumEliminadoEnSantuario() {
-        serviceM.guardar(medium);
+        medium = serviceM.guardar(medium);
         serviceM.eliminar(medium.getId());
         serviceM.guardar(medium2);
         serviceM.guardar(medium3);

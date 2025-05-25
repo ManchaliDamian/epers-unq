@@ -2,24 +2,20 @@ package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+
+import lombok.*;
+
 
 import java.util.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class Medium {
     private Long id;
+    @EqualsAndHashCode.Include
     private String nombre;
     private Ubicacion ubicacion;
     private Integer manaMax;
