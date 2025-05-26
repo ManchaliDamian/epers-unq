@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -313,4 +314,14 @@ public class UbicacionServiceTest {
         dataService.eliminarTodo();
     }
 
+    @Test
+    void conectarUbicaciones() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+        assert(serviceU.estanConectadas(santuario.getId(), cementerio.getId()));
+    }
+
+    @Test
+    void conectarUbicacionConSigoMisma() {
+        assertThrows(MismaUbicacionException.class, () -> serviceU.conectar(santuario.getId(), santuario.getId()));
+    }
 }
