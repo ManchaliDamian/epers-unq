@@ -358,9 +358,29 @@ public class UbicacionServiceTest {
         assertEquals(santuario.getId(), neo.get().getId());
         assertEquals(0, neo.get().getConexiones().size());
     }
+    @Test
+    void caminoMasCorto_variosSaltos_debeDevolverTodaLaCadena() {
+        Ubicacion b = serviceU.guardar(new Santuario("B", 20));
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30));
+
+        // A → B → C → cementerio
+        serviceU.conectar(santuario.getId(), b.getId());
+        serviceU.conectar(b.getId(), c.getId());
+        serviceU.conectar(c.getId(), cementerio.getId());
+
+        List<Ubicacion> ruta = serviceU.caminoMasCorto(santuario.getId(), cementerio.getId());
+
+        assertEquals(4, ruta.size(), "Tres saltos deben devolver cuatro nodos");
+        List<Long> ids = ruta.stream().map(Ubicacion::getId).toList();
+        assertEquals(
+                List.of(santuario.getId(), b.getId(), c.getId(), cementerio.getId()),
+                ids,
+                "La ruta debe seguir el orden A → B → C → D"
+        );
+    }
     //-------------------------------------------------------------------------------------
 
-//    @AfterEach
+    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

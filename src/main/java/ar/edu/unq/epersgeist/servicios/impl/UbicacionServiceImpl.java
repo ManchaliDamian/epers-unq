@@ -88,10 +88,11 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public  List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino){
-        if(!this.estanConectadas(idOrigen, idDestino)){
+        List<Ubicacion> caminoMasCorto = ubicacionRepository.caminoMasCortoEntre(idOrigen, idDestino);
+        if (caminoMasCorto.isEmpty()) {
             throw new UbicacionesNoConectadasException(idOrigen, idDestino);
         }
-        return ubicacionRepository.caminoMasCortoEntre(idOrigen,idDestino);
+        return caminoMasCorto;
     }
 
     @Override
