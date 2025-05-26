@@ -164,17 +164,4 @@ public class UbicacionMapperImp implements UbicacionMapper{
         return neoDto;
     }
 
-    @Override
-    public Ubicacion fromNeo(UbicacionNeoDTO neo) {
-        if (neo == null) return null;
-        TipoUbicacion tipo = neo.getTipo();
-        Ubicacion domain = switch (tipo) {
-            case CEMENTERIO -> new Cementerio();
-            case SANTUARIO -> new Santuario();
-        };
-        domain.setId(neo.getId());
-        domain.setDeleted(neo.isDeleted());
-        return domain;
-    }
-
 }

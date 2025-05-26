@@ -18,15 +18,17 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     boolean tieneConexiones(@Param("id") Long id);
 
     @Query(
-            "MATCH (a:UbicacionNeoDTO {id: $idOrigen}), (b:UbicacionNeoDTO {id: $idDestino})\n" +
-                    "RETURN EXISTS((a)-[:CONECTA]->(b))"
+            "MATCH (inicio:UbicacionNeoDTO {id: $idOrigen}), " +
+                    "(fin:UbicacionNeoDTO {id: $idDestino})" +
+                    "RETURN EXISTS((inicio)-[:CONECTA]->(fin))"
     )
     boolean estanConectados(@Param("idOrigen") Long idOrigen,@Param("idDestino") Long idDestino );
 
     @Query(
-            "MATCH (a:UbicacionNeoDTO {id: $idOrigen}), (b:UbicacionNeoDTO {id: $idDestino})" +
-                    "MATCH p = shortestPath((a)-[:CONECTA*]->(b))" +
-                    "RETURN nodes(p) AS ubicaciones"
+            "MATCH (inicio:UbicacionNeoDTO {id: $idOrigen}), " +
+                    "(fin:UbicacionNeoDTO {id: $idDestino})" +
+                    "MATCH caminos = shortestPath((inicio)-[:CONECTA*]->(fin))" +
+                    "RETURN nodes(caminos) AS ubicaciones"
     )
     List<UbicacionNeoDTO> caminoMasCortoEntre(@Param("idOrigen") Long idOrigen, @Param("idDestino") Long idDestino);
 

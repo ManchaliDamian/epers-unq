@@ -32,7 +32,6 @@ public interface UbicacionMapper {
 
     // toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
-    Ubicacion fromNeo(UbicacionNeoDTO neo);
 
 }
 

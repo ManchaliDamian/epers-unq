@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -281,11 +282,12 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void caminoMasCorto_deberiaDevolverListaVacia_siNoHayRuta() {
-        List<Ubicacion> camino = serviceU.caminoMasCorto(santuario.getId(), cementerio.getId());
-        assertTrue(camino.isEmpty(),
-                "Sin relación entre " + santuario.getId() + " y "
-                        + cementerio.getId() + ", el camino más corto debe ser vacío");
+    void caminoMasCortoSinConexion_debeLanzarUbicacionesNoConectadasException() {
+        assertThrows(
+                UbicacionesNoConectadasException.class,
+                () -> serviceU.caminoMasCorto(santuario.getId(), cementerio.getId()),
+                "Si no hay ninguna arista, caminoMasCorto() debe lanzar la excepción"
+        );
     }
 
     //Dudoso para probar cuando anden los test.

@@ -149,9 +149,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public List<Ubicacion> caminoMasCortoEntre(Long idOrigen, Long idDestino) {
-        return ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino)
-                .stream()
-                .map(mapperU::fromNeo)
+        List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino);
+
+        return nodosNeo.stream()
+                .map( neo -> ubiDaoSQL.findById(neo.getId())
+                        .filter(u -> !u.isDeleted())
+                        .orElseThrow(() -> new UbicacionNoEncontradaException(neo.getId()))
+                )
+                .map(mapperU::toDomain)
                 .collect(Collectors.toList());
     }
 
