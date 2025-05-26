@@ -11,9 +11,11 @@ import lombok.*;
 @ToString
 @Setter @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class Ubicacion {
+    @EqualsAndHashCode.Include
     private Long id;
+    @EqualsAndHashCode.Include
     private String nombre;
     private Integer flujoDeEnergia;
     private TipoUbicacion tipo;

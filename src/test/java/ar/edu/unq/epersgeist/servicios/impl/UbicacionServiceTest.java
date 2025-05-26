@@ -283,6 +283,20 @@ public class UbicacionServiceTest {
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
 
+    @Test
+    void ubicacionesSobrecargadasCasoFavorable(){
+        List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(50);
+        assertTrue(ubicaciones.contains(santuario));
+        assertTrue(ubicaciones.contains(cementerio));
+        assertEquals(2, ubicaciones.size());
+    }
+
+    @Test
+    void ubicacionesSobrecargadasCasoDesfavorable(){
+        List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(70);
+        assertTrue(ubicaciones.isEmpty());
+    }
+
     //-----NEO---------------------------------------------------------------------------
 
     @Test
