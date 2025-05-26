@@ -21,4 +21,5 @@ public interface UbicacionService {
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
     boolean estanConectadas(Long idOrigen, Long idDestino);
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
+    void conectar(Long idOrigen, Long idDestino);
 }

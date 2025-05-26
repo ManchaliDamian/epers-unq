@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -91,6 +92,14 @@ public class UbicacionServiceImpl implements UbicacionService {
             throw new UbicacionesNoConectadasException(idOrigen, idDestino);
         }
         return ubicacionRepository.caminoMasCortoEntre(idOrigen,idDestino);
+    }
+
+    @Override
+    public void conectar(Long idOrigen, Long idDestino){
+        if(idOrigen.equals(idDestino))
+            throw new MismaUbicacionException();
+
+        ubicacionRepository.conectar(idOrigen, idDestino);
     }
 
 }
