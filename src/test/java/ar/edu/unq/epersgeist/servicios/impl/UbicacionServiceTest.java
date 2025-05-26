@@ -328,12 +328,12 @@ public class UbicacionServiceTest {
         Ubicacion y = serviceU.guardar(new Santuario("Y", 30));
         Ubicacion z = serviceU.guardar(new Santuario("Z", 40));
 
-        // Ruta larga: A->X->Y->Z
+        // A->X->Y->Z
         serviceU.conectar(santuario.getId(), x.getId());
         serviceU.conectar(x.getId(), y.getId());
         serviceU.conectar(y.getId(), z.getId());
 
-        // Ruta directa corta: A->Z
+        // A->Z
         serviceU.conectar(santuario.getId(), z.getId());
 
         List<Ubicacion> ruta = serviceU.caminoMasCorto(santuario.getId(), z.getId());
@@ -350,6 +350,26 @@ public class UbicacionServiceTest {
                 () -> serviceU.caminoMasCorto(cementerio.getId(), santuario.getId()));
     }
 
+    @Test
+    void caminoMasCorto_variosSaltos_debeDevolverTodaLaCadena() {
+        Ubicacion b = serviceU.guardar(new Santuario("B", 20));
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30));
+
+        // A → B → C → cementerio
+        serviceU.conectar(santuario.getId(), b.getId());
+        serviceU.conectar(b.getId(), c.getId());
+        serviceU.conectar(c.getId(), cementerio.getId());
+
+        List<Ubicacion> ruta = serviceU.caminoMasCorto(santuario.getId(), cementerio.getId());
+
+        assertEquals(4, ruta.size(), "Tres saltos deben devolver cuatro nodos");
+        List<Long> ids = ruta.stream().map(Ubicacion::getId).toList();
+        assertEquals(
+                List.of(santuario.getId(), b.getId(), c.getId(), cementerio.getId()),
+                ids,
+                "La ruta debe seguir el orden A → B → C → D"
+        );
+    }
     //-------------------------------------------------------------------------------------
 
     @AfterEach
