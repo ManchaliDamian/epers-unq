@@ -14,6 +14,7 @@ import java.util.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class Medium {
+    @EqualsAndHashCode.Include
     private Long id;
     @EqualsAndHashCode.Include
     private String nombre;

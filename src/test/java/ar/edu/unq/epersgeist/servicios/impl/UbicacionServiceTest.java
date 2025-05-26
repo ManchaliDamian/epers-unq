@@ -284,13 +284,15 @@ public class UbicacionServiceTest {
     @Test
     void ubicacionesSobrecargadasCasoFavorable(){
         List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(50);
+        assertTrue(ubicaciones.contains(santuario));
+        assertTrue(ubicaciones.contains(cementerio));
         assertEquals(2, ubicaciones.size());
     }
 
     @Test
     void ubicacionesSobrecargadasCasoDesfavorable(){
         List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(70);
-        assertEquals(0, ubicaciones.size());
+        assertTrue(ubicaciones.isEmpty());
     }
 
     //-----NEO---------------------------------------------------------------------------
