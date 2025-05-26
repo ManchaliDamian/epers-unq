@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -305,10 +307,16 @@ public class UbicacionServiceTest {
         assertEquals(ubicaciones.size(),1);
         assertEquals(ubicaciones.getFirst().getNombre(),santuario.getNombre());
     }
+    @Test
+    void retornarMismaId(){
 
+        Optional<Ubicacion> neo = serviceU.recuperar(santuario.getId());
+        assertEquals(santuario.getId(), neo.get().getId());
+        assertEquals(0, neo.get().getConexiones().size());
+    }
     //-------------------------------------------------------------------------------------
 
-    @AfterEach
+//    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

@@ -10,6 +10,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituReposi
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,9 +129,14 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId);
-        if (ubicacion.isEmpty()) {
+        Optional<Ubicacion> ubicacion;
+        try {
+
+             ubicacion = ubicacionRepository.recuperar(ubicacionId);
+        } catch (JpaObjectRetrievalFailureException e) {
+
             throw new UbicacionNoEncontradaException(ubicacionId);
+
         }
 
         medium.mover(ubicacion.get());

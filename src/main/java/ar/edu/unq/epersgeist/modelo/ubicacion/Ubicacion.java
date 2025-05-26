@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -20,6 +22,8 @@ public abstract class Ubicacion {
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
+
+    private Set<Ubicacion> conexiones = new HashSet<>();
 
     public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
