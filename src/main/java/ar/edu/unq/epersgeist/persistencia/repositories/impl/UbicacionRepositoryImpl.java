@@ -100,7 +100,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         return ubiDaoSQL.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
-    @Override
+
     public Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
         return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
