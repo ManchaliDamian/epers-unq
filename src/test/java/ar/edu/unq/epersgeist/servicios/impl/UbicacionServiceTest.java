@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -328,12 +330,12 @@ public class UbicacionServiceTest {
         Ubicacion y = serviceU.guardar(new Santuario("Y", 30));
         Ubicacion z = serviceU.guardar(new Santuario("Z", 40));
 
-        // A->X->Y->Z
+        // Ruta larga: A->X->Y->Z
         serviceU.conectar(santuario.getId(), x.getId());
         serviceU.conectar(x.getId(), y.getId());
         serviceU.conectar(y.getId(), z.getId());
 
-        // A->Z
+        // Ruta directa corta: A->Z
         serviceU.conectar(santuario.getId(), z.getId());
 
         List<Ubicacion> ruta = serviceU.caminoMasCorto(santuario.getId(), z.getId());
@@ -349,7 +351,13 @@ public class UbicacionServiceTest {
         assertThrows(UbicacionesNoConectadasException.class,
                 () -> serviceU.caminoMasCorto(cementerio.getId(), santuario.getId()));
     }
+    @Test
+    void retornarMismaId(){
 
+        Optional<Ubicacion> neo = serviceU.recuperar(santuario.getId());
+        assertEquals(santuario.getId(), neo.get().getId());
+        assertEquals(0, neo.get().getConexiones().size());
+    }
     @Test
     void caminoMasCorto_variosSaltos_debeDevolverTodaLaCadena() {
         Ubicacion b = serviceU.guardar(new Santuario("B", 20));

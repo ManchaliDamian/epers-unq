@@ -161,7 +161,10 @@ public class UbicacionMapperImp implements UbicacionMapper{
         }
         UbicacionNeoDTO neoDto = new UbicacionNeoDTO(ubicacion.getId(), ubicacion.getTipo());
         neoDto.setDeleted(ubicacion.isDeleted());
+
         return neoDto;
     }
+
+
 
 }
