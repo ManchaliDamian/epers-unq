@@ -34,21 +34,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UbicacionServiceTest {
 
-    @Autowired
-    private MediumService serviceM;
-    @Autowired
-    private EspirituService serviceE;
-    @Autowired
-    private UbicacionService serviceU;
+    @Autowired private MediumService serviceM;
+    @Autowired private EspirituService serviceE;
+    @Autowired private UbicacionService serviceU;
 
-    @Autowired
-    private MediumRepository mediumRepository;
-    @Autowired
-    private EspirituRepository espirituRepository;
-    @Autowired
-    private UbicacionRepository ubicacionRepository;
-    @Autowired
-    private DataService dataService;
+    @Autowired private MediumRepository mediumRepository;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private DataService dataService;
 
 
     private Medium medium;
