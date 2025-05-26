@@ -23,6 +23,7 @@ public interface UbicacionRepository {
     boolean estanConectadas(Long idOrigen,Long idDestino);
     List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino);
     void conectar(Long idOrigen,Long idDestino);
+    List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
 
     //deberian estar aca?
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion();

@@ -103,4 +103,9 @@ public class UbicacionServiceImpl implements UbicacionService {
         ubicacionRepository.conectar(idOrigen, idDestino);
     }
 
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
+    }
+
 }

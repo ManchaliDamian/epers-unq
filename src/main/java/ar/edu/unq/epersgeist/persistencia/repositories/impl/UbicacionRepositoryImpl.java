@@ -172,6 +172,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return mapperU.toDomainList(ubiDaoSQL.ubicacionesSobrecargadas(umbralDeEnergia));
+    }
+
+    @Override
     public List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion() {
         return mapperU.toDomainListSantuarios(ubiDaoSQL.obtenerSantuariosOrdenadosPorCorrupcion());
     }

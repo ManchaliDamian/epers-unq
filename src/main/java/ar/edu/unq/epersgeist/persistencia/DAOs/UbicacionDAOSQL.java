@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs;
 
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
@@ -87,4 +88,9 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
             "AND e.deleted = false")
     int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 
+    @Query(
+            "FROM Ubicacion e " +
+            "WHERE e.flujoDeEnergia > :umbralDeEnergia"
+    )
+    List<UbicacionJPADTO> ubicacionesSobrecargadas(@Param("umbralDeEnergia") Integer umbralDeEnergia);
 }
