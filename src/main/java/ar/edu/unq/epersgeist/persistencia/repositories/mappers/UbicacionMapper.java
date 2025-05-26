@@ -33,6 +33,5 @@ public interface UbicacionMapper {
     // toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
 
-
 }
 

@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -274,17 +275,22 @@ public class UbicacionServiceTest {
 
     //-------------------------------------------------------------------------------------
 
-    //Dudoso para probar cuando anden los test.
     @Test
-    void verificarQueNoEstanConectadosTest(){
-        Ubicacion santuarioCualquiera = new Santuario("Santuario", 50);
-        UbicacionService cualquierServicU = null;
-        Ubicacion santMal = cualquierServicU.guardar(santuarioCualquiera);
-
-        Long idDestino = santMal.getId();
-        Long idOrigen = santuario.getId();
-        assertFalse(serviceU.estanConectadas(idOrigen,idDestino));
+    void estanConectadas_esFalse_entreNodosNoEnlazados() {
+            assertFalse(serviceU.estanConectadas(santuario.getId(), cementerio.getId()),
+                    "Dos nodos sin relación no deberian estar conectados");
     }
+
+    @Test
+    void caminoMasCortoSinConexion_debeLanzarUbicacionesNoConectadasException() {
+        assertThrows(
+                UbicacionesNoConectadasException.class,
+                () -> serviceU.caminoMasCorto(santuario.getId(), cementerio.getId()),
+                "Si no hay ninguna arista, caminoMasCorto() debe lanzar la excepción"
+        );
+    }
+
+    //Dudoso para probar cuando anden los test.
 
     @Test
     void verificarQueEstanConectadosDosUbicaciones(){

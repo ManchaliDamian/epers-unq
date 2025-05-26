@@ -15,7 +15,6 @@ import java.util.Date;
 
 @Entity(name = "Ubicacion")
 public abstract class UbicacionJPADTO {
-    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
