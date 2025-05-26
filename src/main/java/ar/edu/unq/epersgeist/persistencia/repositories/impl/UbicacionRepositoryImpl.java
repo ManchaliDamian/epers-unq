@@ -188,6 +188,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
+    public void conectar(Long idOrigen,Long idDestino){
+        ubiDaoNeo.conectar(idOrigen, idDestino);
+    }
+
+    @Override
     public List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion() {
         return mapperU.toDomainListSantuarios(ubiDaoSQL.obtenerSantuariosOrdenadosPorCorrupcion());
     }
