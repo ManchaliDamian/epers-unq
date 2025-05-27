@@ -16,6 +16,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
@@ -210,6 +211,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public int cantTotalDeDemoniacosLibresEn(long ubicacionId) {
         return ubiDaoSQL.cantTotalDeDemoniacosLibresEn(ubicacionId);
+    }
+
+    @Override
+    public List<DegreeResult> degreeOf(List<Long> ids){
+        return null;
     }
 
 }
