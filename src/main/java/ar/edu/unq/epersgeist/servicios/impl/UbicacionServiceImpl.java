@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -88,10 +89,17 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public  List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino){
+        Ubicacion origen = ubicacionRepository.recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+
+        if (idOrigen.equals(idDestino)) {return List.of(origen);}
+
+        ubicacionRepository.recuperar(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+
         List<Ubicacion> caminoMasCorto = ubicacionRepository.caminoMasCorto(idOrigen, idDestino);
-        if (caminoMasCorto.isEmpty()) {
-            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
-        }
+
+        if (caminoMasCorto.isEmpty()) {throw new UbicacionesNoConectadasException(idOrigen, idDestino);}
         return caminoMasCorto;
     }
 
@@ -100,12 +108,26 @@ public class UbicacionServiceImpl implements UbicacionService {
         if(idOrigen.equals(idDestino))
             throw new MismaUbicacionException();
 
+        ubicacionRepository.recuperar(idOrigen)
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+
+        ubicacionRepository.recuperar(idDestino)
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+
         ubicacionRepository.conectar(idOrigen, idDestino);
     }
 
     @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
+    }
+
+    @Override
+    public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
+        ubicacionRepository.recuperar(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+
+        return ubicacionRepository.recuperarConexiones(ubicacionId);
     }
 
 }
