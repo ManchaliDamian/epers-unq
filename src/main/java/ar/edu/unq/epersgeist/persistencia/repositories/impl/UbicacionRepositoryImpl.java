@@ -87,12 +87,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         return resultado;
     }
 
-    public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
+    private Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
         return ubiDaoSQL.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
 
-    public Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
+    private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
         return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 

@@ -89,10 +89,17 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public  List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino){
+        Ubicacion origen = ubicacionRepository.recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+
+        if (idOrigen.equals(idDestino)) {return List.of(origen);}
+
+        ubicacionRepository.recuperar(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+
         List<Ubicacion> caminoMasCorto = ubicacionRepository.caminoMasCorto(idOrigen, idDestino);
-        if (caminoMasCorto.isEmpty()) {
-            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
-        }
+
+        if (caminoMasCorto.isEmpty()) {throw new UbicacionesNoConectadasException(idOrigen, idDestino);}
         return caminoMasCorto;
     }
 
@@ -100,6 +107,12 @@ public class UbicacionServiceImpl implements UbicacionService {
     public void conectar(Long idOrigen, Long idDestino){
         if(idOrigen.equals(idDestino))
             throw new MismaUbicacionException();
+
+        ubicacionRepository.recuperar(idOrigen)
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+
+        ubicacionRepository.recuperar(idDestino)
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
 
         ubicacionRepository.conectar(idOrigen, idDestino);
     }

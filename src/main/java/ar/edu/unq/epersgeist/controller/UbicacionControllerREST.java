@@ -104,11 +104,6 @@ public final class UbicacionControllerREST {
     @PostMapping("/{idOrigen}/conectar/{idDestino}")
     public ResponseEntity<ConexionDTO> conectar(@PathVariable Long idOrigen, @PathVariable Long idDestino) {
 
-        ubicacionService.recuperar(idOrigen)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
-        ubicacionService.recuperar(idDestino)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
-
         ubicacionService.conectar(idOrigen, idDestino);
 
         ConexionDTO dto = new ConexionDTO(idOrigen, idDestino, LocalDateTime.now());
@@ -119,11 +114,6 @@ public final class UbicacionControllerREST {
 
     @GetMapping("/{idOrigen}/conectada/{idDestino}")
     public ResponseEntity<Map<String, Boolean>> estanConectadas(@PathVariable Long idOrigen, @PathVariable Long idDestino) {
-
-        ubicacionService.recuperar(idOrigen)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
-        ubicacionService.recuperar(idDestino)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
 
         boolean conectado = ubicacionService.estanConectadas(idOrigen, idDestino);
         Map<String, Boolean> respuesta = Collections.singletonMap("conectadas", conectado);
@@ -140,5 +130,17 @@ public final class UbicacionControllerREST {
                 .toList();
 
         return ResponseEntity.ok(dtoLista);
+    }
+
+    @GetMapping("/{idOrigen}/camino/{idDestino}")
+    public ResponseEntity<List<UbicacionDTO>> caminoMasCorto(@PathVariable Long idOrigen, @PathVariable Long idDestino) {
+
+        List<Ubicacion> caminoMasCorto = ubicacionService.caminoMasCorto(idOrigen, idDestino);
+
+        List<UbicacionDTO> dtocaminoMasCorto = caminoMasCorto.stream()
+                .map(UbicacionDTO::desdeModelo)
+                .toList();
+
+        return ResponseEntity.ok(dtocaminoMasCorto);
     }
 }
