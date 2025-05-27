@@ -20,6 +20,7 @@ import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -192,11 +193,22 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public List<ClosenessResult> closenessOf(List<Long> ids) {
         return ids.stream()
                 .map(id -> new ClosenessResult(
-                        mapper.toDomain(ubiDaoSQL.getReferenceById(id)),
-                        ubiDaoNeo.closenessOf(id)
-                ))
+                        this.mapperU.toDomain(
+                                this.ubiDaoSQL.findById(id)
+                                        .orElseThrow(() -> new UbicacionNoEncontradaException(id))
+                        ),
+                        closenessOf(id, ids)))
                 .collect(Collectors.toList());
     }
+
+    private Double closenessOf(Long id, List<Long> ids) {
+        return ids.stream()
+                .filter(i -> !Objects.equals(id, i))
+                .mapToInt(i -> this.caminoMasCortoEntre(i, id).size())
+                .average()
+                .orElse(0.0);
+    }
+
 
     @Override
     public void conectar(Long idOrigen,Long idDestino){
