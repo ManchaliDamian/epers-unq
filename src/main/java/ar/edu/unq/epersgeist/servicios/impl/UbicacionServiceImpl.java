@@ -89,15 +89,16 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public  List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino){
-        if(!this.estanConectadas(idOrigen, idDestino)){
+        List<Ubicacion> caminoMasCorto = ubicacionRepository.caminoMasCortoEntre(idOrigen, idDestino);
+        if (caminoMasCorto.isEmpty()) {
             throw new UbicacionesNoConectadasException(idOrigen, idDestino);
         }
-        return ubicacionRepository.caminoMasCortoEntre(idOrigen,idDestino);
+        return caminoMasCorto;
     }
 
     @Override
     public void conectar(Long idOrigen, Long idDestino){
-        if(idOrigen == idDestino)
+        if(idOrigen.equals(idDestino))
             throw new MismaUbicacionException();
 
         ubicacionRepository.conectar(idOrigen, idDestino);
@@ -106,6 +107,11 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<ClosenessResult> closenessOf(List<Long> ids){
         return ubicacionRepository.closenessOf(ids);
+    }
+
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
     }
 
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
@@ -75,12 +76,32 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
-        return ubiDaoSQL.findById(ubicacionId).filter(ubi -> !ubi.isDeleted()).map(mapperU::toDomain);
+
+        Optional<Ubicacion> recuperadoSql = ubiDaoSQL.findById(ubicacionId).filter(ubi -> !ubi.isDeleted()).map(mapperU::toDomain);
+
+        if (recuperadoSql.isEmpty()){
+            throw new UbicacionNoEncontradaException(ubicacionId);
+        }
+
+        Optional<UbicacionNeoDTO> recuperadNeo = this.recuperarNeo(ubicacionId);
+
+        if (recuperadNeo.isEmpty()) {
+            throw new UbicacionNoEncontradaException(ubicacionId);
+        }
+
+        Set<Long> conexionesId = recuperadNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getId).collect(Collectors.toSet());
+        List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
+        List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
+        recuperadoSql.get().setConexiones(conexionesUbicacion.stream().collect(Collectors.toSet()));
+
+        return recuperadoSql;
     }
 
     public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
         return ubiDaoSQL.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
+
+
     public Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
         return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
@@ -180,6 +201,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public void conectar(Long idOrigen,Long idDestino){
         ubiDaoNeo.conectar(idOrigen, idDestino);
+    }
+
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return mapperU.toDomainList(ubiDaoSQL.ubicacionesSobrecargadas(umbralDeEnergia));
     }
 
     @Override

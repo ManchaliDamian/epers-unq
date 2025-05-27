@@ -14,6 +14,7 @@ import java.util.Date;
 @ToString
 
 public abstract class Espiritu {
+    @EqualsAndHashCode.Include
     private Long id;
     private Ubicacion ubicacion;
     protected Integer nivelDeConexion;

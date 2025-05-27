@@ -25,8 +25,8 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     boolean estanConectados(@Param("idOrigen") Long idOrigen,@Param("idDestino") Long idDestino );
 
     @Query(
-            "MATCH (origen:UbicacionNeo {id: $idOrigen}), (destino:UbicacionNeo {id: $idDestino}) " +
-                    "MERGE (origen)-[:CondicionDeMutacion]->(destino)"
+            "MATCH (origen:UbicacionNeoDTO {id: $idOrigen}), (destino:UbicacionNeoDTO {id: $idDestino}) " +
+                    "MERGE (origen)-[:CONECTA]->(destino)"
     )
     void conectar(@Param("idOrigen") Long idOrigen, @Param("idDestino") Long idDestino);
 

@@ -24,6 +24,7 @@ public interface UbicacionRepository {
     boolean estanConectadas(Long idOrigen,Long idDestino);
     List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino);
     void conectar(Long idOrigen,Long idDestino);
+    List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
     List<ClosenessResult> closenessOf(List<Long> ids);
 
     //deberian estar aca?

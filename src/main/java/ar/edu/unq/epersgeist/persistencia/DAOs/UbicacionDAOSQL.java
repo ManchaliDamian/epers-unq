@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,4 +85,9 @@ public interface UbicacionDAOSQL extends JpaRepository<UbicacionJPADTO, Long>{
             "AND e.deleted = false")
     int cantTotalDeDemoniacosLibresEn(@Param("ubicacionId") Long ubicacionId);
 
+    @Query(
+            "FROM Ubicacion e " +
+            "WHERE e.flujoDeEnergia > :umbralDeEnergia"
+    )
+    List<UbicacionJPADTO> ubicacionesSobrecargadas(@Param("umbralDeEnergia") Integer umbralDeEnergia);
 }

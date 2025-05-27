@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -9,9 +11,11 @@ import lombok.*;
 @ToString
 @Setter @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class Ubicacion {
+    @EqualsAndHashCode.Include
     private Long id;
+    @EqualsAndHashCode.Include
     private String nombre;
     private Integer flujoDeEnergia;
     private TipoUbicacion tipo;
@@ -20,6 +24,8 @@ public abstract class Ubicacion {
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
+
+    private Set<Ubicacion> conexiones = new HashSet<>();
 
     public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
