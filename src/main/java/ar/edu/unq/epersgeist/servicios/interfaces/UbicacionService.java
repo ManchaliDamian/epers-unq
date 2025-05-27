@@ -22,4 +22,5 @@ public interface UbicacionService {
     boolean estanConectadas(Long idOrigen, Long idDestino);
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
     void conectar(Long idOrigen, Long idDestino);
+    List<ClosenessResult> closenessOf(List<Long> ids);
 }

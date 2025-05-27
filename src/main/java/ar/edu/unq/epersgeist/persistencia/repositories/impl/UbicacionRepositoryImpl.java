@@ -16,6 +16,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -164,6 +165,16 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public void deleteAll() {
         this.ubiDaoNeo.deleteAll();
         this.ubiDaoSQL.deleteAll();
+    }
+
+    @Override
+    public List<ClosenessResult> closenessOf(List<Long> ids) {
+        return ids.stream()
+                .map(id -> new ClosenessResult(
+                        mapper.toDomain(ubiDaoSQL.getReferenceById(id)),
+                        ubiDaoNeo.closenessOf(id)
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override

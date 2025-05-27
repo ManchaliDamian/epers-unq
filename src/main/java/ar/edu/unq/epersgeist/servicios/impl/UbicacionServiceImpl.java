@@ -10,6 +10,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -100,6 +101,11 @@ public class UbicacionServiceImpl implements UbicacionService {
             throw new MismaUbicacionException();
 
         ubicacionRepository.conectar(idOrigen, idDestino);
+    }
+
+    @Override
+    public List<ClosenessResult> closenessOf(List<Long> ids){
+        return ubicacionRepository.closenessOf(ids);
     }
 
 }
