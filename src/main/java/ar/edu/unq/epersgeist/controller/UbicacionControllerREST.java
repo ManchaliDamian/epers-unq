@@ -129,4 +129,16 @@ public final class UbicacionControllerREST {
         Map<String, Boolean> respuesta = Collections.singletonMap("conectadas", conectado);
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/sobrecargadas")
+    public ResponseEntity<List<UbicacionDTO>> getUbicacionesSobrecargadas(
+            @RequestParam(name = "umbral", required = true) Integer umbralDeEnergia) {
+
+        List<Ubicacion> lista = ubicacionService.ubicacionesSobrecargadas(umbralDeEnergia);
+        List<UbicacionDTO> dtoLista = lista.stream()
+                .map(UbicacionDTO::desdeModelo)
+                .toList();
+
+        return ResponseEntity.ok(dtoLista);
+    }
 }
