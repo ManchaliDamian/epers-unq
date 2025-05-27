@@ -164,7 +164,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public List<Ubicacion> caminoMasCortoEntre(Long idOrigen, Long idDestino) {
+    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
         List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
 
         return nodosNeo.stream()
