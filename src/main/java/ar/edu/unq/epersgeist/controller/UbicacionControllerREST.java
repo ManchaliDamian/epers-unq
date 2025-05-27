@@ -109,10 +109,24 @@ public final class UbicacionControllerREST {
         ubicacionService.recuperar(idDestino)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
 
+        ubicacionService.conectar(idOrigen, idDestino);
+
         ConexionDTO dto = new ConexionDTO(idOrigen, idDestino, LocalDateTime.now());
         URI location = URI.create("/ubicacion/" + idOrigen + "/conexiones");
 
         return ResponseEntity.created(location).body(dto);
     }
 
+    @GetMapping("/{idOrigen}/conectada/{idDestino}")
+    public ResponseEntity<Map<String, Boolean>> estanConectadas(@PathVariable Long idOrigen, @PathVariable Long idDestino) {
+
+        ubicacionService.recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+        ubicacionService.recuperar(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+
+        boolean conectado = ubicacionService.estanConectadas(idOrigen, idDestino);
+        Map<String, Boolean> respuesta = Collections.singletonMap("conectadas", conectado);
+        return ResponseEntity.ok(respuesta);
+    }
 }
