@@ -23,4 +23,5 @@ public interface UbicacionService {
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
     void conectar(Long idOrigen, Long idDestino);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
+    List<Ubicacion> recuperarConexiones(Long ubicacionId);
 }

@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -106,6 +107,14 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
+    }
+
+    @Override
+    public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
+        ubicacionRepository.recuperar(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+
+        return ubicacionRepository.recuperarConexiones(ubicacionId);
     }
 
 }

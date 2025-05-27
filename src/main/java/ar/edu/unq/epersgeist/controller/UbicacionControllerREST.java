@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.*;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -83,4 +86,33 @@ public final class UbicacionControllerREST {
         ubicacionService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/conexiones")
+    public ResponseEntity<List<UbicacionDTO>> getConexiones(@PathVariable Long id) {
+        ubicacionService.recuperar(id)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(id));
+
+        List<Ubicacion> vecinos = ubicacionService.recuperarConexiones(id);
+
+        List<UbicacionDTO> dtoVecinos = vecinos.stream()
+                .map(UbicacionDTO::desdeModelo)
+                .toList();
+
+        return ResponseEntity.ok(dtoVecinos);
+    }
+
+    @PostMapping("/{idOrigen}/conectar/{idDestino}")
+    public ResponseEntity<ConexionDTO> conectar(@PathVariable Long idOrigen, @PathVariable Long idDestino) {
+
+        ubicacionService.recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+        ubicacionService.recuperar(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+
+        ConexionDTO dto = new ConexionDTO(idOrigen, idDestino, LocalDateTime.now());
+        URI location = URI.create("/ubicacion/" + idOrigen + "/conexiones");
+
+        return ResponseEntity.created(location).body(dto);
+    }
+
 }

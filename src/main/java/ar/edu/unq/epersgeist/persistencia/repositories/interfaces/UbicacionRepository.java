@@ -24,8 +24,8 @@ public interface UbicacionRepository {
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
     void conectar(Long idOrigen,Long idDestino);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
+    List<Ubicacion> recuperarConexiones(Long ubicacionId);
 
-    //deberian estar aca?
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion();
     List<Medium> mediumConMayorDemoniacosEn(long ubicacionId);
     int cantTotalDeDemoniacosEn(long ubicacionId);
