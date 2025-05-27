@@ -39,6 +39,14 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     List<UbicacionNeoDTO> caminoMasCorto(@Param("idOrigen") Long idOrigen, @Param("idDestino") Long idDestino);
 
     @Query(
+            "MATCH (nodo:UbicacionNeoDTO {id: $idUbicacion}) " +
+            "WHERE id(nodo) = :idUbicacion" +
+            "WITH size((nodo)--()) * 1.0 AS distancia" +
+            "RETURN distancia"
+    )
+    Double degreeOf(@Param("idUbicacion") Long idUbicacion);
+
+    @Query(
         "MATCH (u:UbicacionNeoDTO) DETACH DELETE u"
     )
     void deleteAll();

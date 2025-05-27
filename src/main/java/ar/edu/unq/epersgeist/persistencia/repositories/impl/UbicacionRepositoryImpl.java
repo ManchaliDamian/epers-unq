@@ -215,7 +215,10 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public List<DegreeResult> degreeOf(List<Long> ids){
-        return null;
+        return ids.stream().map(
+                id -> new DegreeResult(
+                        this.mapperU.toDomain(ubiDaoSQL.getReferenceById(id)),
+                        ubiDaoNeo.degreeOf(id))).toList();
     }
 
 }
