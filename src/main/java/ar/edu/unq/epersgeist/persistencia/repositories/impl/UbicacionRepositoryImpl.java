@@ -18,6 +18,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepos
 
 import org.springframework.stereotype.Repository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -75,25 +76,18 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId){
-
-        Optional<Ubicacion> recuperadoSql = ubiDaoSQL.findById(ubicacionId).filter(ubi -> !ubi.isDeleted()).map(mapperU::toDomain);
-
-        if (recuperadoSql.isEmpty()){
-            throw new UbicacionNoEncontradaException(ubicacionId);
+        Optional<UbicacionJPADTO> recuperadoSql = this.recuperarSql(ubicacionId);
+        Optional<UbicacionNeoDTO> recuperadoNeo = this.recuperarNeo(ubicacionId);
+        Optional<Ubicacion> resultado = Optional.empty();
+        if(recuperadoSql.isPresent() && recuperadoNeo.isPresent()){
+            Ubicacion ubicacion = mapperU.toDomain(recuperadoSql.get());
+            Set<Long> conexionesId = recuperadoNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getId).collect(Collectors.toSet());
+            List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
+            List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
+            ubicacion.setConexiones(new HashSet<>(conexionesUbicacion));
+            resultado = Optional.of(ubicacion);
         }
-
-        Optional<UbicacionNeoDTO> recuperadNeo = this.recuperarNeo(ubicacionId);
-
-        if (recuperadNeo.isEmpty()) {
-            throw new UbicacionNoEncontradaException(ubicacionId);
-        }
-
-        Set<Long> conexionesId = recuperadNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getId).collect(Collectors.toSet());
-        List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
-        List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
-        recuperadoSql.get().setConexiones(conexionesUbicacion.stream().collect(Collectors.toSet()));
-
-        return recuperadoSql;
+        return resultado;
     }
 
     public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
@@ -104,6 +98,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
         return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
+
     @Override
     public void eliminar(Long id) {
         if (!ubiDaoSQL.findEspiritusByUbicacionId(id).isEmpty()
@@ -165,12 +160,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public boolean estanConectadas(Long idOrigen,Long idDestino){
-        return ubiDaoNeo.estanConectados(idOrigen,idDestino);
+        return ubiDaoNeo.estanConectadas(idOrigen,idDestino);
     }
 
     @Override
     public List<Ubicacion> caminoMasCortoEntre(Long idOrigen, Long idDestino) {
-        List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCortoEntre(idOrigen, idDestino);
+        List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
 
         return nodosNeo.stream()
                 .map( neo -> ubiDaoSQL.findById(neo.getId())
