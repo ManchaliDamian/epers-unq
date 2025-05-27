@@ -1,14 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
-import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -283,6 +284,7 @@ public class UbicacionServiceTest {
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
 
+    //-----NEO---------------------------------------------------------------------------
     @Test
     void ubicacionesSobrecargadasCasoFavorable(){
         List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(50);
@@ -297,7 +299,6 @@ public class UbicacionServiceTest {
         assertTrue(ubicaciones.isEmpty());
     }
 
-    //-----NEO---------------------------------------------------------------------------
 
     @Test
     void estanConectadas_esFalse_entreNodosNoEnlazados() {
@@ -389,9 +390,109 @@ public class UbicacionServiceTest {
         assertEquals(
                 List.of(santuario.getId(), b.getId(), c.getId(), cementerio.getId()),
                 ids,
-                "La ruta debe seguir el orden A → B → C → D"
+                "La ruta debe seguir el orden A → B → C → cementerio"
         );
     }
+
+    @Test
+    void caminoMasCorto_OrigenEqualsDestino_DeberiaRetornarSoloEseNodo() {
+        Long id = santuario.getId();
+
+        List<Ubicacion> resultado = serviceU.caminoMasCorto(id, id);
+
+        assertEquals(1, resultado.size(), "Cuando origen == destino, la ruta debe tener un único elemento.");
+
+        Ubicacion obtenido = resultado.get(0);
+        assertNotNull(obtenido, "El elemento no debe ser null.");
+        assertEquals(id, obtenido.getId(), "El único elemento devuelto debe tener el mismo ID que el origen.");
+
+        assertEquals("Quilmes", obtenido.getNombre());
+        assertEquals(70, obtenido.getFlujoDeEnergia());
+        assertEquals(TipoUbicacion.SANTUARIO, obtenido.getTipo());
+    }
+
+    @Test
+    void recuperarConexiones_casoFeliz_debeDevolverVecinosDirectos() {
+
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+
+        List<Ubicacion> vecinosDeA = serviceU.recuperarConexiones(santuario.getId());
+
+        assertEquals(1, vecinosDeA.size(), "Después de conectar, debe haber exactamente 1 vecino");
+        assertEquals(cementerio.getId(), vecinosDeA.get(0).getId(),
+                "El único vecino debe ser el cementerio al que conectamos");
+
+        List<Ubicacion> vecinosDeB = serviceU.recuperarConexiones(cementerio.getId());
+        assertTrue(vecinosDeB.isEmpty(), "Sin conexión inversa, B no debería tener vecinos directos");
+    }
+
+    @Test
+    void caminoMasCorto_idOrigenNoExiste_debeLanzarUbicacionNoEncontradaException() {
+        long idInexistente = 9999L;
+        assertTrue(serviceU.recuperar(idInexistente).isEmpty());
+
+        assertThrows(UbicacionNoEncontradaException.class,
+                () -> serviceU.caminoMasCorto(idInexistente, santuario.getId()),
+                "Si el origen no existe, debe lanzarse UbicacionNoEncontradaException");
+    }
+
+    @Test
+    void caminoMasCorto_idDestinoNoExiste_debeLanzarUbicacionNoEncontradaException() {
+        long idInexistente = 8888L;
+        assertTrue(serviceU.recuperar(idInexistente).isEmpty());
+
+        assertThrows(UbicacionNoEncontradaException.class,
+                () -> serviceU.caminoMasCorto(santuario.getId(), idInexistente),
+                "Si el destino no existe, debe lanzarse UbicacionNoEncontradaException");
+    }
+
+    @Test
+    void conectar_multiplesVeces_conUnaMISMAArista_noDebieraFallarNiDuplicar() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+        serviceU.conectar(santuario.getId(), cementerio.getId()); // segunda invocación
+
+        List<Ubicacion> vecinos = serviceU.recuperarConexiones(santuario.getId());
+
+        assertEquals(1, vecinos.size(), "La conexión A→B solo debe aparecer una vez, incluso si llamamos conectar dos veces.");
+        assertEquals(cementerio.getId(), vecinos.get(0).getId());
+    }
+
+    @Test
+    void recuperarConexiones_multiplesVecinos_debeDevolverTodosLosDestinos() {
+        Ubicacion b = serviceU.guardar(new Santuario("B", 20));
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30));
+
+        serviceU.conectar(santuario.getId(), b.getId());
+        serviceU.conectar(santuario.getId(), c.getId());
+
+        List<Ubicacion> vecinos = serviceU.recuperarConexiones(santuario.getId());
+        List<Long> ids = vecinos.stream().map(Ubicacion::getId).toList();
+
+        assertTrue(ids.containsAll(List.of(b.getId(), c.getId())),
+                "Debe devolver todos los destinos de las conexiones salientes");
+        assertEquals(2, vecinos.size());
+    }
+
+    @Test
+    void conectar_conIdOrigenNoExiste_debeLanzarUbicacionNoEncontradaException() {
+        long inexistente = 9999L;
+        assertThrows(
+                UbicacionNoEncontradaException.class,
+                () -> serviceU.conectar(inexistente, cementerio.getId()),
+                "Conectar con origen inexistente debe lanzar UbicacionNoEncontradaException"
+        );
+    }
+
+    @Test
+    void conectar_conIdDestinoNoExiste_debeLanzarUbicacionNoEncontradaException() {
+        long inexistente = 8888L;
+        assertThrows(
+                UbicacionNoEncontradaException.class,
+                () -> serviceU.conectar(santuario.getId(), inexistente),
+                "Conectar con destino inexistente debe lanzar UbicacionNoEncontradaException"
+        );
+    }
+
     //-------------------------------------------------------------------------------------
 
     @AfterEach
@@ -399,3 +500,5 @@ public class UbicacionServiceTest {
         dataService.eliminarTodo();
     }
 }
+
+

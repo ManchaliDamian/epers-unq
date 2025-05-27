@@ -19,10 +19,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepos
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -91,12 +88,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         return resultado;
     }
 
-    public Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
+    private Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
         return ubiDaoSQL.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
 
-    public Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
+    private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
         return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
     }
 
@@ -191,6 +188,25 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         return mapperU.toDomainList(ubiDaoSQL.ubicacionesSobrecargadas(umbralDeEnergia));
+    }
+
+    @Override
+    public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
+        List<UbicacionNeoDTO> vecinosNeo = ubiDaoNeo.recuperarConexiones(ubicacionId);
+
+        List<Ubicacion> resultado = new ArrayList<>();
+        for (UbicacionNeoDTO vecinoNeo : vecinosNeo) {
+            Long vecinoId = vecinoNeo.getId();
+
+            UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
+                    .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
+
+            Ubicacion dominio = mapperU.toDomain(jpaDTO);
+
+            resultado.add(dominio);
+        }
+
+        return resultado;
     }
 
     @Override

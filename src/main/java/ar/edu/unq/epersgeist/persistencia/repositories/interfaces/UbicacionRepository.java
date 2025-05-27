@@ -21,13 +21,14 @@ public interface UbicacionRepository {
     List<Espiritu> findEspiritusByUbicacionId(Long id);
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long id);
     void deleteAll();
+
     boolean estanConectadas(Long idOrigen,Long idDestino);
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
     void conectar(Long idOrigen,Long idDestino);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
     List<DegreeResult> degreeOf(List<Long> ids);
+    List<Ubicacion> recuperarConexiones(Long ubicacionId);
 
-    //deberian estar aca?
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion();
     List<Medium> mediumConMayorDemoniacosEn(long ubicacionId);
     int cantTotalDeDemoniacosEn(long ubicacionId);

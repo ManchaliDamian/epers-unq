@@ -44,7 +44,6 @@ public class UbicacionMapperImp implements UbicacionMapper{
         return switch (tipo){
             case CEMENTERIO -> toDomainCementerio((CementerioJPADTO) jpa);
             case SANTUARIO -> toDomainSantuario((SantuarioJPADTO) jpa);
-            default -> throw new IllegalArgumentException("Tipo de UbicacionJPADTO desconocido para toDomain: " + tipo);
         };
     }
 
@@ -149,7 +148,6 @@ public class UbicacionMapperImp implements UbicacionMapper{
         return switch (tipo) {
             case CEMENTERIO -> this.actualizarJpaCon((CementerioJPADTO) ubiJPA, (Cementerio) ubicacion);
             case SANTUARIO -> this.actualizarJpaCon((SantuarioJPADTO) ubiJPA, (Santuario) ubicacion);
-            default -> throw new IllegalStateException("Tipo de ubicación inesperado para actualización polimórfica: " + ubicacion.getClass().getSimpleName());
         };
     }
 
