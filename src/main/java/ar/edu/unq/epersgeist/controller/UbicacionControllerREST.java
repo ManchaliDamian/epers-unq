@@ -89,9 +89,6 @@ public final class UbicacionControllerREST {
 
     @GetMapping("/{id}/conexiones")
     public ResponseEntity<List<UbicacionDTO>> getConexiones(@PathVariable Long id) {
-        ubicacionService.recuperar(id)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(id));
-
         List<Ubicacion> vecinos = ubicacionService.recuperarConexiones(id);
 
         List<UbicacionDTO> dtoVecinos = vecinos.stream()

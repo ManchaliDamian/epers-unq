@@ -194,15 +194,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         List<UbicacionNeoDTO> vecinosNeo = ubiDaoNeo.recuperarConexiones(ubicacionId);
 
         List<Ubicacion> resultado = new ArrayList<>();
-        for (UbicacionNeoDTO nodoNeo : vecinosNeo) {
-            Long vecinoId = nodoNeo.getId();
+        for (UbicacionNeoDTO vecinoNeo : vecinosNeo) {
+            Long vecinoId = vecinoNeo.getId();
 
             UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
                     .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
 
             Ubicacion dominio = mapperU.toDomain(jpaDTO);
-
-            dominio.setDeleted(nodoNeo.isDeleted());
 
             resultado.add(dominio);
         }
