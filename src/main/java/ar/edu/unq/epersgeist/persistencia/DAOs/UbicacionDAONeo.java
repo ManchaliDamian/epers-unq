@@ -46,10 +46,9 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     List<UbicacionNeoDTO> recuperarConexiones(@Param("id") Long id);
 
     @Query(
-            "MATCH (nodo:UbicacionNeoDTO {id: $idUbicacion}) " +
+            "MATCH (nodo:UbicacionNeoDTO) " +
             "WHERE id(nodo) = :idUbicacion" +
-            "WITH size((nodo)--()) * 1.0 AS distancia" +
-            "RETURN distancia"
+            "RETURN size((nodo)--()) * 1.0 AS distancia"
     )
     Double degreeOf(@Param("idUbicacion") Long idUbicacion);
 

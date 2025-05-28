@@ -495,10 +495,10 @@ public class UbicacionServiceTest {
 
     //-------------------------------------------------------------------------------------
 
-    @AfterEach
-    void cleanup() {
-        dataService.eliminarTodo();
-    }
+//    @AfterEach
+//    void cleanup() {
+//        dataService.eliminarTodo();
+//    }
 }
 
 

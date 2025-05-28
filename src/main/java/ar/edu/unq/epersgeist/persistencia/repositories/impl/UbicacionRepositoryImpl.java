@@ -233,7 +233,10 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public List<DegreeResult> degreeOf(List<Long> ids){
         return ids.stream().map(
                 id -> new DegreeResult(
-                        this.mapperU.toDomain(ubiDaoSQL.getReferenceById(id)),
+                        this.mapperU.toDomain(
+                                this.ubiDaoSQL.findById(id)
+                                        .orElseThrow(() -> new UbicacionNoEncontradaException(id))
+                        ),
                         ubiDaoNeo.degreeOf(id))).toList();
     }
 

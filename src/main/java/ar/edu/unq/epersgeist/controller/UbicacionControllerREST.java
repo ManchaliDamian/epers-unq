@@ -6,6 +6,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -139,5 +140,10 @@ public final class UbicacionControllerREST {
                 .toList();
 
         return ResponseEntity.ok(dtocaminoMasCorto);
+    }
+
+    @GetMapping("/degreeCentrality")
+    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestBody List<Long>ids){
+        return ResponseEntity.ok(ubicacionService.degreeOf(ids));
     }
 }
