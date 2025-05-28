@@ -211,8 +211,10 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
 
     @Override
-    public void conectar(Long idOrigen,Long idDestino){
+    public Ubicacion conectar(Long idOrigen,Long idDestino){
         ubiDaoNeo.conectar(idOrigen, idDestino);
+        return this.recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
     }
 
     @Override

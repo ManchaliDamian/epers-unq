@@ -43,6 +43,7 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(ubicacionService.closenessOf(ids));
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<UbicacionDTO> getUbicacionById(@PathVariable Long id) {
         Ubicacion ubicacion = ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
@@ -72,6 +73,11 @@ public final class UbicacionControllerREST {
         URI location = URI.create("/ubicacion/" + creada.getId());
         UbicacionDTO respuesta = UbicacionDTO.desdeModelo(creada);
         return ResponseEntity.created(location).body(respuesta);
+    }
+
+    @PostMapping("/conectar/{idOrigen}/{idDestino}")
+    public ResponseEntity<UbicacionDTO> conectar(@PathVariable Long idOrigen, @PathVariable Long idDestino){
+        return ResponseEntity.ok(UbicacionDTO.desdeModelo(ubicacionService.conectar(idOrigen, idDestino)));
     }
 
     @PutMapping("/{id}")

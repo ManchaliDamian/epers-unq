@@ -97,11 +97,11 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void conectar(Long idOrigen, Long idDestino){
+    public Ubicacion conectar(Long idOrigen, Long idDestino){
         if(idOrigen.equals(idDestino))
             throw new MismaUbicacionException();
 
-        ubicacionRepository.conectar(idOrigen, idDestino);
+        return ubicacionRepository.conectar(idOrigen, idDestino);
     }
 
     @Override
