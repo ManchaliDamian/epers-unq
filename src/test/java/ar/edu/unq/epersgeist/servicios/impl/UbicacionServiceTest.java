@@ -13,10 +13,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
-import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
-import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
-import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
-import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +23,8 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -493,12 +488,59 @@ public class UbicacionServiceTest {
         );
     }
 
+    @Test
+    void degreeSinConexiones_debeSerCeroParaAmbas() {
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(0.0, grado.get(santuario.getId()), "Quilmes sin conexiones debe tener degree 0");
+        assertEquals(0.0, grado.get(cementerio.getId()), "Bernal sin conexiones debe tener degree 0");
+    }
+
+    @Test
+    void degreeConConexionUnidireccional_debeSerUnoParaAmbos() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(1.0, grado.get(santuario.getId()),   "Quilmes con una salida debe tener degree 1");
+        assertEquals(1.0, grado.get(cementerio.getId()), "Bernal con una entrada debe tener degree 1");
+    }
+
+    @Test
+    void degreeConConexionBidireccional_debeSerDosParaAmbos() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+        serviceU.conectar(cementerio.getId(), santuario.getId());
+
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(2.0, grado.get(santuario.getId()),   "Quilmes con entrada y salida debe tener degree 2");
+        assertEquals(2.0, grado.get(cementerio.getId()), "Bernal con entrada y salida debe tener degree 2");
+    }
+
     //-------------------------------------------------------------------------------------
 
-//    @AfterEach
-//    void cleanup() {
-//        dataService.eliminarTodo();
-//    }
+    @AfterEach
+    void cleanup() {
+        dataService.eliminarTodo();
+    }
 }
 
 

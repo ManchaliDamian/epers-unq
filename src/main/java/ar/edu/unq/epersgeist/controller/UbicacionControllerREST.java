@@ -143,7 +143,7 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/degreeCentrality")
-    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestBody List<Long>ids){
+    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestParam("ids") List<Long>ids){
         return ResponseEntity.ok(ubicacionService.degreeOf(ids));
     }
 }
