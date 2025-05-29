@@ -193,11 +193,18 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     private Double closenessOf(Long id, List<Long> ids) {
-        return ids.stream()
+        int suma = ids.stream()
                 .filter(i -> !Objects.equals(id, i))
-                .mapToInt(i -> this.caminoMasCorto(i, id).size())
-                .average()
-                .orElse(0.0);
+                .mapToInt(i -> {
+                    try {
+                        return this.caminoMasCorto(i, id).size();
+                    } catch (UbicacionNoEncontradaException e) {
+                        return 10;
+                    }
+                })
+                .sum();
+
+        return suma == 0 ? 1.0 : 1.0 / suma;
     }
 
 

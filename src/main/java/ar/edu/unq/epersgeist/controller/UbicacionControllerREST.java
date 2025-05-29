@@ -6,6 +6,9 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +27,16 @@ import java.util.Map;
 public final class UbicacionControllerREST {
 
     private final UbicacionService ubicacionService;
-
-    public UbicacionControllerREST(UbicacionService ubicacionService){
+    private final UbicacionRepository ubicacionRepository;
+    private final MediumRepository mediumRepository;
+    private final EspirituRepository espirituRepository;
+    public UbicacionControllerREST(UbicacionService ubicacionService, /* ELIMINAR */ UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository){
+        //ELIMINAR
+        this.ubicacionRepository = ubicacionRepository;
+        this.mediumRepository = mediumRepository;
+        this.espirituRepository = espirituRepository;
         this.ubicacionService = ubicacionService;
     }
-
-
     // GET handlers
     @GetMapping
     public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) TipoUbicacion tipo) {
@@ -42,8 +49,8 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/closeness")
-    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestBody List<Long> ids) {
-        return ResponseEntity.ok(ubicacionService.closenessOf(ids));
+    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestBody ClosenessRequestDTO ids) {
+        return ResponseEntity.ok(ubicacionService.closenessOf(ids.ids()));
     }
 
 
@@ -146,5 +153,14 @@ public final class UbicacionControllerREST {
                 .toList();
 
         return ResponseEntity.ok(dtocaminoMasCorto);
+    }
+
+
+    //ELIMINAR
+    @PostMapping("/deleteAll")
+    public void deleteAll() {
+        espirituRepository.deleteAll();
+        mediumRepository.deleteAll();
+        ubicacionRepository.deleteAll();
     }
 }
