@@ -21,10 +21,12 @@ public interface UbicacionRepository {
     List<Espiritu> findEspiritusByUbicacionId(Long id);
     List<Medium> findMediumsSinEspiritusByUbicacionId(Long id);
     void deleteAll();
+
     boolean estanConectadas(Long idOrigen,Long idDestino);
-    List<Ubicacion> caminoMasCortoEntre(Long idOrigen,Long idDestino);
-    Ubicacion conectar(Long idOrigen,Long idDestino);
+    List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
+    void conectar(Long idOrigen,Long idDestino);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
+    List<Ubicacion> recuperarConexiones(Long ubicacionId);
     List<ClosenessResult> closenessOf(List<Long> ids);
 
     //deberian estar aca?

@@ -129,17 +129,8 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Optional<Ubicacion> ubicacion;
-        try {
-
-             ubicacion = ubicacionRepository.recuperar(ubicacionId);
-        } catch (JpaObjectRetrievalFailureException e) {
-
-            throw new UbicacionNoEncontradaException(ubicacionId);
-
-        }
-
-        medium.mover(ubicacion.get());
+        Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+        medium.mover(ubicacion);
         mediumRepository.save(medium);
     }
 }
