@@ -114,9 +114,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubiDaoSQL.save(ubicacionSQLAEliminar);
         ubiDaoNeo.save(ubicacionNeoAEliminar);
     }
-    //-------------------------------------------------------------------------
-
-    //De acá para abajo duda sobre cuales serian también para neo4j
 
     @Override
     public List<Ubicacion> recuperarTodos(){
