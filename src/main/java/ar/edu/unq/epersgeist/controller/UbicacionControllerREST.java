@@ -31,7 +31,6 @@ public final class UbicacionControllerREST {
     }
 
 
-    // GET handlers
     @GetMapping
     public List<UbicacionDTO> getUbicaciones(@RequestParam(required = false) TipoUbicacion tipo) {
         var ubicaciones = switch (tipo) {
@@ -70,7 +69,6 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(mediumDTOS);
     }
 
-    //POST handlers
     @PostMapping
     public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {
         Ubicacion ubicacion = dto.aModelo();
@@ -89,7 +87,6 @@ public final class UbicacionControllerREST {
     }
 
 
-    //DELETE handlers
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
         ubicacionService.eliminar(id);
