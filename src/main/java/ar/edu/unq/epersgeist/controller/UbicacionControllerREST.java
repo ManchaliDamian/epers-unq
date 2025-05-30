@@ -148,7 +148,8 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/degreeCentrality")
-    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestParam("ids") List<Long> ids){
-        return ResponseEntity.ok(ubicacionService.degreeOf(ids));
+    public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestParam("ids") List<Long> ids){
+        List<DegreeResult> degree = ubicacionService.degreeOf(ids);
+        return ResponseEntity.ok(DegreeResultDTO.desdeModelo(degree));
     }
 }
