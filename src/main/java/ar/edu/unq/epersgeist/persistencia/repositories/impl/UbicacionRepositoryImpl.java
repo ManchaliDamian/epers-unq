@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
