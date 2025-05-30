@@ -16,15 +16,13 @@ import java.util.*;
 @Component("espirituMapperImpl")
 public class EspirituMapperImp implements EspirituMapper {
     private final UbicacionMapper ubicacionMapper;
-    private final MediumMapper mediumMapper; // No necesita @Lazy aquí si MediumMapper no depende directamente de EspirituMapper en su constructor
+    private final MediumMapper mediumMapper;
 
-    // Asegúrate que MediumMapper también tenga inyectado @Lazy EspirituMapper si hay ciclo de beans
     public EspirituMapperImp(UbicacionMapper ubicacionMapper, @Lazy MediumMapper mediumMapper) {
         this.ubicacionMapper = ubicacionMapper;
         this.mediumMapper = mediumMapper;
     }
 
-    // --- Métodos públicos (entrada sin contexto) ---
     @Override
     public EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa) {
         return toDomainAngel(jpa, new IdentityHashMap<>());
@@ -56,13 +54,12 @@ public class EspirituMapperImp implements EspirituMapper {
         return toJPAList(espiritus, new IdentityHashMap<>());
     }
 
-    // --- Métodos internos con contexto ---
     public EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa, Map<Object, Object> context) {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituAngelical) context.get(jpa);
 
-        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion())); // Asume que Ubicacion no causa ciclo
-        context.put(jpa, espiritu); // Guardar antes de mapear hijos
+        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
+        context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());
         espiritu.setDeleted(jpa.isDeleted());
@@ -70,7 +67,7 @@ public class EspirituMapperImp implements EspirituMapper {
         espiritu.setUpdatedAt(jpa.getUpdatedAt());
         espiritu.setNivelDeConexion(jpa.getNivelDeConexion());
         if (jpa.getMediumConectado() != null) {
-            espiritu.setMediumConectado(mediumMapper.toDomain(jpa.getMediumConectado(), context)); // Pasar contexto
+            espiritu.setMediumConectado(mediumMapper.toDomain(jpa.getMediumConectado(), context));
         }
         return espiritu;
     }
@@ -158,33 +155,28 @@ public class EspirituMapperImp implements EspirituMapper {
         }).collect(Collectors.toList());
     }
 
-    // Mantén tus otros métodos de lista y actualización como estaban,
-    // a menos que también se llamen en contextos que puedan causar ciclos.
-    // Si los métodos de actualización también necesitan evitar ciclos, aplica la misma lógica de contexto.
     @Override
     public List<EspirituDemoniaco> toDomainListDemoniaco(List<EspirituDemoniacoJPADTO> espirituDemoniacoJPADTOS) {
         return  espirituDemoniacoJPADTOS.stream()
-                .map(this::toDomainDemonio) // Llama a la versión pública que crea el contexto
+                .map(this::toDomainDemonio)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<EspirituAngelical> toDomainListAngelical(List<EspirituAngelicalJPADTO> espirituAngelicalJPADTOS) {
         return  espirituAngelicalJPADTOS.stream()
-                .map(this::toDomainAngel) // Llama a la versión pública que crea el contexto
+                .map(this::toDomainAngel)
                 .collect(Collectors.toList());
     }
 
     @Override
     public EspirituAngelicalJPADTO actualizarEspirituAngelicalJpaCon(EspirituAngelicalJPADTO espirituJPADTO, EspirituAngelical espiritu) {
-        // Considerar si aquí también se necesita contexto si `mediumMapper.toJpa` puede entrar en ciclo
+
         espirituJPADTO.setNombre(espiritu.getNombre());
         espirituJPADTO.setUbicacion(ubicacionMapper.toJpa(espiritu.getUbicacion()));
         espirituJPADTO.setDeleted(espiritu.isDeleted());
         if (espiritu.getMediumConectado() != null) {
-            // Idealmente, usar una versión de toJpa que no mapee la lista de espíritus del medium,
-            // o usar el contexto si es una actualización compleja.
-            // Para una simple actualización, podrías necesitar un mapeo más superficial del medium.
+
             espirituJPADTO.setMediumConectado(mediumMapper.toJpa(espiritu.getMediumConectado()));
         } else {
             espirituJPADTO.setMediumConectado(null);

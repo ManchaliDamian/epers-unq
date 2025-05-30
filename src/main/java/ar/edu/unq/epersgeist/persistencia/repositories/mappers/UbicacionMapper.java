@@ -11,17 +11,15 @@ import java.util.List;
 
 public interface UbicacionMapper {
 
-    // toDomain
     Santuario toDomainSantuario(SantuarioJPADTO jpa);
     Cementerio toDomainCementerio(CementerioJPADTO jpa);
-    Ubicacion toDomain(UbicacionJPADTO jpa); // Ahora es abstracto
+    Ubicacion toDomain(UbicacionJPADTO jpa);
 
     List<Ubicacion> toDomainList(List<UbicacionJPADTO> ubicacionJPADTOS);
     List<Cementerio> toDomainListCementerio(List<CementerioJPADTO> cementerios);
     List<Santuario> toDomainListSantuarios(List<SantuarioJPADTO> santuarios);
 
-    // toJpa
-    UbicacionJPADTO toJpa(Ubicacion ubicacion); // Ahora es abstracto
+    UbicacionJPADTO toJpa(Ubicacion ubicacion);
     SantuarioJPADTO toJpa(Santuario santuario);
     CementerioJPADTO toJpa(Cementerio cementerio);
 
@@ -30,7 +28,6 @@ public interface UbicacionMapper {
 
     UbicacionJPADTO actualizarJPA(UbicacionJPADTO ubiJPA, Ubicacion ubicacion);
 
-    // toNeo
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
 
 }

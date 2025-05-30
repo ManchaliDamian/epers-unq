@@ -40,7 +40,7 @@ public class UbicacionMapperImp implements UbicacionMapper{
 
     @Override
     public Ubicacion toDomain(UbicacionJPADTO jpa) {
-        TipoUbicacion tipo = jpa.getTipo(); // Asumo que UbicacionJPADTO tiene getTipo()
+        TipoUbicacion tipo = jpa.getTipo();
         return switch (tipo){
             case CEMENTERIO -> toDomainCementerio((CementerioJPADTO) jpa);
             case SANTUARIO -> toDomainSantuario((SantuarioJPADTO) jpa);
@@ -125,10 +125,6 @@ public class UbicacionMapperImp implements UbicacionMapper{
         ubiJPA.setNombre(ubicacion.getNombre());
         ubiJPA.setFlujoDeEnergia(ubicacion.getFlujoDeEnergia());
         ubiJPA.setDeleted(ubicacion.isDeleted());
-        // NO se suelen actualizar id, tipo, created/updated at, deleted en un merge,
-        // ya que el DTO JPA ya existe y se gestiona su identidad/auditoría por la DB.
-        // Si tu lógica lo requiere, puedes añadirlos aquí.
-        // ubiJPA.setUpdatedAt(java.time.LocalDateTime.now()); // Opcional: Actualizar el campo updatedate
         return ubiJPA;
     }
 

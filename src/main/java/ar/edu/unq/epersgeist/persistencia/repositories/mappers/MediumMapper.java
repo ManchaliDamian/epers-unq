@@ -13,7 +13,6 @@ public interface MediumMapper {
 
     Medium toDomain(MediumJPADTO mediumJPADTO);
 
-    // --- Métodos internos con contexto ---
     MediumJPADTO toJpa(Medium medium, Map<Object, Object> context);
 
     Medium toDomain(MediumJPADTO mediumJPADTO, Map<Object, Object> context);

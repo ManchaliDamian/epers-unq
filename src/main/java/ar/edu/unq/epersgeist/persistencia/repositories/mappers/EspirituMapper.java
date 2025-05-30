@@ -55,20 +55,6 @@ public interface EspirituMapper {
     List<EspirituDemoniaco> toDomainListDemoniaco(List<EspirituDemoniacoJPADTO> espirituDemoniacoJPADTOS);
     List<EspirituAngelical> toDomainListAngelical(List<EspirituAngelicalJPADTO> espirituAngelicalJPADTOS);
 
-/*
-    default List<Espiritu> toModelList(List<EspirituJPADTO> jpas) {
-        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
-    }
-    default List<EspirituAngelical> toModelListAngeles(List<EspirituAngelicalJPADTO> jpas) {
-        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
-    }
-    default List<EspirituDemoniaco> toModelListDemoniaco(List<EspirituDemoniacoJPADTO> jpas) {
-        return jpas.stream().map(this::toDomain).collect(Collectors.toList());
-    }
-*/
-
-
-    // Actualiza un EspirituJPA desde el modelo de dominio
     default EspirituJPADTO actualizarJpaCon(EspirituJPADTO espirituJPADTO, Espiritu espiritu){
         return switch (espiritu.getTipo()){
             case ANGELICAL -> actualizarEspirituAngelicalJpaCon((EspirituAngelicalJPADTO) espirituJPADTO, (EspirituAngelical) espiritu);
