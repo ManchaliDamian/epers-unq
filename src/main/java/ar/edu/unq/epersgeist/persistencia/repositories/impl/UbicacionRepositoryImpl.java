@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -16,6 +17,7 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
@@ -176,6 +178,34 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         this.ubiDaoNeo.deleteAll();
         this.ubiDaoSQL.deleteAll();
     }
+
+    @Override
+    public List<ClosenessResult> closenessOf(List<Long> ids) {
+        return ids.stream()
+                .map(id -> new ClosenessResult(
+                        UbicacionDTO.desdeModelo(this.mapperU.toDomain(
+                                this.ubiDaoSQL.findById(id)
+                                        .orElseThrow(() -> new UbicacionNoEncontradaException(id))
+                        )),
+                        closenessOf(id, ids)))
+                .collect(Collectors.toList());
+    }
+
+    private Double closenessOf(Long id, List<Long> ids) {
+        int suma = ids.stream()
+                .filter(i -> !Objects.equals(id, i))
+                .mapToInt(i -> {
+                    try {
+                        return this.caminoMasCorto(i, id).size();
+                    } catch (UbicacionNoEncontradaException e) {
+                        return 10;
+                    }
+                })
+                .sum();
+
+        return suma == 0 ? 1.0 : 1.0 / suma;
+    }
+
 
     @Override
     public void conectar(Long idOrigen,Long idDestino){

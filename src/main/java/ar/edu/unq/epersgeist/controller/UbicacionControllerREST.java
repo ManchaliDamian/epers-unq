@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,12 @@ public final class UbicacionControllerREST {
         };
         return ubicaciones.stream().map(UbicacionDTO::desdeModelo).toList();
     }
+
+    @GetMapping("/closeness")
+    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestBody ClosenessRequestDTO ids) {
+        return ResponseEntity.ok(ubicacionService.closenessOf(ids.ids()));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UbicacionDTO> getUbicacionById(@PathVariable Long id) {

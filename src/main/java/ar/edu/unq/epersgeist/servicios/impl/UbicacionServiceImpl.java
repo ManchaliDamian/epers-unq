@@ -11,6 +11,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -121,6 +122,11 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
+    }
+
+    @Override
+    public List<ClosenessResult> closenessOf(List<Long> ids){
+        return ubicacionRepository.closenessOf(ids);
     }
 
     @Override
