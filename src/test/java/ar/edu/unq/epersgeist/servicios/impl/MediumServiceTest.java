@@ -150,6 +150,8 @@ public class MediumServiceTest {
 
     @Test
     void moverMedium_conEspiritus_actualizaUbicacionesEnCascada() {
+        serviceU.conectar(cementerio.getId(), santuario.getId());
+
         medium1.conectarseAEspiritu(angel);
         serviceM.guardar(medium1);
 
@@ -431,6 +433,9 @@ public class MediumServiceTest {
         medium1 = serviceE.conectar(angel.getId(), medium1.getId()); // angel: 20 + 10 = 30 (daño = 15)
         medium2 = serviceE.conectar(demonio.getId(), medium2.getId()); // demonio: 5 + 10 = 15
 
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+        serviceU.conectar(cementerio.getId(), santuario.getId());
+
         serviceM.mover(medium2.getId(), cementerio.getId());
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
@@ -463,6 +468,8 @@ public class MediumServiceTest {
         medium1 = serviceE.conectar(angel2. getId(), medium1.getId());
         medium2 = serviceE.conectar(demonio. getId(), medium2.getId());
 
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+
         serviceM.mover(medium2.getId(), cementerio.getId());
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
@@ -484,6 +491,7 @@ public class MediumServiceTest {
     void exorcizar_ExorcistaSinAngeles_LanzaExcepcion_MismaUbicacionAlMoverse() {
 
         serviceE.conectar(demonio.getId(), medium2.getId());
+        serviceU.conectar(cementerio.getId(), santuario.getId());
         serviceM.mover(medium1.getId(), santuario.getId());
         assertThrows(ExorcistaSinAngelesException.class, () -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
@@ -497,6 +505,8 @@ public class MediumServiceTest {
         serviceE.guardar(demonio);
 
         serviceE.conectar(angel.getId(), medium1.getId());
+
+        serviceU.conectar(santuario.getId(), cementerio.getId());
         serviceM.mover(medium2.getId(), cementerio.getId());
         assertDoesNotThrow(() -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
@@ -526,6 +536,7 @@ public class MediumServiceTest {
         Optional<Espiritu> angelRecuperado = serviceE.recuperar(angel.getId());
         Optional<Espiritu> demonioRecuperado = serviceE.recuperar(demonio.getId());
 
+        serviceU.conectar(santuario.getId(), cementerio.getId());
         serviceM.mover(medium2.getId(), cementerio.getId());
 
         assertEquals(30, angelRecuperado.get().getNivelDeConexion());//20+10=30
