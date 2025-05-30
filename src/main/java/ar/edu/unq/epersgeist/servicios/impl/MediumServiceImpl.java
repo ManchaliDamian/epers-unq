@@ -46,6 +46,9 @@ public class MediumServiceImpl implements MediumService {
     private Medium getMedium(Long mediumId) {
         return mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
     }
+    private Ubicacion getUbicacion(Long ubicacionId) {
+        return ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+    }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
@@ -129,8 +132,15 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = this.getMedium(mediumId);
-        Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
-        medium.mover(ubicacion);
+        Ubicacion destino = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+        Ubicacion origen = medium.getUbicacion();
+        boolean conectadas = ubicacionRepository.estanConectadas(origen.getId(), destino.getId());
+
+        if (!conectadas) {
+            throw new UbicacionLejanaException(origen, destino);
+        }
+
+        medium.mover(destino);
         mediumRepository.save(medium);
     }
 }

@@ -43,8 +43,8 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/closeness")
-    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestBody ClosenessRequestDTO ids) {
-        return ResponseEntity.ok(ubicacionService.closenessOf(ids.ids()));
+    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestParam("ids") List<Long> ids) {
+        return ResponseEntity.ok(ubicacionService.closenessOf(ids));
     }
 
 
@@ -150,7 +150,7 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/degreeCentrality")
-    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestParam("ids") List<Long>ids){
+    public ResponseEntity<List<DegreeResult>> getDegreeResult(@RequestParam("ids") List<Long> ids){
         return ResponseEntity.ok(ubicacionService.degreeOf(ids));
     }
 }
