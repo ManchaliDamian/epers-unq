@@ -27,14 +27,7 @@ import java.util.Map;
 public final class UbicacionControllerREST {
 
     private final UbicacionService ubicacionService;
-    private final UbicacionRepository ubicacionRepository;
-    private final MediumRepository mediumRepository;
-    private final EspirituRepository espirituRepository;
-    public UbicacionControllerREST(UbicacionService ubicacionService, /* ELIMINAR */ UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository){
-        //ELIMINAR
-        this.ubicacionRepository = ubicacionRepository;
-        this.mediumRepository = mediumRepository;
-        this.espirituRepository = espirituRepository;
+    public UbicacionControllerREST(UbicacionService ubicacionService){
         this.ubicacionService = ubicacionService;
     }
     // GET handlers
@@ -155,12 +148,4 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(dtocaminoMasCorto);
     }
 
-
-    //ELIMINAR
-    @PostMapping("/deleteAll")
-    public void deleteAll() {
-        espirituRepository.deleteAll();
-        mediumRepository.deleteAll();
-        ubicacionRepository.deleteAll();
-    }
 }

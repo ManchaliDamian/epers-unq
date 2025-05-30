@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -184,10 +185,10 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public List<ClosenessResult> closenessOf(List<Long> ids) {
         return ids.stream()
                 .map(id -> new ClosenessResult(
-                        this.mapperU.toDomain(
+                        UbicacionDTO.desdeModelo(this.mapperU.toDomain(
                                 this.ubiDaoSQL.findById(id)
                                         .orElseThrow(() -> new UbicacionNoEncontradaException(id))
-                        ),
+                        )),
                         closenessOf(id, ids)))
                 .collect(Collectors.toList());
     }

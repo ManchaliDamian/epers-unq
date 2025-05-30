@@ -13,10 +13,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
-import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
-import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
-import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
-import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +23,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +46,10 @@ public class UbicacionServiceTest {
     private Medium medium3;
     private Ubicacion santuario;
     private Ubicacion cementerio;
+    private Ubicacion ubicacion1;
+    private Ubicacion ubicacion2;
+    private Ubicacion ubicacion3;
+    private Ubicacion ubicacion4;
     private Espiritu angel;
     private Espiritu demonio;
 
@@ -62,6 +60,11 @@ public class UbicacionServiceTest {
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal", 60);
 
+        ubicacion1 = new Cementerio("U1", 10);
+        ubicacion2 = new Cementerio("U2", 10);
+        ubicacion3 = new Cementerio("U3", 10);
+        ubicacion4 = new Cementerio("U4", 10);
+
         angel = new EspirituAngelical("damian", santuario);
         demonio = new EspirituDemoniaco("Roberto", santuario);
 
@@ -70,7 +73,10 @@ public class UbicacionServiceTest {
         medium3 = new Medium("roberto", 200, 150, santuario);
         santuario = serviceU.guardar(santuario);
         cementerio = serviceU.guardar(cementerio);
-
+        ubicacion1 = serviceU.guardar(ubicacion1);
+        ubicacion2 = serviceU.guardar(ubicacion2);
+        ubicacion3 = serviceU.guardar(ubicacion3);
+        ubicacion4 = serviceU.guardar(ubicacion4);
     }
 
     @Test
@@ -492,6 +498,37 @@ public class UbicacionServiceTest {
                 "Conectar con destino inexistente debe lanzar UbicacionNoEncontradaException"
         );
     }
+
+    @Test
+    void closeness() {
+        serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
+        serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
+        serviceU.conectar(ubicacion3.getId(),ubicacion4.getId());
+        serviceU.conectar(ubicacion4.getId(),ubicacion2.getId());
+
+        /*        4
+        *         | ↖
+        *     1   ↓  3
+        *      ↖→ 2 ↗
+        */
+
+        List<Long> ids = List.of(ubicacion1.getId(),ubicacion2.getId(),ubicacion3.getId(),ubicacion4.getId());
+        List<Double> closenessEsperados = List.of(
+                1.0,
+                0.14285714285714285,
+                0.125,
+                0.1111111111111111
+        );
+
+        List<ClosenessResult> resultados = serviceU.closenessOf(ids);
+
+        for (int i = 0; i < resultados.size(); i++) {
+            double esperado = closenessEsperados.get(i);
+            double obtenido = resultados.get(i).closeness();
+            assertEquals(esperado, obtenido, 0.001, "Error en el índice " + i);
+        }
+    }
+
 
     //-------------------------------------------------------------------------------------
 
