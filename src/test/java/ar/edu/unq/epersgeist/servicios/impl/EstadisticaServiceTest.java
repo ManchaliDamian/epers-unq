@@ -55,11 +55,6 @@ public class EstadisticaServiceTest {
         santuario1 = new Santuario("santuario 1",50);
         santuario2 = new Santuario("santuario 2",50);
 
-
-        angelical1 = new EspirituAngelical("angelical 1", santuario1);
-        angelical2 = new EspirituAngelical("angelical 2", santuario2);
-        angelical3 = new EspirituAngelical("angelical 3", santuario2);
-
         demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
         demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
         demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2);
@@ -77,17 +72,12 @@ public class EstadisticaServiceTest {
         espirituService.guardar(demoniaco2);
         espirituService.guardar(demoniaco3);
 
-        espirituService.guardar(angelical1);
-        espirituService.guardar(angelical2);
-        espirituService.guardar(angelical3);
-
     }
 
     @Test
     void elSantuarioMasCorrupto(){
 
         medium1 = espirituService.conectar(demoniaco1.getId(), medium1.getId());
-        mediumService.mover(medium1.getId(), santuario1.getId());
 
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
         assertEquals(santuario1.getNombre(),reporte.getNombreSantuario());
