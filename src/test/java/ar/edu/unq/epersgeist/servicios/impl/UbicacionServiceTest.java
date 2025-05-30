@@ -580,7 +580,7 @@ public class UbicacionServiceTest {
 
     //-------------------------------------------------------------------------------------
 
-    @AfterEach
+//    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

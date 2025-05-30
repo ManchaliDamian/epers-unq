@@ -43,8 +43,9 @@ public final class UbicacionControllerREST {
     }
 
     @GetMapping("/closeness")
-    public ResponseEntity<List<ClosenessResult>> closenessOf(@RequestParam("ids") List<Long> ids) {
-        return ResponseEntity.ok(ubicacionService.closenessOf(ids));
+    public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestParam("ids") List<Long> ids) {
+        List<ClosenessResult> closeness = ubicacionService.closenessOf(ids);
+        return ResponseEntity.ok(ClosenessResultDTO.desdeModelo(closeness));
     }
 
 
