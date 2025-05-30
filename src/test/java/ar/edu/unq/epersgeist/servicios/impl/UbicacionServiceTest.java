@@ -24,6 +24,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,10 +61,6 @@ public class UbicacionServiceTest {
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal", 60);
 
-        ubicacion1 = new Cementerio("U1", 10);
-        ubicacion2 = new Cementerio("U2", 10);
-        ubicacion3 = new Cementerio("U3", 10);
-        ubicacion4 = new Cementerio("U4", 10);
 
         angel = new EspirituAngelical("damian", santuario);
         demonio = new EspirituDemoniaco("Roberto", santuario);
@@ -73,10 +70,6 @@ public class UbicacionServiceTest {
         medium3 = new Medium("roberto", 200, 150, santuario);
         santuario = serviceU.guardar(santuario);
         cementerio = serviceU.guardar(cementerio);
-        ubicacion1 = serviceU.guardar(ubicacion1);
-        ubicacion2 = serviceU.guardar(ubicacion2);
-        ubicacion3 = serviceU.guardar(ubicacion3);
-        ubicacion4 = serviceU.guardar(ubicacion4);
     }
 
     @Test
@@ -501,6 +494,14 @@ public class UbicacionServiceTest {
 
     @Test
     void closeness() {
+        ubicacion1 = new Cementerio("U1", 10);
+        ubicacion2 = new Cementerio("U2", 10);
+        ubicacion3 = new Cementerio("U3", 10);
+        ubicacion4 = new Cementerio("U4", 10);
+        ubicacion1 = serviceU.guardar(ubicacion1);
+        ubicacion2 = serviceU.guardar(ubicacion2);
+        ubicacion3 = serviceU.guardar(ubicacion3);
+        ubicacion4 = serviceU.guardar(ubicacion4);
         serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
         serviceU.conectar(ubicacion3.getId(),ubicacion4.getId());
@@ -529,6 +530,53 @@ public class UbicacionServiceTest {
         }
     }
 
+
+    @Test
+    void degreeSinConexiones_debeSerCeroParaAmbas() {
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(0.0, grado.get(santuario.getId()), "Quilmes sin conexiones debe tener degree 0");
+        assertEquals(0.0, grado.get(cementerio.getId()), "Bernal sin conexiones debe tener degree 0");
+    }
+
+    @Test
+    void degreeConConexionUnidireccional_debeSerUnoParaAmbos() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(1.0, grado.get(santuario.getId()),   "Quilmes con una salida debe tener degree 1");
+        assertEquals(1.0, grado.get(cementerio.getId()), "Bernal con una entrada debe tener degree 1");
+    }
+
+    @Test
+    void degreeConConexionBidireccional_debeSerDosParaAmbos() {
+        serviceU.conectar(santuario.getId(), cementerio.getId());
+        serviceU.conectar(cementerio.getId(), santuario.getId());
+
+        List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
+
+        Map<Long, Double> grado = resultados.stream()
+                .collect(Collectors.toMap(
+                        dr -> dr.ubicacion().getId(),
+                        DegreeResult::degree
+                ));
+
+        assertEquals(2.0, grado.get(santuario.getId()),   "Quilmes con entrada y salida debe tener degree 2");
+        assertEquals(2.0, grado.get(cementerio.getId()), "Bernal con entrada y salida debe tener degree 2");
+    }
 
     //-------------------------------------------------------------------------------------
 

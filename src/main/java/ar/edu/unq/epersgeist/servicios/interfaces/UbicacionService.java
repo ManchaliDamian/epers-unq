@@ -24,5 +24,6 @@ public interface UbicacionService {
     void conectar(Long idOrigen, Long idDestino);
     List<ClosenessResult> closenessOf(List<Long> ids);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
+    List<DegreeResult> degreeOf(List<Long> ids);
     List<Ubicacion> recuperarConexiones(Long ubicacionId);
 }

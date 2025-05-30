@@ -12,6 +12,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
+import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -104,17 +105,16 @@ public class UbicacionServiceImpl implements UbicacionService {
         return caminoMasCorto;
     }
 
-
     @Override
     public void conectar(Long idOrigen, Long idDestino){
         if(idOrigen.equals(idDestino))
             throw new MismaUbicacionException();
 
         ubicacionRepository.recuperar(idOrigen)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idOrigen));
 
         ubicacionRepository.recuperar(idDestino)
-                .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
+            .orElseThrow(() -> new UbicacionNoEncontradaException(idDestino));
 
         ubicacionRepository.conectar(idOrigen, idDestino);
     }
@@ -130,10 +130,16 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
+    public List<DegreeResult> degreeOf(List<Long> ids){
+        return ubicacionRepository.degreeOf(ids);
+    }
+
+    @Override
     public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
         ubicacionRepository.recuperar(ubicacionId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
 
         return ubicacionRepository.recuperarConexiones(ubicacionId);
     }
+
 }
