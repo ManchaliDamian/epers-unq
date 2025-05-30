@@ -1,59 +1,67 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.enums.Direccion;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.EspirituService;
-import ar.edu.unq.epersgeist.servicios.MediumService;
-import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import jakarta.persistence.NoResultException;
-import org.junit.jupiter.api.*;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
+import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class EspirituServiceTest {
 
-    private EspirituService serviceE;
-    private EspirituDAO espirituDAO;
+    @Autowired private EspirituService serviceE;
+    @Autowired private UbicacionService serviceU;
+    @Autowired private MediumService serviceM;
+
+    @Autowired private EspirituDAO espirituDAO;
+    @Autowired private MediumDAO mediumDAO;
+    @Autowired private UbicacionDAO ubicacionDao;
+
     private Espiritu azazel;
     private Espiritu belcebu;
     private Espiritu angel;
 
-    private MediumService serviceM;
-    private MediumDAO mediumDAO;
     private Medium medium;
 
-    private UbicacionService serviceU;
     private Ubicacion quilmes;
     private Ubicacion berazategui;
-    private UbicacionDAO ubicacionDao;
 
-    private EliminarTodoServiceImpl serviceEliminarTodo;
+
+    private DataService dataService;
     @BeforeEach
     void setUp() {
+        dataService = new DataServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
 
-        ubicacionDao = new HibernateUbicacionDAO();
-        serviceU = new UbicacionServiceImpl(ubicacionDao);
+        quilmes = new Santuario("Quilmes", 100);
+        berazategui = new Cementerio("Berazategui",100);
 
-        mediumDAO = new HibernateMediumDAO();
-        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
-
-        espirituDAO = new HibernateEspirituDAO();
-        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-
-        quilmes = new Ubicacion("Quilmes");
-        berazategui = new Ubicacion("Berazategui");
-
-        serviceU.crear(quilmes);
-        serviceU.crear(berazategui);
+        serviceU.guardar(quilmes);
+        serviceU.guardar(berazategui);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
@@ -62,28 +70,80 @@ public class EspirituServiceTest {
 
         serviceE.guardar(azazel);
         serviceE.guardar(belcebu);
-
         serviceE.guardar(angel);
-        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+
+    }
+
+    @Test
+    void testUpdateATDeEspiritu(){
+        String nuevoNombre = "Nuevo Azazel";
+
+        azazel.setNombre(nuevoNombre);
+        azazel.setUbicacion(berazategui);
+        serviceE.actualizar(azazel);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = azazel.getUpdatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(azazel.getNombre(),nuevoNombre);
+        assertEquals(azazel.getUbicacion().getNombre(),berazategui.getNombre());
+
+    }
+
+    @Test
+    void testCreateAtDeEspiritu(){
+        serviceE.guardar(azazel);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = azazel.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+
     }
 
 
     @Test
     void testConectarEspirituAMediumSaleBien() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
 
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
-        Espiritu conectado = serviceE.recuperar(azazel.getId());
-        assertEquals(mediumConectado.getId(), conectado.getMediumConectado().getId());
+        Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
+        assertEquals(mediumConectado.getId(), conectado.get().getMediumConectado().getId());
+
+    }
+    @Test
+    void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
+
+        serviceM.guardar(medium);
+        serviceE.eliminar(azazel.getId());
+
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
+
+        Optional<Espiritu> conectado = dataService.recuperarEliminadoEspiritu(azazel.getId());
+        assertNull(conectado.get().getMediumConectado());
+
 
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
-        serviceE.actualizar(azazel);
+        serviceE.guardar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
@@ -92,7 +152,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -104,59 +164,125 @@ public class EspirituServiceTest {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         serviceE.guardar(nuevoEspiritu);
 
-        Espiritu recuperado = serviceE.recuperar(nuevoEspiritu.getId());
+        Optional<Espiritu> recuperado = serviceE.recuperar(nuevoEspiritu.getId());
         assertNotNull(recuperado);
-        assertEquals("Miguel", recuperado.getNombre());
-        assertEquals(0, recuperado.getNivelDeConexion());
+        assertEquals("Miguel", recuperado.get().getNombre());
+        assertEquals(0, recuperado.get().getNivelDeConexion());
+    }
+    @Test
+    void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        serviceE.guardar(nuevoEspiritu);
+        serviceE.eliminar(nuevoEspiritu.getId());
+
+        assertTrue(serviceE.recuperar(nuevoEspiritu.getId()).isEmpty());
     }
 
     @Test
     void testRecuperarTodos() {
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertEquals(3, espiritus.size());
+    }
+    @Test
+    void testRecuperarTodosCuandoHayUnEliminadoLogico() {
+        serviceE.eliminar(angel.getId());
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(2, espiritus.size());
 
-        List<Long> idsEsperados = List.of(azazel.getId(), belcebu.getId(), angel.getId());
-        assertTrue(espiritus.stream().allMatch(e -> idsEsperados.contains(e.getId())));
+    }
+    @Test
+    void testRecuperarTodosCuandoTodosEliminadosLogicamente() {
+        serviceE.eliminar(angel.getId());
+        serviceE.eliminar(azazel.getId());
+        serviceE.eliminar(belcebu.getId());
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(0, espiritus.size());
+    }
+    @Test
+    void testRecuperarTodosLosEliminadosLogicamente() {
+        serviceE.eliminar(angel.getId());
+        serviceE.eliminar(azazel.getId());
+
+        List<Espiritu> espiritus = serviceE.recuperarTodos();
+        assertEquals(1, espiritus.size());
+
+        List<Espiritu> espiritusEliminados = dataService.recuperarTodosLosEspiritusEliminados();
+        assertEquals(2, espiritusEliminados.size());
+    }
+
+    @Test
+    void testRecuperarAngelesExistentes(){
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(1, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosExistentes(){
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(2, demonios.size());
+    }
+
+    @Test
+    void testRecuperarAngelesNoExistentes(){
+        serviceE.eliminar(angel.getId());
+        List<EspirituAngelical> angeles = serviceE.recuperarAngeles();
+        assertEquals(0, angeles.size());
+    }
+
+    @Test
+    void testRecuperarDemoniosNoExistentes(){
+        serviceE.eliminar(belcebu.getId());
+        serviceE.eliminar(azazel.getId());
+        List<EspirituDemoniaco> demonios = serviceE.recuperarDemonios();
+        assertEquals(0, demonios.size());
     }
 
     @Test
     void testActualizar() {
         String nuevoNombre = "Lucifer";
         azazel.setNombre(nuevoNombre);
-        serviceE.actualizar(azazel);
+        serviceE.guardar(azazel);
 
-        Espiritu actualizado = serviceE.recuperar(azazel.getId());
-        assertEquals(nuevoNombre, actualizado.getNombre());
+        Optional<Espiritu> actualizado = serviceE.recuperar(azazel.getId());
+        assertEquals(nuevoNombre, actualizado.get().getNombre());
     }
 
     @Test
     void testEliminar() {
         serviceE.eliminar(angel.getId());
 
-        Espiritu eliminado = serviceE.recuperar(angel.getId());
-        assertNull(eliminado);
+        assertTrue(serviceE.recuperar(angel.getId()).isEmpty());
+    }
+    @Test
+    void eliminarEspirituConMediumConectadoLanzaException() {
+        serviceM.guardar(medium);
+        serviceE.conectar(angel.getId(), medium.getId());
 
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertEquals(2, espiritus.size());
+        assertThrows(EspirituNoEliminableException.class, () -> serviceE.eliminar(angel.getId()));
+    }
+    @Test
+    void testRecuperarEliminadoPorId() {
+        serviceE.eliminar(angel.getId());
+        Optional<Espiritu> eliminado = dataService.recuperarEliminadoEspiritu(angel.getId());
+        assertEquals(eliminado.get().getNombre(), "Gabriel");
+        assertTrue(eliminado.get().isDeleted());
+
     }
 
     @Test
-    void testEliminarTodo() {
-        serviceM.crear(medium);
+    void testEliminarCuandoEstaBorradoLanzaExcepcion(){
+        serviceE.eliminar(angel.getId());
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.eliminar(angel.getId()));
+    }
 
-        serviceEliminarTodo.eliminarTodo();
-
-        List<Espiritu> espiritus = serviceE.recuperarTodos();
-        assertTrue(espiritus.isEmpty());
-
-        assertThrows(NoResultException.class, () -> {
-            serviceM.recuperar(medium.getId());
-        });
+    @Test
+    void testEliminarCuandoNoExisteLanzaExcepcion(){
+        assertThrows(EspirituNoEncontradoException.class, () -> serviceE.eliminar(412943L));
     }
 
     @Test
     void testRecuperarTodosCuandoNoExisten() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
         List<Espiritu> espiritus = serviceE.recuperarTodos();
         assertTrue(espiritus.isEmpty());
     }
@@ -184,14 +310,22 @@ public class EspirituServiceTest {
             }
             azazel.setNivelDeConexion(90);
             belcebu.setNivelDeConexion(10);
-            serviceE.actualizar(azazel);
-            serviceE.actualizar(belcebu);
+            serviceE.guardar(azazel);
+            serviceE.guardar(belcebu);
 
         }
+        @Test
+        void primeraPaginaDescendente_devuelveEspiritusOrdenadoSinEliminado() {
+            serviceE.eliminar(azazel.getId());
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
 
+            assertEquals(2, resultado.size());
+            assertEquals("Mephisto", resultado.get(0).getNombre());
+            assertEquals("Lucifer", resultado.get(1).getNombre());
+        }
         @Test
         void primeraPaginaDescendente_devuelveDosEspiritusOrdenados() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
 
             assertEquals(2, resultado.size());
             assertEquals("Azazel", resultado.get(0).getNombre());
@@ -200,7 +334,7 @@ public class EspirituServiceTest {
 
         @Test
         void segundaPaginaDescendente_devuelveSiguientesDosEspiritus() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 2, 2);
 
             assertEquals(2, resultado.size());
             assertEquals("Lucifer", resultado.get(0).getNombre());
@@ -209,25 +343,51 @@ public class EspirituServiceTest {
 
         @Test
         void paginaInexistente_devuelveListaVacia() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 10, 2);
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 11, 2);
 
             assertTrue(resultado.isEmpty());
         }
 
         @Test
         void primeraPaginaAscendente_devuelveEspiritusEnOrdenInverso() {
-            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 0, 2);
-            resultado.forEach(e -> System.out.println(e.getNombre() + " - Nivel: " + e.getNivelDeConexion()));
+            List<Espiritu> resultado = serviceE.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 2);
+
 
             assertEquals(2, resultado.size());
             assertEquals("Belcebu", resultado.get(0).getNombre());
             assertEquals("Vine", resultado.get(1).getNombre());
         }
 
+        @Test
+        void paginaNegativaOCeroLanzaError(){
+            IllegalArgumentException exceptionCero = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 0, 5)
+            );
+
+            assertEquals("El número de página 0 es menor a 1", exceptionCero.getMessage());
+
+            IllegalArgumentException exceptionUno = assertThrows(IllegalArgumentException.class, () -> {
+                serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, -4, 5);
+            });
+
+            assertEquals("El número de página -4 es menor a 1", exceptionUno.getMessage());
+        }
+
+        @Test
+        void cantidadPorPaginaNegativaLanzaError(){
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> serviceE.espiritusDemoniacos(Direccion.DESCENDENTE, 4, -1)
+            );
+
+            assertEquals("La cantidad por pagina -1 es menor a 0", exception.getMessage());
+        }
+
     }
 
     @AfterEach
     void cleanup() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 }

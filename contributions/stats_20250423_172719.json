@@ -1,0 +1,229 @@
+{
+  "Contributions-per-user": [
+    {
+      "👤 Contributor": "Axel García",
+      "📊 Stats": {
+        "📨 commits": 2,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+      ]
+    },
+    {
+      "👤 Contributor": "Damian Manchali",
+      "📊 Stats": {
+        "📨 commits": 42,
+        "✅ added": 357,
+        "⛔ deleted": 531
+      },
+      "💬 Messages": [
+        "testEspirituDemoniaco con secuencial y eliminacion de importaciones no usadas",
+        "Merge branch 'fix/correcciones-tp2' into feature/conectarA-test",
+        "test EspirituService cambiando nombres",
+        "uniendo descansar() con sus test",
+        "exception de SinAngeles cuando medium quiere exorcizar sin",
+        "medium eliminado en el test espirituDemoniaco",
+        "cambios de modelado",
+        "modelado ubicacion arreglado",
+        "eliminarTodo service testeado",
+        "eliminando codigo muerto",
+        "actualizar(Ubicacion ubicacion) corregido test funcionando",
+        "errores solucionados",
+        "Revert \"Pginator\"",
+        "preparando entrega...",
+        "Merge branch 'dev' into feature/exorcizar-test",
+        "testInvocar",
+        "Merge remote-tracking branch 'origin/dev' into feature/exorcizar-test",
+        "test exorcizarA",
+        "invocarEspirituService test",
+        "Merge remote-tracking branch 'origin/feature/medium-tests' into feature/mendium-service-invocar",
+        " invocarEspirituService",
+        "test 100%",
+        "conflictos test ubicacion",
+        "test corriendo",
+        "Revert \"Feature/test ubicacion\"",
+        "solucionando conflictos"
+      ]
+    },
+    {
+      "👤 Contributor": "Francisco Sebastian Raffin",
+      "📊 Stats": {
+        "📨 commits": 2,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'fix/correcciones-tp2' into feature/tests-service-casos-desfavorables-descansar"
+      ]
+    },
+    {
+      "👤 Contributor": "FranciscoSRaffin",
+      "📊 Stats": {
+        "📨 commits": 8,
+        "✅ added": 721,
+        "⛔ deleted": 519
+      },
+      "💬 Messages": [
+        "fix tests",
+        "deleted bh",
+        "descansar y conectar tests",
+        "Tests funcionando",
+        "Falla testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion",
+        "Pginator",
+        "sacados getters y setters",
+        "Fallan los tests :)"
+      ]
+    },
+    {
+      "👤 Contributor": "Franco",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 401,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "insights script"
+      ]
+    },
+    {
+      "👤 Contributor": "Hernán F. Moreyra",
+      "📊 Stats": {
+        "📨 commits": 4,
+        "✅ added": 1,
+        "⛔ deleted": 1
+      },
+      "💬 Messages": [
+        "small query fix"
+      ]
+    },
+    {
+      "👤 Contributor": "Hernán Moreyra",
+      "📊 Stats": {
+        "📨 commits": 20,
+        "✅ added": 539,
+        "⛔ deleted": 233
+      },
+      "💬 Messages": [
+        "removido comentario de duda resuelta",
+        "agregado caso desfavorable de test espiritus",
+        "agregados tests conectarA",
+        "agregados tests perderNivelDeConexion",
+        "removido codigo no utilizado y sus tests",
+        "agregados asserts de tests exorcizar",
+        "query fix",
+        "test fallando",
+        "estrategia generador secuencial de numeros",
+        "test exorcizar inicial",
+        "Merge branch 'fix/correcciones-tp2' into fix/exorcizar",
+        "test desfavorable fix",
+        "agregados casos desfavorables en UbicacionServiceTest",
+        "fix exorcizar y espirituDAO",
+        "agregado caso desfavorable de mediumsSinEspiritusEn",
+        "borrado eliminarTodo de services que utiliza el usuario",
+        "HibernateMediumDAO query espiritus fix",
+        "exorcizarA fix",
+        "medium modelo",
+        "service tests fix"
+      ]
+    },
+    {
+      "👤 Contributor": "Lourdes de la Cerda",
+      "📊 Stats": {
+        "📨 commits": 22,
+        "✅ added": 803,
+        "⛔ deleted": 473
+      },
+      "💬 Messages": [
+        "refactor en conectar espiritu service",
+        "Merge branch 'fix/correcciones-tp2' into fix/medium-exorcizar",
+        "test exorcizar service favorables y desfavorables",
+        "test exorcizar con ataque fallido y elimino test desconectarEspiritu",
+        "test favorables para exorcizar y comento codigo repetido o que nunca se usa para revisar",
+        "commit respaldo",
+        "elimine el enum tipo espiritu y cambie la query de recuperar demoniacos",
+        "borro 2da opcion en test paginacion",
+        "Merge branch 'fix/correcciones-tp2' into feature/paginacion-test",
+        "tests paginacion con nuevo modelado de espiritu",
+        "elimino generadormock de los test y agrego su nueva implementacion",
+        "agrego patron strategy y singleton para generador",
+        "Merge branch 'feature/modelado-espiritu' of https://github.com/EPERS-UNQ/group-b-repo into feature/modelado-espiritu",
+        "elimino generador del constructor de espiritu y sus test",
+        "test para espiritus de medium",
+        "transaccion en espiritus de MediumServiceImpl y correcion de query en espiritus de HibernateMediumDAO",
+        "elimino verify en exorcizarA",
+        "paginacion en espiritusDemoniacos con test funcionando",
+        "Merge branch 'dev' into feature/random",
+        "inyecto GeneradorDeNumeros en espiritu",
+        "Merge branch 'dev' into feature/test-espirituService",
+        "test de espiritu service funcionando"
+      ]
+    },
+    {
+      "👤 Contributor": "axlg98",
+      "📊 Stats": {
+        "📨 commits": 8,
+        "✅ added": 84,
+        "⛔ deleted": 70
+      },
+      "💬 Messages": [
+        "borrando código muerto",
+        "subiendo cambios",
+        "Arreglando merge de conflicto",
+        ".",
+        "arreglando conflictos",
+        "arreglando paginacion y subiendo test"
+      ]
+    },
+    {
+      "👤 Contributor": "franco",
+      "📊 Stats": {
+        "📨 commits": 2,
+        "✅ added": 577,
+        "⛔ deleted": 3
+      },
+      "💬 Messages": [
+        "enunciado-spring",
+        "insights script"
+      ]
+    },
+    {
+      "👤 Contributor": "lourdesdlc",
+      "📊 Stats": {
+        "📨 commits": 26,
+        "✅ added": 803,
+        "⛔ deleted": 473
+      },
+      "💬 Messages": [
+        "refactor en conectar espiritu service",
+        "Merge branch 'fix/correcciones-tp2' into fix/medium-exorcizar",
+        "test exorcizar service favorables y desfavorables",
+        "test exorcizar con ataque fallido y elimino test desconectarEspiritu",
+        "test favorables para exorcizar y comento codigo repetido o que nunca se usa para revisar",
+        "commit respaldo",
+        "elimine el enum tipo espiritu y cambie la query de recuperar demoniacos",
+        "borro 2da opcion en test paginacion",
+        "Merge branch 'fix/correcciones-tp2' into feature/paginacion-test",
+        "tests paginacion con nuevo modelado de espiritu",
+        "elimino generadormock de los test y agrego su nueva implementacion",
+        "agrego patron strategy y singleton para generador",
+        "Merge branch 'feature/modelado-espiritu' of https://github.com/EPERS-UNQ/group-b-repo into feature/modelado-espiritu",
+        "elimino generador del constructor de espiritu y sus test",
+        "test para espiritus de medium",
+        "transaccion en espiritus de MediumServiceImpl y correcion de query en espiritus de HibernateMediumDAO",
+        "elimino verify en exorcizarA",
+        "paginacion en espiritusDemoniacos con test funcionando",
+        "Merge branch 'dev' into feature/random",
+        "inyecto GeneradorDeNumeros en espiritu",
+        "Merge branch 'dev' into feature/test-espirituService",
+        "test de espiritu service funcionando"
+      ]
+    }
+  ],
+  "❌ Commits directos a dev": [
+    {
+      "commit": "insights script",
+      "author": "Franco"
+    }
+  ]
+}

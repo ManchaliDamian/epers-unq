@@ -1,76 +1,139 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.persistencia.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.UbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
+import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
+import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest
 public class UbicacionServiceTest {
 
-    private UbicacionServiceImpl serviceU;
-    private Ubicacion quilmes;
-    private Ubicacion bernal;
-    private UbicacionDAO ubicacionDao;
+    @Autowired private MediumService serviceM;
+    @Autowired private EspirituService serviceE;
+    @Autowired private UbicacionService serviceU;
 
-    private EspirituServiceImpl serviceE;
-    private EspirituDAO espirituDAO;
+    @Autowired private MediumDAO mediumDAO;
+    @Autowired private EspirituDAO espirituDAO;
+    @Autowired private UbicacionDAO ubicacionDAO;
 
-    private MediumServiceImpl serviceM;
-    private MediumDAO mediumDAO;
     private Medium medium;
+    private Medium medium2;
+    private Medium medium3;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Espiritu angel;
     private Espiritu demonio;
 
-    private EliminarTodoServiceImpl serviceEliminarTodo;
+    private DataService dataService;
+
     @BeforeEach
     void prepare() {
-        ubicacionDao = new HibernateUbicacionDAO();
-        espirituDAO = new HibernateEspirituDAO();
-        mediumDAO = new HibernateMediumDAO();
+        dataService = new DataServiceImpl(ubicacionDAO, mediumDAO, espirituDAO);
 
-        serviceU = new UbicacionServiceImpl(ubicacionDao);
-        serviceE = new EspirituServiceImpl(espirituDAO, mediumDAO);
-        serviceM = new MediumServiceImpl(mediumDAO, espirituDAO);
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        quilmes = new Ubicacion("Quilmes");
-        bernal = new Ubicacion("Bernal");
+        angel = new EspirituAngelical("damian",santuario);
+        demonio = new EspirituDemoniaco("Roberto", santuario);
 
-        angel = new EspirituAngelical("damian",quilmes);
-        demonio = new EspirituDemoniaco("Roberto", quilmes);
-
-
-        medium = new Medium("roberto", 200, 150, quilmes);
-
-        serviceU.crear(quilmes);
-        serviceU.crear(bernal);
-
-        serviceEliminarTodo = new EliminarTodoServiceImpl(ubicacionDao, mediumDAO, espirituDAO);
+        medium = new Medium("roberto", 200, 150, santuario);
+        medium2 = new Medium("roberto", 200, 150, santuario);
+        medium3 = new Medium("roberto", 200, 150, santuario);
+        serviceU.guardar(santuario);
+        serviceU.guardar(cementerio);
 
     }
 
+    @Test
+    void testUpdateATDeUbicacion(){
+        String nuevoNombre = "Nueva ubicacion";
+
+        santuario.setNombre(nuevoNombre);
+        santuario.setFlujoDeEnergia(35);
+        serviceU.actualizar(santuario);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = santuario.getUpdatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+        assertEquals(santuario.getNombre(),nuevoNombre);
+        assertEquals(35,santuario.getFlujoDeEnergia());
+
+    }
+
+    @Test
+    void testCreateAtDeUbicacion(){
+        serviceU.guardar(santuario);
+
+        Date fechaEsperada = new Date();
+
+        Date fechaEspiritu = santuario.getCreatedAt();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String esperadaFormateada = sdf.format(fechaEsperada);
+        String obtenidaFormateada = sdf.format(fechaEspiritu);
+
+        assertEquals(esperadaFormateada, obtenidaFormateada);
+
+    }
+
+    @Test
+    void recuperarUbicacionEliminada() {
+        serviceU.eliminar(santuario.getId());
+        Optional<Ubicacion> ubicacionEliminada = dataService.recuperarEliminadoUbicacion(santuario.getId());
+        assertTrue(ubicacionEliminada.get().isDeleted());
+    }
+    @Test
+    void recuperarTodasUbicacionesEliminadas() {
+        serviceU.eliminar(santuario.getId());
+        List<Ubicacion> ubicacionesEliminadas = dataService.recuperarTodosEliminadosDeUbicacion();
+        assertEquals(1, ubicacionesEliminadas.size());
+    }
     @Test
     void espiritusEnUnaUbicacionExistente() {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = serviceU.espiritusEn(quilmes.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
+    }
+    @Test
+    void espiritusEnUnaUbicacionExistenteSinEliminados() {
+        serviceE.guardar(angel);
+        serviceE.guardar(demonio);
+        serviceE.eliminar(angel.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
+        assertEquals(1, espiritusEn.size());
     }
 
     @Test
@@ -78,45 +141,70 @@ public class UbicacionServiceTest {
         serviceE.guardar(angel);
         serviceE.guardar(demonio);
 
-        List<Espiritu> espiritusEn = serviceU.espiritusEn(bernal.getId());
+        List<Espiritu> espiritusEn = serviceU.espiritusEn(cementerio.getId());
         assertEquals(0, espiritusEn.size());
     }
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        serviceM.crear(medium);
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        serviceM.guardar(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(),mediums.getFirst().getId());
     }
 
     @Test
     void noHayMediumsEnBernal() {
-        serviceM.crear(medium);
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(bernal.getId());
+        serviceM.guardar(medium);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(cementerio.getId());
         assertEquals(0, mediums.size());
     }
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
         serviceE.guardar(angel);
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
-        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(quilmes.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
+    }
+    @Test
+    void mediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(0, mediums.size());
+    }
+    @Test
+    void hayMediumsConUnMediumEliminadoEnSantuario() {
+        serviceM.guardar(medium);
+        serviceM.eliminar(medium.getId());
+        serviceM.guardar(medium2);
+        serviceM.guardar(medium3);
+        List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
+        assertEquals(2, mediums.size());
     }
 
     @Test
     void noHayMediumsSinEspiritusEnUbicacionInexistente() {
-        serviceM.crear(medium);
+        serviceM.guardar(medium);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
         assertEquals(0, mediums.size());
     }
 
     @Test
     void recuperarUbicacionDada() {
-        Ubicacion q = serviceU.recuperar(quilmes.getId());
-        assertEquals("Quilmes", q.getNombre());
+        Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
+        assertEquals("Quilmes", q.get().getNombre());
+    }
+
+    @Test
+    public void testCrearYRecuperarUbicacion() {
+        Optional<Ubicacion> recuperada = serviceU.recuperar(santuario.getId());
+
+        assertNotNull(recuperada, "La ubicación recuperada no debería ser null");
+        assertEquals("Quilmes", recuperada.get().getNombre(), "El nombre no coincide");
+        assertEquals(santuario.getId(), recuperada.get().getId(), "El ID no coincide");
     }
 
     @Test
@@ -126,25 +214,67 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void actualizarUnaUbicacion(){
-        Ubicacion q = serviceU.recuperar(quilmes.getId());
-        q.cambiarNombre("Avellaneda");
-        serviceU.actualizar(q);
-        Ubicacion nombreNuevo = serviceU.recuperar(q.getId());
+    void recuperarSantuariosExistentes(){
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(1, santuarios.size());
+    }
 
-        assertEquals("Avellaneda", nombreNuevo.getNombre());
+    @Test
+    void recuperarCementeriosExistentes(){
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(1, cementerios.size());
+    }
+
+    @Test
+    void recuperarSantuariosNoExistentes(){
+        serviceU.eliminar(santuario.getId());
+        List<Santuario> santuarios = serviceU.recuperarSantuarios();
+        assertEquals(0, santuarios.size());
+    }
+
+    @Test
+    void recuperarCementeriosNoExistentes(){
+        serviceU.eliminar(cementerio.getId());
+        List<Cementerio> cementerios = serviceU.recuperarCementerios();
+        assertEquals(0, cementerios.size());
+    }
+
+
+    @Test
+    void actualizarUnaUbicacion(){
+        Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
+        q.get().cambiarNombre("Avellaneda");
+        serviceU.guardar(q.get());
+        Optional<Ubicacion> nombreNuevo = serviceU.recuperar(q.get().getId());
+
+        assertEquals("Avellaneda", nombreNuevo.get().getNombre());
     }
 
     @Test
     void eliminarUbicacion() {
-        serviceU.eliminar(quilmes);
+        serviceU.eliminar(santuario.getId());
         List<Ubicacion> ubicaciones = serviceU.recuperarTodos();
         assertEquals(1, ubicaciones.size());
     }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnEspirituEnEsaUbicacion() {
+
+        serviceE.guardar(angel);
+
+        assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
+    }
+    @Test
+    void eliminarUbicacionLanzaExceptionPorQueExisteUnMediumEnEsaUbicacion() {
+
+        serviceM.guardar(medium);
+
+        assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
+    }
+
 
     @AfterEach
     void cleanup() {
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

@@ -1,7 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
-
-
+import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicaciones.Ubicacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,110 +14,135 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class EspirituTest {
-    private Espiritu espiritu;
-    private Ubicacion quilmes;
+    private Espiritu angel;
+    private Espiritu demonio;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
     private Medium mediumConectado;
 
     @BeforeEach
     void setUp(){
-        quilmes = new Ubicacion("Quilmes");
+        santuario = new Santuario("santuario", 40);
+        cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Mago",100,90,quilmes);
-        espiritu = new EspirituAngelical("Espiritu",quilmes);
+        mediumConectado = new Medium("Mago",100,90,cementerio);
+        angel = new EspirituAngelical("Espiritu",cementerio);
+        demonio = new EspirituDemoniaco("Espiritu", santuario);
     }
 
     @Test
     void aumentaNivelDeConexionDelEspiritu(){
-        mediumConectado.conectarseAEspiritu(espiritu);
+        mediumConectado.conectarseAEspiritu(angel);
 
-        assertEquals(18,espiritu.getNivelDeConexion());
+        assertEquals(18,angel.getNivelDeConexion());
     }
 
     @Test
     void espirituRecienSeConectaYNoTieneId(){
-        assertNull(espiritu.getId());
-    }
-
-    @Test
-    void puedeAumentarLaConexionDelEspiritu(){
-        mediumConectado.conectarseAEspiritu(espiritu);
-
-        assertEquals(18,espiritu.getNivelDeConexion());
+        assertNull(angel.getId());
     }
 
     @Test
     void perderNivelDeConexionConCiertaCantidad(){
-        mediumConectado.conectarseAEspiritu(espiritu);
+        mediumConectado.conectarseAEspiritu(angel);
 
-        espiritu.perderNivelDeConexion(5);
-        assertEquals(13,espiritu.getNivelDeConexion());
+        angel.perderNivelDeConexion(5);
+        assertEquals(13,angel.getNivelDeConexion());
     }
 
     @Test
     void espirituNoPuedePerderNivelDeConexionUnaVezYSerNegativo(){
-        mediumConectado.conectarseAEspiritu(espiritu);
+        mediumConectado.conectarseAEspiritu(angel);
 
-        espiritu.perderNivelDeConexion(300);
-        assertEquals(0,espiritu.getNivelDeConexion());
-        assertNull(espiritu.getMediumConectado());
-        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+        angel.perderNivelDeConexion(300);
+        assertEquals(0,angel.getNivelDeConexion());
+        assertNull(angel.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(angel));
     }
 
     @Test
     void espirituNoPuedePerderNivelDeConexionVariasVecesYSerNegativo(){
-        mediumConectado.conectarseAEspiritu(espiritu);
+        mediumConectado.conectarseAEspiritu(angel);
 
-        espiritu.perderNivelDeConexion(10);
-        espiritu.perderNivelDeConexion(10);
-        espiritu.perderNivelDeConexion(10);
-        assertEquals(0,espiritu.getNivelDeConexion());
-        assertNull(espiritu.getMediumConectado());
-        assertFalse(mediumConectado.getEspiritus().contains(espiritu));
+        angel.perderNivelDeConexion(10);
+        angel.perderNivelDeConexion(10);
+        angel.perderNivelDeConexion(10);
+        assertEquals(0,angel.getNivelDeConexion());
+        assertNull(angel.getMediumConectado());
+        assertFalse(mediumConectado.getEspiritus().contains(angel));
     }
 
 
     @Test
     void elEspirituNoTieneMediumConectado(){
-        assertNull(espiritu.getMediumConectado());
+        assertNull(angel.getMediumConectado());
     }
 
     @Test
     void elEspirituTieneUnMediumConectado(){
-        espiritu.setMediumConectado(mediumConectado);
-        assertTrue(espiritu.estaConectado());
+        angel.setMediumConectado(mediumConectado);
+        assertTrue(angel.estaConectado());
     }
 
     @Test
     void elEspirituDescansa(){
-        espiritu.descansar();
-        assertEquals(5,espiritu.getNivelDeConexion());
+        angel.descansar(santuario);
+        assertEquals(40,angel.getNivelDeConexion());
     }
 
     @Test
     void conectarA_SeteaElMedium(){
-        espiritu.conectarA(mediumConectado);
-        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+        angel.conectarA(mediumConectado);
+        assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
 
     @Test
     void conectarA_AumentaLaConexionCorrectamente() {
-        espiritu.setNivelDeConexion(60);
-        espiritu.conectarA(mediumConectado);
+        angel.setNivelDeConexion(60);
+        angel.conectarA(mediumConectado);
 
         // el aumento debería ser el 20% de 90, o sea 18
-        assertEquals(78, espiritu.getNivelDeConexion());
-        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+        assertEquals(78, angel.getNivelDeConexion());
+        assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
     @Test
     void conectarA_NoSuperaElMaximoDe100() {
-        // si el espíritu ya tiene una conexión de 95, y el medium da +18, debería quedar en 100
-        espiritu.setNivelDeConexion(95);
-        espiritu.conectarA(mediumConectado);
+        angel.setNivelDeConexion(95);
+        angel.conectarA(mediumConectado);
 
-        assertEquals(100, espiritu.getNivelDeConexion());
-        assertEquals(espiritu.getMediumConectado().getId(), mediumConectado.getId());
+        assertEquals(100, angel.getNivelDeConexion());
+        assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
+    @Test
+    void aumentarConexion_ConManaCero() {
+        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario);
+        angel.setNivelDeConexion(50);
+        angel.conectarA(mediumSinMana);
+        assertEquals(50, angel.getNivelDeConexion());
+    }
+
+    @Test
+    void perderNivelDeConexion_CantidadNegativa() {
+        angel.setNivelDeConexion(50);
+        assertThrows(IllegalArgumentException.class, () -> {
+            angel.perderNivelDeConexion(-10);
+        });
+    }
+
+    @Test
+    void conectarA_MediumNuloLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> {
+            angel.conectarA(null);
+        });
+    }
+
+    @Test
+    void descansar_UbicacionNulaLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> {
+            angel.descansar(null);
+        });
+    }
 }
