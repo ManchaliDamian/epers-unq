@@ -183,13 +183,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public List<ClosenessResult> closenessOf(List<Long> ids) {
         return ids.stream()
                 .map(id -> new ClosenessResult(
-                        UbicacionDTO.desdeModelo(this.mapperU.toDomain(
-                                this.ubiDaoSQL.findById(id)
-                                        .orElseThrow(() -> new UbicacionNoEncontradaException(id))
-                        )),
+                        this.recuperar(id)
+                                .orElseThrow(() -> new UbicacionNoEncontradaException(id)),
                         closenessOf(id, ids)))
                 .collect(Collectors.toList());
     }
+
 
     private Double closenessOf(Long id, List<Long> ids) {
         int suma = ids.stream()

@@ -8,17 +8,20 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Setter @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode @ToString
+@Setter @Getter @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_ubicacion")
 
 @Entity(name = "Ubicacion")
 public abstract class UbicacionJPADTO {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Include
     @Column(unique = true, nullable = false)
     private String nombre;
 
