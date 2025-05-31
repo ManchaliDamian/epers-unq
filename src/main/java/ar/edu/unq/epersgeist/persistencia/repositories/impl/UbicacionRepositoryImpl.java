@@ -17,7 +17,6 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
-import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -255,14 +254,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public List<DegreeResult> degreeOf(List<Long> ids){
-        return ids.stream().map(
-                id -> new DegreeResult(
-                        this.mapperU.toDomain(
-                                this.ubiDaoSQL.findById(id)
-                                        .orElseThrow(() -> new UbicacionNoEncontradaException(id))
-                        ),
-                        ubiDaoNeo.degreeOf(id))).toList();
+    public Double degreeOf(Long id){
+        if (!ubiDaoNeo.existsById(id)) {
+            throw new UbicacionNoEncontradaException(id);
+        }
+        return ubiDaoNeo.degreeOf(id);
     }
 
 }
