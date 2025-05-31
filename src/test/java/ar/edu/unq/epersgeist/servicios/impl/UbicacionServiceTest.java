@@ -512,7 +512,7 @@ public class UbicacionServiceTest {
         /*        4     S    C
         *         | ↖
         *         ↓  3
-        *   1 <-> 2 ↗
+        *   1 ↔ 2 ↗
         */
 
         List<Long> ids = List.of(ubicacion1.getId(),ubicacion2.getId(),ubicacion3.getId(),ubicacion4.getId(), santuario.getId(), cementerio.getId());
@@ -585,6 +585,11 @@ public class UbicacionServiceTest {
 
         assertEquals(2.0, grado.get(santuario.getId()),   "Quilmes con entrada y salida debe tener degree 2");
         assertEquals(2.0, grado.get(cementerio.getId()), "Bernal con entrada y salida debe tener degree 2");
+    }
+
+    @Test
+    void degreeDeUbicacionesNoExistentesLanzaExcepcion(){
+        assertThrows(UbicacionNoEncontradaException.class, () -> serviceU.degreeOf(List.of(333L, 444L)));
     }
 
     //-------------------------------------------------------------------------------------
