@@ -29,7 +29,7 @@ public interface UbicacionRepository {
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
     List<DegreeResult> degreeOf(List<Long> ids);
     List<Ubicacion> recuperarConexiones(Long ubicacionId);
-    List<ClosenessResult> closenessOf(List<Long> ids);
+    Double closenessOf(Long id);
 
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion();
     List<Medium> mediumConMayorDemoniacosEn(long ubicacionId);

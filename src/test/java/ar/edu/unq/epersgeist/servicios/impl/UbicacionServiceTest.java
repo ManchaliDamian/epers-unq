@@ -503,23 +503,27 @@ public class UbicacionServiceTest {
         ubicacion3 = serviceU.guardar(ubicacion3);
         ubicacion4 = serviceU.guardar(ubicacion4);
         serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
+        serviceU.conectar(ubicacion2.getId(),ubicacion1.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
         serviceU.conectar(ubicacion3.getId(),ubicacion4.getId());
         serviceU.conectar(ubicacion4.getId(),ubicacion2.getId());
 
-        /*        4
+
+        /*        4     S    C
         *         | ↖
-        *     1   ↓  3
-        *      ↖→ 2 ↗
+        *         ↓  3
+        *   1 <-> 2 ↗
         */
 
-        List<Long> ids = List.of(ubicacion1.getId(),ubicacion2.getId(),ubicacion3.getId(),ubicacion4.getId());
+        List<Long> ids = List.of(ubicacion1.getId(),ubicacion2.getId(),ubicacion3.getId(),ubicacion4.getId(), santuario.getId(), cementerio.getId());
         List<Double> closenessEsperados = List.of(
-                1.0,
-                0.14285714285714285,
-                0.125,
-                0.1111111111111111
-        );
+                1.0 / 26,
+                1.0 / 24,
+                1.0 / 26,
+                1.0 / 25,
+                1.0 / 50,
+                1.0 / 50
+        );// tener en cuenta que santuario y cementerio están desconectados de los nodos ubicacionN (se suma 10 si no hay camino)
 
         List<ClosenessResult> resultados = serviceU.closenessOf(ids);
 
@@ -528,6 +532,11 @@ public class UbicacionServiceTest {
             double obtenido = resultados.get(i).closeness();
             assertEquals(esperado, obtenido, 0.001, "Error en el índice " + i);
         }
+    }
+
+    @Test
+    void closenessDeUbicacionesNoExistentesLanzaExcepcion(){
+        assertThrows(UbicacionNoEncontradaException.class, () -> serviceU.closenessOf(List.of(433L, 231L)));
     }
 
 

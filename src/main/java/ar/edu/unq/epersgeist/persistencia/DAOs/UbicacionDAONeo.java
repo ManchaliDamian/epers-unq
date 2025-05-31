@@ -52,8 +52,25 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     )
     Double degreeOf(@Param("idUbicacion") Long idUbicacion);
 
+    @Query("""
+        MATCH (n:UbicacionNeoDTO {id: $id})
+        MATCH (other:UbicacionNeoDTO)
+        WHERE other <> n
+        OPTIONAL MATCH path = shortestPath((n)-[:CONECTA*]->(other))
+        WITH sum(
+                CASE
+                    WHEN path IS NULL THEN 10
+                    ELSE length(path)
+                END
+            ) AS totalDist
+        RETURN 1.0 / totalDist AS closeness
+    """)
+    Double closenessOf(@Param("id") Long id);
+
+
     @Query(
         "MATCH (u:UbicacionNeoDTO) DETACH DELETE u"
     )
     void deleteAll();
+
 }

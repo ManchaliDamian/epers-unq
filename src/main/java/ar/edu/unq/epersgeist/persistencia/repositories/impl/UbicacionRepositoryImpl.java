@@ -16,7 +16,6 @@ import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
-import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
@@ -179,31 +178,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public List<ClosenessResult> closenessOf(List<Long> ids) {
-        return ids.stream()
-                .map(id -> new ClosenessResult(
-                        this.recuperar(id)
-                                .orElseThrow(() -> new UbicacionNoEncontradaException(id)),
-                        closenessOf(id, ids)))
-                .collect(Collectors.toList());
+    public Double closenessOf(Long id) {
+        if (!ubiDaoNeo.existsById(id)) {
+            throw new UbicacionNoEncontradaException(id);
+        }
+        return this.ubiDaoNeo.closenessOf(id);
     }
-
-
-    private Double closenessOf(Long id, List<Long> ids) {
-        int suma = ids.stream()
-                .filter(i -> !Objects.equals(id, i))
-                .mapToInt(i -> {
-                    try {
-                        return this.caminoMasCorto(i, id).size();
-                    } catch (UbicacionNoEncontradaException e) {
-                        return 10;
-                    }
-                })
-                .sum();
-
-        return suma == 0 ? 1.0 : 1.0 / suma;
-    }
-
 
     @Override
     public void conectar(Long idOrigen,Long idDestino){
