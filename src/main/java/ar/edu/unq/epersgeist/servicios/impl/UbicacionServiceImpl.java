@@ -18,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,7 +132,13 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public List<DegreeResult> degreeOf(List<Long> ids){
-        return ubicacionRepository.degreeOf(ids);
+        List<DegreeResult> resultados = new ArrayList<>();
+        for (Long id : ids) {
+            Ubicacion ubicacion = ubicacionRepository.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
+            Double degree = ubicacionRepository.degreeOf(id);
+            resultados.add(new DegreeResult(ubicacion, degree));
+        }
+        return resultados;
     }
 
     @Override
