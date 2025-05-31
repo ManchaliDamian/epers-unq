@@ -592,10 +592,42 @@ public class UbicacionServiceTest {
         assertThrows(UbicacionNoEncontradaException.class, () -> serviceU.degreeOf(List.of(333L, 444L)));
     }
 
+    @Test
+    void crearYConectarNNodos() {
+        int cantidadDeNodos = 130;
+        int cantidadDeConexionesPorNodo = 3;
+
+        List<Ubicacion> nodos = new ArrayList<>();
+        for (int i = 0; i < cantidadDeNodos; i++) {
+            nodos.add(serviceU.guardar(new Santuario("Nodo " + i, 10)));
+        }
+
+        Random random = new Random();
+        Set<String> conexionesHechas = new HashSet<>();
+
+        for (Ubicacion nodo : nodos) {
+            Set<Long> conectados = new HashSet<>();
+            while (conectados.size() < cantidadDeConexionesPorNodo) {
+                Ubicacion destino = nodos.get(random.nextInt(nodos.size()));
+                if (!nodo.getId().equals(destino.getId()) && !conectados.contains(destino.getId())) {
+                    String claveConexion = nodo.getId() + "-" + destino.getId();
+
+                    if (!conexionesHechas.contains(claveConexion)) {
+                        serviceU.conectar(nodo.getId(), destino.getId());
+                        conexionesHechas.add(claveConexion);
+                        conectados.add(destino.getId());
+                    }
+                }
+            }
+        }
+    }
+
+
     //-------------------------------------------------------------------------------------
 
-    @AfterEach
-    void cleanup() {
-        dataService.eliminarTodo();
-    }
+    //@AfterEach
+    //void cleanup() {
+    //    dataService.eliminarTodo();
+    //}
+
 }
