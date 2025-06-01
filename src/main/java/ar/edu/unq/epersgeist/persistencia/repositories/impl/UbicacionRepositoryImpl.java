@@ -11,11 +11,14 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.CentralityMapperImpl;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
+import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -29,15 +32,17 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     private UbicacionMapper mapperU;
     private MediumMapper mapperM;
     private EspirituMapper mapperE;
+    private CentralityMapperImpl mapperC;
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   UbicacionMapper mapperU){
+                                   UbicacionMapper mapperU, CentralityMapperImpl mapperC){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;
         this.mapperE = mapperE;
         this.mapperM = mapperM;
+        this.mapperC = mapperC;
     }
 
     @Override
@@ -177,14 +182,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public Double closenessOf(Long id) {
-        if (!ubiDaoNeo.existsById(id)) {
-            throw new UbicacionNoEncontradaException(id);
-        }
-        return this.ubiDaoNeo.closenessOf(id);
-    }
-
-    @Override
     public void conectar(Long idOrigen,Long idDestino){
         ubiDaoNeo.conectar(idOrigen, idDestino);
     }
@@ -234,11 +231,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
-    public Double degreeOf(Long id){
-        if (!ubiDaoNeo.existsById(id)) {
-            throw new UbicacionNoEncontradaException(id);
-        }
-        return ubiDaoNeo.degreeOf(id);
+    public List<ClosenessResult> closenessOf(List<Long> ids) {
+        return this.mapperC.toDomainListCloseness(this.ubiDaoNeo.closenessOf(ids));
+    }
+
+    @Override
+    public List<DegreeResult> degreeOf(List<Long> ids){
+        return this.mapperC.toDomainListDegree(this.ubiDaoNeo.degreeOf(ids));
     }
 
 }

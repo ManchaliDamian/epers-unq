@@ -6,7 +6,7 @@ import java.util.List;
 
 public record DegreeResultDTO(
         UbicacionDTO ubicacion,
-        Double degreeCentrality
+        Long degreeCentrality
 ) {
     public static DegreeResultDTO desdeModelo(DegreeResult r) {
         return new DegreeResultDTO(

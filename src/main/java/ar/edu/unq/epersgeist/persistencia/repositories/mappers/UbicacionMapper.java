@@ -30,5 +30,6 @@ public interface UbicacionMapper {
 
     UbicacionNeoDTO toNeo(Ubicacion ubicacion);
 
+    Ubicacion toDomain(UbicacionNeoDTO ubicacion);
 }
 

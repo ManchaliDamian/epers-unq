@@ -1,5 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs;
 
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.ClosenessResultNeoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.DegreeResultNeoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -45,27 +47,28 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     )
     List<UbicacionNeoDTO> recuperarConexiones(@Param("id") Long id);
 
-    @Query(
-            "MATCH (nodo:UbicacionNeoDTO { id: $idUbicacion })" +
-                    "    OPTIONAL MATCH (nodo)-[r]-()" +
-                    "    RETURN count(r) * 1.0 AS distancia"
-    )
-    Double degreeOf(@Param("idUbicacion") Long idUbicacion);
+    @Query("""
+        MATCH (n:UbicacionNeoDTO)
+        WHERE n.id IN $ids
+        OPTIONAL MATCH (n)-[r]-()
+        RETURN n AS ubicacion, count(r) AS degree
+    """)
+    List<DegreeResultNeoDTO> degreeOf(@Param("ids") List<Long> ids);
 
     @Query("""
-        MATCH (n:UbicacionNeoDTO {id: $id})
-        MATCH (other:UbicacionNeoDTO)
-        WHERE other <> n
+        MATCH (n:UbicacionNeoDTO), (other:UbicacionNeoDTO)
+        WHERE n.id IN $ids AND other <> n
         OPTIONAL MATCH path = shortestPath((n)-[:CONECTA*]->(other))
-        WITH sum(
+        WITH n,
+            sum(
                 CASE
                     WHEN path IS NULL THEN 10
                     ELSE length(path)
                 END
             ) AS totalDist
-        RETURN 1.0 / totalDist AS closeness
+        RETURN n AS ubicacion, 1.0 / totalDist AS closeness
     """)
-    Double closenessOf(@Param("id") Long id);
+    List<ClosenessResultNeoDTO> closenessOf(@Param("ids") List<Long> ids);
 
 
     @Query(

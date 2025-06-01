@@ -527,16 +527,21 @@ public class UbicacionServiceTest {
 
         List<ClosenessResult> resultados = serviceU.closenessOf(ids);
 
-        for (int i = 0; i < resultados.size(); i++) {
+        // Reordenar los resultados para que coincidan con el orden de los IDs
+        Map<Long, Double> mapaResultados = resultados.stream()
+                .collect(Collectors.toMap(r -> r.ubicacion().getId(), ClosenessResult::closeness));
+
+        for (int i = 0; i < ids.size(); i++) {
+            long id = ids.get(i);
             double esperado = closenessEsperados.get(i);
-            double obtenido = resultados.get(i).closeness();
-            assertEquals(esperado, obtenido, 0.001, "Error en el índice " + i);
+            double obtenido = mapaResultados.getOrDefault(id, -1.0);
+            assertEquals(esperado, obtenido, 0.001, "Error en el índice " + i + ", id=" + id);
         }
     }
 
     @Test
     void closenessDeUbicacionesNoExistentesLanzaExcepcion(){
-        assertThrows(UbicacionNoEncontradaException.class, () -> serviceU.closenessOf(List.of(433L, 231L)));
+        assertTrue((serviceU.closenessOf(List.of(433L, 231L)).isEmpty()));
     }
 
 
@@ -544,14 +549,14 @@ public class UbicacionServiceTest {
     void degreeSinConexiones_debeSerCeroParaAmbas() {
         List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
 
-        Map<Long, Double> grado = resultados.stream()
+        Map<Long, Long> grado = resultados.stream()
                 .collect(Collectors.toMap(
                         dr -> dr.ubicacion().getId(),
                         DegreeResult::degree
                 ));
 
-        assertEquals(0.0, grado.get(santuario.getId()), "Quilmes sin conexiones debe tener degree 0");
-        assertEquals(0.0, grado.get(cementerio.getId()), "Bernal sin conexiones debe tener degree 0");
+        assertEquals(0, grado.get(santuario.getId()), "Quilmes sin conexiones debe tener degree 0");
+        assertEquals(0, grado.get(cementerio.getId()), "Bernal sin conexiones debe tener degree 0");
     }
 
     @Test
@@ -560,14 +565,14 @@ public class UbicacionServiceTest {
 
         List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
 
-        Map<Long, Double> grado = resultados.stream()
+        Map<Long, Long> grado = resultados.stream()
                 .collect(Collectors.toMap(
                         dr -> dr.ubicacion().getId(),
                         DegreeResult::degree
                 ));
 
-        assertEquals(1.0, grado.get(santuario.getId()),   "Quilmes con una salida debe tener degree 1");
-        assertEquals(1.0, grado.get(cementerio.getId()), "Bernal con una entrada debe tener degree 1");
+        assertEquals(1, grado.get(santuario.getId()),   "Quilmes con una salida debe tener degree 1");
+        assertEquals(1, grado.get(cementerio.getId()), "Bernal con una entrada debe tener degree 1");
     }
 
     @Test
@@ -577,20 +582,55 @@ public class UbicacionServiceTest {
 
         List<DegreeResult> resultados = serviceU.degreeOf(List.of(santuario.getId(), cementerio.getId()));
 
-        Map<Long, Double> grado = resultados.stream()
+        Map<Long, Long> grado = resultados.stream()
                 .collect(Collectors.toMap(
                         dr -> dr.ubicacion().getId(),
                         DegreeResult::degree
                 ));
 
-        assertEquals(2.0, grado.get(santuario.getId()),   "Quilmes con entrada y salida debe tener degree 2");
-        assertEquals(2.0, grado.get(cementerio.getId()), "Bernal con entrada y salida debe tener degree 2");
+        assertEquals(2, grado.get(santuario.getId()),   "Quilmes con entrada y salida debe tener degree 2");
+        assertEquals(2, grado.get(cementerio.getId()), "Bernal con entrada y salida debe tener degree 2");
     }
 
     @Test
-    void degreeDeUbicacionesNoExistentesLanzaExcepcion(){
-        assertThrows(UbicacionNoEncontradaException.class, () -> serviceU.degreeOf(List.of(333L, 444L)));
+    void degreeDeUbicacionesNoExistentesEsListaVacia(){
+        assertTrue((serviceU.degreeOf(List.of(333L, 444L)).isEmpty()));
     }
+
+//    @Test
+    void crearYConectarNNodos() {
+        int cantidadDeNodos = 50;
+        int cantidadDeConexionesPorNodo = 3;
+
+        List<Ubicacion> nodos = new ArrayList<>();
+        for (int i = 0; i < cantidadDeNodos; i++) {
+            nodos.add(serviceU.guardar(new Santuario("Nodo " + i, 10)));
+        }
+
+        Random random = new Random();
+        Set<String> conexionesHechas = new HashSet<>();
+
+        for (Ubicacion nodo : nodos) {
+            Set<Long> conectados = new HashSet<>();
+            while (conectados.size() < cantidadDeConexionesPorNodo) {
+                Ubicacion destino = nodos.get(random.nextInt(nodos.size()));
+                if (!nodo.getId().equals(destino.getId()) && !conectados.contains(destino.getId())) {
+                    String claveConexion = nodo.getId() + "-" + destino.getId();
+
+                    if (!conexionesHechas.contains(claveConexion)) {
+                        serviceU.conectar(nodo.getId(), destino.getId());
+                        conexionesHechas.add(claveConexion);
+                        conectados.add(destino.getId());
+                    }
+                }
+            }
+        }
+    }
+
+//    @Test
+//    void cleanup() { // esto esta solo para borrar rapidamente
+//           dataService.eliminarTodo();
+//    }
 
     //-------------------------------------------------------------------------------------
 
@@ -598,4 +638,5 @@ public class UbicacionServiceTest {
     void cleanup() {
         dataService.eliminarTodo();
     }
+
 }
