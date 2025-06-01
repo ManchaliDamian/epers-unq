@@ -127,24 +127,12 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public List<ClosenessResult> closenessOf(List<Long> ids){
-        List<ClosenessResult> resultados = new ArrayList<>();
-        for (Long id : ids) {
-            Ubicacion ubicacion = ubicacionRepository.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-            Double closeness = ubicacionRepository.closenessOf(id);
-            resultados.add(new ClosenessResult(ubicacion, closeness));
-        }
-        return resultados;
+        return ubicacionRepository.closenessOf(ids);
     }
 
     @Override
     public List<DegreeResult> degreeOf(List<Long> ids){
-        List<DegreeResult> resultados = new ArrayList<>();
-        for (Long id : ids) {
-            Ubicacion ubicacion = ubicacionRepository.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-            Double degree = ubicacionRepository.degreeOf(id);
-            resultados.add(new DegreeResult(ubicacion, degree));
-        }
-        return resultados;
+        return ubicacionRepository.degreeOf(ids);
     }
 
     @Override

@@ -3,6 +3,8 @@ package ar.edu.unq.epersgeist.persistencia.repositories.interfaces;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
+import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
+import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +27,12 @@ public interface UbicacionRepository {
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
     void conectar(Long idOrigen,Long idDestino);
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
-    Double degreeOf(Long id);
+    List<DegreeResult> degreeOf(List<Long> ids);
     List<Ubicacion> recuperarConexiones(Long ubicacionId);
-    Double closenessOf(Long id);
+    List<ClosenessResult> closenessOf(List<Long> id);
 
     List<Santuario> obtenerSantuariosOrdenadosPorCorrupcion();
     List<Medium> mediumConMayorDemoniacosEn(long ubicacionId);
     int cantTotalDeDemoniacosEn(long ubicacionId);
     int cantTotalDeDemoniacosLibresEn(long ubicacionId);
-
 }

@@ -48,6 +48,22 @@ public class UbicacionMapperImp implements UbicacionMapper{
     }
 
     @Override
+    public Ubicacion toDomain(UbicacionNeoDTO ubicacion) {
+        TipoUbicacion tipo = ubicacion.getTipo();
+        Ubicacion ubi;
+        if (tipo == TipoUbicacion.CEMENTERIO){
+            ubi = new Cementerio();
+        } else {
+            ubi = new Santuario();
+        }
+        ubi.setId(ubicacion.getId());
+        ubi.setTipo(tipo);
+        ubi.setDeleted(ubicacion.isDeleted());
+        return ubi;
+    }
+
+
+    @Override
     public List<Ubicacion> toDomainList(List<UbicacionJPADTO> ubicacionJPADTOS) {
         if (ubicacionJPADTOS == null || ubicacionJPADTOS.isEmpty()) {
             return Collections.emptyList();
@@ -158,7 +174,5 @@ public class UbicacionMapperImp implements UbicacionMapper{
 
         return neoDto;
     }
-
-
 
 }

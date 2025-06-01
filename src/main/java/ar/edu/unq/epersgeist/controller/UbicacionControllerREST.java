@@ -41,13 +41,6 @@ public final class UbicacionControllerREST {
         return ubicaciones.stream().map(UbicacionDTO::desdeModelo).toList();
     }
 
-    @GetMapping("/closeness")
-    public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestParam("ids") List<Long> ids) {
-        List<ClosenessResult> closeness = ubicacionService.closenessOf(ids);
-        return ResponseEntity.ok(ClosenessResultDTO.desdeModelo(closeness));
-    }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<UbicacionDTO> getUbicacionById(@PathVariable Long id) {
         Ubicacion ubicacion = ubicacionService.recuperar(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
@@ -147,9 +140,15 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(dtocaminoMasCorto);
     }
 
-    @GetMapping("/degreeCentrality")
-    public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestParam("ids") List<Long> ids){
-        List<DegreeResult> degree = ubicacionService.degreeOf(ids);
+    @PostMapping("/closeness")
+    public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestBody IdsDTO idsDTO) {
+        List<ClosenessResult> closeness = ubicacionService.closenessOf(idsDTO.ids());
+        return ResponseEntity.ok(ClosenessResultDTO.desdeModelo(closeness));
+    }
+
+    @PostMapping("/degree")
+    public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestBody IdsDTO idsDTO) {
+        List<DegreeResult> degree = ubicacionService.degreeOf(idsDTO.ids());
         return ResponseEntity.ok(DegreeResultDTO.desdeModelo(degree));
     }
 }
