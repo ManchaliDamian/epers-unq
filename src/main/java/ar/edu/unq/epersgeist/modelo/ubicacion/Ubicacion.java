@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
@@ -25,15 +26,18 @@ public abstract class Ubicacion {
     private Date updatedAt;
     private boolean deleted = false;
 
+    private List<Coordenada> coordenadas;
+
     private Set<Ubicacion> conexiones = new HashSet<>();
 
-    public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo) {
+    public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo, @NonNull List<Coordenada> coordenadas) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
             throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
         }
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;
+        this.coordenadas = coordenadas;
     }
 
     public void cambiarNombre(String nuevoNombre) {

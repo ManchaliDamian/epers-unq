@@ -9,14 +9,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import java.util.List;
 
-public record UbicacionDTO(@NotNull Long id, @NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer flujoDeEnergia, @NotNull TipoUbicacion tipo) {
+
+public record UbicacionDTO(@NotNull Long id, @NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer flujoDeEnergia, @NotNull TipoUbicacion tipo, List<CoordenadaDTO> coordenadas) {
     public static UbicacionDTO desdeModelo(Ubicacion ubicacion) {
         return new UbicacionDTO(
                 ubicacion.getId(),
                 ubicacion.getNombre(),
                 ubicacion.getFlujoDeEnergia(),
-                ubicacion.getTipo()
+                ubicacion.getTipo(),
+                ubicacion.getCoordenadas().stream().map(CoordenadaDTO::desdeModelo).toList()
         );
     }
 
