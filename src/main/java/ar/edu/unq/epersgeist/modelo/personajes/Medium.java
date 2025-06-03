@@ -42,6 +42,7 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
+
         if (noEsMismaUbicacion(espiritu)) {
             throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu,this);
         } else if (espiritu.estaConectado()) {
