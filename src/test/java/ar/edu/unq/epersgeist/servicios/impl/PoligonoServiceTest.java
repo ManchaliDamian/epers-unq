@@ -1,8 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
+import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.PoligonoService;
+import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,21 +24,29 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 public class PoligonoServiceTest {
 
-    @Autowired
-    private PoligonoService poligonoService;
+    @Autowired private DataService dataService;
+    @Autowired private PoligonoService poligonoService;
+    @Autowired private UbicacionService serviceU;
 
     private Poligono poligonoCuadrado;
     private Poligono poligonoTriangular;
-    private Long ubicacionId1;
-    private Long ubicacionId2;
+    private Ubicacion ubicacionCuadrada;
+    private Ubicacion ubicacionTriangular;
+    private Long ubicacionCuadradaId;
+    private Long ubicacionTriangularId;
 
     @BeforeEach
     void setUp() {
-        // Limpiar la base de datos antes de cada test
-        poligonoService.eliminarTodos();
+        // limpiar las bases de datos antes de cada test
+        dataService.eliminarTodo();
 
-        ubicacionId1 = 1L;
-        ubicacionId2 = 2L;
+        // crear ubicaciones y persistirlas
+        ubicacionCuadrada = new Cementerio("La Plata", 4);
+        ubicacionTriangular = new Santuario("Quilmes",70);
+        ubicacionCuadrada = serviceU.guardar(ubicacionCuadrada, poligonoCuadrado);
+        ubicacionTriangular = serviceU.guardar(ubicacionTriangular, poligonoTriangular);
+        ubicacionCuadradaId = ubicacionCuadrada.getId();
+        ubicacionTriangularId = ubicacionTriangular.getId();
 
         // Crear un polígono cuadrado válido
         List<Coordenada> coordenadasCuadrado = Arrays.asList(
@@ -63,11 +72,11 @@ public class PoligonoServiceTest {
     void testGuardar_PoligonoValido_SeGuardaCorrectamente() {
         // exercise
         assertDoesNotThrow(() -> {
-            poligonoService.guardar(ubicacionId1, poligonoCuadrado);
+            poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
         });
 
         // verify
-        Optional<Poligono> poligonoRecuperado = poligonoService.recuperarPorUbicacionId(ubicacionId1);
+        Optional<Poligono> poligonoRecuperado = poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId);
         assertTrue(poligonoRecuperado.isPresent());
         assertEquals(5, poligonoRecuperado.get().getVertices().size());
     }
@@ -75,12 +84,12 @@ public class PoligonoServiceTest {
     @Test
     void testGuardar_MultiplesPoligonos_SeGuardanTodos() {
         // exercise
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
-        poligonoService.guardar(ubicacionId2, poligonoTriangular);
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
+        poligonoService.guardar(ubicacionTriangularId, poligonoTriangular);
 
         // assert
-        Optional<Poligono> poligono1 = poligonoService.recuperarPorUbicacionId(ubicacionId1);
-        Optional<Poligono> poligono2 = poligonoService.recuperarPorUbicacionId(ubicacionId2);
+        Optional<Poligono> poligono1 = poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId);
+        Optional<Poligono> poligono2 = poligonoService.recuperarPorUbicacionId(ubicacionTriangularId);
 
         // verify
         assertTrue(poligono1.isPresent());
@@ -93,10 +102,10 @@ public class PoligonoServiceTest {
     @Test
     void testRecuperarPorUbicacionId_PoligonoExiste_RetornaPoligono() {
         // setup
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
 
         // exercise
-        Optional<Poligono> resultado = poligonoService.recuperarPorUbicacionId(ubicacionId1);
+        Optional<Poligono> resultado = poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId);
 
         // assert
         assertTrue(resultado.isPresent());
@@ -122,8 +131,8 @@ public class PoligonoServiceTest {
     @Test
     void testRecuperarTodos_ConVariosPoligonos_RetornaTodos() {
         // setup
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
-        poligonoService.guardar(ubicacionId2, poligonoTriangular);
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
+        poligonoService.guardar(ubicacionTriangularId, poligonoTriangular);
 
         // exercise
         List<Poligono> resultado = poligonoService.recuperarTodos();
@@ -144,14 +153,14 @@ public class PoligonoServiceTest {
     @Test
     void testEliminar_PoligonoExiste_SeEliminaCorrectamente() {
         // setup
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
-        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionId1).isPresent());
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
+        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId).isPresent());
 
         // exercise
-        poligonoService.eliminar(ubicacionId1);
+        poligonoService.eliminar(ubicacionCuadradaId);
 
         // verify
-        Optional<Poligono> resultado = poligonoService.recuperarPorUbicacionId(ubicacionId1);
+        Optional<Poligono> resultado = poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId);
         assertTrue(resultado.isEmpty());
     }
 
@@ -165,22 +174,22 @@ public class PoligonoServiceTest {
     @Test
     void testEliminar_EliminaUnoDeVarios_SoloEliminaElIndicado() {
         // setup
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
-        poligonoService.guardar(ubicacionId2, poligonoTriangular);
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
+        poligonoService.guardar(ubicacionTriangularId, poligonoTriangular);
 
         // exercise
-        poligonoService.eliminar(ubicacionId1);
+        poligonoService.eliminar(ubicacionCuadradaId);
 
         // verify
-        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionId1).isEmpty());
-        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionId2).isPresent());
+        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionCuadradaId).isEmpty());
+        assertTrue(poligonoService.recuperarPorUbicacionId(ubicacionTriangularId).isPresent());
     }
 
     @Test
     void testEliminarTodos_ConVariosPoligonos_EliminaTodos() {
         // setup
-        poligonoService.guardar(ubicacionId1, poligonoCuadrado);
-        poligonoService.guardar(ubicacionId2, poligonoTriangular);
+        poligonoService.guardar(ubicacionCuadradaId, poligonoCuadrado);
+        poligonoService.guardar(ubicacionTriangularId, poligonoTriangular);
         assertEquals(2, poligonoService.recuperarTodos().size());
 
         // exercise
