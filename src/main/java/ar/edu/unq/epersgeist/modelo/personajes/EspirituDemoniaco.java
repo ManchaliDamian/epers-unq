@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import lombok.*;
 
@@ -13,8 +14,8 @@ public class EspirituDemoniaco extends Espiritu{
         super(TipoEspiritu.DEMONIACO);
     }
 
-    public EspirituDemoniaco(String nombre, Ubicacion ubicacion) {
-        super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
+    public EspirituDemoniaco(String nombre, Ubicacion ubicacion, Coordenada coordenada) {
+        super(nombre, ubicacion, TipoEspiritu.DEMONIACO, coordenada);
     }
 
     @Override

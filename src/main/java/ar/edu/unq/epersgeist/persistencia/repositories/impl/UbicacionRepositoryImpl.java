@@ -5,7 +5,7 @@ import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
-import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
@@ -30,7 +30,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiDaoSQL;
-    private UbicacionDAOMongo ubiDaoMongo;
+    private PoligonoDAO poligonoDAO;
     private UbicacionMapper mapperU;
     private MediumMapper mapperM;
     private EspirituMapper mapperE;
@@ -38,14 +38,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   UbicacionMapper mapperU, CentralityMapperImpl mapperC, UbicacionDAOMongo ubiDaoMongo){
+                                   UbicacionMapper mapperU, CentralityMapperImpl mapperC, PoligonoDAO poligonoDAO){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;
         this.mapperE = mapperE;
         this.mapperM = mapperM;
         this.mapperC = mapperC;
-        this.ubiDaoMongo = ubiDaoMongo;
+        this.poligonoDAO = poligonoDAO; // ver si hay que usarlo
     }
 
     @Override

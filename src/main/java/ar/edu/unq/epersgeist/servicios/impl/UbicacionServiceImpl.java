@@ -7,9 +7,11 @@ import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
@@ -27,15 +29,24 @@ import java.util.Optional;
 public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionRepository ubicacionRepository;
+    private final PoligonoRepository poligonoRepository;
 
-    public UbicacionServiceImpl(UbicacionRepository ubicacionRepository) {
+    public UbicacionServiceImpl(UbicacionRepository ubicacionRepository, PoligonoRepository poligonoRepository) {
         this.ubicacionRepository = ubicacionRepository;
+        this.poligonoRepository = poligonoRepository;
     }
 
     @Override
-    public Ubicacion guardar(Ubicacion ubicacion) {
+    public Ubicacion guardar(Ubicacion ubicacion, Poligono poligono ) {
         try {
-            return ubicacionRepository.guardar(ubicacion);
+            Ubicacion ubicacionGuardada = ubicacionRepository.guardar(ubicacion);
+
+            if (poligono != null) {
+                poligonoRepository.save(ubicacionGuardada.getId(), poligono);
+            }
+
+            return ubicacionGuardada;
+
         } catch (DataIntegrityViolationException e) {
             throw new NombreDeUbicacionRepetidoException(ubicacion.getNombre());
         }
