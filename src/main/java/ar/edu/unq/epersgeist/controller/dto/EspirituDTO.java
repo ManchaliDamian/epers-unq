@@ -7,7 +7,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 
-public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId, UbicacionDTO ubicacion, TipoEspiritu tipo, CoordenadaDTO coordenadaDTO) {
+public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId,
+                          UbicacionDTO ubicacion, TipoEspiritu tipo, CoordenadaDTO coordenadaDTO) {
     public static EspirituDTO desdeModelo(Espiritu espiritu) {
         return new EspirituDTO(
                 espiritu.getId(),
@@ -25,7 +26,6 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
         Espiritu e = switch (this.tipo) {
             case ANGELICAL  -> new EspirituAngelical(nombre, ubicacion.aModelo(), coordenada);
             case DEMONIACO   -> new EspirituDemoniaco(nombre, ubicacion.aModelo(), coordenada);
-            default         -> throw new IllegalArgumentException("Tipo no válido: " + tipo);
         };
 
         e.setId(id);
