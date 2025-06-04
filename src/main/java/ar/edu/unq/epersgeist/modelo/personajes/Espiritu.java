@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -10,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 
@@ -22,20 +21,18 @@ public abstract class Espiritu {
     @EqualsAndHashCode.Include
     private String nombre;
     private Medium mediumConectado;
-    private final TipoEspiritu tipo;
-    private Coordenada coordenada;
+    private TipoEspiritu tipo;
 
     //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo, @NonNull Coordenada coordenada) {
+    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
-        this.coordenada = coordenada;
     }
 
     protected Espiritu(@NonNull TipoEspiritu tipo) {

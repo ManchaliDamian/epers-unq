@@ -9,13 +9,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
-public record CreateEspirituDTO(@NotBlank String nombre, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo, CoordenadaDTO coordenadaDTO) {
+public record CreateEspirituDTO(@NotBlank String nombre, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo) {
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu) {
         return new CreateEspirituDTO(
                 espiritu.getNombre(),
                 espiritu.getUbicacion() != null ? espiritu.getUbicacion().getId() : null,
-                espiritu.getTipo(),
-                CoordenadaDTO.desdeModelo(espiritu.getCoordenada())
+                espiritu.getTipo()
         );
     }
 
@@ -23,10 +22,10 @@ public record CreateEspirituDTO(@NotBlank String nombre, @NotNull Long ubicacion
 
         switch (this.tipo()){
             case ANGELICAL -> {
-                return new EspirituAngelical(nombre, ubicacion, coordenadaDTO.aModelo());
+                return new EspirituAngelical(nombre, ubicacion);
             }
             case DEMONIACO -> {
-                return new EspirituDemoniaco(nombre, ubicacion, coordenadaDTO.aModelo());
+                return new EspirituDemoniaco(nombre, ubicacion);
             }
             default -> throw new IllegalArgumentException("Argumentos no validos");
         }
