@@ -4,10 +4,11 @@ import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,13 +17,25 @@ class UbicacionTest {
     private Ubicacion santuario;
     private Espiritu espirituAngel;
     private Espiritu espirituDemonio;
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+
 
     @BeforeEach
     void setUp() {
-        cementerio = new Cementerio("Cementerio del Oeste", 50);
-        santuario = new Santuario("Santuario del Este", 75);
-        espirituAngel = new EspirituAngelical("Angel", cementerio);
-        espirituDemonio = new EspirituDemoniaco("Demonio", santuario);
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+        cementerio = new Cementerio("Cementerio del Oeste", 50, poligono);
+        santuario = new Santuario("Santuario del Este", 75, poligono);
+        espirituAngel = new EspirituAngelical("Angel", cementerio, c1);
+        espirituDemonio = new EspirituDemoniaco("Demonio", santuario, c1);
     }
 
     @Test
@@ -37,11 +50,11 @@ class UbicacionTest {
     @Test
     void testConstructorFlujoDeEnergiaInvalido() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Cementerio("Cementerio", 150);
+            new Cementerio("Cementerio", 150,poligono);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new Santuario("Santuario", -10);
+            new Santuario("Santuario", -10,poligono);
         });
     }
 

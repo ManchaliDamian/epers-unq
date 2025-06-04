@@ -5,10 +5,11 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,16 +21,27 @@ public class EspirituDemoniacoTest {
     private Ubicacion cementerio;
     private Medium mediumAngel;
     private Medium mediumDemon;
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
 
     @BeforeEach
     void setUp() {
-        santuario = new Santuario("Quilmes", 70);
-        cementerio = new Cementerio("Bernal",60);
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+        santuario = new Santuario("Quilmes", 70, poligono);
+        cementerio = new Cementerio("Bernal",60, poligono);
 
-        angel = new EspirituAngelical( "EspirituAngelical", santuario);
-        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
-        mediumAngel= new Medium("Mago", 100, 50, santuario);
-        mediumDemon = new Medium("Maguito",100, 10, cementerio);
+        angel = new EspirituAngelical( "EspirituAngelical", santuario,c1);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio, c1);
+        mediumAngel= new Medium("Mago", 100, 50, santuario,c1);
+        mediumDemon = new Medium("Maguito",100, 10, cementerio,c1);
 
     }
 

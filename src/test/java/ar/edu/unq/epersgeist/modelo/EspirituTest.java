@@ -4,11 +4,12 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,15 +20,27 @@ public class EspirituTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+
 
     @BeforeEach
     void setUp(){
-        santuario = new Santuario("santuario", 40);
-        cementerio = new Cementerio("cementerio", 60);
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+        santuario = new Santuario("santuario", 40, poligono);
+        cementerio = new Cementerio("cementerio", 60, poligono);
 
-        mediumConectado = new Medium("Mago",100,90,cementerio);
-        angel = new EspirituAngelical("Espiritu",cementerio);
-        demonio = new EspirituDemoniaco("Espiritu", santuario);
+        mediumConectado = new Medium("Mago",100,90,cementerio, c1);
+        angel = new EspirituAngelical("Espiritu",cementerio,c1);
+        demonio = new EspirituDemoniaco("Espiritu", santuario,c1);
     }
 
     @Test
@@ -118,7 +131,7 @@ public class EspirituTest {
 
     @Test
     void aumentarConexion_ConManaCero() {
-        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario);
+        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario, c1);
         angel.setNivelDeConexion(50);
         angel.conectarA(mediumSinMana);
         assertEquals(50, angel.getNivelDeConexion());

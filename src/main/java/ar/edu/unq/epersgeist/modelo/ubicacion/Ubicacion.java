@@ -26,18 +26,18 @@ public abstract class Ubicacion {
     private Date updatedAt;
     private boolean deleted = false;
 
-    private List<Coordenada> coordenadas;
+    private Poligono poligono;
 
     private Set<Ubicacion> conexiones = new HashSet<>();
 
-    public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo, @NonNull List<Coordenada> coordenadas) {
+    public Ubicacion(String nombre, Integer flujoDeEnergia, TipoUbicacion tipo, @NonNull Poligono poligono) {
         if (flujoDeEnergia < 0 || flujoDeEnergia > 100) {
             throw new IllegalArgumentException("El flujo de energía debe estar entre 0 y 100");
         }
         this.nombre = nombre;
         this.flujoDeEnergia = flujoDeEnergia;
         this.tipo = tipo;
-        this.coordenadas = coordenadas;
+        this.poligono = poligono;
     }
 
     public void cambiarNombre(String nuevoNombre) {

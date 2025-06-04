@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.PoligonoService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -204,4 +205,11 @@ public class PoligonoServiceTest {
     void testEliminarTodos_SinPoligonos_NoLanzaExcepcion() {
         assertDoesNotThrow(() -> poligonoService.eliminarTodos());
     }
+
+//    @AfterEach
+    void eliminar() {
+        dataService.eliminarTodo();
+    }
+
+
 }

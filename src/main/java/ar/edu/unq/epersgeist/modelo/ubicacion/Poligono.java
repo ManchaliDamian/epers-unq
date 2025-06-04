@@ -8,6 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 public class Poligono {
+
+    private String id;
     private List<Coordenada> vertices;
 
     public Poligono(List<Coordenada> coordenadas){

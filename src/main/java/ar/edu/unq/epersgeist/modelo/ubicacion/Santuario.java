@@ -9,8 +9,8 @@ import lombok.*;
 @Getter @Setter @NoArgsConstructor @ToString
 public class Santuario extends Ubicacion {
 
-    public Santuario( String nombre, Integer flujoDeEnergia)  {
-        super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO);
+    public Santuario( String nombre, Integer flujoDeEnergia, Poligono poligono)  {
+        super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO, poligono);
 
     }
 

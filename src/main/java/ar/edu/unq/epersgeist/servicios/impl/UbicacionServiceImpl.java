@@ -42,7 +42,7 @@ public class UbicacionServiceImpl implements UbicacionService {
             Ubicacion ubicacionGuardada = ubicacionRepository.guardar(ubicacion);
 
             if (poligono != null) {
-                poligonoRepository.save(ubicacionGuardada.getId(), poligono);
+                poligonoRepository.guardar(ubicacionGuardada.getId(), poligono);
             }
 
             return ubicacionGuardada;

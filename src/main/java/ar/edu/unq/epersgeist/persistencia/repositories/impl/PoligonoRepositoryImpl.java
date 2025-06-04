@@ -5,11 +5,12 @@ import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.PoligonoMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Repository
 public class PoligonoRepositoryImpl implements PoligonoRepository {
 
     private PoligonoMapper poligonoMapper;
