@@ -1,28 +1,31 @@
 package ar.edu.unq.epersgeist.controller.dto;
 
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
-public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer flujoDeEnergia, @NotNull TipoUbicacion tipo) {
+public record CreateUbicacionDTO(@NotBlank String nombre, @NotNull @Min(1) @Max(100) Integer flujoDeEnergia, @NotNull TipoUbicacion tipo, PoligonoDTO poligono) {
     public static CreateUbicacionDTO desdeModelo(Ubicacion ubicacion) {
         return new CreateUbicacionDTO(
                 ubicacion.getNombre(),
                 ubicacion.getFlujoDeEnergia(),
-                ubicacion.getTipo()
+                ubicacion.getTipo(),
+                PoligonoDTO.desdeModelo(ubicacion.getPoligono())
         );
     }
 
     public Ubicacion aModelo() {
         return switch (this.tipo()) {
-            case SANTUARIO -> new Santuario(this.nombre(), this.flujoDeEnergia());
-            case CEMENTERIO -> new Cementerio(this.nombre(), this.flujoDeEnergia());
+            case SANTUARIO -> new Santuario(this.nombre(), this.flujoDeEnergia(), poligono.aModelo());
+            case CEMENTERIO -> new Cementerio(this.nombre(), this.flujoDeEnergia(), poligono.aModelo());
         };
     }
 }

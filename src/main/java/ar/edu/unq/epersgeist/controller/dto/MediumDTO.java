@@ -13,7 +13,8 @@ public record MediumDTO(
         UbicacionDTO ubicacion,
         Integer manaMax,
         Integer mana,
-        Set<EspirituDTO> espiritus
+        Set<EspirituDTO> espiritus,
+        CoordenadaDTO coordenadaDTO
 ) {
     public static MediumDTO desdeModelo(Medium medium) {
         Set<EspirituDTO> espiritusDTO = medium.getEspiritus()
@@ -27,12 +28,14 @@ public record MediumDTO(
                 UbicacionDTO.desdeModelo(medium.getUbicacion()),
                 medium.getManaMax(),
                 medium.getMana(),
-                espiritusDTO
+                espiritusDTO,
+                CoordenadaDTO.desdeModelo(medium.getCoordenada())
         );
     }
 
     public Medium aModelo() {
-        Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo());
+
+        Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo(), coordenadaDTO.aModelo());
 
         if (espiritus != null) {
             for (EspirituDTO dto : espiritus) {
