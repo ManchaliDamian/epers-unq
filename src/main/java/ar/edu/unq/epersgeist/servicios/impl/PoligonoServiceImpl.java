@@ -21,12 +21,12 @@ public class PoligonoServiceImpl implements PoligonoService {
 
     @Override
     public void guardar(Long ubicacionId, Poligono poligono) {
-        poligonoRepository.save(ubicacionId, poligono);
+        poligonoRepository.guardar(ubicacionId, poligono);
     }
 
     @Override
     public void actualizar(Poligono poligono) {
-        poligonoRepository.save(poligono);
+        poligonoRepository.actualizar(poligono);
     }
 
     @Override
