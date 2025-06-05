@@ -58,8 +58,8 @@ public class EspirituControllerRESTTest {
     @BeforeEach
     void setUp() throws Throwable {
         serviceEliminarTodo.eliminarTodo();
-        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, null);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, null);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 

@@ -30,18 +30,18 @@ public class EspirituAngelicalTest {
 
     @BeforeEach
     void setUp(){
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        santuario = new Santuario("Quilmes", 70, poligono);
-        cementerio = new Cementerio("Bernal",60, poligono);
+//        c1 = new Coordenada(1.0,1.0);
+//        c2 = new Coordenada(2.0,2.0);
+//        c3 = new Coordenada(3.0,3.0);
+//        c4 = new Coordenada(-1.0,-1.0);
+//        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+//        poligono = new Poligono(coordenadas);
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
 
-        angel = new EspirituAngelical("EspirituAngelical", santuario, c1);
-        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio, c1);
-        mediumConectado = new Medium("Mago",100,50,santuario, c1);
+        angel = new EspirituAngelical("EspirituAngelical", santuario);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        mediumConectado = new Medium("Mago",100,50,santuario);
 
     }
 
@@ -71,7 +71,7 @@ public class EspirituAngelicalTest {
 
     @Test
     void recibirEfectoDeSantuario_AumentaNivelDeConexion() {
-        Santuario santuario = new Santuario("Test", 30, poligono);
+        Santuario santuario = new Santuario("Test", 30);
         angel.setNivelDeConexion(50);
 
         angel.recuperarConexionEn(santuario);
@@ -81,7 +81,7 @@ public class EspirituAngelicalTest {
 
     @Test
     void recibirEfectoDeSantuario_NoExcedeMaximo() {
-        Santuario santuario = new Santuario("Test", 60, poligono);
+        Santuario santuario = new Santuario("Test", 60);
         angel.setNivelDeConexion(50);
 
         angel.recuperarConexionEn(santuario);

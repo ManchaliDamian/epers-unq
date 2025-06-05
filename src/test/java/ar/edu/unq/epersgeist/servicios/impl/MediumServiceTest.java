@@ -8,9 +8,7 @@ import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
@@ -24,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,15 +49,27 @@ public class MediumServiceTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
 
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+
     @BeforeEach
     void setUp() {
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         cementerio = new Cementerio("La Plata", 4);
         santuario = new Santuario("Quilmes",70);
-        santuario = serviceU.guardar(santuario);
-        cementerio =serviceU.guardar(cementerio);
+        santuario = serviceU.guardar(santuario, poligono);
+        cementerio =serviceU.guardar(cementerio, poligono);
 
         medium1 = new Medium("Pablo", 100, 50, cementerio);
         medium2 = new Medium("Fidol", 100, 50, santuario);

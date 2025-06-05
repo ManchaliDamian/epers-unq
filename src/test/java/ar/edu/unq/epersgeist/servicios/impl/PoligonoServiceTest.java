@@ -206,7 +206,7 @@ public class PoligonoServiceTest {
         assertDoesNotThrow(() -> poligonoService.eliminarTodos());
     }
 
-//    @AfterEach
+    @AfterEach
     void eliminar() {
         dataService.eliminarTodo();
     }

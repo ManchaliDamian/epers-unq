@@ -29,18 +29,18 @@ public class EspirituTest {
 
     @BeforeEach
     void setUp(){
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        santuario = new Santuario("santuario", 40, poligono);
-        cementerio = new Cementerio("cementerio", 60, poligono);
+//        c1 = new Coordenada(1.0,1.0);
+//        c2 = new Coordenada(2.0,2.0);
+//        c3 = new Coordenada(3.0,3.0);
+//        c4 = new Coordenada(-1.0,-1.0);
+//        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+//        poligono = new Poligono(coordenadas);
+        santuario = new Santuario("santuario", 40);
+        cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Mago",100,90,cementerio, c1);
-        angel = new EspirituAngelical("Espiritu",cementerio,c1);
-        demonio = new EspirituDemoniaco("Espiritu", santuario,c1);
+        mediumConectado = new Medium("Mago",100,90,cementerio);
+        angel = new EspirituAngelical("Espiritu",cementerio);
+        demonio = new EspirituDemoniaco("Espiritu", santuario);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class EspirituTest {
 
     @Test
     void aumentarConexion_ConManaCero() {
-        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario, c1);
+        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario);
         angel.setNivelDeConexion(50);
         angel.conectarA(mediumSinMana);
         assertEquals(50, angel.getNivelDeConexion());

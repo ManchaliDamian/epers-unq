@@ -26,16 +26,16 @@ class UbicacionTest {
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        cementerio = new Cementerio("Cementerio del Oeste", 50, poligono);
-        santuario = new Santuario("Santuario del Este", 75, poligono);
-        espirituAngel = new EspirituAngelical("Angel", cementerio, c1);
-        espirituDemonio = new EspirituDemoniaco("Demonio", santuario, c1);
+//        c1 = new Coordenada(1.0,1.0);
+//        c2 = new Coordenada(2.0,2.0);
+//        c3 = new Coordenada(3.0,3.0);
+//        c4 = new Coordenada(-1.0,-1.0);
+//        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+//        poligono = new Poligono(coordenadas);
+        cementerio = new Cementerio("Cementerio del Oeste", 50);
+        santuario = new Santuario("Santuario del Este", 75);
+        espirituAngel = new EspirituAngelical("Angel", cementerio);
+        espirituDemonio = new EspirituDemoniaco("Demonio", santuario);
     }
 
     @Test
@@ -50,11 +50,11 @@ class UbicacionTest {
     @Test
     void testConstructorFlujoDeEnergiaInvalido() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Cementerio("Cementerio", 150,poligono);
+            new Cementerio("Cementerio", 150);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new Santuario("Santuario", -10,poligono);
+            new Santuario("Santuario", -10);
         });
     }
 

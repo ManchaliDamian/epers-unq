@@ -5,10 +5,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
@@ -25,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -52,14 +51,25 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private Ubicacion berazategui;
 
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+
     @BeforeEach
     void setUp() {
-
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
 
-        quilmes = serviceU.guardar(quilmes);
-        berazategui = serviceU.guardar(berazategui);
+        quilmes = serviceU.guardar(quilmes, poligono);
+        berazategui = serviceU.guardar(berazategui, poligono);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);

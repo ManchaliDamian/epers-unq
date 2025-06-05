@@ -66,7 +66,9 @@ public final class UbicacionControllerREST {
     @PostMapping
     public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {
         Ubicacion ubicacion = dto.aModelo();
-        Ubicacion creada = ubicacionService.guardar(ubicacion);
+        Poligono poligono  = dto.poligono().aModelo();
+
+        Ubicacion creada = ubicacionService.guardar(ubicacion, poligono);
         URI location = URI.create("/ubicacion/" + creada.getId());
         UbicacionDTO respuesta = UbicacionDTO.desdeModelo(creada);
         return ResponseEntity.created(location).body(respuesta);

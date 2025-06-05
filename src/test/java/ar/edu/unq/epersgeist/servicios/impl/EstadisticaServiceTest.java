@@ -6,6 +6,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
@@ -15,6 +17,9 @@ import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,9 +51,20 @@ public class EstadisticaServiceTest {
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
 
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
 
     @BeforeEach
-     void setUp(){
+    void setUp() {
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
 
         cementerio = new Cementerio("Quilmes",1);
 
@@ -62,9 +78,9 @@ public class EstadisticaServiceTest {
 
         medium1 = new Medium("medium 1",100,50,santuario1);
 
-        ubicacionService.guardar(cementerio);
-        ubicacionService.guardar(santuario1);
-        ubicacionService.guardar(santuario2);
+        ubicacionService.guardar(cementerio, poligono);
+        ubicacionService.guardar(santuario1, poligono);
+        ubicacionService.guardar(santuario2, poligono);
 
         medium1 = mediumService.guardar(medium1);
 
