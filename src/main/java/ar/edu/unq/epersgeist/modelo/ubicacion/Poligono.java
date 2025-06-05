@@ -3,11 +3,12 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.PoligonoIncompletoException;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
+@ToString
 public class Poligono {
 
     private String id;

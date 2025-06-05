@@ -2,7 +2,8 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @ToString
+@EqualsAndHashCode
 public class Coordenada {
 
     private String id;
