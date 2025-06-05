@@ -20,11 +20,11 @@ public class EspirituTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
-    private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
+//    private Coordenada c1;
+//    private Coordenada c4;
+//    private Coordenada c3;
+//    private Coordenada c2;
+//    private Poligono poligono;
 
 
     @BeforeEach
