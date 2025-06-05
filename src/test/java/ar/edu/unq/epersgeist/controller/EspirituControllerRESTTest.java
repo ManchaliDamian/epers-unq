@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -24,7 +25,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +38,7 @@ public class EspirituControllerRESTTest {
     @Autowired private EspirituService espirituService;
     @Autowired private MediumService mediumService;
     @Autowired private UbicacionService ubicacionService;
-    @Autowired private DataService serviceEliminarTodo;
+    @Autowired private DataService dataService;
 
     @Autowired private UbicacionRepository ubicacionRepository;
 
@@ -55,11 +58,23 @@ public class EspirituControllerRESTTest {
     private EspirituDTO angelGuardado;
     private EspirituDTO demonGuardado;
 
+    private PoligonoDTO poligono;
+
     @BeforeEach
     void setUp() throws Throwable {
-        serviceEliminarTodo.eliminarTodo();
-        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, null);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, null);
+        dataService.eliminarTodo();
+
+        List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
+                new CoordenadaDTO(0.0, 0.0), // esquina inferior izquierda
+                new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
+                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
+                new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
+                new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
+        );
+        poligono = new PoligonoDTO(coordenadasCuadrado);
+
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
@@ -112,7 +127,7 @@ public class EspirituControllerRESTTest {
 
     @AfterEach
     void eliminarTodo(){
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

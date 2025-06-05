@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.*;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
@@ -21,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,14 +46,23 @@ public class UbicacionControllerRESTTest {
     private EspirituDTO angelGuardado;
     private EspirituDTO demonGuardado;
 
-
-
+    private PoligonoDTO poligono;
 
     @BeforeEach
     void setUp() throws Throwable {
         dataService.eliminarTodo();
-        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, null);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, null);
+
+        List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
+                new CoordenadaDTO(0.0, 0.0), // esquina inferior izquierda
+                new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
+                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
+                new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
+                new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
+        );
+        poligono = new PoligonoDTO(coordenadasCuadrado);
+
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
