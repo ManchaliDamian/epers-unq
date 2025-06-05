@@ -15,21 +15,20 @@ import java.util.List;
 
 public record UbicacionDTO(@NotNull Long id, @NotBlank String nombre,
                            @NotNull @Min(1) @Max(100) Integer flujoDeEnergia,
-                           @NotNull TipoUbicacion tipo, PoligonoDTO poligono) {
+                           @NotNull TipoUbicacion tipo) {
     public static UbicacionDTO desdeModelo(Ubicacion ubicacion) {
         return new UbicacionDTO(
                 ubicacion.getId(),
                 ubicacion.getNombre(),
                 ubicacion.getFlujoDeEnergia(),
-                ubicacion.getTipo(),
-                PoligonoDTO.desdeModelo(ubicacion.getPoligono())
+                ubicacion.getTipo()
         );
     }
 
     public Ubicacion aModelo() {
         return switch (this.tipo()) {
-            case SANTUARIO -> new Santuario(this.nombre(), this.flujoDeEnergia(), poligono.aModelo());
-            case CEMENTERIO -> new Cementerio(this.nombre(), this.flujoDeEnergia(),poligono.aModelo());
+            case SANTUARIO -> new Santuario(this.nombre(), this.flujoDeEnergia());
+            case CEMENTERIO -> new Cementerio(this.nombre(), this.flujoDeEnergia());
         };
     }
 }
