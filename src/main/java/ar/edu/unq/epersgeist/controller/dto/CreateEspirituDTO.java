@@ -10,14 +10,6 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record CreateEspirituDTO(@NotBlank String nombre, @NotNull Long ubicacionId, @NotNull TipoEspiritu tipo) {
-    public static CreateEspirituDTO desdeModelo(Espiritu espiritu) {
-        return new CreateEspirituDTO(
-                espiritu.getNombre(),
-                espiritu.getUbicacion() != null ? espiritu.getUbicacion().getId() : null,
-                espiritu.getTipo()
-        );
-    }
-
     public Espiritu aModelo(Ubicacion ubicacion){
 
         switch (this.tipo()){

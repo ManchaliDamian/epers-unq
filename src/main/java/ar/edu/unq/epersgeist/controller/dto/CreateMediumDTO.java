@@ -11,14 +11,6 @@ public record CreateMediumDTO(
         Integer manaMax,
         Integer mana
 ) {
-    public static CreateMediumDTO desdeModelo(Medium medium) {
-        return new CreateMediumDTO(
-                medium.getNombre(),
-                medium.getUbicacion() != null ? medium.getUbicacion().getId() : null,
-                medium.getManaMax(),
-                medium.getMana()
-        );
-    }
 
     public Medium aModelo(Ubicacion ubicacion) {
         return new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion);
