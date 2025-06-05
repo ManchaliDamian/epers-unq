@@ -1,5 +1,8 @@
 package ar.edu.unq.epersgeist.controller.helper;
-import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.controller.dto.medium.CreateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.UpdateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CreateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

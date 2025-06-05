@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.controller.dto;
+package ar.edu.unq.epersgeist.controller.dto.medium;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import jakarta.validation.constraints.NotBlank;

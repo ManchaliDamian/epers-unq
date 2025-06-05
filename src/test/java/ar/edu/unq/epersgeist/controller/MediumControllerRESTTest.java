@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.controller;
-import ar.edu.unq.epersgeist.controller.dto.CreateMediumDTO;
-import ar.edu.unq.epersgeist.controller.dto.UpdateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.CreateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.UpdateMediumDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
