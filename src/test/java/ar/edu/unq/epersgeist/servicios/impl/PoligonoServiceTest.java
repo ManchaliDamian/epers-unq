@@ -41,11 +41,6 @@ public class PoligonoServiceTest {
         // limpiar las bases de datos antes de cada test
         dataService.eliminarTodo();
 
-        System.out.println("== Antes de cada test ==");
-        System.out.println("Ubicaciones: " + serviceU.toString());      // o .count() en su repositorio
-        System.out.println("Poligonos: " + poligonoService.toString()); // o poligonoRepository.count()
-
-
         // Crear un polígono cuadrado válido
         List<Coordenada> coordenadasCuadrado = Arrays.asList(
             new Coordenada(0.0, 0.0), // esquina inferior izquierda
