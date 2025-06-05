@@ -24,6 +24,7 @@ public class Medium {
     private Integer mana;
     private final Set<Espiritu> espiritus = new HashSet<>();
     private Coordenada coordenada;
+    private String mongoId;
 
     //auditoria
     private Date createdAt;
