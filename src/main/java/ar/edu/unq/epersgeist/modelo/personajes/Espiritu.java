@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -42,6 +43,9 @@ public abstract class Espiritu {
     }
 
     public void conectarA(Medium medium){
+        if(estaDominado()){
+            throw new EspirituDominadoException(this.getNombre());
+        }
         this.setMediumConectado(medium);
         this.aumentarConexionCon(medium);
     }
