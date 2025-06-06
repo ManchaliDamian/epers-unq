@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.DAOs.MediumMongoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class MediumRepositoryImpl implements MediumRepository {
 
     private MediumDAO mediumDAO;
+    private MediumMongoDAO mediumMongoDAO;
     private MediumMapper mediumMapper;
     private EspirituMapper espirituMapper;
 
@@ -23,6 +25,11 @@ public class MediumRepositoryImpl implements MediumRepository {
         this.mediumDAO = mediumDAO;
         this.mediumMapper = mediumMapper;
         this.espirituMapper = espirituMapper;
+    }
+
+    @Override
+    public Double laDistanciaA(Double longitud, Double latitud, Double idMediumSQL){
+        return mediumMongoDAO.distanciaA(longitud, latitud, idMediumSQL);
     }
 
     @Override
