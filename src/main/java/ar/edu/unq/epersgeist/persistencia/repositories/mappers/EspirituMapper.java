@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 public interface EspirituMapper {
     //toDomain
+    Espiritu toDomain(EspirituJPADTO jpa, Map<Object, Object> context);
+
     EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
     EspirituDemoniaco toDomainDemonio(EspirituDemoniacoJPADTO jpa);
 
@@ -31,6 +33,8 @@ public interface EspirituMapper {
             case DEMONIACO -> toJpaDemonio((EspirituDemoniaco)espiritu);
         };
     }
+
+    EspirituJPADTO toJpa(Espiritu espiritu, Map<Object, Object> context);
 
 
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);

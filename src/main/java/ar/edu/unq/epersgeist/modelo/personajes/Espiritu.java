@@ -23,6 +23,8 @@ public abstract class Espiritu {
     private Medium mediumConectado;
     private TipoEspiritu tipo;
 
+    private Espiritu dominador;
+
     //auditoria
     private Date createdAt;
     private Date updatedAt;
@@ -61,7 +63,9 @@ public abstract class Espiritu {
             this.getMediumConectado().desvincularseDe(this);
         }
     }
-
+    public boolean estaDominado() {
+        return this.getDominador() != null;
+    }
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }

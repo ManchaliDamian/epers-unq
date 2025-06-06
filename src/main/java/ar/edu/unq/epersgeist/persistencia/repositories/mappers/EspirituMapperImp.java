@@ -69,6 +69,9 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa.getMediumConectado() != null) {
             espiritu.setMediumConectado(mediumMapper.toDomain(jpa.getMediumConectado(), context));
         }
+        if (jpa.getDominador() != null) {
+            espiritu.setDominador(toDomain((EspirituJPADTO) jpa.getDominador(), context));
+        }
         return espiritu;
     }
 
@@ -87,7 +90,25 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa.getMediumConectado() != null) {
             espiritu.setMediumConectado(mediumMapper.toDomain(jpa.getMediumConectado(), context)); // Pasar contexto
         }
+        if (jpa.getDominador() != null) {
+            espiritu.setDominador(toDomain((EspirituJPADTO) jpa.getDominador(), context));
+        }
         return espiritu;
+    }
+
+    @Override
+    public Espiritu toDomain(EspirituJPADTO jpa, Map<Object, Object> context) {
+        if (jpa == null) {
+            return null;
+        }
+        if (context.containsKey(jpa)) {
+            return (Espiritu) context.get(jpa);
+        }
+
+        return switch (jpa.getTipo()) {
+            case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) jpa, context);
+            case DEMONIACO  -> toDomainDemonio((EspirituDemoniacoJPADTO) jpa, context);
+        };
     }
 
     public EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu, Map<Object, Object> context) {
@@ -104,6 +125,9 @@ public class EspirituMapperImp implements EspirituMapper {
         espirituJPA.setNivelDeConexion(espiritu.getNivelDeConexion());
         if (espiritu.getMediumConectado() != null) {
             espirituJPA.setMediumConectado(mediumMapper.toJpa(espiritu.getMediumConectado(), context)); // Pasar contexto
+        }
+        if (espiritu.getDominador() != null) {
+            espirituJPA.setDominador(toJpa(espiritu.getDominador(), context));
         }
         return espirituJPA;
     }
@@ -124,21 +148,33 @@ public class EspirituMapperImp implements EspirituMapper {
         if (espiritu.getMediumConectado() != null) {
             espirituJPA.setMediumConectado(mediumMapper.toJpa(espiritu.getMediumConectado(), context)); // Pasar contexto
         }
+        if (espiritu.getDominador() != null) {
+            espirituJPA.setDominador(toJpa(espiritu.getDominador(), context));
+        }
         return espirituJPA;
+    }
+
+    @Override
+    public EspirituJPADTO toJpa(Espiritu espiritu, Map<Object, Object> context) {
+        if (espiritu == null) return null;
+        if (context.containsKey(espiritu)) {
+            return (EspirituJPADTO) context.get(espiritu);
+        }
+
+        return switch (espiritu.getTipo()) {
+            case ANGELICAL -> toJpaAngel((EspirituAngelical) espiritu, context);
+            case DEMONIACO -> toJpaDemonio((EspirituDemoniaco) espiritu, context);
+        };
     }
 
     @Override
     public List<Espiritu> toDomainList(List<EspirituJPADTO> espirituJPADTOS, Map<Object, Object> context) {
         if (espirituJPADTOS == null) return Collections.emptyList();
         return espirituJPADTOS.stream().map(dto -> {
-            switch (dto.getTipo()) {
-                case ANGELICAL:
-                    return toDomainAngel((EspirituAngelicalJPADTO) dto, context);
-                case DEMONIACO:
-                    return toDomainDemonio((EspirituDemoniacoJPADTO) dto, context);
-                default:
-                    throw new IllegalArgumentException("Tipo de espíritu desconocido: " + dto.getTipo());
-            }
+            return switch (dto.getTipo()) {
+                case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) dto, context);
+                case DEMONIACO -> toDomainDemonio((EspirituDemoniacoJPADTO) dto, context);
+            };
         }).collect(Collectors.toList());
     }
 
