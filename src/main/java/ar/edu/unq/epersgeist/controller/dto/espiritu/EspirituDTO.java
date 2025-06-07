@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.controller.dto.espiritu;
 
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -8,7 +9,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId,
-                          UbicacionDTO ubicacion, TipoEspiritu tipo) {
+                          UbicacionDTO ubicacion, TipoEspiritu tipo, CoordenadaDTO coordenadaDTO) {
     public static EspirituDTO desdeModelo(Espiritu espiritu) {
         return new EspirituDTO(
                 espiritu.getId(),
@@ -16,14 +17,15 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
                 espiritu.getNivelDeConexion(),
                 espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
                 UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
-                espiritu.getTipo()
+                espiritu.getTipo(),
+                CoordenadaDTO.desdeModelo(espiritu.getCoordenada())
         );
     }
 
     public Espiritu aModelo() {
         Espiritu e = switch (this.tipo) {
-            case ANGELICAL  -> new EspirituAngelical(nombre, ubicacion.aModelo());
-            case DEMONIACO   -> new EspirituDemoniaco(nombre, ubicacion.aModelo());
+            case ANGELICAL  -> new EspirituAngelical(nombre, ubicacion.aModelo(), coordenadaDTO.aModelo());
+            case DEMONIACO   -> new EspirituDemoniaco(nombre, ubicacion.aModelo(), coordenadaDTO.aModelo());
         };
 
         e.setId(id);

@@ -14,8 +14,8 @@ public class EspirituDemoniaco extends Espiritu{
         super(TipoEspiritu.DEMONIACO);
     }
 
-    public EspirituDemoniaco(String nombre, Ubicacion ubicacion) {
-        super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
+    public EspirituDemoniaco(String nombre, Ubicacion ubicacion, Coordenada coordenada) {
+        super(nombre, ubicacion, TipoEspiritu.DEMONIACO, coordenada);
     }
 
     @Override

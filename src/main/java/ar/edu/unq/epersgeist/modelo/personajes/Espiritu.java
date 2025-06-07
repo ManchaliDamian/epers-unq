@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituDominadoException;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -23,6 +24,7 @@ public abstract class Espiritu {
     private String nombre;
     private Medium mediumConectado;
     private TipoEspiritu tipo;
+    private Coordenada coordenada;
 
     private Espiritu dominador;
 
@@ -31,11 +33,12 @@ public abstract class Espiritu {
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
+    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo, @NonNull Coordenada coordenada) {
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
+        this.coordenada = coordenada;
     }
 
     protected Espiritu(@NonNull TipoEspiritu tipo) {
