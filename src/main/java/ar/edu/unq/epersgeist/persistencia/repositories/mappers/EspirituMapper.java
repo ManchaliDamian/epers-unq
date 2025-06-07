@@ -3,9 +3,11 @@ package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -78,4 +80,8 @@ public interface EspirituMapper {
             EspirituDemoniaco espiritu
     );
 
+
+    //toMongo
+    EspirituMongoDTO toMongo(Espiritu espiritu);
+    Coordenada toCoordenada(EspirituMongoDTO mongo);
 }

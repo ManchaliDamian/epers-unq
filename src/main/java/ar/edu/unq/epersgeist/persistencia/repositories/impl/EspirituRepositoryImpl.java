@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class EspirituRepositoryImpl implements EspirituRepository {
 
     private EspirituDAO espirituDAO;
+    private EspirituDAOMongo espirituDAOMongo;
     private EspirituMapper mapper;
 
     public EspirituRepositoryImpl(EspirituDAO espirituDAO, EspirituMapper mapper){
@@ -26,8 +29,17 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Espiritu save(Espiritu espiritu) {
-        EspirituJPADTO espirituGuardado = this.espirituDAO.save(mapper.toJpa(espiritu));
-        return mapper.toDomain(espirituGuardado);
+        EspirituJPADTO jpa = mapper.toJpa(espiritu);
+        jpa = espirituDAO.save(jpa);
+        Espiritu dominio = mapper.toDomain(jpa);
+
+        EspirituMongoDTO mongoDto = mapper.toMongo(dominio);
+        mongoDto.setIdSQL(dominio.getId());
+        espirituDAOMongo.save(mongoDto);
+
+        dominio.setCoordenada(mapper.toCoordenada(mongoDto));
+
+        return dominio;
     }
 
     @Override

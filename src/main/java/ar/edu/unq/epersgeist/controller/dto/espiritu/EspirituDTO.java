@@ -24,9 +24,10 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
 
     public Espiritu aModelo() {
         Espiritu e = switch (this.tipo) {
-            case ANGELICAL  -> new EspirituAngelical(nombre, ubicacion.aModelo(), coordenadaDTO.aModelo());
-            case DEMONIACO   -> new EspirituDemoniaco(nombre, ubicacion.aModelo(), coordenadaDTO.aModelo());
+            case ANGELICAL  -> new EspirituAngelical(nombre, ubicacion.aModelo());
+            case DEMONIACO   -> new EspirituDemoniaco(nombre, ubicacion.aModelo());
         };
+        e.setCoordenada(coordenadaDTO.aModelo());
 
         e.setId(id);
         e.setNivelDeConexion(nivelDeConexion);

@@ -3,10 +3,13 @@ package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -58,7 +61,7 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituAngelical) context.get(jpa);
 
-        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()), jpa.);
+        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
         context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());
@@ -231,5 +234,21 @@ public class EspirituMapperImp implements EspirituMapper {
             espirituJPADTO.setMediumConectado(null);
         }
         return espirituJPADTO;
+    }
+
+    //toMongo
+    @Override
+    public EspirituMongoDTO toMongo(Espiritu espiritu) {
+        Coordenada c = espiritu.getCoordenada();
+        GeoJsonPoint punto = new GeoJsonPoint(c.getLongitud(), c.getLatitud());
+
+        EspirituMongoDTO dto = new EspirituMongoDTO(punto);
+        dto.setIdSQL(espiritu.getId());
+        return dto;
+    }
+    @Override
+    public Coordenada toCoordenada(EspirituMongoDTO mongo) {
+        GeoJsonPoint p = mongo.getPunto();
+        return new Coordenada(p.getY(), p.getX());
     }
 }

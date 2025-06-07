@@ -29,14 +29,11 @@ public record CreateEspirituDTO(
 
     public Espiritu aModelo(Ubicacion ubicacion){
 
-        switch (this.tipo()){
-            case ANGELICAL -> {
-                return new EspirituAngelical(nombre, ubicacion, coordenadaDTO.aModelo());
-            }
-            case DEMONIACO -> {
-                return new EspirituDemoniaco(nombre, ubicacion, coordenadaDTO.aModelo());
-            }
-            default -> throw new IllegalArgumentException("Argumentos no validos");
-        }
+        Espiritu e = switch (this.tipo()) {
+            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion);
+            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion);
+        };
+        e.setCoordenada(coordenadaDTO.aModelo());
+        return e;
     }
 }

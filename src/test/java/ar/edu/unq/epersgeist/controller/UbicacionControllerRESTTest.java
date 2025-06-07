@@ -52,13 +52,14 @@ public class UbicacionControllerRESTTest {
     private EspirituDTO demonGuardado;
 
     private PoligonoDTO poligono;
+    private CoordenadaDTO c1;
 
     @BeforeEach
     void setUp() throws Throwable {
         dataService.eliminarTodo();
-
+        c1 = new CoordenadaDTO(0.0, 0.0);
         List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
-                new CoordenadaDTO(0.0, 0.0), // esquina inferior izquierda
+                c1, // esquina inferior izquierda
                 new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
                 new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
                 new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
@@ -71,8 +72,8 @@ public class UbicacionControllerRESTTest {
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL);
-        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL, c1);
+        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO, c1);
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
         demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);
