@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.Query;
 public interface MediumMongoDAO extends MongoRepository<MediumMongoDTO, String> {
 
     @Aggregation(pipeline ={
-            "{'$geoNear': { " + //cercanos
+            "{'$geoNear': { " +
                     "'near':{'type': 'Point', 'coordinates': [?0, ?1]}, " +
                     "'distanceField': 'distancia', " +
                     "'spherical': true, " +
@@ -18,5 +18,5 @@ public interface MediumMongoDAO extends MongoRepository<MediumMongoDTO, String> 
             "{ $project: { 'distancia': 1, '_id': 0 }} "
         }
     )
-    Double distanciaA(Double longitud, Double latitud, Double idMediumSQL);
+    Double distanciaA(Double longitud, Double latitud, Long idMediumSQL);
 }

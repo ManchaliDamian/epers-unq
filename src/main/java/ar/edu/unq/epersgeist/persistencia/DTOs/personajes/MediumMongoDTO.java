@@ -18,24 +18,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("Medium")
 public class MediumMongoDTO {
     @Id
-    private String id;
+    private String idMediumMongo;
 
     private Long idMediumSQL;
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint coordenada;
 
+    public MediumMongoDTO(String idMediumMongo, Long idMediumSQL){
+        this.idMediumMongo = idMediumMongo;
+        this.idMediumSQL = idMediumSQL;
+    }
+
     public static MediumMongoDTO desdeModelo(Medium medium){
         MediumMongoDTO dto = new MediumMongoDTO();
         dto.idMediumSQL = medium.getId();
         dto.coordenada = convertirAGeoJson(medium.getCoordenada());
-        dto.id = medium.getMongoId();
+        dto.idMediumMongo = medium.getMongoId();
         return dto;
     }
 
     public Medium aModelo(){
         Medium medium = new Medium();
-        medium.setMongoId(this.id);
+        medium.setMongoId(this.idMediumMongo);
         medium.setId(this.idMediumSQL);
         medium.setCoordenada(convertirACoordenada(this.coordenada));
         return medium;
