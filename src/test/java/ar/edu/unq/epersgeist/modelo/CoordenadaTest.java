@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.CoordenadaFueraDeRangoException;
+import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeRangoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import org.junit.jupiter.api.Test;
 

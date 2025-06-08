@@ -1,14 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
+import ar.edu.unq.epersgeist.exception.InvocacionNoPermitidaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.*;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

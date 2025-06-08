@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
-import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 

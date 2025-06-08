@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.ubicacion;
 
-import ar.edu.unq.epersgeist.modelo.exception.PoligonoIncompletoException;
+import ar.edu.unq.epersgeist.exception.PoligonoIncompletoException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

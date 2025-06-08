@@ -13,4 +13,8 @@ import java.util.Optional;
 public interface PoligonoDAO extends MongoRepository<PoligonoMongoDTO, String> {
     Optional<PoligonoMongoDTO> findByUbicacionId(Long ubicacionId);
     void deleteByUbicacionId(Long ubicacionId);
+
+    // busca el polígono de una ubicación que *contenga* el punto
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } } }")
+    Optional<PoligonoMongoDTO> findByPoligonoGeoIntersects(GeoJsonPoint punto);
 }

@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.PoligonoIncompletoException;
+import ar.edu.unq.epersgeist.exception.PoligonoIncompletoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import org.junit.jupiter.api.Test;

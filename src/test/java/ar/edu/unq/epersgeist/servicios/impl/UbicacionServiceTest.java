@@ -1,10 +1,10 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
-import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
+import ar.edu.unq.epersgeist.exception.MismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;

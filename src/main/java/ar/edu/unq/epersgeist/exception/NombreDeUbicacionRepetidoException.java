@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.exception;
+package ar.edu.unq.epersgeist.exception;
 
 final public class NombreDeUbicacionRepetidoException extends RuntimeException {
 

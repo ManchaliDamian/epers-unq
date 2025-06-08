@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.exception.ConectarException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
