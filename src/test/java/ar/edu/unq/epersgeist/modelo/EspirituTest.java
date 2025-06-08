@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -21,26 +22,19 @@ public class EspirituTest {
     private Ubicacion cementerio;
     private Medium mediumConectado;
     private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
+
+
 
 
     @BeforeEach
     void setUp(){
         c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        santuario = new Santuario("santuario", 40, poligono);
-        cementerio = new Cementerio("cementerio", 60, poligono);
+        santuario = new Santuario("santuario", 40);
+        cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Mago",100,90,cementerio, c1);
-        angel = new EspirituAngelical("Espiritu",cementerio,c1);
-        demonio = new EspirituDemoniaco("Espiritu", santuario,c1);
+        mediumConectado = new Medium("Medium",100,90, cementerio, c1);
+        angel = new EspirituAngelical("Angel",cementerio,c1);
+        demonio = new EspirituDemoniaco("Demonio", santuario,c1);
     }
 
     @Test
@@ -109,6 +103,14 @@ public class EspirituTest {
         assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
+    @Test
+    void conectarA_EspirituDominado_LanzaExcepcion() {
+        Espiritu otroDominador = new EspirituAngelical("Dominador", cementerio, c1);
+        angel.setDominador(otroDominador);
+        assertThrows(EspirituDominadoException.class, () -> {
+            angel.conectarA(mediumConectado);
+        });
+    }
 
     @Test
     void conectarA_AumentaLaConexionCorrectamente() {

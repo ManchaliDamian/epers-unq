@@ -2,9 +2,13 @@ package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -67,7 +71,8 @@ public class MediumMapperImp implements MediumMapper {
         Medium medium = new Medium(
                 mediumJPADTO.getNombre(),
                 mediumJPADTO.getManaMax(), mediumJPADTO.getMana(),
-                ubicacionMapper.toDomain(mediumJPADTO.getUbicacion()));
+                ubicacionMapper.toDomain(mediumJPADTO.getUbicacion()),
+                null);
         context.put(mediumJPADTO, medium);
 
         medium.setId(mediumJPADTO.getId());
@@ -93,5 +98,15 @@ public class MediumMapperImp implements MediumMapper {
         return mediumList.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MediumMongoDTO toMongo(Medium medium) {
+        Coordenada c = medium.getCoordenada();
+        GeoJsonPoint punto = new GeoJsonPoint(c.getLongitud(), c.getLatitud());
+
+        MediumMongoDTO dto = new MediumMongoDTO(punto);
+        dto.setIdSQL(medium.getId());
+        return dto;
     }
 }

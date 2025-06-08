@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.controller.helper;
 
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.UpdateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UpdateUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import com.fasterxml.jackson.databind.ObjectMapper;

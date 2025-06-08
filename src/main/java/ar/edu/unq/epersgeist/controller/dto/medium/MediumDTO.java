@@ -1,5 +1,8 @@
-package ar.edu.unq.epersgeist.controller.dto;
+package ar.edu.unq.epersgeist.controller.dto.medium;
 
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import jakarta.validation.constraints.NotBlank;
@@ -30,13 +33,14 @@ public record MediumDTO(
                 medium.getMana(),
                 espiritusDTO,
                 CoordenadaDTO.desdeModelo(medium.getCoordenada())
+
         );
     }
 
     public Medium aModelo() {
 
         Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo(), coordenadaDTO.aModelo());
-
+        medium.setCoordenada(coordenadaDTO.aModelo());
         if (espiritus != null) {
             for (EspirituDTO dto : espiritus) {
                 Espiritu e = dto.aModelo();

@@ -3,9 +3,8 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Aggregation;
-import org.springframework.data.mongodb.repository.Query;
 
-public interface MediumMongoDAO extends MongoRepository<MediumMongoDTO, String> {
+public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> {
 
     @Aggregation(pipeline ={
             "{'$geoNear': { " +

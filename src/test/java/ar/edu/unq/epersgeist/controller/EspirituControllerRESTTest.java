@@ -1,6 +1,12 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.CreateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.CreateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.PoligonoDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCMediumController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
@@ -24,7 +30,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,11 +43,11 @@ public class EspirituControllerRESTTest {
     @Autowired private EspirituService espirituService;
     @Autowired private MediumService mediumService;
     @Autowired private UbicacionService ubicacionService;
-    @Autowired private DataService serviceEliminarTodo;
+    @Autowired private DataService dataService;
 
     @Autowired private UbicacionRepository ubicacionRepository;
 
-    @Autowired private MediumDAO mediumRepository;
+    @Autowired private MediumDAOSQL mediumRepository;
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;
@@ -55,16 +63,29 @@ public class EspirituControllerRESTTest {
     private EspirituDTO angelGuardado;
     private EspirituDTO demonGuardado;
 
+    private PoligonoDTO poligono;
+    private CoordenadaDTO c1;
+
     @BeforeEach
     void setUp() throws Throwable {
-        serviceEliminarTodo.eliminarTodo();
-        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
+        dataService.eliminarTodo();
+        c1 = new CoordenadaDTO(0.0, 0.0);
+        List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
+                c1, // esquina inferior izquierda
+                new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
+                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
+                new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
+                new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
+        );
+        poligono = new PoligonoDTO(coordenadasCuadrado);
+
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL);
-        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL, c1);
+        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO, c1);
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
         demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);
@@ -112,7 +133,7 @@ public class EspirituControllerRESTTest {
 
     @AfterEach
     void eliminarTodo(){
-        serviceEliminarTodo.eliminarTodo();
+        dataService.eliminarTodo();
     }
 
 }

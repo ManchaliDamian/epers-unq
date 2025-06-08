@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(collection = "mediums")
-public class MediumMongoDTO {
+@Document(collection = "espiritus")
+public class EspirituMongoDTO {
     @Id
     private String idMongo;
 
@@ -19,7 +19,7 @@ public class MediumMongoDTO {
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint punto;
 
-    public MediumMongoDTO(GeoJsonPoint punto) {
+    public EspirituMongoDTO(GeoJsonPoint punto) {
         this.punto = punto;
     }
 }

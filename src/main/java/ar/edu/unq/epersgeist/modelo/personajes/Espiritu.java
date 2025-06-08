@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 
@@ -22,15 +23,17 @@ public abstract class Espiritu {
     @EqualsAndHashCode.Include
     private String nombre;
     private Medium mediumConectado;
-    private final TipoEspiritu tipo;
+    private TipoEspiritu tipo;
     private Coordenada coordenada;
+
+    private Espiritu dominador;
 
     //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo, @NonNull Coordenada coordenada) {
+    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo, Coordenada coordenada) {
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -43,6 +46,9 @@ public abstract class Espiritu {
     }
 
     public void conectarA(Medium medium){
+        if(estaDominado()){
+            throw new EspirituDominadoException(this.getNombre());
+        }
         this.setMediumConectado(medium);
         this.aumentarConexionCon(medium);
     }
@@ -64,7 +70,9 @@ public abstract class Espiritu {
             this.getMediumConectado().desvincularseDe(this);
         }
     }
-
+    public boolean estaDominado() {
+        return this.getDominador() != null;
+    }
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }

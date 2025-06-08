@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.controller.dto;
+package ar.edu.unq.epersgeist.controller.dto.ubicacion;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 

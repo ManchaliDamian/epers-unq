@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.MediumDTO;
-import ar.edu.unq.epersgeist.controller.dto.UpdateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.CreateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.UpdateEspirituDTO;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;

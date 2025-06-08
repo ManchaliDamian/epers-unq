@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EspirituDAO extends JpaRepository<EspirituJPADTO, Long> {
+public interface EspirituDAOSQL extends JpaRepository<EspirituJPADTO, Long> {
     @Query(
             "FROM Espiritu e where e.deleted = false"
     )

@@ -30,18 +30,14 @@ public class EspirituDemoniacoTest {
     @BeforeEach
     void setUp() {
         c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        santuario = new Santuario("Quilmes", 70, poligono);
-        cementerio = new Cementerio("Bernal",60, poligono);
 
-        angel = new EspirituAngelical( "EspirituAngelical", santuario,c1);
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
+
+        angel = new EspirituAngelical( "EspirituAngelical", santuario, c1);
         demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio, c1);
-        mediumAngel= new Medium("Mago", 100, 50, santuario,c1);
-        mediumDemon = new Medium("Maguito",100, 10, cementerio,c1);
+        mediumAngel= new Medium("Mago", 100, 50, santuario, c1);
+        mediumDemon = new Medium("Maguito",100, 10, cementerio, c1);
 
     }
 

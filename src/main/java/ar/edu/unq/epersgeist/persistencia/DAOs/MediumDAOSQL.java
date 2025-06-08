@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MediumDAO extends JpaRepository<MediumJPADTO, Long> {
+public interface MediumDAOSQL extends JpaRepository<MediumJPADTO, Long> {
     @Query(
             "FROM Medium m where m.deleted = false"
     )

@@ -24,14 +24,12 @@ public class Medium {
     private Integer mana;
     private final Set<Espiritu> espiritus = new HashSet<>();
     private Coordenada coordenada;
-    private String mongoId;
-
     //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion, @NonNull Coordenada coordenada) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion, Coordenada coordenada) {
         if (manaMax < 0) {
             throw new IllegalArgumentException("manaMax no puede ser negativo.");
         }
@@ -106,8 +104,6 @@ public class Medium {
 
     public Espiritu invocarA(Espiritu espiritu) {
         this.validarInvocar(espiritu);
-
-        if(coordenada.calcularDistanciaA(this.coordenada,espiritu) > 30000) throw new EspirituMuyLejanoException(espiritu.getNombre(),this.getNombre());
 
         if (this.getMana() >= 10) {
             espiritu.serInvocadoEn(this.ubicacion);
