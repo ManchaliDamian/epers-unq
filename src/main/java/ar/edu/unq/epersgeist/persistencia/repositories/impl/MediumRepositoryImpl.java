@@ -8,6 +8,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
@@ -48,29 +50,33 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Medium actualizar(Medium medium) {
+        if (medium.getId() == null) {
+            throw new IllegalArgumentException("El medium debe estar persistido");
+        }
         MediumJPADTO actualizar = actualizarMediumJPA(medium);
         return  mediumMapper.toDomain(actualizar);
     }
 
     @Override
     public Medium actualizar(Medium medium, Coordenada coordenada) {
+        if (medium.getId() == null) {
+            throw new IllegalArgumentException("El medium debe estar persistido");
+        }
         MediumJPADTO dto = actualizarMediumJPA(medium);
+
+        // eliminar la coordenada anterior
+        mediumDAOMongo.deleteByIdSQL(medium.getId());
+
+        // crear nuevo document
         MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
         mediumDAOMongo.save(mongoDTO);
         return mediumMapper.toDomain(dto);
     }
 
     @Override
-    public void eliminar(Long id) {
-        Medium medium = this.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
-        if (!medium.getEspiritus().isEmpty()) {
-            throw new MediumNoEliminableException(id);
-        }
-        medium.setDeleted(true);
-        this.actualizar(medium);
+    public void eliminarFisicoEnMongoSiExiste(Long id) {
         Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(mediumDAOMongo::delete);
-
     }
 
     private MediumJPADTO actualizarMediumJPA(Medium medium) {
@@ -82,6 +88,7 @@ public class MediumRepositoryImpl implements MediumRepository {
         mediumDAOSQL.save(dto);
         return dto;
     }
+
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
         return this.mediumDAOSQL.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
@@ -110,5 +117,6 @@ public class MediumRepositoryImpl implements MediumRepository {
     @Override
     public void deleteAll(){
         this.mediumDAOSQL.deleteAll();
+        this.mediumDAOMongo.deleteAll();
     }
 }

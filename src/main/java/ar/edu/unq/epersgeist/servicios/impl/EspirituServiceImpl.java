@@ -85,20 +85,22 @@ public class EspirituServiceImpl implements EspirituService {
         return espirituRepository.recuperarDemonios();
     }
 
-    /*
     @Override
-    public void eliminar(Long espirituId) {
-        Espiritu espiritu = this.getEspiritu(espirituId);
-        if (espiritu.getMediumConectado() != null) {
-            throw new EspirituNoEliminableException(espirituId);
+    public void eliminar(Long id) {
+        Espiritu espiritu = espirituRepository.recuperar(id)
+                .orElseThrow(() -> new EspirituNoEncontradoException(id));
+
+        if (espiritu.isDeleted()) {
+            throw new EspirituNoEncontradoException(id);
         }
+
+        if (espiritu.getMediumConectado() != null && !espiritu.getMediumConectado().isDeleted()) {
+            throw new EspirituNoEliminableException(id);
+        }
+
         espiritu.setDeleted(true);
         espirituRepository.actualizar(espiritu);
-    }
-*/
-    @Override
-    public void eliminar(Long espirituId) {
-        mediumRepository.eliminar(espirituId);
+        espirituRepository.eliminarFisicoEnMongoSiExiste(id);
     }
 
     @Override

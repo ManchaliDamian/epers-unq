@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface EspirituDAOMongo extends MongoRepository<EspirituMongoDTO, String> {
     @Query("{ 'idSQL' : ?0 }")
     Optional<EspirituMongoDTO> findByIdSQL(Long espirituId);
+
+    void deleteByIdSQL(Long espirituId);
 }

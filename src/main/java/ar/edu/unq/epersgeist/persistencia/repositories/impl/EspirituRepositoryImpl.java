@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
@@ -45,13 +46,24 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Espiritu actualizar(Espiritu espiritu) {
+        if (espiritu.getId() == null) {
+            throw new IllegalArgumentException("El espiritu debe estar persistido");
+        }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
         return mapper.toDomain(dto);
     }
 
     @Override
     public Espiritu actualizar(Espiritu espiritu, Coordenada coordenada) {
+        if (espiritu.getId() == null) {
+            throw new IllegalArgumentException("El espiritu debe estar persistido");
+        }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+
+        // eliminar la coordenada anterior
+        espirituDAOMongo.deleteByIdSQL(espiritu.getId());
+
+        // crear nuevo document
         EspirituMongoDTO mongoDTO = mapper.toMongo(dto, coordenada);
         espirituDAOMongo.save(mongoDTO);
         return mapper.toDomain(dto);
@@ -68,13 +80,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     }
 
     @Override
-    public void eliminar(Long id) {
-        Espiritu espiritu = this.recuperar(id).orElseThrow(() -> new EspirituNoEncontradoException(id));
-        if(espiritu.isDeleted()) {
-            throw new EspirituNoEncontradoException(id);
-        }
-        espiritu.setDeleted(true);
-        this.actualizar(espiritu);
+    public void eliminarFisicoEnMongoSiExiste(Long id) {
         Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(espirituDAOMongo::delete);
     }
@@ -132,5 +138,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();
+        this.espirituDAOMongo.deleteAll();
     }
 }

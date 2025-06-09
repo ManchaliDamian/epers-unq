@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "mediums")
 public class MediumMongoDTO {
     @Id
-    private String idMongo;
+    private String id;
 
     private Long idSQL;
 

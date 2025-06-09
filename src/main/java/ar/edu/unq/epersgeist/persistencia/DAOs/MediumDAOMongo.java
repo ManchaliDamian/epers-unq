@@ -24,4 +24,5 @@ public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> 
 
     Optional<MediumMongoDTO> findByIdSQL(Long id);
 
+    void deleteByIdSQL(Long espirituId);
 }
