@@ -15,14 +15,4 @@ public class Coordenada {
         this.longitud = longitud;
     }
 
-    public Double calcularDistanciaA(Coordenada coordenadaMedium, Espiritu espiritu){
-        Double latM = coordenadaMedium.getLatitud();
-        Double longM = coordenadaMedium.getLongitud();
-
-        Double latE = coordenadaMedium.getLatitud();
-        Double longE = coordenadaMedium.getLongitud();
-        return 0.0;
-        //return this.calularDistanciaHaversine(latM,longM,latE,longE);
-    }
-
 }
