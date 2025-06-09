@@ -1,15 +1,11 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEliminableException;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;

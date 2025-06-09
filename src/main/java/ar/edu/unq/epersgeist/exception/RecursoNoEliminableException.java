@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.exception;
+package ar.edu.unq.epersgeist.exception;
 
 public abstract class RecursoNoEliminableException extends RuntimeException {
     public RecursoNoEliminableException(String mensaje) {
