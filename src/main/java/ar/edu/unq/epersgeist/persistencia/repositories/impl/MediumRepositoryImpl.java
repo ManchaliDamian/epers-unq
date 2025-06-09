@@ -43,13 +43,10 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Medium guardar(Medium medium, Coordenada coordenada) {
-        MediumJPADTO mediumGuardado = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
-        Medium dominio = mediumMapper.toDomain(mediumGuardado);
-
-        MediumMongoDTO mongoDto = mediumMapper.toMongo(dominio);
-        mongoDto.setIdSQL(mediumGuardado.getId());
+        MediumJPADTO jpa = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
+        MediumMongoDTO mongoDto = mediumMapper.toMongo(jpa, coordenada);
         mediumDAOMongo.save(mongoDto);
-        return dominio;
+        return mediumMapper.toDomain(jpa);
     }
 
     @Override

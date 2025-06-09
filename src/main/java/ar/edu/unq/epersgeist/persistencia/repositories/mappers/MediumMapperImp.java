@@ -100,11 +100,6 @@ public class MediumMapperImp implements MediumMapper {
     }
 
     @Override
-    public MediumMongoDTO toMongo(Medium medium) {
-       return null;
-    }
-
-    @Override
     public MediumMongoDTO toMongo(MediumJPADTO jpa, Coordenada coordenada) {
         GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
         MediumMongoDTO dto = new MediumMongoDTO(punto);
