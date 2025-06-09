@@ -76,8 +76,8 @@ public class MediumServiceTest {
         demonio = new EspirituDemoniaco("Jose", santuario);
         demonCementerio = new EspirituDemoniaco("Juan", cementerio);
         angel = new EspirituAngelical( "kici", cementerio);
-        medium1 = serviceM.guardar(medium1);
-        medium2 = serviceM.guardar(medium2);
+        medium1 = serviceM.guardar(medium1, c1);
+        medium2 = serviceM.guardar(medium2, c1);
         demonio = serviceE.guardar(demonio, c1);
         demonCementerio = serviceE.guardar(demonCementerio, c1);
         angel = serviceE.guardar(angel, c1);

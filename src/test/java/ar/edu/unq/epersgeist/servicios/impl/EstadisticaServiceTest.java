@@ -71,7 +71,7 @@ public class EstadisticaServiceTest {
         ubicacionService.guardar(santuario1, poligono);
         ubicacionService.guardar(santuario2, poligono);
 
-        medium1 = mediumService.guardar(medium1);
+        medium1 = mediumService.guardar(medium1, c1);
 
         demoniaco1 = espirituService.guardar(demoniaco1, c1);
         espirituService.guardar(demoniaco2, c1);

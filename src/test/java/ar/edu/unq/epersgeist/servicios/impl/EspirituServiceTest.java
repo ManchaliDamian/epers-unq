@@ -123,7 +123,7 @@ public class EspirituServiceTest {
 
     @Test
     void testConectarEspirituAMediumSaleBien() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
         Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
@@ -134,7 +134,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
 
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.eliminar(azazel.getId());
 
         assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
@@ -146,7 +146,7 @@ public class EspirituServiceTest {
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         azazel.setUbicacion(berazategui);
         azazel = serviceE.actualizar(azazel);
 
@@ -157,7 +157,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -260,7 +260,7 @@ public class EspirituServiceTest {
     }
     @Test
     void eliminarEspirituConMediumConectadoLanzaException() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.conectar(angel.getId(), medium.getId());
 
         assertThrows(EspirituNoEliminableException.class, () -> serviceE.eliminar(angel.getId()));
