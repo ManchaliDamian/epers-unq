@@ -34,14 +34,19 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Espiritu guardar(Espiritu espiritu) {
-        return espirituRepository.save(espiritu);
+    public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
+        return espirituRepository.guardar(espiritu, coordenada);
     }
 
     @Override
     public Espiritu actualizar(Espiritu espiritu){
-        return espirituRepository.save(espiritu);
+        return espirituRepository.actualizar(espiritu);
     }
+
+    public Espiritu actualizar(Espiritu espiritu, Coordenada coordenada){
+        return espirituRepository.actualizar(espiritu, coordenada);
+    }
+
 
     private Espiritu getEspiritu(Long espirituId) {
         Espiritu espiritu = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
@@ -87,7 +92,7 @@ public class EspirituServiceImpl implements EspirituService {
             throw new EspirituNoEliminableException(espirituId);
         }
         espiritu.setDeleted(true);
-        espirituRepository.save(espiritu);
+        espirituRepository.actualizar(espiritu);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class EspirituServiceImpl implements EspirituService {
 
         medium.conectarseAEspiritu(espiritu);
 
-        espirituRepository.save(espiritu);
+        espirituRepository.actualizar(espiritu);
         return mediumRepository.save(medium);
     }
 

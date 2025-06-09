@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.controller.dto.medium;
 
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,19 +15,18 @@ public record CreateMediumDTO(
         Integer mana,
         CoordenadaDTO coordenadaDTO
 ) {
-    public static CreateMediumDTO desdeModelo(Medium medium) {
+    public static CreateMediumDTO desdeModelo(Medium medium, Coordenada coordenada) {
         return new CreateMediumDTO(
                 medium.getNombre(),
                 medium.getUbicacion() != null ? medium.getUbicacion().getId() : null,
                 medium.getManaMax(),
                 medium.getMana(),
-                CoordenadaDTO.desdeModelo(medium.getCoordenada())
+                CoordenadaDTO.desdeModelo(coordenada)
         );
     }
 
     public Medium aModelo(Ubicacion ubicacion) {
-        Medium medium = new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion, coordenadaDTO.aModelo());
-        medium.setCoordenada(coordenadaDTO.aModelo());
+        Medium medium = new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion);
 
         return medium;
     }

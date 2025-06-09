@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
@@ -37,8 +38,9 @@ public final  class EspirituControllerREST {
         Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId())
                 .orElseThrow(() -> new UbicacionNoEncontradaException(dto.ubicacionId()));
 
-        Espiritu espiritu = dto.aModelo(ubicacion);
-        Espiritu creado = espirituService.guardar(espiritu);
+        Espiritu espiritu = dto.aModeloEspiritu(ubicacion);
+        Coordenada coordenada = dto.aModeloCoordenada();
+        Espiritu creado = espirituService.guardar(espiritu, coordenada);
 
         return ResponseEntity
                 .created(URI.create("/espiritu/" + creado.getId()))

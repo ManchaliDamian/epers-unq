@@ -42,41 +42,30 @@ public class EstadisticaServiceTest {
     private Santuario santuario1;
     private Santuario santuario2;
 
-
-    private EspirituAngelical angelical1;
-    private EspirituAngelical angelical2;
-    private EspirituAngelical angelical3;
-
     private Espiritu demoniaco1;
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
 
-    private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
-
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
+        Coordenada c1 = new Coordenada(1.0, 1.0);
+        Coordenada c2 = new Coordenada(2.0, 2.0);
+        Coordenada c3 = new Coordenada(3.0, 3.0);
+        Coordenada c4 = new Coordenada(-1.0, -1.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
+        Poligono poligono = new Poligono(coordenadas);
 
         cementerio = new Cementerio("Quilmes",1);
 
         santuario1 = new Santuario("santuario 1",50);
         santuario2 = new Santuario("santuario 2",50);
 
-        demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1, c1);
-        demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1, c1);
-        demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2, c1);
+        demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
+        demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
+        demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2);
 
 
-        medium1 = new Medium("medium 1",100,50,santuario1, c1);
+        medium1 = new Medium("medium 1",100,50,santuario1);
 
         ubicacionService.guardar(cementerio, poligono);
         ubicacionService.guardar(santuario1, poligono);
@@ -84,9 +73,9 @@ public class EstadisticaServiceTest {
 
         medium1 = mediumService.guardar(medium1);
 
-        demoniaco1 = espirituService.guardar(demoniaco1);
-        espirituService.guardar(demoniaco2);
-        espirituService.guardar(demoniaco3);
+        demoniaco1 = espirituService.guardar(demoniaco1, c1);
+        espirituService.guardar(demoniaco2, c1);
+        espirituService.guardar(demoniaco3, c1);
 
     }
 

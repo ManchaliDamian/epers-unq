@@ -71,12 +71,12 @@ public class UbicacionServiceTest {
         cementerio = new Cementerio("Bernal", 60);
 
 
-        angel = new EspirituAngelical("damian", santuario, c1);
-        demonio = new EspirituDemoniaco("Roberto", santuario, c1);
+        angel = new EspirituAngelical("damian", santuario);
+        demonio = new EspirituDemoniaco("Roberto", santuario);
 
-        medium = new Medium("roberto", 200, 150, santuario, c1);
-        medium2 = new Medium("roberto", 200, 150, santuario, c1);
-        medium3 = new Medium("roberto", 200, 150, santuario, c1);
+        medium = new Medium("roberto", 200, 150, santuario);
+        medium2 = new Medium("roberto", 200, 150, santuario);
+        medium3 = new Medium("roberto", 200, 150, santuario);
         santuario = serviceU.guardar(santuario, poligono);
         cementerio = serviceU.guardar(cementerio, poligono);
     }
@@ -137,8 +137,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionExistente() {
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
@@ -146,8 +146,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionExistenteSinEliminados() {
-        angel = serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        angel = serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(1, espiritusEn.size());
@@ -155,8 +155,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionInexistente() {
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(cementerio.getId());
         assertEquals(0, espiritusEn.size());
@@ -179,7 +179,7 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
-        angel = serviceE.guardar(angel);
+        angel = serviceE.guardar(angel, c1);
         medium = serviceM.guardar(medium);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
@@ -279,7 +279,7 @@ public class UbicacionServiceTest {
     @Test
     void eliminarUbicacionLanzaExceptionPorQueExisteUnEspirituEnEsaUbicacion() {
 
-        serviceE.guardar(angel);
+        serviceE.guardar(angel, c1);
 
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }

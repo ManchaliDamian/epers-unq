@@ -71,16 +71,16 @@ public class MediumServiceTest {
         santuario = serviceU.guardar(santuario, poligono);
         cementerio =serviceU.guardar(cementerio, poligono);
 
-        medium1 = new Medium("Pablo", 100, 50, cementerio, c1);
-        medium2 = new Medium("Fidol", 100, 50, santuario, c1);
-        demonio = new EspirituDemoniaco("Jose", santuario, c1);
-        demonCementerio = new EspirituDemoniaco("Juan", cementerio, c1);
-        angel = new EspirituAngelical( "kici", cementerio, c1);
+        medium1 = new Medium("Pablo", 100, 50, cementerio);
+        medium2 = new Medium("Fidol", 100, 50, santuario);
+        demonio = new EspirituDemoniaco("Jose", santuario);
+        demonCementerio = new EspirituDemoniaco("Juan", cementerio);
+        angel = new EspirituAngelical( "kici", cementerio);
         medium1 = serviceM.guardar(medium1);
         medium2 = serviceM.guardar(medium2);
-        demonio = serviceE.guardar(demonio);
-        demonCementerio = serviceE.guardar(demonCementerio);
-        angel = serviceE.guardar(angel);
+        demonio = serviceE.guardar(demonio, c1);
+        demonCementerio = serviceE.guardar(demonCementerio, c1);
+        angel = serviceE.guardar(angel, c1);
 
     }
 
@@ -109,8 +109,6 @@ public class MediumServiceTest {
 
     @Test
     void testCreateAtDeMedium(){
-        serviceM.guardar(medium1);
-
         Date fechaEsperada = new Date();
 
         Date fechaEspiritu = medium1.getCreatedAt();
@@ -164,7 +162,7 @@ public class MediumServiceTest {
         serviceU.conectar(cementerio.getId(), santuario.getId());
 
         medium1.conectarseAEspiritu(angel);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
 
         serviceM.mover(medium1.getId(), santuario.getId());
 
@@ -193,8 +191,8 @@ public class MediumServiceTest {
 
     @Test
     void invocar_actualizaUbicacionEspirituEnDB() {
-        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario, c1);
-        nuevoDemonio = serviceE.guardar(nuevoDemonio);
+        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario);
+        nuevoDemonio = serviceE.guardar(nuevoDemonio, c1);
 
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
 
@@ -205,7 +203,7 @@ public class MediumServiceTest {
     @Test
     void testInvocarFallaPorqueEspirituYaEstaConectado() {
         demonio.setMediumConectado(medium1);
-        serviceE.guardar(demonio);
+        serviceE.actualizar(demonio);
         assertThrows(EspirituOcupadoException.class, () -> {
             serviceM.invocar(medium1.getId(), demonio.getId());
         });
@@ -214,9 +212,9 @@ public class MediumServiceTest {
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
         demonio.setUbicacion(cementerio);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
         demonio.setUbicacion(santuario);
-        serviceE.guardar(demonio);
+        serviceE.actualizar(demonio);
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
     }
@@ -229,8 +227,6 @@ public class MediumServiceTest {
 
     @Test
     void testRecuperarTodosLosMediums() {
-        serviceM.guardar(medium1);
-        serviceM.guardar(medium2);
         List<Medium> todos = serviceM.recuperarTodos();
         assertEquals(2, todos.size());
     }
@@ -258,7 +254,7 @@ public class MediumServiceTest {
     @Test
     void testEspiritusDeUnMedium() {
         medium1.conectarseAEspiritu(angel);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
 
         List<Espiritu> espiritusDelMedium = serviceM.espiritus(medium1.getId());
 
@@ -277,7 +273,7 @@ public class MediumServiceTest {
     void testAngelesDeUnMedium() {
         medium1.conectarseAEspiritu(angel);
         medium1.conectarseAEspiritu(demonCementerio);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
 
         List<EspirituAngelical> angelesDelMedium = serviceM.angeles(medium1.getId());
 
@@ -315,8 +311,8 @@ public class MediumServiceTest {
         medium2.setMana(5);
         medium2.conectarseAEspiritu(demonio);//5*0.2=1, 10+1=11
 
-        serviceM.guardar(medium2);
-        serviceE.guardar(demonio);
+        serviceM.actualizar(medium2);
+        serviceE.actualizar(demonio);
 
         serviceM.descansar(medium2.getId());//100*1.5=150
 
@@ -332,8 +328,8 @@ public class MediumServiceTest {
         medium1.setMana(5);
         medium1.conectarseAEspiritu(angel);
 
-        serviceM.guardar(medium1);
-        serviceE.guardar(angel);
+        serviceM.actualizar(medium1);
+        serviceE.actualizar(angel);
         serviceM.descansar(medium1.getId());
 
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
@@ -346,7 +342,7 @@ public class MediumServiceTest {
     @Test
     void descansarSinEspiritus(){
         medium1.setMana(5);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         assertEquals(7, mediumRecuperado.get().getMana());
@@ -355,7 +351,7 @@ public class MediumServiceTest {
     void descansarPeroElMagoLlegaAlLimiteDeMana(){
         medium1.setMana(98);
         medium1.conectarseAEspiritu(angel);
-        serviceM.guardar(medium1);
+        serviceM.actualizar(medium1);
         serviceM.descansar(medium1.getId());
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
         assertEquals(100, mediumRecuperado.get().getMana());
@@ -367,8 +363,8 @@ public class MediumServiceTest {
         demonio.setUbicacion(cementerio);
         medium1.conectarseAEspiritu(demonio);//50*0.2=10, 10+10=20
 
-        serviceE.guardar(demonio);
-        serviceM.guardar(medium1);
+        serviceE.actualizar(demonio);
+        serviceM.actualizar(medium1);
         serviceM.descansar(medium1.getId()); //52, 50
 
         Optional<Medium> mediumRecuperado = serviceM.recuperar(medium1.getId());
@@ -384,8 +380,8 @@ public class MediumServiceTest {
         angel.setUbicacion(santuario);
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
 
-        serviceE.guardar(angel);
-        serviceM.guardar(medium2);
+        serviceE.actualizar(angel);
+        serviceM.actualizar(medium2);
 
         serviceM.descansar(medium2.getId());
 
@@ -404,9 +400,9 @@ public class MediumServiceTest {
         medium2.conectarseAEspiritu(angel); // 50*0.2=10, 10+10=20
         medium2.conectarseAEspiritu(demonio);
 
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
-        serviceM.guardar(medium2);
+        serviceE.actualizar(angel);
+        serviceE.actualizar(demonio);
+        serviceM.actualizar(medium2);
 
         serviceM.descansar(medium2.getId());
 
@@ -423,8 +419,8 @@ public class MediumServiceTest {
     void noSePuedeExorcizar_diferenteUbicacion() {
         medium1.conectarseAEspiritu(angel);
         medium2.conectarseAEspiritu(demonio);
-        serviceM.guardar(medium1);
-        serviceM.guardar(medium2);
+        serviceM.actualizar(medium1);
+        serviceM.actualizar(medium2);
 
         assertThrows(
                 ExorcizarNoPermitidoNoEsMismaUbicacion.class,
@@ -438,8 +434,8 @@ public class MediumServiceTest {
 
         angel.setNivelDeConexion(20);
         demonio.setNivelDeConexion(5);
-        demonio = serviceE.guardar(demonio);
-        angel = serviceE.guardar(angel);
+        demonio = serviceE.actualizar(demonio);
+        angel = serviceE.actualizar(angel);
 
         medium1 = serviceE.conectar(angel.getId(), medium1.getId()); // angel: 20 + 10 = 30 (daño = 15)
         medium2 = serviceE.conectar(demonio.getId(), medium2.getId()); // demonio: 5 + 10 = 15
@@ -465,15 +461,15 @@ public class MediumServiceTest {
     void exorcizar_DosAngelesDerrotanUnDemonio_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
-        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio, c1);
-        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio, c1);
+        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio);
+        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio);
         angel1.setNivelDeConexion(20); // 30 al conectarse, daño = 15
         angel2.setNivelDeConexion(30); // 40 al conectarse, daño = 20
 
         demonio.setNivelDeConexion(25); // 35 al conectarse
-        demonio = serviceE.guardar(demonio);
-        angel1 = serviceE.guardar(angel1);
-        angel2 = serviceE.guardar(angel2);
+        demonio = serviceE.actualizar(demonio);
+        angel1 = serviceE.guardar(angel1, c1);
+        angel2 = serviceE.guardar(angel2, c1);
 
         medium1 = serviceE.conectar(angel1. getId(), medium1.getId());
         medium1 = serviceE.conectar(angel2. getId(), medium1.getId());
@@ -513,7 +509,7 @@ public class MediumServiceTest {
     void exorcizar_DemonioYaDesconectado_NoHaceNada() {
         demonio.setNivelDeConexion(0);
         demonio.setMediumConectado(null);
-        serviceE.guardar(demonio);
+        serviceE.actualizar(demonio);
 
         serviceE.conectar(angel.getId(), medium1.getId());
 

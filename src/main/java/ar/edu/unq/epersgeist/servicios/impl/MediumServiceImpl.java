@@ -93,8 +93,8 @@ public class MediumServiceImpl implements MediumService {
 
         mediumRepository.save(mediumExorcista);
         mediumRepository.save(mediumAExorcizar);
-        angelesCopy.forEach(espirituRepository::save);
-        demoniosCopy.forEach(espirituRepository::save);
+        angelesCopy.forEach(espirituRepository::actualizar);
+        demoniosCopy.forEach(espirituRepository::actualizar);
     }
 
     @Override
@@ -121,14 +121,14 @@ public class MediumServiceImpl implements MediumService {
         }
         Medium medium = this.getMedium(mediumId);
 
-        Coordenada coordenada = espiritu.get().getCoordenada();
+        Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
         mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
 
         medium.invocarA(espiritu.get());
 
         mediumRepository.save(medium);
-        espirituRepository.save(espiritu.get());
+        espirituRepository.actualizar(espiritu.get());
 
         return espiritu.get();
     }

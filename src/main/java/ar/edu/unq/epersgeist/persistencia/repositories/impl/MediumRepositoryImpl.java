@@ -40,7 +40,6 @@ public class MediumRepositoryImpl implements MediumRepository {
     public Medium save(Medium medium) {
         MediumJPADTO mediumGuardado = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
         Medium dominio = mediumMapper.toDomain(mediumGuardado);
-        dominio.setCoordenada(medium.getCoordenada());
 
         MediumMongoDTO mongoDto = mediumMapper.toMongo(dominio);
         mongoDto.setIdSQL(mediumGuardado.getId());

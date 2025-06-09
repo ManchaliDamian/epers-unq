@@ -71,14 +71,14 @@ public class EspirituServiceTest {
         quilmes = serviceU.guardar(quilmes, poligono);
         berazategui = serviceU.guardar(berazategui, poligono);
 
-        azazel = new EspirituDemoniaco( "Azazel", quilmes, c1);
-        belcebu = new EspirituDemoniaco(  "Belcebu", quilmes, c1);
-        angel = new EspirituAngelical( "Gabriel", quilmes, c1);
-        medium = new Medium("nombre", 150, 30, quilmes, c1);
+        azazel = new EspirituDemoniaco( "Azazel", quilmes);
+        belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
+        angel = new EspirituAngelical( "Gabriel", quilmes);
+        medium = new Medium("nombre", 150, 30, quilmes);
 
-        azazel = serviceE.guardar(azazel);
-        belcebu = serviceE.guardar(belcebu);
-        angel = serviceE.guardar(angel);
+        azazel = serviceE.guardar(azazel, c1);
+        belcebu = serviceE.guardar(belcebu, c1);
+        angel = serviceE.guardar(angel, c1);
 
     }
 
@@ -148,7 +148,7 @@ public class EspirituServiceTest {
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
         medium = serviceM.guardar(medium);
         azazel.setUbicacion(berazategui);
-        azazel = serviceE.guardar(azazel);
+        azazel = serviceE.actualizar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
@@ -166,8 +166,8 @@ public class EspirituServiceTest {
     }
     @Test
     void testGuardarYRecuperarEspiritu() {
-        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes, c1);
-        nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        nuevoEspiritu = serviceE.guardar(nuevoEspiritu, c1);
 
         Optional<Espiritu> recuperado = serviceE.recuperar(nuevoEspiritu.getId());
         assertNotNull(recuperado);
@@ -176,8 +176,8 @@ public class EspirituServiceTest {
     }
     @Test
     void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
-        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes, c1);
-        nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        nuevoEspiritu = serviceE.guardar(nuevoEspiritu, c1);
         serviceE.eliminar(nuevoEspiritu.getId());
 
         assertTrue(serviceE.recuperar(nuevoEspiritu.getId()).isEmpty());
@@ -246,7 +246,7 @@ public class EspirituServiceTest {
     void testActualizar() {
         String nuevoNombre = "Lucifer";
         azazel.setNombre(nuevoNombre);
-        serviceE.guardar(azazel);
+        serviceE.actualizar(azazel);
 
         Optional<Espiritu> actualizado = serviceE.recuperar(azazel.getId());
         assertEquals(nuevoNombre, actualizado.get().getNombre());
@@ -298,12 +298,12 @@ public class EspirituServiceTest {
         void setUpPaginacion() {
 
             List<EspirituDemoniaco> nuevos = List.of(
-                    new EspirituDemoniaco("Mephisto", quilmes, c1),
-                    new EspirituDemoniaco("Lucifer", quilmes, c1),
-                    new EspirituDemoniaco("Belial", quilmes, c1),
-                    new EspirituDemoniaco("Amon", quilmes, c1),
-                    new EspirituDemoniaco("Andras", quilmes, c1),
-                    new EspirituDemoniaco("Vine", quilmes, c1)
+                    new EspirituDemoniaco("Mephisto", quilmes),
+                    new EspirituDemoniaco("Lucifer", quilmes),
+                    new EspirituDemoniaco("Belial", quilmes),
+                    new EspirituDemoniaco("Amon", quilmes),
+                    new EspirituDemoniaco("Andras", quilmes),
+                    new EspirituDemoniaco("Vine", quilmes)
             );
 
             List<Integer> niveles = List.of(80, 75, 60, 55, 25, 15);
@@ -311,12 +311,12 @@ public class EspirituServiceTest {
             for (int i = 0; i < nuevos.size(); i++) {
                 EspirituDemoniaco espiritu = nuevos.get(i);
                 espiritu.setNivelDeConexion(niveles.get(i));
-                serviceE.guardar(espiritu);
+                serviceE.guardar(espiritu, c1);
             }
             azazel.setNivelDeConexion(90);
             belcebu.setNivelDeConexion(10);
-            serviceE.guardar(azazel);
-            serviceE.guardar(belcebu);
+            serviceE.actualizar(azazel);
+            serviceE.actualizar(belcebu);
 
         }
         @Test

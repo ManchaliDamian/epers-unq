@@ -11,9 +11,12 @@ import java.util.Optional;
 
 
 public interface EspirituRepository {
-    Espiritu save(Espiritu espiritu);
+    Espiritu guardar(Espiritu espiritu, Coordenada coordenada);
+    Espiritu actualizar(Espiritu espiritu);
+    Espiritu actualizar(Espiritu espiritu, Coordenada coordenada);
     List<Espiritu> recuperarTodos();
     Optional<Espiritu> recuperar(Long espirituId);
+    Optional<Coordenada> recuperarCoordenada(Long espirituId);
     List<EspirituDemoniaco> recuperarDemonios();
     List<EspirituAngelical> recuperarAngeles();
     Optional<Espiritu> recuperarEliminado(Long id);

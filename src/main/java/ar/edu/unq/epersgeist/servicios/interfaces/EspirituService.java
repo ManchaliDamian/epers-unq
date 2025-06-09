@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EspirituService {
-    Espiritu guardar(Espiritu espiritu);
+    Espiritu guardar(Espiritu espiritu, Coordenada coordenada);
     Espiritu actualizar(Espiritu espiritu);
+    Espiritu actualizar(Espiritu espiritu, Coordenada coordenada);
     Optional<Espiritu> recuperar(Long espirituId);
     void eliminar(Long espirituId);
     Medium conectar(Long espirituId, Long mediumId);
