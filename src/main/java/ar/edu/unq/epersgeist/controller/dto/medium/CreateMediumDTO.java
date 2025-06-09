@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 public record CreateMediumDTO(
         @NotBlank String nombre,
@@ -25,9 +24,12 @@ public record CreateMediumDTO(
         );
     }
 
-    public Medium aModelo(Ubicacion ubicacion) {
-        Medium medium = new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion);
+    public Medium aModeloMedium(Ubicacion ubicacion) {
 
-        return medium;
+        return new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion);
+    }
+
+    public Coordenada aModeloCoordenada() {
+        return coordenadaDTO.aModelo();
     }
 }
