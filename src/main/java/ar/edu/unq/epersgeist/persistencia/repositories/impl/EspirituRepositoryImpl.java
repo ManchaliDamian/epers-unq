@@ -41,34 +41,14 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public Espiritu save(Espiritu espiritu) {
         EspirituJPADTO jpa = mapper.toJpa(espiritu);
         jpa = espirituDAOSQL.save(jpa);
-        espiritu.setId(jpa.getId());
-        espiritu.setCreatedAt(jpa.getCreatedAt());
-        espiritu.setUpdatedAt(jpa.getUpdatedAt());
+        Espiritu dominio = mapper.toDomain(jpa);
+        dominio.setCoordenada(espiritu.getCoordenada());
 
-        GeoJsonPoint punto = new GeoJsonPoint(
-                espiritu.getCoordenada().getLongitud(),
-                espiritu.getCoordenada().getLatitud()
-        );
+        EspirituMongoDTO mongoDto = mapper.toMongo(dominio);
+        mongoDto.setIdSQL(jpa.getId());
+        espirituDAOMongo.save(mongoDto);
 
-        Optional<PoligonoMongoDTO> areaOpt =
-                poligonoDAO.findByPoligonoGeoIntersects(punto);
-
-
-        if (areaOpt.isEmpty()
-                || !areaOpt.get().getUbicacionId().equals(espiritu.getUbicacion().getId())) {
-            throw new CoordenadaFueraDeAreaException(
-                    "El punto " + punto + " no pertenece al área de la ubicación "
-                            + espiritu.getUbicacion().getId()
-            );
-        }
-
-        EspirituMongoDTO mDto = mapper.toMongo(espiritu);
-        mDto.setIdSQL(jpa.getId());
-        espirituDAOMongo.save(mDto);
-
-        espiritu.setCoordenada(mapper.toCoordenada(mDto));
-
-        return espiritu;
+        return dominio;
     }
 
     @Override

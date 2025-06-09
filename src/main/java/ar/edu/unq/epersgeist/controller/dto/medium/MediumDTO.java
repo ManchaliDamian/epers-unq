@@ -39,7 +39,7 @@ public record MediumDTO(
 
     public Medium aModelo() {
 
-        Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo());
+        Medium medium = new Medium(nombre, manaMax, mana, ubicacion.aModelo(), coordenadaDTO.aModelo());
         medium.setCoordenada(coordenadaDTO.aModelo());
         if (espiritus != null) {
             for (EspirituDTO dto : espiritus) {

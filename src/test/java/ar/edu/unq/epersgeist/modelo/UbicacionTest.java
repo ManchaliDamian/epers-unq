@@ -14,25 +14,16 @@ class UbicacionTest {
     private Ubicacion santuario;
     private Espiritu espirituAngel;
     private Espiritu espirituDemonio;
-    private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
 
 
     @BeforeEach
     void setUp() {
-//        c1 = new Coordenada(1.0,1.0);
-//        c2 = new Coordenada(2.0,2.0);
-//        c3 = new Coordenada(3.0,3.0);
-//        c4 = new Coordenada(-1.0,-1.0);
-//        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-//        poligono = new Poligono(coordenadas);
+        Coordenada c1 = new Coordenada(1.0, 1.0);
+
         cementerio = new Cementerio("Cementerio del Oeste", 50);
         santuario = new Santuario("Santuario del Este", 75);
-        espirituAngel = new EspirituAngelical("Angel", cementerio);
-        espirituDemonio = new EspirituDemoniaco("Demonio", santuario);
+        espirituAngel = new EspirituAngelical("Angel", cementerio, c1);
+        espirituDemonio = new EspirituDemoniaco("Demonio", santuario, c1);
     }
 
     @Test

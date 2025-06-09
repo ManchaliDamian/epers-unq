@@ -47,7 +47,7 @@ public class EspirituControllerRESTTest {
 
     @Autowired private UbicacionRepository ubicacionRepository;
 
-    @Autowired private MediumDAO mediumRepository;
+    @Autowired private MediumDAOSQL mediumRepository;
 
     @Autowired private MockMVCUbicacionController mockMVCUbicacionController;
     @Autowired private MockMVCEspirituController mockMVCEspirituController;

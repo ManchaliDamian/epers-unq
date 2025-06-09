@@ -70,11 +70,11 @@ public class MediumServiceTest {
         santuario = serviceU.guardar(santuario, poligono);
         cementerio =serviceU.guardar(cementerio, poligono);
 
-        medium1 = new Medium("Pablo", 100, 50, cementerio);
-        medium2 = new Medium("Fidol", 100, 50, santuario);
-        demonio = new EspirituDemoniaco("Jose", santuario);
-        demonCementerio = new EspirituDemoniaco("Juan", cementerio);
-        angel = new EspirituAngelical( "kici", cementerio);
+        medium1 = new Medium("Pablo", 100, 50, cementerio, c1);
+        medium2 = new Medium("Fidol", 100, 50, santuario, c1);
+        demonio = new EspirituDemoniaco("Jose", santuario, c1);
+        demonCementerio = new EspirituDemoniaco("Juan", cementerio, c1);
+        angel = new EspirituAngelical( "kici", cementerio, c1);
         medium1 = serviceM.guardar(medium1);
         medium2 = serviceM.guardar(medium2);
         demonio = serviceE.guardar(demonio);
@@ -192,7 +192,7 @@ public class MediumServiceTest {
 
     @Test
     void invocar_actualizaUbicacionEspirituEnDB() {
-        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario);
+        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario, c1);
         nuevoDemonio = serviceE.guardar(nuevoDemonio);
 
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
@@ -464,8 +464,8 @@ public class MediumServiceTest {
     void exorcizar_DosAngelesDerrotanUnDemonio_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
-        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio);
-        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio);
+        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio, c1);
+        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio, c1);
         angel1.setNivelDeConexion(20); // 30 al conectarse, daño = 15
         angel2.setNivelDeConexion(30); // 40 al conectarse, daño = 20
 

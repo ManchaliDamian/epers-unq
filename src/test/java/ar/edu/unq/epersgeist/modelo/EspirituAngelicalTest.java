@@ -9,8 +9,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,26 +20,16 @@ public class EspirituAngelicalTest {
     private Ubicacion cementerio;
     private Medium mediumConectado;
     private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
-
 
     @BeforeEach
     void setUp(){
-//        c1 = new Coordenada(1.0,1.0);
-//        c2 = new Coordenada(2.0,2.0);
-//        c3 = new Coordenada(3.0,3.0);
-//        c4 = new Coordenada(-1.0,-1.0);
-//        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-//        poligono = new Poligono(coordenadas);
+        c1 = new Coordenada(1.0,1.0);
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
 
-        angel = new EspirituAngelical("EspirituAngelical", santuario);
-        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
-        mediumConectado = new Medium("Mago",100,50,santuario);
+        angel = new EspirituAngelical("EspirituAngelical", santuario, c1);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio, c1);
+        mediumConectado = new Medium("Mago",100,50,santuario, c1);
 
     }
 

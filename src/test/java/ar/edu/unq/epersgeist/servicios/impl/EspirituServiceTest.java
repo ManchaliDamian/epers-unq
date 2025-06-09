@@ -71,10 +71,10 @@ public class EspirituServiceTest {
         quilmes = serviceU.guardar(quilmes, poligono);
         berazategui = serviceU.guardar(berazategui, poligono);
 
-        azazel = new EspirituDemoniaco( "Azazel", quilmes);
-        belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
-        angel = new EspirituAngelical( "Gabriel", quilmes);
-        medium = new Medium("nombre", 150, 30, quilmes);
+        azazel = new EspirituDemoniaco( "Azazel", quilmes, c1);
+        belcebu = new EspirituDemoniaco(  "Belcebu", quilmes, c1);
+        angel = new EspirituAngelical( "Gabriel", quilmes, c1);
+        medium = new Medium("nombre", 150, 30, quilmes, c1);
 
         azazel = serviceE.guardar(azazel);
         belcebu = serviceE.guardar(belcebu);
@@ -166,7 +166,7 @@ public class EspirituServiceTest {
     }
     @Test
     void testGuardarYRecuperarEspiritu() {
-        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes, c1);
         nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
 
         Optional<Espiritu> recuperado = serviceE.recuperar(nuevoEspiritu.getId());
@@ -176,7 +176,7 @@ public class EspirituServiceTest {
     }
     @Test
     void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
-        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes, c1);
         nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
         serviceE.eliminar(nuevoEspiritu.getId());
 
@@ -298,12 +298,12 @@ public class EspirituServiceTest {
         void setUpPaginacion() {
 
             List<EspirituDemoniaco> nuevos = List.of(
-                    new EspirituDemoniaco("Mephisto", quilmes),
-                    new EspirituDemoniaco("Lucifer", quilmes),
-                    new EspirituDemoniaco("Belial", quilmes),
-                    new EspirituDemoniaco("Amon", quilmes),
-                    new EspirituDemoniaco("Andras", quilmes),
-                    new EspirituDemoniaco("Vine", quilmes)
+                    new EspirituDemoniaco("Mephisto", quilmes, c1),
+                    new EspirituDemoniaco("Lucifer", quilmes, c1),
+                    new EspirituDemoniaco("Belial", quilmes, c1),
+                    new EspirituDemoniaco("Amon", quilmes, c1),
+                    new EspirituDemoniaco("Andras", quilmes, c1),
+                    new EspirituDemoniaco("Vine", quilmes, c1)
             );
 
             List<Integer> niveles = List.of(80, 75, 60, 55, 25, 15);

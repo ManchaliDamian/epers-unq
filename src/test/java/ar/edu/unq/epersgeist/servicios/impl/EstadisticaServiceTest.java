@@ -71,12 +71,12 @@ public class EstadisticaServiceTest {
         santuario1 = new Santuario("santuario 1",50);
         santuario2 = new Santuario("santuario 2",50);
 
-        demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1);
-        demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1);
-        demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2);
+        demoniaco1 = new EspirituDemoniaco("demoniaco 1",santuario1, c1);
+        demoniaco2 = new EspirituDemoniaco("demoniaco 2",santuario1, c1);
+        demoniaco3 = new EspirituDemoniaco("demoniaco 3",santuario2, c1);
 
 
-        medium1 = new Medium("medium 1",100,50,santuario1);
+        medium1 = new Medium("medium 1",100,50,santuario1, c1);
 
         ubicacionService.guardar(cementerio, poligono);
         ubicacionService.guardar(santuario1, poligono);

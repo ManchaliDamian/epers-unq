@@ -33,11 +33,12 @@ public abstract class Espiritu {
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
+    public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo, Coordenada coordenada) {
         this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
+        this.coordenada = coordenada;
     }
 
     protected Espiritu(@NonNull TipoEspiritu tipo) {

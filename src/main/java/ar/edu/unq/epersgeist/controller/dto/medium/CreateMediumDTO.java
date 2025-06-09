@@ -25,7 +25,7 @@ public record CreateMediumDTO(
     }
 
     public Medium aModelo(Ubicacion ubicacion) {
-        Medium medium = new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion);
+        Medium medium = new Medium(this.nombre(), this.manaMax(), this.mana(), ubicacion, coordenadaDTO.aModelo());
         medium.setCoordenada(coordenadaDTO.aModelo());
 
         return medium;

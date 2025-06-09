@@ -30,8 +30,8 @@ public record CreateEspirituDTO(
     public Espiritu aModelo(Ubicacion ubicacion){
 
         Espiritu e = switch (this.tipo()) {
-            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion);
-            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion);
+            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion, coordenadaDTO.aModelo());
+            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion, coordenadaDTO.aModelo());
         };
         e.setCoordenada(coordenadaDTO.aModelo());
         return e;

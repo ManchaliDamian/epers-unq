@@ -29,7 +29,7 @@ public class Medium {
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion, Coordenada coordenada) {
         if (manaMax < 0) {
             throw new IllegalArgumentException("manaMax no puede ser negativo.");
         }
@@ -40,6 +40,7 @@ public class Medium {
         this.manaMax = manaMax;
         this.mana = mana;
         this.ubicacion = ubicacion;
+        this.coordenada = coordenada;
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {

@@ -61,7 +61,7 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituAngelical) context.get(jpa);
 
-        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
+        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()), null);
         context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());
@@ -82,7 +82,7 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituDemoniaco) context.get(jpa);
 
-        EspirituDemoniaco espiritu = new EspirituDemoniaco(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
+        EspirituDemoniaco espiritu = new EspirituDemoniaco(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()), null);
         context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());

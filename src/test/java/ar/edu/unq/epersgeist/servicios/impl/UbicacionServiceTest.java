@@ -71,12 +71,12 @@ public class UbicacionServiceTest {
         cementerio = new Cementerio("Bernal", 60);
 
 
-        angel = new EspirituAngelical("damian", santuario);
-        demonio = new EspirituDemoniaco("Roberto", santuario);
+        angel = new EspirituAngelical("damian", santuario, c1);
+        demonio = new EspirituDemoniaco("Roberto", santuario, c1);
 
-        medium = new Medium("roberto", 200, 150, santuario);
-        medium2 = new Medium("roberto", 200, 150, santuario);
-        medium3 = new Medium("roberto", 200, 150, santuario);
+        medium = new Medium("roberto", 200, 150, santuario, c1);
+        medium2 = new Medium("roberto", 200, 150, santuario, c1);
+        medium3 = new Medium("roberto", 200, 150, santuario, c1);
         santuario = serviceU.guardar(santuario, poligono);
         cementerio = serviceU.guardar(cementerio, poligono);
     }
