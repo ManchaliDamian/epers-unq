@@ -75,7 +75,7 @@ public class MediumControllerREST {
     public ResponseEntity<MediumDTO> createMedium(@Valid @RequestBody CreateMediumDTO dto) {
         Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId()).orElseThrow(() -> new UbicacionNoEncontradaException(dto.ubicacionId()));
         Medium medium = dto.aModelo(ubicacion);
-        Medium creado = mediumService.guardar(medium);
+        Medium creado = mediumService.guardar(medium, dto.coordenadaDTO().aModelo());
         URI location = URI.create("/medium/" + creado.getId());
         MediumDTO respuesta = MediumDTO.desdeModelo(creado);
         return ResponseEntity.created(location).body(respuesta);

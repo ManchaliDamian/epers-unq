@@ -77,7 +77,7 @@ public class MediumRepositoryImpl implements MediumRepository {
         }
         medium.get().setDeleted(true);
         this.actualizar(medium.get());
-        Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByMediumIdSQL(id);
+        Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(mediumDAOMongo::delete);
 
     }

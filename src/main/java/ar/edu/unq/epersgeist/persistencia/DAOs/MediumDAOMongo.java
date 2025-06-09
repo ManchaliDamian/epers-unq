@@ -22,6 +22,6 @@ public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> 
     Double distanciaA(Double longitud, Double latitud, Long idMediumSQL);
 
 
-    Optional<MediumMongoDTO> findByMediumIdSQL(Long id);
+    Optional<MediumMongoDTO> findByIdSQL(Long id);
 
 }
