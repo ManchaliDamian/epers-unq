@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
@@ -62,6 +64,22 @@ public class MediumRepositoryImpl implements MediumRepository {
         MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
         mediumDAOMongo.save(mongoDTO);
         return mediumMapper.toDomain(dto);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        Optional<Medium> medium = this.recuperar(id);
+        if (medium.isEmpty()) {
+            throw new MediumNoEncontradoException(id);
+        }
+        if (!medium.get().getEspiritus().isEmpty()) {
+            throw new MediumNoEliminableException(id);
+        }
+        medium.get().setDeleted(true);
+        this.actualizar(medium.get());
+        Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByMediumIdSQL(id);
+        mongoDTO.ifPresent(mediumDAOMongo::delete);
+
     }
 
     private MediumJPADTO actualizarMediumJPA(Medium medium) {

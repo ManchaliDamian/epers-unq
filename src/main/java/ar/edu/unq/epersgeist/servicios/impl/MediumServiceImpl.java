@@ -58,7 +58,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void eliminar(Long mediumId) {
-
+        mediumRepository.eliminar(mediumId);
         Medium medium = this.getMedium(mediumId);
         if (!medium.getEspiritus().isEmpty()) {
             throw new MediumNoEliminableException(mediumId);

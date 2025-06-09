@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Aggregation;
 
+import java.util.Optional;
+
 public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> {
 
     @Aggregation(pipeline ={
@@ -18,4 +20,8 @@ public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> 
         }
     )
     Double distanciaA(Double longitud, Double latitud, Long idMediumSQL);
+
+
+    Optional<MediumMongoDTO> findByMediumIdSQL(Long id);
+
 }
