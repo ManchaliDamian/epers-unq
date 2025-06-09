@@ -104,7 +104,7 @@ public class EspirituServiceImpl implements EspirituService {
         medium.conectarseAEspiritu(espiritu);
 
         espirituRepository.actualizar(espiritu);
-        return mediumRepository.save(medium);
+        return mediumRepository.actualizar(medium);
     }
 
     @Override

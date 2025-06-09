@@ -34,13 +34,13 @@ public class MediumServiceImpl implements MediumService {
 
 
     @Override
-    public Medium guardar(Medium unMedium) {
-        return mediumRepository.save(unMedium);
+    public Medium guardar(Medium unMedium, Coordenada coordenada) {
+        return mediumRepository.save(unMedium, coordenada);
     }
 
     @Override
     public Medium actualizar(Medium unMedium) {
-        return mediumRepository.save(unMedium);
+        return mediumRepository.actualizar(unMedium);
     }
 
     private Medium getMedium(Long mediumId) {

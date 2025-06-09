@@ -1,7 +1,9 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
@@ -11,6 +13,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,7 +40,7 @@ public class MediumRepositoryImpl implements MediumRepository {
     }
 
     @Override
-    public Medium save(Medium medium) {
+    public Medium guardar(Medium medium, Coordenada coordenada) {
         MediumJPADTO mediumGuardado = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
         Medium dominio = mediumMapper.toDomain(mediumGuardado);
 
@@ -47,6 +50,29 @@ public class MediumRepositoryImpl implements MediumRepository {
         return dominio;
     }
 
+    @Override
+    public Medium actualizar(Medium medium) {
+        MediumJPADTO actualizar = actualizarMediumJPA(medium);
+        return  mediumMapper.toDomain(actualizar);
+    }
+
+    @Override
+    public Medium actualizar(Medium medium, Coordenada coordenada) {
+        MediumJPADTO dto = actualizarMediumJPA(medium);
+        MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
+        mediumDAOMongo.save(mongoDTO);
+        return mediumMapper.toDomain(dto);
+    }
+
+    private MediumJPADTO actualizarMediumJPA(Medium medium) {
+        mediumDAOSQL.findById(medium.getId())
+                .filter(u -> !u.isDeleted())
+                .orElseThrow(() -> new EspirituNoEncontradoException(medium.getId()));
+
+        MediumJPADTO dto = mediumMapper.toJpa(medium);
+        mediumDAOSQL.save(dto);
+        return dto;
+    }
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
         return this.mediumDAOSQL.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));

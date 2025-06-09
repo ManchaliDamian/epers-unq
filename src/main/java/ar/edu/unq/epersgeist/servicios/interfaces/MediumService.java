@@ -4,12 +4,13 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MediumService {
-    Medium guardar(Medium unMedium);
+    Medium guardar(Medium unMedium, Coordenada coordenada);
     Medium actualizar(Medium unMedium);
     Optional<Medium> recuperar(Long mediumId);
     List<Medium> recuperarTodos();
