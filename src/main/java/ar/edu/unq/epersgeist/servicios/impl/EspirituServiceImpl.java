@@ -85,6 +85,7 @@ public class EspirituServiceImpl implements EspirituService {
         return espirituRepository.recuperarDemonios();
     }
 
+    /*
     @Override
     public void eliminar(Long espirituId) {
         Espiritu espiritu = this.getEspiritu(espirituId);
@@ -93,6 +94,11 @@ public class EspirituServiceImpl implements EspirituService {
         }
         espiritu.setDeleted(true);
         espirituRepository.actualizar(espiritu);
+    }
+*/
+    @Override
+    public void eliminar(Long espirituId) {
+        mediumRepository.eliminar(espirituId);
     }
 
     @Override
