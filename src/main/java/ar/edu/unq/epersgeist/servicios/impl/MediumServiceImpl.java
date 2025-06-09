@@ -35,7 +35,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium guardar(Medium unMedium, Coordenada coordenada) {
-        return mediumRepository.save(unMedium, coordenada);
+        return mediumRepository.guardar(unMedium, coordenada);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MediumServiceImpl implements MediumService {
             throw new MediumNoEliminableException(mediumId);
         }
         medium.setDeleted(true);
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MediumServiceImpl implements MediumService {
     public void descansar(Long mediumId) {
         Medium medium = this.getMedium(mediumId);
         medium.descansar();
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
     }
 
     @Override
@@ -91,8 +91,8 @@ public class MediumServiceImpl implements MediumService {
         List<EspirituDemoniaco> demoniosCopy = new ArrayList<>(demonios);
         mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
 
-        mediumRepository.save(mediumExorcista);
-        mediumRepository.save(mediumAExorcizar);
+        mediumRepository.actualizar(mediumExorcista);
+        mediumRepository.actualizar(mediumAExorcizar);
         angelesCopy.forEach(espirituRepository::actualizar);
         demoniosCopy.forEach(espirituRepository::actualizar);
     }
@@ -127,7 +127,7 @@ public class MediumServiceImpl implements MediumService {
 
         medium.invocarA(espiritu.get());
 
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
         espirituRepository.actualizar(espiritu.get());
 
         return espiritu.get();
@@ -145,6 +145,6 @@ public class MediumServiceImpl implements MediumService {
         }
 
         medium.mover(destino);
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
     }
 }
