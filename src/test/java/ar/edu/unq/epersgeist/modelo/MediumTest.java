@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.exception.ConectarException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,29 +28,20 @@ public class MediumTest {
     private EspirituAngelical espirituAngelicalMock;
 
     private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
-
 
 
     @BeforeEach
     void setUp(){
         c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
-        santuario = new Santuario("Quilmes", 70, poligono);
-        cementerio = new Cementerio("Bernal",60, poligono);
+
+        santuario = new Santuario("Quilmes", 70);
+        cementerio = new Cementerio("Bernal",60);
         espirituAngelical = new EspirituAngelical("EspirituAngelical",santuario, c1);
-        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio,c2);
-        espirituNoConectado = new EspirituDemoniaco("Belcebú",cementerio,c3);
-        mediumConectado = new Medium("Mago",100,50,santuario,c1);
-        mediumQuilmes = new Medium("Pepe",100,50,santuario, c2);
-        mediumBernal = new Medium("Bernardo",100,90,cementerio,c1);
+        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio, c1);
+        espirituNoConectado = new EspirituDemoniaco("Belcebú", cementerio, c1);
+        mediumConectado = new Medium("Mago",100,50,santuario, c1);
+        mediumQuilmes = new Medium("Pepe",100,50,santuario, c1);
+        mediumBernal = new Medium("Bernardo",100,90,cementerio, c1);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
         espirituAngelicalMock = mock(EspirituAngelical.class);
@@ -121,7 +111,7 @@ public class MediumTest {
 
     @Test
     void exorcizarA_SinAngeles() {
-        Medium poseido = new Medium("Juan",100,35, cementerio,c1);
+        Medium poseido = new Medium("Juan",100,35, cementerio, c1);
 
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
@@ -132,7 +122,7 @@ public class MediumTest {
     //ejemplos del enunciado
     @Test
     void descansarEnCementerioAumentaManaCorrectamente() {
-        Ubicacion cementerio = new Cementerio("cementerio",100, poligono);
+        Ubicacion cementerio = new Cementerio("cementerio",100);
         Medium yohAsakura = new Medium("Yoh Asakura", 200, 10, cementerio, c1);
         yohAsakura.descansar();
         assertEquals(60, yohAsakura.getMana());
@@ -140,8 +130,8 @@ public class MediumTest {
 
     @Test
     void descansarEnSantuarioAumentaManaCorrectamente() {
-        Ubicacion santuario = new Santuario("santuario",100, poligono);
-        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario,c1);
+        Ubicacion santuario = new Santuario("santuario",100);
+        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario, c1);
         lorraineWaine.descansar();
         assertEquals(160, lorraineWaine.getMana());
     }

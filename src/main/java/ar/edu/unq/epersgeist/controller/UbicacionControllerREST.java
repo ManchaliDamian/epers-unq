@@ -1,12 +1,15 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -66,7 +69,9 @@ public final class UbicacionControllerREST {
     @PostMapping
     public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {
         Ubicacion ubicacion = dto.aModelo();
-        Ubicacion creada = ubicacionService.guardar(ubicacion, ubicacion.getPoligono());
+        Poligono poligono  = dto.poligono().aModelo();
+
+        Ubicacion creada = ubicacionService.guardar(ubicacion, poligono);
         URI location = URI.create("/ubicacion/" + creada.getId());
         UbicacionDTO respuesta = UbicacionDTO.desdeModelo(creada);
         return ResponseEntity.created(location).body(respuesta);

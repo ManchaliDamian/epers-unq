@@ -3,9 +3,11 @@ package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 public interface EspirituMapper {
     //toDomain
+    Espiritu toDomain(EspirituJPADTO jpa, Map<Object, Object> context);
+
     EspirituAngelical toDomainAngel(EspirituAngelicalJPADTO jpa);
     EspirituDemoniaco toDomainDemonio(EspirituDemoniacoJPADTO jpa);
 
@@ -31,6 +35,8 @@ public interface EspirituMapper {
             case DEMONIACO -> toJpaDemonio((EspirituDemoniaco)espiritu);
         };
     }
+
+    EspirituJPADTO toJpa(Espiritu espiritu, Map<Object, Object> context);
 
 
     EspirituAngelicalJPADTO toJpaAngel(EspirituAngelical espiritu);
@@ -74,4 +80,8 @@ public interface EspirituMapper {
             EspirituDemoniaco espiritu
     );
 
+
+    //toMongo
+    EspirituMongoDTO toMongo(Espiritu espiritu);
+    Coordenada toCoordenada(EspirituMongoDTO mongo);
 }

@@ -1,35 +1,24 @@
 package ar.edu.unq.epersgeist.persistencia.DTOs.personajes;
 
-import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
-import lombok.NoArgsConstructor;
-import lombok.*;
 import jakarta.persistence.Id;
+import lombok.*;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@ToString
-@Setter
-@Getter
-@EqualsAndHashCode
-@NoArgsConstructor
-
-@Document("Medium")
+@Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Document(collection = "mediums")
 public class MediumMongoDTO {
     @Id
-    private String idMediumMongo;
+    private String idMongo;
 
-    private Long idMediumSQL;
+    private Long idSQL;
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
-    private GeoJsonPoint coordenada;
+    private GeoJsonPoint punto;
 
-    public MediumMongoDTO(String idMediumMongo, Long idMediumSQL,  GeoJsonPoint coordenada){
-        this.idMediumMongo = idMediumMongo;
-        this.idMediumSQL = idMediumSQL;
-        this.coordenada = coordenada;
+    public MediumMongoDTO(GeoJsonPoint punto) {
+        this.punto = punto;
     }
-
-
 }

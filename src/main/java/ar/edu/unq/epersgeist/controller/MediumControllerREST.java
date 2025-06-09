@@ -1,12 +1,15 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.CreateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.UpdateMediumDTO;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import jakarta.validation.Valid;

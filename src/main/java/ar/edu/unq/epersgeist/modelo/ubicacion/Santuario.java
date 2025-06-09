@@ -2,15 +2,15 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
-import ar.edu.unq.epersgeist.modelo.exception.InvocacionNoPermitidaException;
+import ar.edu.unq.epersgeist.exception.InvocacionNoPermitidaException;
 
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @ToString
 public class Santuario extends Ubicacion {
 
-    public Santuario( String nombre, Integer flujoDeEnergia, Poligono poligono)  {
-        super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO, poligono);
+    public Santuario( String nombre, Integer flujoDeEnergia)  {
+        super(nombre, flujoDeEnergia, TipoUbicacion.SANTUARIO);
 
     }
 

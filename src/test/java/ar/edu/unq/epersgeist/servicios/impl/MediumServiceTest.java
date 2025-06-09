@@ -1,10 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
+import ar.edu.unq.epersgeist.exception.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.exception.*;
 import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -22,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -49,70 +48,33 @@ public class MediumServiceTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
 
-    //Poligono principal
-    private Poligono poligono;
-    //Poligono secundario
-    private Poligono poligonoS;
-
-    private Coordenada c0;
     private Coordenada c1;
-    private Coordenada c2;
-    private Coordenada c3;
     private Coordenada c4;
-
-    //Otras Coordenadas
-    private Coordenada cs0;
-    private Coordenada cs1;
-    private Coordenada cs2;
-    private Coordenada cs3;
-    private Coordenada cs4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
 
     @BeforeEach
     void setUp() {
-
-        c0 = new Coordenada(3.44,5.44);
-        c1 = new Coordenada(20.44,50.44);
-        c2 = new Coordenada(8.44,35.44);
-        c3 = new Coordenada(10.44,25.44);
-        c4 = new Coordenada(3.44,5.44);
-
-        ArrayList<Coordenada> coordenadas = new ArrayList<Coordenada>();
-        coordenadas.add(c0);
-        coordenadas.add(c1);
-        coordenadas.add(c2);
-        coordenadas.add(c3);
-        coordenadas.add(c4);
-
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
-
-        cs0 = new Coordenada(50.0, 40.0);
-        cs1 = new Coordenada(50.0, 60.0);
-        cs2 = new Coordenada(70.0, 60.0);
-        cs3 = new Coordenada(70.0, 40.0);
-        cs4 = new Coordenada(50.0, 40.0);
-
-        ArrayList<Coordenada> coordenadasSec = new ArrayList<Coordenada>();
-        coordenadas.add(cs0);
-        coordenadas.add(cs1);
-        coordenadas.add(cs2);
-        coordenadas.add(cs3);
-        coordenadas.add(cs4);
-
-        poligonoS = new Poligono(coordenadasSec);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
-        cementerio = new Cementerio("La Plata", 4,poligono);
-        santuario = new Santuario("Quilmes",70,poligonoS);
-        santuario = serviceU.guardar(santuario,poligonoS);
-        cementerio =serviceU.guardar(cementerio,poligono);
+        cementerio = new Cementerio("La Plata", 4);
+        santuario = new Santuario("Quilmes",70);
+        santuario = serviceU.guardar(santuario, poligono);
+        cementerio =serviceU.guardar(cementerio, poligono);
 
-        medium1 = new Medium("Pablo", 100, 50, cementerio,cs0);
-        medium2 = new Medium("Fidol", 100, 50, santuario,cs1);
-        demonio = new EspirituDemoniaco("Jose", santuario,cs3);
-        demonCementerio = new EspirituDemoniaco("Juan", cementerio,c4);
-
-        angel = new EspirituAngelical( "kici", cementerio,cs4);
+        medium1 = new Medium("Pablo", 100, 50, cementerio, c1);
+        medium2 = new Medium("Fidol", 100, 50, santuario, c1);
+        demonio = new EspirituDemoniaco("Jose", santuario, c1);
+        demonCementerio = new EspirituDemoniaco("Juan", cementerio, c1);
+        angel = new EspirituAngelical( "kici", cementerio, c1);
         medium1 = serviceM.guardar(medium1);
         medium2 = serviceM.guardar(medium2);
         demonio = serviceE.guardar(demonio);
@@ -230,7 +192,7 @@ public class MediumServiceTest {
 
     @Test
     void invocar_actualizaUbicacionEspirituEnDB() {
-        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario,c0);
+        Espiritu nuevoDemonio = new EspirituDemoniaco("NuevoDemonio", santuario, c1);
         nuevoDemonio = serviceE.guardar(nuevoDemonio);
 
         serviceM.invocar(medium1.getId(), nuevoDemonio.getId());
@@ -502,8 +464,8 @@ public class MediumServiceTest {
     void exorcizar_DosAngelesDerrotanUnDemonio_MismaUbicacionAlMoverse() {
         Generador.setEstrategia(new GeneradorSecuencial(10, 1, 10, 1));
 
-        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio,c2);
-        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio,c1);
+        Espiritu angel1 = new EspirituAngelical("Ángel1", cementerio, c1);
+        Espiritu angel2 = new EspirituAngelical("Ángel2", cementerio, c1);
         angel1.setNivelDeConexion(20); // 30 al conectarse, daño = 15
         angel2.setNivelDeConexion(30); // 40 al conectarse, daño = 20
 

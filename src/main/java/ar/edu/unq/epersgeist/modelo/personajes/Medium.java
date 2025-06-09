@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
-import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
@@ -24,8 +24,6 @@ public class Medium {
     private Integer mana;
     private final Set<Espiritu> espiritus = new HashSet<>();
     private Coordenada coordenada;
-    private String mongoId;
-
     //auditoria
     private Date createdAt;
     private Date updatedAt;
@@ -106,7 +104,7 @@ public class Medium {
 
     public Espiritu invocarA(Espiritu espiritu) {
         this.validarInvocar(espiritu);
-        
+
         if (this.getMana() >= 10) {
             espiritu.serInvocadoEn(this.ubicacion);
             this.mana -= 10;

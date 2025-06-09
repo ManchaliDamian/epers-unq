@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion;
 
-import ar.edu.unq.epersgeist.modelo.exception.PoligonoIncompletoException;
+import ar.edu.unq.epersgeist.exception.PoligonoIncompletoException;
 import lombok.*;
 
 import org.springframework.data.geo.Point;
@@ -27,12 +27,16 @@ public class PoligonoMongoDTO {
     private Long ubicacionId;
 
     public PoligonoMongoDTO(Long ubicacionId, List<Point> vertices) {
-        if (vertices == null || vertices.size() < 4
-                || !vertices.getFirst().equals(vertices.getLast())) {
-            throw new PoligonoIncompletoException();
+        if (vertices == null || vertices.size() < 4) {
+            throw new PoligonoIncompletoException(
+                    "La lista no puede ser nula y debe tener al menos 4 vértices."
+            );
         }
-        this.ubicacionId = ubicacionId;
+        if (!vertices.getFirst().equals(vertices.getLast())) {
+            throw new PoligonoIncompletoException("El primer vértice debe coincidir con el último.");
+        }
 
+        this.ubicacionId = ubicacionId;
         this.poligono = new GeoJsonPolygon(vertices);
     }
 }

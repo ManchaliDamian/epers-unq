@@ -37,6 +37,10 @@ public abstract class EspirituJPADTO {
     @JoinColumn(name = "medium_id")
     private MediumJPADTO mediumConectado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dominador_id")
+    private EspirituJPADTO dominador;
+
     @Enumerated(EnumType.STRING)
     private TipoEspiritu tipo;
 

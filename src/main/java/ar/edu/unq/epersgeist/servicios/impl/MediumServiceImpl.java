@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.exception.*;
+import ar.edu.unq.epersgeist.modelo.exception.EspirituMuyLejanoException;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -11,7 +12,6 @@ import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituReposi
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,7 +124,8 @@ public class MediumServiceImpl implements MediumService {
 
         Coordenada coordenada = espiritu.get().getCoordenada();
 
-        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId()).orElseThrow(EspirituMuyLejanoException::new);
+        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId())
+                            .orElseThrow(() -> new EspirituMuyLejanoException(espiritu.get().getId(), medium.getId()));
 
         medium.invocarA(espiritu.get());
 
