@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.exception;
+package ar.edu.unq.epersgeist.exception;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 

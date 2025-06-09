@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.modelo.exception;
+package ar.edu.unq.epersgeist.exception;
 
 public class EspirituDominadoException extends RuntimeException {
   public EspirituDominadoException(String nombre) {

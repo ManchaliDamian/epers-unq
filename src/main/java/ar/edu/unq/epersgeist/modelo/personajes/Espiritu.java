@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituDominadoException;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
+import ar.edu.unq.epersgeist.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

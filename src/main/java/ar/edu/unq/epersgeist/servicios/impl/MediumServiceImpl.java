@@ -1,5 +1,5 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.exception.*;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;

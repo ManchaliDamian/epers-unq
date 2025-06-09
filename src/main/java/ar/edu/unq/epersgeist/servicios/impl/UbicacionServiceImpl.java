@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.NombreDeUbicacionRepetidoException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
+import ar.edu.unq.epersgeist.exception.MismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -20,7 +20,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
