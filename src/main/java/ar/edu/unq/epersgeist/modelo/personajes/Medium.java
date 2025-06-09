@@ -106,9 +106,7 @@ public class Medium {
 
     public Espiritu invocarA(Espiritu espiritu) {
         this.validarInvocar(espiritu);
-
-        if(coordenada.calcularDistanciaA(this.coordenada,espiritu) > 30000) throw new EspirituMuyLejanoException(espiritu.getNombre(),this.getNombre());
-
+        
         if (this.getMana() >= 10) {
             espiritu.serInvocadoEn(this.ubicacion);
             this.mana -= 10;

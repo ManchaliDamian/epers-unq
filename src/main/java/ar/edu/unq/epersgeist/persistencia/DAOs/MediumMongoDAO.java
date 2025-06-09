@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Optional;
+
 public interface MediumMongoDAO extends MongoRepository<MediumMongoDTO, String> {
 
     @Aggregation(pipeline ={
@@ -18,5 +20,5 @@ public interface MediumMongoDAO extends MongoRepository<MediumMongoDTO, String> 
             "{ $project: { 'distancia': 1, '_id': 0 }} "
         }
     )
-    Double distanciaA(Double longitud, Double latitud, Long idMediumSQL);
+    Optional<Double> distanciaA(Double longitud, Double latitud, Long idMediumSQL);
 }
