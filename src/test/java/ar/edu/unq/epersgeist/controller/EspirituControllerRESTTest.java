@@ -73,8 +73,8 @@ public class EspirituControllerRESTTest {
         List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
                 c1, // esquina inferior izquierda
                 new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
-                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
                 new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
+                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
                 new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
         );
         poligono = new PoligonoDTO(coordenadasCuadrado);

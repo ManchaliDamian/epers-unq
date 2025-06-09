@@ -13,14 +13,13 @@ public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> 
                     "'near':{'type': 'Point', 'coordinates': [?0, ?1]}, " +
                     "'distanceField': 'distancia', " +
                     "'spherical': true, " +
+                    "'query': { 'idSQL': ?2 }, " +
                     "'maxDistance': 50000 " +
                     "}} " +
-                    "{ $match:{'mediumIdSQL': ?2}}",
             "{ $project: { 'distancia': 1, '_id': 0 }} "
         }
     )
     Double distanciaA(Double longitud, Double latitud, Long idMediumSQL);
-
 
     Optional<MediumMongoDTO> findByIdSQL(Long id);
 
