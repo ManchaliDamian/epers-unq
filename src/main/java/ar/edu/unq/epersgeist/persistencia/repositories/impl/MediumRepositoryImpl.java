@@ -8,14 +8,11 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,13 +40,10 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Medium guardar(Medium medium, Coordenada coordenada) {
-        MediumJPADTO mediumGuardado = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
-        Medium dominio = mediumMapper.toDomain(mediumGuardado);
-
-        MediumMongoDTO mongoDto = mediumMapper.toMongo(dominio);
-        mongoDto.setIdSQL(mediumGuardado.getId());
+        MediumJPADTO jpa = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
+        MediumMongoDTO mongoDto = mediumMapper.toMongo(jpa, coordenada);
         mediumDAOMongo.save(mongoDto);
-        return dominio;
+        return mediumMapper.toDomain(jpa);
     }
 
     @Override
@@ -68,15 +62,12 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public void eliminar(Long id) {
-        Optional<Medium> medium = this.recuperar(id);
-        if (medium.isEmpty()) {
-            throw new MediumNoEncontradoException(id);
-        }
-        if (!medium.get().getEspiritus().isEmpty()) {
+        Medium medium = this.recuperar(id).orElseThrow(() -> new MediumNoEncontradoException(id));
+        if (!medium.getEspiritus().isEmpty()) {
             throw new MediumNoEliminableException(id);
         }
-        medium.get().setDeleted(true);
-        this.actualizar(medium.get());
+        medium.setDeleted(true);
+        this.actualizar(medium);
         Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(mediumDAOMongo::delete);
 

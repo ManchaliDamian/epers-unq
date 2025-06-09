@@ -1,13 +1,17 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
 import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEliminableException;
+import ar.edu.unq.epersgeist.modelo.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
@@ -61,6 +65,18 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         EspirituJPADTO dto = mapper.toJpa(espiritu);
         espirituDAOSQL.save(dto);
         return dto;
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        Espiritu espiritu = this.recuperar(id).orElseThrow(() -> new EspirituNoEncontradoException(id));
+        if(espiritu.isDeleted()) {
+            throw new EspirituNoEncontradoException(id);
+        }
+        espiritu.setDeleted(true);
+        this.actualizar(espiritu);
+        Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
+        mongoDTO.ifPresent(espirituDAOMongo::delete);
     }
 
     @Override

@@ -14,6 +14,7 @@ public interface EspirituRepository {
     Espiritu guardar(Espiritu espiritu, Coordenada coordenada);
     Espiritu actualizar(Espiritu espiritu);
     Espiritu actualizar(Espiritu espiritu, Coordenada coordenada);
+    void eliminar(Long id);
     List<Espiritu> recuperarTodos();
     Optional<Espiritu> recuperar(Long espirituId);
     Optional<Coordenada> recuperarCoordenada(Long espirituId);

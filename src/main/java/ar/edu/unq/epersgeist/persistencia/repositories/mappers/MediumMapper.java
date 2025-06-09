@@ -21,7 +21,5 @@ public interface MediumMapper {
 
     List<Medium> toDomainList(List<MediumJPADTO> mediumList);
 
-    MediumMongoDTO toMongo(Medium medium);
-
     MediumMongoDTO toMongo(MediumJPADTO dto, Coordenada coordenada);
 }
