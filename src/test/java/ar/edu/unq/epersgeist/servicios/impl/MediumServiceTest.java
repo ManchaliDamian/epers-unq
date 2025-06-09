@@ -59,7 +59,7 @@ public class MediumServiceTest {
     void setUp() {
         c1 = new Coordenada(1.0,1.0);
         c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
+        c3 = new Coordenada(2.0,1.0);
         c4 = new Coordenada(-1.0,-1.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
