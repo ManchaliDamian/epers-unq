@@ -1,12 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +24,9 @@ public class EspirituTest {
         santuario = new Santuario("santuario", 40);
         cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Mago",100,90,cementerio);
-        angel = new EspirituAngelical("Espiritu",cementerio);
-        demonio = new EspirituDemoniaco("Espiritu", santuario);
+        mediumConectado = new Medium("Medium",100,90, cementerio);
+        angel = new EspirituAngelical("Angel",cementerio);
+        demonio = new EspirituDemoniaco("Demonio", santuario);
     }
 
     @Test
@@ -96,6 +95,14 @@ public class EspirituTest {
         assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
 
+    @Test
+    void conectarA_EspirituDominado_LanzaExcepcion() {
+        Espiritu otroDominador = new EspirituAngelical("Dominador", cementerio);
+        angel.setDominador(otroDominador);
+        assertThrows(EspirituDominadoException.class, () -> {
+            angel.conectarA(mediumConectado);
+        });
+    }
 
     @Test
     void conectarA_AumentaLaConexionCorrectamente() {

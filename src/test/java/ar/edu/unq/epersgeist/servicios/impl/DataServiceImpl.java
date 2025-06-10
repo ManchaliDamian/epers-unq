@@ -6,6 +6,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,20 @@ public class DataServiceImpl implements DataService {
     private final UbicacionRepository ubicacionRepository;
     private final MediumRepository mediumRepository;
     private final EspirituRepository espirituRepository;
+    private final PoligonoRepository poligonoRepository;
 
-    public DataServiceImpl(UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository) {
+    public DataServiceImpl(UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository, PoligonoRepository poligonoRepository) {
         this.ubicacionRepository = ubicacionRepository;
         this.mediumRepository = mediumRepository;
         this.espirituRepository = espirituRepository;
+        this.poligonoRepository = poligonoRepository;
     }
 
     public void eliminarTodo() {
         espirituRepository.deleteAll();
         mediumRepository.deleteAll();
         ubicacionRepository.deleteAll();
+        poligonoRepository.deleteAll();
     }
 
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {

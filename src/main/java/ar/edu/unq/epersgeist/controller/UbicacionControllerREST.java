@@ -1,11 +1,15 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.*;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.servicios.interfaces.DegreeResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
 import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
@@ -65,7 +69,9 @@ public final class UbicacionControllerREST {
     @PostMapping
     public ResponseEntity<UbicacionDTO> guardarUbicacion(@Valid @RequestBody CreateUbicacionDTO dto) {
         Ubicacion ubicacion = dto.aModelo();
-        Ubicacion creada = ubicacionService.guardar(ubicacion);
+        Poligono poligono  = dto.poligono().aModelo();
+
+        Ubicacion creada = ubicacionService.guardar(ubicacion, poligono);
         URI location = URI.create("/ubicacion/" + creada.getId());
         UbicacionDTO respuesta = UbicacionDTO.desdeModelo(creada);
         return ResponseEntity.created(location).body(respuesta);
@@ -140,15 +146,15 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(dtocaminoMasCorto);
     }
 
-    @PostMapping("/closeness")
-    public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestBody IdsDTO idsDTO) {
-        List<ClosenessResult> closeness = ubicacionService.closenessOf(idsDTO.ids());
+    @GetMapping("/closeness")
+    public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestParam(required = false) List<Long> ids) {
+        List<ClosenessResult> closeness = ubicacionService.closenessOf(ids);
         return ResponseEntity.ok(ClosenessResultDTO.desdeModelo(closeness));
     }
 
-    @PostMapping("/degree")
-    public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestBody IdsDTO idsDTO) {
-        List<DegreeResult> degree = ubicacionService.degreeOf(idsDTO.ids());
+    @GetMapping("/degree")
+    public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestParam(required = false) List<Long> ids) {
+        List<DegreeResult> degree = ubicacionService.degreeOf(ids);
         return ResponseEntity.ok(DegreeResultDTO.desdeModelo(degree));
     }
 }

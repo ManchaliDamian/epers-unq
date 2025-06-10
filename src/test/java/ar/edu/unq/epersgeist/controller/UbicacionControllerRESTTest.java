@@ -1,9 +1,11 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.CreateEspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.CreateUbicacionDTO;
-import ar.edu.unq.epersgeist.controller.dto.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.UbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.CreateEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CreateUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.PoligonoDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
@@ -21,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,19 +51,29 @@ public class UbicacionControllerRESTTest {
     private EspirituDTO angelGuardado;
     private EspirituDTO demonGuardado;
 
-
-
+    private PoligonoDTO poligono;
+    private CoordenadaDTO c1;
 
     @BeforeEach
     void setUp() throws Throwable {
         dataService.eliminarTodo();
-        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO);
+        c1 = new CoordenadaDTO(0.0, 0.0);
+        List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
+                c1, // esquina inferior izquierda
+                new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
+                new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
+                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
+                new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
+        );
+        poligono = new PoligonoDTO(coordenadasCuadrado);
+
+        quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL);
-        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL, c1);
+        demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO, c1);
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);
         demonGuardado = mockMVCEspirituController.guardarEspiritu(demon, EspirituDTO.class);

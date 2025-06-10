@@ -21,7 +21,6 @@ public class UbicacionNeoDTO {
     private Long id;
 
     private TipoUbicacion tipo;
-    private boolean deleted = false;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeoDTO> conexiones = new HashSet<>();

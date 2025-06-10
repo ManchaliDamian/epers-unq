@@ -10,9 +10,5 @@ import java.util.List;
 public interface CentralityMapper {
     List<ClosenessResult> toDomainListCloseness(List<ClosenessResultNeoDTO> resultNeoDTOList);
 
-    ClosenessResult toDomainCloseness(ClosenessResultNeoDTO resultNeoDTO);
-
     List<DegreeResult> toDomainListDegree(List<DegreeResultNeoDTO> resultNeoDTOList);
-
-    DegreeResult toDomainDegree(DegreeResultNeoDTO resultNeoDTO);
 }

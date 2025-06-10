@@ -1,14 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
-import ar.edu.unq.epersgeist.modelo.exception.MismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionesNoConectadasException;
+import ar.edu.unq.epersgeist.exception.MismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
 import java.text.SimpleDateFormat;
@@ -54,9 +52,20 @@ public class UbicacionServiceTest {
     private Espiritu angel;
     private Espiritu demonio;
 
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
 
     @BeforeEach
-    void prepare() {
+    void setUp() {
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal", 60);
@@ -68,8 +77,8 @@ public class UbicacionServiceTest {
         medium = new Medium("roberto", 200, 150, santuario);
         medium2 = new Medium("roberto", 200, 150, santuario);
         medium3 = new Medium("roberto", 200, 150, santuario);
-        santuario = serviceU.guardar(santuario);
-        cementerio = serviceU.guardar(cementerio);
+        santuario = serviceU.guardar(santuario, poligono);
+        cementerio = serviceU.guardar(cementerio, poligono);
     }
 
     @Test
@@ -97,7 +106,7 @@ public class UbicacionServiceTest {
 
     @Test
     void testCreateAtDeUbicacion() {
-        santuario = serviceU.guardar(santuario);
+        santuario = serviceU.guardar(santuario, poligono);
 
         Date fechaEsperada = new Date();
 
@@ -128,8 +137,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionExistente() {
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(2, espiritusEn.size());
@@ -137,8 +146,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionExistenteSinEliminados() {
-        angel = serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        angel = serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(1, espiritusEn.size());
@@ -146,8 +155,8 @@ public class UbicacionServiceTest {
 
     @Test
     void espiritusEnUnaUbicacionInexistente() {
-        serviceE.guardar(angel);
-        serviceE.guardar(demonio);
+        serviceE.guardar(angel, c1);
+        serviceE.guardar(demonio, c1);
 
         List<Espiritu> espiritusEn = serviceU.espiritusEn(cementerio.getId());
         assertEquals(0, espiritusEn.size());
@@ -155,7 +164,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumsSinEspiritusEnUbicacion() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(1, mediums.size());
         assertEquals(medium.getId(), mediums.getFirst().getId());
@@ -163,15 +172,15 @@ public class UbicacionServiceTest {
 
     @Test
     void noHayMediumsEnBernal() {
-        serviceM.guardar(medium);
+        serviceM.guardar(medium, c1);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(cementerio.getId());
         assertEquals(0, mediums.size());
     }
 
     @Test
     void hayMediumsPeroTienenEspiritusDespuesDeConectarseEnQuilmes() {
-        angel = serviceE.guardar(angel);
-        medium = serviceM.guardar(medium);
+        angel = serviceE.guardar(angel, c1);
+        medium = serviceM.guardar(medium, c1);
         serviceE.conectar(angel.getId(), medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
@@ -179,7 +188,7 @@ public class UbicacionServiceTest {
 
     @Test
     void mediumEliminadoEnSantuario() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceM.eliminar(medium.getId());
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(0, mediums.size());
@@ -187,17 +196,17 @@ public class UbicacionServiceTest {
 
     @Test
     void hayMediumsConUnMediumEliminadoEnSantuario() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceM.eliminar(medium.getId());
-        serviceM.guardar(medium2);
-        serviceM.guardar(medium3);
+        serviceM.guardar(medium2, c1);
+        serviceM.guardar(medium3, c1);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(santuario.getId());
         assertEquals(2, mediums.size());
     }
 
     @Test
     void noHayMediumsSinEspiritusEnUbicacionInexistente() {
-        serviceM.guardar(medium);
+        serviceM.guardar(medium, c1);
         List<Medium> mediums = serviceU.mediumsSinEspiritusEn(99L);
         assertEquals(0, mediums.size());
     }
@@ -254,7 +263,7 @@ public class UbicacionServiceTest {
     void actualizarUnaUbicacion() {
         Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         q.get().cambiarNombre("Avellaneda");
-        serviceU.guardar(q.get());
+        serviceU.guardar(q.get(), poligono);
         Optional<Ubicacion> nombreNuevo = serviceU.recuperar(q.get().getId());
 
         assertEquals("Avellaneda", nombreNuevo.get().getNombre());
@@ -270,7 +279,7 @@ public class UbicacionServiceTest {
     @Test
     void eliminarUbicacionLanzaExceptionPorQueExisteUnEspirituEnEsaUbicacion() {
 
-        serviceE.guardar(angel);
+        serviceE.guardar(angel, c1);
 
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
@@ -278,7 +287,7 @@ public class UbicacionServiceTest {
     @Test
     void eliminarUbicacionLanzaExceptionPorQueExisteUnMediumEnEsaUbicacion() {
 
-        serviceM.guardar(medium);
+        serviceM.guardar(medium, c1);
 
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
@@ -340,9 +349,9 @@ public class UbicacionServiceTest {
 
     @Test
     void caminoMasCorto_eligeRutaMasCorta() {
-        Ubicacion x = serviceU.guardar(new Santuario("X", 20));
-        Ubicacion y = serviceU.guardar(new Santuario("Y", 30));
-        Ubicacion z = serviceU.guardar(new Santuario("Z", 40));
+        Ubicacion x = serviceU.guardar(new Santuario("X", 20), poligono);
+        Ubicacion y = serviceU.guardar(new Santuario("Y", 30), poligono);
+        Ubicacion z = serviceU.guardar(new Santuario("Z", 40), poligono);
 
         // Ruta larga: A->X->Y->Z
         serviceU.conectar(santuario.getId(), x.getId());
@@ -374,8 +383,8 @@ public class UbicacionServiceTest {
     }
     @Test
     void caminoMasCorto_variosSaltos_debeDevolverTodaLaCadena() {
-        Ubicacion b = serviceU.guardar(new Santuario("B", 20));
-        Ubicacion c = serviceU.guardar(new Santuario("C", 30));
+        Ubicacion b = serviceU.guardar(new Santuario("B", 20), poligono);
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono);
 
         // A → B → C → cementerio
         serviceU.conectar(santuario.getId(), b.getId());
@@ -458,8 +467,8 @@ public class UbicacionServiceTest {
 
     @Test
     void recuperarConexiones_multiplesVecinos_debeDevolverTodosLosDestinos() {
-        Ubicacion b = serviceU.guardar(new Santuario("B", 20));
-        Ubicacion c = serviceU.guardar(new Santuario("C", 30));
+        Ubicacion b = serviceU.guardar(new Santuario("B", 20), poligono);
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono);
 
         serviceU.conectar(santuario.getId(), b.getId());
         serviceU.conectar(santuario.getId(), c.getId());
@@ -498,10 +507,10 @@ public class UbicacionServiceTest {
         ubicacion2 = new Cementerio("U2", 10);
         ubicacion3 = new Cementerio("U3", 10);
         ubicacion4 = new Cementerio("U4", 10);
-        ubicacion1 = serviceU.guardar(ubicacion1);
-        ubicacion2 = serviceU.guardar(ubicacion2);
-        ubicacion3 = serviceU.guardar(ubicacion3);
-        ubicacion4 = serviceU.guardar(ubicacion4);
+        ubicacion1 = serviceU.guardar(ubicacion1, poligono);
+        ubicacion2 = serviceU.guardar(ubicacion2, poligono);
+        ubicacion3 = serviceU.guardar(ubicacion3, poligono);
+        ubicacion4 = serviceU.guardar(ubicacion4, poligono);
         serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion1.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
@@ -597,14 +606,14 @@ public class UbicacionServiceTest {
         assertTrue((serviceU.degreeOf(List.of(333L, 444L)).isEmpty()));
     }
 
-//    @Test
+    //@Test
     void crearYConectarNNodos() {
         int cantidadDeNodos = 50;
         int cantidadDeConexionesPorNodo = 3;
 
         List<Ubicacion> nodos = new ArrayList<>();
         for (int i = 0; i < cantidadDeNodos; i++) {
-            nodos.add(serviceU.guardar(new Santuario("Nodo " + i, 10)));
+            nodos.add(serviceU.guardar(new Santuario("Nodo " + i, 10), poligono));
         }
 
         Random random = new Random();
@@ -629,7 +638,7 @@ public class UbicacionServiceTest {
 
 //    @Test
 //    void cleanup() { // esto esta solo para borrar rapidamente
-//           dataService.eliminarTodo();
+//        dataService.eliminarTodo();
 //    }
 
     //-------------------------------------------------------------------------------------

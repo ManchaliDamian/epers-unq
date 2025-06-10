@@ -1,17 +1,15 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.ConectarException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -25,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -52,23 +51,34 @@ public class EspirituServiceTest {
     private Ubicacion quilmes;
     private Ubicacion berazategui;
 
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+
     @BeforeEach
     void setUp() {
-
+        c1 = new Coordenada(1.0,1.0);
+        c2 = new Coordenada(2.0,2.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(-1.0,-1.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
 
-        quilmes = serviceU.guardar(quilmes);
-        berazategui = serviceU.guardar(berazategui);
+        quilmes = serviceU.guardar(quilmes, poligono);
+        berazategui = serviceU.guardar(berazategui, poligono);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
         angel = new EspirituAngelical( "Gabriel", quilmes);
         medium = new Medium("nombre", 150, 30, quilmes);
 
-        azazel = serviceE.guardar(azazel);
-        belcebu = serviceE.guardar(belcebu);
-        angel = serviceE.guardar(angel);
+        azazel = serviceE.guardar(azazel, c1);
+        belcebu = serviceE.guardar(belcebu, c1);
+        angel = serviceE.guardar(angel, c1);
 
     }
 
@@ -113,7 +123,7 @@ public class EspirituServiceTest {
 
     @Test
     void testConectarEspirituAMediumSaleBien() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         Medium mediumConectado = serviceE.conectar(azazel.getId(), medium.getId());
 
         Optional<Espiritu> conectado = serviceE.recuperar(azazel.getId());
@@ -124,7 +134,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueEsEspirituEliminado() {
 
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.eliminar(azazel.getId());
 
         assertThrows(EspirituNoEncontradoException.class, () -> serviceE.conectar(azazel.getId(), medium.getId()));
@@ -136,9 +146,9 @@ public class EspirituServiceTest {
     }
     @Test
     void testConectarEspirituAMediumFallaPorqueNoEstanEnLaMismaUbicacion() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         azazel.setUbicacion(berazategui);
-        azazel = serviceE.guardar(azazel);
+        azazel = serviceE.actualizar(azazel);
 
         assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
@@ -147,7 +157,7 @@ public class EspirituServiceTest {
     @Test
     void testConectarEspirituAMediumFallaPorqueElEspirituNoEstaLibre() {
 
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
@@ -157,7 +167,7 @@ public class EspirituServiceTest {
     @Test
     void testGuardarYRecuperarEspiritu() {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
-        nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
+        nuevoEspiritu = serviceE.guardar(nuevoEspiritu, c1);
 
         Optional<Espiritu> recuperado = serviceE.recuperar(nuevoEspiritu.getId());
         assertNotNull(recuperado);
@@ -167,7 +177,7 @@ public class EspirituServiceTest {
     @Test
     void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
-        nuevoEspiritu = serviceE.guardar(nuevoEspiritu);
+        nuevoEspiritu = serviceE.guardar(nuevoEspiritu, c1);
         serviceE.eliminar(nuevoEspiritu.getId());
 
         assertTrue(serviceE.recuperar(nuevoEspiritu.getId()).isEmpty());
@@ -236,7 +246,7 @@ public class EspirituServiceTest {
     void testActualizar() {
         String nuevoNombre = "Lucifer";
         azazel.setNombre(nuevoNombre);
-        serviceE.guardar(azazel);
+        serviceE.actualizar(azazel);
 
         Optional<Espiritu> actualizado = serviceE.recuperar(azazel.getId());
         assertEquals(nuevoNombre, actualizado.get().getNombre());
@@ -250,7 +260,7 @@ public class EspirituServiceTest {
     }
     @Test
     void eliminarEspirituConMediumConectadoLanzaException() {
-        medium = serviceM.guardar(medium);
+        medium = serviceM.guardar(medium, c1);
         serviceE.conectar(angel.getId(), medium.getId());
 
         assertThrows(EspirituNoEliminableException.class, () -> serviceE.eliminar(angel.getId()));
@@ -301,12 +311,12 @@ public class EspirituServiceTest {
             for (int i = 0; i < nuevos.size(); i++) {
                 EspirituDemoniaco espiritu = nuevos.get(i);
                 espiritu.setNivelDeConexion(niveles.get(i));
-                serviceE.guardar(espiritu);
+                serviceE.guardar(espiritu, c1);
             }
             azazel.setNivelDeConexion(90);
             belcebu.setNivelDeConexion(10);
-            serviceE.guardar(azazel);
-            serviceE.guardar(belcebu);
+            serviceE.actualizar(azazel);
+            serviceE.actualizar(belcebu);
 
         }
         @Test

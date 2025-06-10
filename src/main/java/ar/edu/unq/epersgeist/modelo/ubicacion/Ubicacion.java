@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo.ubicacion;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;

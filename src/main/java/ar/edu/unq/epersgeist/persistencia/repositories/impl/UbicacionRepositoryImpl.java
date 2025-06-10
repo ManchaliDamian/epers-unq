@@ -1,20 +1,18 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEliminableException;
-import ar.edu.unq.epersgeist.modelo.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
+import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.CentralityMapperImpl;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
@@ -32,11 +30,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     private UbicacionMapper mapperU;
     private MediumMapper mapperM;
     private EspirituMapper mapperE;
-    private CentralityMapperImpl mapperC;
+    private CentralityMapper mapperC;
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   UbicacionMapper mapperU, CentralityMapperImpl mapperC){
+                                   UbicacionMapper mapperU, CentralityMapper mapperC){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;
@@ -98,7 +96,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
 
     private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
-        return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
+        return ubiDaoNeo.findById(ubicacionId);
     }
 
     @Override
@@ -111,12 +109,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         UbicacionJPADTO ubicacionSQLAEliminar = this.recuperarSql(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionSQLAEliminar.setDeleted(true);
 
-        UbicacionNeoDTO ubicacionNeoAEliminar = this.recuperarNeo(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-        ubicacionNeoAEliminar.setDeleted(true);
-
-
+        ubiDaoNeo.deleteById(id);
         ubiDaoSQL.save(ubicacionSQLAEliminar);
-        ubiDaoNeo.save(ubicacionNeoAEliminar);
     }
 
     @Override
@@ -167,10 +161,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
 
         return nodosNeo.stream()
-                .map( neo -> ubiDaoSQL.findById(neo.getId())
-                        .filter(u -> !u.isDeleted())
-                        .orElseThrow(() -> new UbicacionNoEncontradaException(neo.getId()))
-                )
                 .map(mapperU::toDomain)
                 .collect(Collectors.toList());
     }

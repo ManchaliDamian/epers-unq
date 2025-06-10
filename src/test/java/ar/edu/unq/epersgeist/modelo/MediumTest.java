@@ -1,14 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exception.ConectarException;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.modelo.exception.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.exception.ConectarException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +34,7 @@ public class MediumTest {
         cementerio = new Cementerio("Bernal",60);
         espirituAngelical = new EspirituAngelical("EspirituAngelical",santuario);
         espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio);
-        espirituNoConectado = new EspirituDemoniaco("Belcebú",cementerio);
+        espirituNoConectado = new EspirituDemoniaco("Belcebú", cementerio);
         mediumConectado = new Medium("Mago",100,50,santuario);
         mediumQuilmes = new Medium("Pepe",100,50,santuario);
         mediumBernal = new Medium("Bernardo",100,90,cementerio);

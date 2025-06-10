@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
-import ar.edu.unq.epersgeist.modelo.exception.*;
+import ar.edu.unq.epersgeist.exception.*;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import lombok.*;
@@ -42,6 +42,7 @@ public class Medium {
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
+
         if (noEsMismaUbicacion(espiritu)) {
             throw new EspirituNoEstaEnLaMismaUbicacionException(espiritu,this);
         } else if (espiritu.estaConectado()) {

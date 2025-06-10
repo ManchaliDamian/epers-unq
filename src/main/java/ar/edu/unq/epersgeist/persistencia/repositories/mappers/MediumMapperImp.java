@@ -2,9 +2,13 @@ package ar.edu.unq.epersgeist.persistencia.repositories.mappers;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -93,5 +97,13 @@ public class MediumMapperImp implements MediumMapper {
         return mediumList.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MediumMongoDTO toMongo(MediumJPADTO jpa, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
+        MediumMongoDTO dto = new MediumMongoDTO(punto);
+        dto.setIdSQL(jpa.getId());
+        return dto;
     }
 }
