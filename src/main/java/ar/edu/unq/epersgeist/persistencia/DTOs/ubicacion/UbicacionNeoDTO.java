@@ -12,11 +12,9 @@ import java.util.Set;
 @ToString
 @Setter @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @Node
 public class UbicacionNeoDTO {
-    @EqualsAndHashCode.Include
     @Id
     private Long id;
 

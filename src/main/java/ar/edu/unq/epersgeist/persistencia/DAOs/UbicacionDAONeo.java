@@ -14,6 +14,9 @@ import java.util.Optional;
 @Repository
 public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> {
 
+    @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL DETACH DELETE u")
+    void deleteByIdSQL(@Param("idSQL") Long idSQL);
+
     @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL RETURN u")
     Optional<UbicacionNeoDTO> findByIdSQL(@Param("idSQL") Long idSQL);
 
