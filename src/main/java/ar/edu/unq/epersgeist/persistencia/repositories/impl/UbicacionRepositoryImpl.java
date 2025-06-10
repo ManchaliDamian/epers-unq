@@ -96,7 +96,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
 
     private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
-        return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
+        return ubiDaoNeo.findById(ubicacionId);
     }
 
     @Override
@@ -109,12 +109,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         UbicacionJPADTO ubicacionSQLAEliminar = this.recuperarSql(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionSQLAEliminar.setDeleted(true);
 
-        UbicacionNeoDTO ubicacionNeoAEliminar = this.recuperarNeo(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
-        ubicacionNeoAEliminar.setDeleted(true);
-
-
+        ubiDaoNeo.deleteById(id);
         ubiDaoSQL.save(ubicacionSQLAEliminar);
-        ubiDaoNeo.save(ubicacionNeoAEliminar);
     }
 
     @Override
@@ -165,10 +161,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
 
         return nodosNeo.stream()
-                .map( neo -> ubiDaoSQL.findById(neo.getId())
-                        .filter(u -> !u.isDeleted())
-                        .orElseThrow(() -> new UbicacionNoEncontradaException(neo.getId()))
-                )
                 .map(mapperU::toDomain)
                 .collect(Collectors.toList());
     }
