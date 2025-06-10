@@ -148,21 +148,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
-        List<UbicacionNeoDTO> vecinosNeo = ubiDaoNeo.recuperarConexiones(ubicacionId);
-
-        List<Ubicacion> resultado = new ArrayList<>();
-        for (UbicacionNeoDTO vecinoNeo : vecinosNeo) {
-            Long vecinoId = vecinoNeo.getIdSQL();
-
-            UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
-                    .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
-
-            Ubicacion dominio = mapperU.toDomain(jpaDTO);
-
-            resultado.add(dominio);
-        }
-
-        return resultado;
+        return ubiDaoNeo.recuperarConexiones(ubicacionId).stream()
+                .map(vecinoNeo -> {
+                    Long vecinoId = vecinoNeo.getIdSQL();
+                    UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
+                            .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
+                    return mapperU.toDomain(jpaDTO);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
