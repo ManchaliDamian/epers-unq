@@ -58,7 +58,6 @@ public class UbicacionMapperImp implements UbicacionMapper{
         }
         ubi.setId(ubicacion.getIdSQL());
         ubi.setTipo(tipo);
-        ubi.setDeleted(ubicacion.isDeleted());
         return ubi;
     }
 
@@ -169,10 +168,8 @@ public class UbicacionMapperImp implements UbicacionMapper{
         if (ubicacion == null) {
             return null;
         }
-        UbicacionNeoDTO neoDto = new UbicacionNeoDTO(ubicacion.getId(), ubicacion.getTipo());
-        neoDto.setDeleted(ubicacion.isDeleted());
 
-        return neoDto;
+        return new UbicacionNeoDTO(ubicacion.getId(), ubicacion.getTipo());
     }
 
 }
