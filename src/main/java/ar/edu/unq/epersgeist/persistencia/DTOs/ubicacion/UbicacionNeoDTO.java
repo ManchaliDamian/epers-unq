@@ -20,14 +20,16 @@ public class UbicacionNeoDTO {
     @Id
     private Long id;
 
+    private Long idSQL;
+
     private TipoUbicacion tipo;
     private boolean deleted = false;
 
     @Relationship(type = "CONECTA", direction = Relationship.Direction.OUTGOING)
     private Set<UbicacionNeoDTO> conexiones = new HashSet<>();
 
-    public UbicacionNeoDTO(Long id , TipoUbicacion tipo) {
-        this.id = id;
+    public UbicacionNeoDTO(Long idSQL , TipoUbicacion tipo) {
+        this.idSQL = idSQL;
         this.tipo=tipo;
     }
 }

@@ -9,32 +9,35 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> {
 
+    @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL RETURN u")
+    Optional<UbicacionNeoDTO> findByIdSQL(@Param("idSQL") Long idSQL);
 
     @Query(
-            "MATCH (u:UbicacionNeoDTO {id: $id})-[:CONECTA]-()" +
+            "MATCH (u:UbicacionNeoDTO {idSQL: $idSQL})-[:CONECTA]-()" +
                     "RETURN COUNT(*) > 0")
-    Boolean tieneConexiones(@Param("id") Long id);
+    Boolean tieneConexiones(@Param("idSQL") Long idSQL);
 
     @Query(
-            "MATCH (inicio:UbicacionNeoDTO {id: $idOrigen}), " +
-                    "(fin:UbicacionNeoDTO {id: $idDestino})" +
+            "MATCH (inicio:UbicacionNeoDTO {idSQL: $idOrigen}), " +
+                    "(fin:UbicacionNeoDTO {idSQL: $idDestino})" +
                     "RETURN EXISTS((inicio)-[:CONECTA]->(fin))"
     )
     Boolean estanConectadas(@Param("idOrigen") Long idOrigen, @Param("idDestino") Long idDestino );
 
     @Query(
-            "MATCH (origen:UbicacionNeoDTO {id: $idOrigen}), (destino:UbicacionNeoDTO {id: $idDestino}) " +
+            "MATCH (origen:UbicacionNeoDTO {idSQL: $idOrigen}), (destino:UbicacionNeoDTO {idSQL: $idDestino}) " +
                     "MERGE (origen)-[:CONECTA]->(destino)"
     )
     void conectar(@Param("idOrigen") Long idOrigen, @Param("idDestino") Long idDestino);
 
     @Query(
-            "MATCH (inicio:UbicacionNeoDTO {id: $idOrigen}), " +
-                    "(fin:UbicacionNeoDTO {id: $idDestino})" +
+            "MATCH (inicio:UbicacionNeoDTO {idSQL: $idOrigen}), " +
+                    "(fin:UbicacionNeoDTO {idSQL: $idDestino})" +
                     "MATCH caminos = shortestPath((inicio)-[:CONECTA*]->(fin))" +
                     "RETURN nodes(caminos) AS ubicaciones"
     )
@@ -42,22 +45,22 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
 
 
     @Query(
-            "MATCH (u:UbicacionNeoDTO {id: $id})-[:CONECTA]->(v:UbicacionNeoDTO) " +
+            "MATCH (u:UbicacionNeoDTO {idSQL: $idSQL})-[:CONECTA]->(v:UbicacionNeoDTO) " +
                     "RETURN v"
     )
-    List<UbicacionNeoDTO> recuperarConexiones(@Param("id") Long id);
+    List<UbicacionNeoDTO> recuperarConexiones(@Param("idSQL") Long idSQL);
 
     @Query("""
         MATCH (n:UbicacionNeoDTO)
-        WHERE n.id IN $ids
+        WHERE n.idSQL IN $idsSQL
         OPTIONAL MATCH (n)-[r]-()
         RETURN n AS ubicacion, count(r) AS degree
     """)
-    List<DegreeResultNeoDTO> degreeOf(@Param("ids") List<Long> ids);
+    List<DegreeResultNeoDTO> degreeOf(@Param("idsSQL") List<Long> idsSQL);
 
     @Query("""
         MATCH (n:UbicacionNeoDTO), (other:UbicacionNeoDTO)
-        WHERE n.id IN $ids AND other <> n
+        WHERE n.idSQL IN $idsSQL AND other <> n
         OPTIONAL MATCH path = shortestPath((n)-[:CONECTA*]->(other))
         WITH n,
             sum(
@@ -68,7 +71,7 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
             ) AS totalDist
         RETURN n AS ubicacion, 1.0 / totalDist AS closeness
     """)
-    List<ClosenessResultNeoDTO> closenessOf(@Param("ids") List<Long> ids);
+    List<ClosenessResultNeoDTO> closenessOf(@Param("idsSQL") List<Long> idsSQL);
 
 
     @Query(

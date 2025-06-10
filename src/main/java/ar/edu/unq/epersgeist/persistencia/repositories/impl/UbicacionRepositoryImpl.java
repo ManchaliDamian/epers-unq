@@ -83,10 +83,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Optional<Ubicacion> recuperar(Long ubicacionId){
         Optional<UbicacionJPADTO> recuperadoSql = this.recuperarSql(ubicacionId);
         Optional<UbicacionNeoDTO> recuperadoNeo = this.recuperarNeo(ubicacionId);
+
         Optional<Ubicacion> resultado = Optional.empty();
         if(recuperadoSql.isPresent() && recuperadoNeo.isPresent()){
             Ubicacion ubicacion = mapperU.toDomain(recuperadoSql.get());
-            Set<Long> conexionesId = recuperadoNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getId).collect(Collectors.toSet());
+            Set<Long> conexionesId = recuperadoNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getIdSQL).collect(Collectors.toSet());
             List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
             List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
             ubicacion.setConexiones(new HashSet<>(conexionesUbicacion));
@@ -101,7 +102,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
 
     private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
-        return ubiDaoNeo.findById(ubicacionId).filter(u -> !u.isDeleted());
+        return ubiDaoNeo.findByIdSQL(ubicacionId);
     }
 
     @Override
@@ -200,7 +201,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
         List<Ubicacion> resultado = new ArrayList<>();
         for (UbicacionNeoDTO vecinoNeo : vecinosNeo) {
-            Long vecinoId = vecinoNeo.getId();
+            Long vecinoId = vecinoNeo.getIdSQL();
 
             UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
                     .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
