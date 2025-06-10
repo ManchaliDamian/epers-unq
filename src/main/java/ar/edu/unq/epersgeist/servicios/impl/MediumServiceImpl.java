@@ -37,7 +37,10 @@ public class MediumServiceImpl implements MediumService {
     public Medium guardar(Medium unMedium, Coordenada coordenada) {
         return mediumRepository.guardar(unMedium, coordenada);
     }
-
+    @Override
+    public Medium actualizar(Medium medium, Coordenada coordenada) {
+        return mediumRepository.actualizar(medium, coordenada);
+    }
     @Override
     public Medium actualizar(Medium unMedium) {
         return mediumRepository.actualizar(unMedium);

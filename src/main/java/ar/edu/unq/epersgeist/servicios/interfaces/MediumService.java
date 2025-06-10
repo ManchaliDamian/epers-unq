@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface MediumService {
     Medium guardar(Medium unMedium, Coordenada coordenada);
     Medium actualizar(Medium unMedium);
+    Medium actualizar(Medium unMedium, Coordenada unaCoordenada);
     Optional<Medium> recuperar(Long mediumId);
     List<Medium> recuperarTodos();
     void eliminar(Long mediumId);
