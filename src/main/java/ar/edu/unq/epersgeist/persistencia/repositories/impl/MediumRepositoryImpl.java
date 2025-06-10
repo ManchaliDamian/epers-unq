@@ -1,11 +1,11 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
@@ -37,15 +37,52 @@ public class MediumRepositoryImpl implements MediumRepository {
     }
 
     @Override
-    public Medium save(Medium medium) {
-        MediumJPADTO mediumGuardado = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
-        Medium dominio = mediumMapper.toDomain(mediumGuardado);
-        dominio.setCoordenada(medium.getCoordenada());
-
-        MediumMongoDTO mongoDto = mediumMapper.toMongo(dominio);
-        mongoDto.setIdSQL(mediumGuardado.getId());
+    public Medium guardar(Medium medium, Coordenada coordenada) {
+        MediumJPADTO jpa = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
+        MediumMongoDTO mongoDto = mediumMapper.toMongo(jpa, coordenada);
         mediumDAOMongo.save(mongoDto);
-        return dominio;
+        return mediumMapper.toDomain(jpa);
+    }
+
+    @Override
+    public Medium actualizar(Medium medium) {
+        if (medium.getId() == null) {
+            throw new IllegalArgumentException("El medium debe estar persistido");
+        }
+        MediumJPADTO actualizar = actualizarMediumJPA(medium);
+        return  mediumMapper.toDomain(actualizar);
+    }
+
+    @Override
+    public Medium actualizar(Medium medium, Coordenada coordenada) {
+        if (medium.getId() == null) {
+            throw new IllegalArgumentException("El medium debe estar persistido");
+        }
+        MediumJPADTO dto = actualizarMediumJPA(medium);
+
+        // eliminar la coordenada anterior
+        mediumDAOMongo.deleteByIdSQL(medium.getId());
+
+        // crear nuevo document
+        MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
+        mediumDAOMongo.save(mongoDTO);
+        return mediumMapper.toDomain(dto);
+    }
+
+    @Override
+    public void eliminarFisicoEnMongoSiExiste(Long id) {
+        Optional<MediumMongoDTO> mongoDTO = mediumDAOMongo.findByIdSQL(id);
+        mongoDTO.ifPresent(mediumDAOMongo::delete);
+    }
+
+    private MediumJPADTO actualizarMediumJPA(Medium medium) {
+        mediumDAOSQL.findById(medium.getId())
+                .filter(u -> !u.isDeleted())
+                .orElseThrow(() -> new EspirituNoEncontradoException(medium.getId()));
+
+        MediumJPADTO dto = mediumMapper.toJpa(medium);
+        mediumDAOSQL.save(dto);
+        return dto;
     }
 
     @Override
@@ -76,5 +113,6 @@ public class MediumRepositoryImpl implements MediumRepository {
     @Override
     public void deleteAll(){
         this.mediumDAOSQL.deleteAll();
+        this.mediumDAOMongo.deleteAll();
     }
 }

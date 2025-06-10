@@ -27,21 +27,17 @@ public class MediumTest {
     private EspirituDemoniaco espirituNoConectado;
     private EspirituAngelical espirituAngelicalMock;
 
-    private Coordenada c1;
-
 
     @BeforeEach
     void setUp(){
-        c1 = new Coordenada(1.0,1.0);
-
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
-        espirituAngelical = new EspirituAngelical("EspirituAngelical",santuario, c1);
-        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio, c1);
-        espirituNoConectado = new EspirituDemoniaco("Belcebú", cementerio, c1);
-        mediumConectado = new Medium("Mago",100,50,santuario, c1);
-        mediumQuilmes = new Medium("Pepe",100,50,santuario, c1);
-        mediumBernal = new Medium("Bernardo",100,90,cementerio, c1);
+        espirituAngelical = new EspirituAngelical("EspirituAngelical",santuario);
+        espirituDemoniaco = new EspirituDemoniaco("EspirituDemoniaco",cementerio);
+        espirituNoConectado = new EspirituDemoniaco("Belcebú", cementerio);
+        mediumConectado = new Medium("Mago",100,50,santuario);
+        mediumQuilmes = new Medium("Pepe",100,50,santuario);
+        mediumBernal = new Medium("Bernardo",100,90,cementerio);
         espirituDemoniaco.setMediumConectado(mediumConectado);
         espirituAngelical.setMediumConectado(mediumConectado);
         espirituAngelicalMock = mock(EspirituAngelical.class);
@@ -50,19 +46,19 @@ public class MediumTest {
 
     @Test
     void noSePuedeCrearMediumConManaNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, -4, santuario, c1));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, -4, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMayorAManaMax(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, 301, santuario, c1));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, 301, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMaxNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",-3, 301, santuario, c1));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",-3, 301, santuario));
         assertEquals("manaMax no puede ser negativo.", ex.getMessage());
     }
 
@@ -111,7 +107,7 @@ public class MediumTest {
 
     @Test
     void exorcizarA_SinAngeles() {
-        Medium poseido = new Medium("Juan",100,35, cementerio, c1);
+        Medium poseido = new Medium("Juan",100,35, cementerio);
 
         List<EspirituAngelical> angeles = new ArrayList<EspirituAngelical>();
         List<EspirituDemoniaco> demoniacos = new ArrayList<EspirituDemoniaco>();
@@ -123,7 +119,7 @@ public class MediumTest {
     @Test
     void descansarEnCementerioAumentaManaCorrectamente() {
         Ubicacion cementerio = new Cementerio("cementerio",100);
-        Medium yohAsakura = new Medium("Yoh Asakura", 200, 10, cementerio, c1);
+        Medium yohAsakura = new Medium("Yoh Asakura", 200, 10, cementerio);
         yohAsakura.descansar();
         assertEquals(60, yohAsakura.getMana());
     }
@@ -131,7 +127,7 @@ public class MediumTest {
     @Test
     void descansarEnSantuarioAumentaManaCorrectamente() {
         Ubicacion santuario = new Santuario("santuario",100);
-        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario, c1);
+        Medium lorraineWaine = new Medium("Lorraine Waine", 200, 10, santuario);
         lorraineWaine.descansar();
         assertEquals(160, lorraineWaine.getMana());
     }

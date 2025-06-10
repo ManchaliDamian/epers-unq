@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.exception.*;
-import ar.edu.unq.epersgeist.modelo.exception.EspirituMuyLejanoException;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -35,13 +34,16 @@ public class MediumServiceImpl implements MediumService {
 
 
     @Override
-    public Medium guardar(Medium unMedium) {
-        return mediumRepository.save(unMedium);
+    public Medium guardar(Medium unMedium, Coordenada coordenada) {
+        return mediumRepository.guardar(unMedium, coordenada);
     }
-
+    @Override
+    public Medium actualizar(Medium medium, Coordenada coordenada) {
+        return mediumRepository.actualizar(medium, coordenada);
+    }
     @Override
     public Medium actualizar(Medium unMedium) {
-        return mediumRepository.save(unMedium);
+        return mediumRepository.actualizar(unMedium);
     }
 
     private Medium getMedium(Long mediumId) {
@@ -59,13 +61,13 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void eliminar(Long mediumId) {
-
         Medium medium = this.getMedium(mediumId);
         if (!medium.getEspiritus().isEmpty()) {
             throw new MediumNoEliminableException(mediumId);
         }
         medium.setDeleted(true);
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
+        mediumRepository.eliminarFisicoEnMongoSiExiste(mediumId);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class MediumServiceImpl implements MediumService {
     public void descansar(Long mediumId) {
         Medium medium = this.getMedium(mediumId);
         medium.descansar();
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
     }
 
     @Override
@@ -92,10 +94,10 @@ public class MediumServiceImpl implements MediumService {
         List<EspirituDemoniaco> demoniosCopy = new ArrayList<>(demonios);
         mediumExorcista.exorcizarA(angeles, demonios, mediumAExorcizar.getUbicacion());
 
-        mediumRepository.save(mediumExorcista);
-        mediumRepository.save(mediumAExorcizar);
-        angelesCopy.forEach(espirituRepository::save);
-        demoniosCopy.forEach(espirituRepository::save);
+        mediumRepository.actualizar(mediumExorcista);
+        mediumRepository.actualizar(mediumAExorcizar);
+        angelesCopy.forEach(espirituRepository::actualizar);
+        demoniosCopy.forEach(espirituRepository::actualizar);
     }
 
     @Override
@@ -122,15 +124,14 @@ public class MediumServiceImpl implements MediumService {
         }
         Medium medium = this.getMedium(mediumId);
 
-        Coordenada coordenada = espiritu.get().getCoordenada();
+        Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
-        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId())
-                            .orElseThrow(() -> new EspirituMuyLejanoException(espiritu.get().getId(), medium.getId()));
+        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
 
         medium.invocarA(espiritu.get());
 
-        mediumRepository.save(medium);
-        espirituRepository.save(espiritu.get());
+        mediumRepository.actualizar(medium);
+        espirituRepository.actualizar(espiritu.get());
 
         return espiritu.get();
     }
@@ -147,6 +148,6 @@ public class MediumServiceImpl implements MediumService {
         }
 
         medium.mover(destino);
-        mediumRepository.save(medium);
+        mediumRepository.actualizar(medium);
     }
 }

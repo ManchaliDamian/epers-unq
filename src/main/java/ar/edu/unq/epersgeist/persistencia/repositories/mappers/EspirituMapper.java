@@ -82,6 +82,6 @@ public interface EspirituMapper {
 
 
     //toMongo
-    EspirituMongoDTO toMongo(Espiritu espiritu);
+    EspirituMongoDTO toMongo(EspirituJPADTO jpa, Coordenada coordenada);
     Coordenada toCoordenada(EspirituMongoDTO mongo);
 }

@@ -71,8 +71,7 @@ public class MediumMapperImp implements MediumMapper {
         Medium medium = new Medium(
                 mediumJPADTO.getNombre(),
                 mediumJPADTO.getManaMax(), mediumJPADTO.getMana(),
-                ubicacionMapper.toDomain(mediumJPADTO.getUbicacion()),
-                null);
+                ubicacionMapper.toDomain(mediumJPADTO.getUbicacion()));
         context.put(mediumJPADTO, medium);
 
         medium.setId(mediumJPADTO.getId());
@@ -101,12 +100,10 @@ public class MediumMapperImp implements MediumMapper {
     }
 
     @Override
-    public MediumMongoDTO toMongo(Medium medium) {
-        Coordenada c = medium.getCoordenada();
-        GeoJsonPoint punto = new GeoJsonPoint(c.getLongitud(), c.getLatitud());
-
+    public MediumMongoDTO toMongo(MediumJPADTO jpa, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
         MediumMongoDTO dto = new MediumMongoDTO(punto);
-        dto.setIdSQL(medium.getId());
+        dto.setIdSQL(jpa.getId());
         return dto;
     }
 }

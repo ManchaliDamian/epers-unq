@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("centralityMapperImpl")
-public class CentralityMapperImpl {
+public class CentralityMapperImpl implements CentralityMapper {
 
     UbicacionMapper ubiMapper;
 

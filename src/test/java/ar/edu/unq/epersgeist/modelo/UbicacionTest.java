@@ -18,12 +18,10 @@ class UbicacionTest {
 
     @BeforeEach
     void setUp() {
-        Coordenada c1 = new Coordenada(1.0, 1.0);
-
         cementerio = new Cementerio("Cementerio del Oeste", 50);
         santuario = new Santuario("Santuario del Este", 75);
-        espirituAngel = new EspirituAngelical("Angel", cementerio, c1);
-        espirituDemonio = new EspirituDemoniaco("Demonio", santuario, c1);
+        espirituAngel = new EspirituAngelical("Angel", cementerio);
+        espirituDemonio = new EspirituDemoniaco("Demonio", santuario);
     }
 
     @Test

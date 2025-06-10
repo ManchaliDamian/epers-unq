@@ -18,20 +18,15 @@ public class EspirituTest {
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
-    private Coordenada c1;
-
-
-
 
     @BeforeEach
     void setUp(){
-        c1 = new Coordenada(1.0,1.0);
         santuario = new Santuario("santuario", 40);
         cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Medium",100,90, cementerio, c1);
-        angel = new EspirituAngelical("Angel",cementerio,c1);
-        demonio = new EspirituDemoniaco("Demonio", santuario,c1);
+        mediumConectado = new Medium("Medium",100,90, cementerio);
+        angel = new EspirituAngelical("Angel",cementerio);
+        demonio = new EspirituDemoniaco("Demonio", santuario);
     }
 
     @Test
@@ -102,7 +97,7 @@ public class EspirituTest {
 
     @Test
     void conectarA_EspirituDominado_LanzaExcepcion() {
-        Espiritu otroDominador = new EspirituAngelical("Dominador", cementerio, c1);
+        Espiritu otroDominador = new EspirituAngelical("Dominador", cementerio);
         angel.setDominador(otroDominador);
         assertThrows(EspirituDominadoException.class, () -> {
             angel.conectarA(mediumConectado);
@@ -130,7 +125,7 @@ public class EspirituTest {
 
     @Test
     void aumentarConexion_ConManaCero() {
-        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario, c1);
+        Medium mediumSinMana = new Medium("Novato", 100, 0, santuario);
         angel.setNivelDeConexion(50);
         angel.conectarA(mediumSinMana);
         assertEquals(50, angel.getNivelDeConexion());

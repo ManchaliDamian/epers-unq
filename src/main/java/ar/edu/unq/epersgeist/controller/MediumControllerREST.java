@@ -7,6 +7,7 @@ import ar.edu.unq.epersgeist.controller.dto.medium.UpdateMediumDTO;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
@@ -74,8 +75,10 @@ public class MediumControllerREST {
     @PostMapping
     public ResponseEntity<MediumDTO> createMedium(@Valid @RequestBody CreateMediumDTO dto) {
         Ubicacion ubicacion = ubicacionService.recuperar(dto.ubicacionId()).orElseThrow(() -> new UbicacionNoEncontradaException(dto.ubicacionId()));
-        Medium medium = dto.aModelo(ubicacion);
-        Medium creado = mediumService.guardar(medium);
+
+        Medium medium = dto.aModeloMedium(ubicacion);
+        Coordenada coordenada = dto.aModeloCoordenada();
+        Medium creado = mediumService.guardar(medium, coordenada);
         URI location = URI.create("/medium/" + creado.getId());
         MediumDTO respuesta = MediumDTO.desdeModelo(creado);
         return ResponseEntity.created(location).body(respuesta);

@@ -21,23 +21,16 @@ public class EspirituDemoniacoTest {
     private Ubicacion cementerio;
     private Medium mediumAngel;
     private Medium mediumDemon;
-    private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
-    private Coordenada c2;
-    private Poligono poligono;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal",60);
 
-        angel = new EspirituAngelical( "EspirituAngelical", santuario, c1);
-        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio, c1);
-        mediumAngel= new Medium("Mago", 100, 50, santuario, c1);
-        mediumDemon = new Medium("Maguito",100, 10, cementerio, c1);
+        angel = new EspirituAngelical( "EspirituAngelical", santuario);
+        demonio = new EspirituDemoniaco( "EspirituDemoniaco", cementerio);
+        mediumAngel= new Medium("Mago", 100, 50, santuario);
+        mediumDemon = new Medium("Maguito",100, 10, cementerio);
 
     }
 

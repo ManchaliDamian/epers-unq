@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "espiritus")
 public class EspirituMongoDTO {
     @Id
-    private String idMongo;
+    private String id;
 
     private Long idSQL;
 

@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.exception.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -33,14 +34,19 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public Espiritu guardar(Espiritu espiritu) {
-        return espirituRepository.save(espiritu);
+    public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
+        return espirituRepository.guardar(espiritu, coordenada);
     }
 
     @Override
     public Espiritu actualizar(Espiritu espiritu){
-        return espirituRepository.save(espiritu);
+        return espirituRepository.actualizar(espiritu);
     }
+
+    public Espiritu actualizar(Espiritu espiritu, Coordenada coordenada){
+        return espirituRepository.actualizar(espiritu, coordenada);
+    }
+
 
     private Espiritu getEspiritu(Long espirituId) {
         Espiritu espiritu = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
@@ -80,13 +86,21 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void eliminar(Long espirituId) {
-        Espiritu espiritu = this.getEspiritu(espirituId);
-        if (espiritu.getMediumConectado() != null) {
-            throw new EspirituNoEliminableException(espirituId);
+    public void eliminar(Long id) {
+        Espiritu espiritu = espirituRepository.recuperar(id)
+                .orElseThrow(() -> new EspirituNoEncontradoException(id));
+
+        if (espiritu.isDeleted()) {
+            throw new EspirituNoEncontradoException(id);
         }
+
+        if (espiritu.getMediumConectado() != null && !espiritu.getMediumConectado().isDeleted()) {
+            throw new EspirituNoEliminableException(id);
+        }
+
         espiritu.setDeleted(true);
-        espirituRepository.save(espiritu);
+        espirituRepository.actualizar(espiritu);
+        espirituRepository.eliminarFisicoEnMongoSiExiste(id);
     }
 
     @Override
@@ -97,8 +111,8 @@ public class EspirituServiceImpl implements EspirituService {
 
         medium.conectarseAEspiritu(espiritu);
 
-        espirituRepository.save(espiritu);
-        return mediumRepository.save(medium);
+        espirituRepository.actualizar(espiritu);
+        return mediumRepository.actualizar(medium);
     }
 
     @Override

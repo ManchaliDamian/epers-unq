@@ -61,7 +61,7 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituAngelical) context.get(jpa);
 
-        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()), null);
+        EspirituAngelical espiritu = new EspirituAngelical(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
         context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());
@@ -82,7 +82,7 @@ public class EspirituMapperImp implements EspirituMapper {
         if (jpa == null) return null;
         if (context.containsKey(jpa)) return (EspirituDemoniaco) context.get(jpa);
 
-        EspirituDemoniaco espiritu = new EspirituDemoniaco(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()), null);
+        EspirituDemoniaco espiritu = new EspirituDemoniaco(jpa.getNombre(), ubicacionMapper.toDomain(jpa.getUbicacion()));
         context.put(jpa, espiritu);
 
         espiritu.setId(jpa.getId());
@@ -236,16 +236,14 @@ public class EspirituMapperImp implements EspirituMapper {
         return espirituJPADTO;
     }
 
-    //toMongo
     @Override
-    public EspirituMongoDTO toMongo(Espiritu espiritu) {
-        Coordenada c = espiritu.getCoordenada();
-        GeoJsonPoint punto = new GeoJsonPoint(c.getLongitud(), c.getLatitud());
-
+    public EspirituMongoDTO toMongo(EspirituJPADTO jpa, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
         EspirituMongoDTO dto = new EspirituMongoDTO(punto);
-        dto.setIdSQL(espiritu.getId());
+        dto.setIdSQL(jpa.getId());
         return dto;
     }
+
     @Override
     public Coordenada toCoordenada(EspirituMongoDTO mongo) {
         GeoJsonPoint p = mongo.getPunto();

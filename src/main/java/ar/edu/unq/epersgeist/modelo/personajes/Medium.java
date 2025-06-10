@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
 import ar.edu.unq.epersgeist.exception.*;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import lombok.*;
@@ -23,13 +22,13 @@ public class Medium {
     private Integer manaMax;
     private Integer mana;
     private final Set<Espiritu> espiritus = new HashSet<>();
-    private Coordenada coordenada;
+
     //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
 
-    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion, @NonNull Coordenada coordenada) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         if (manaMax < 0) {
             throw new IllegalArgumentException("manaMax no puede ser negativo.");
         }
@@ -40,7 +39,6 @@ public class Medium {
         this.manaMax = manaMax;
         this.mana = mana;
         this.ubicacion = ubicacion;
-        this.coordenada = coordenada;
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {

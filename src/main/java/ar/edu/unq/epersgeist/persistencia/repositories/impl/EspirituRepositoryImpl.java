@@ -1,20 +1,17 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeAreaException;
+import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,29 +23,61 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituDAOSQL espirituDAOSQL;
     private EspirituDAOMongo espirituDAOMongo;
     private EspirituMapper mapper;
-    private PoligonoDAO poligonoDAO;
 
-
-    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo,
-                                  EspirituMapper mapper, PoligonoDAO poligonoDAO){
+    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapper){
         this.espirituDAOSQL = espirituDAOSQL;
         this.espirituDAOMongo = espirituDAOMongo;
         this.mapper = mapper;
-        this.poligonoDAO = poligonoDAO;
     }
 
     @Override
-    public Espiritu save(Espiritu espiritu) {
+    public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
         EspirituJPADTO jpa = mapper.toJpa(espiritu);
         jpa = espirituDAOSQL.save(jpa);
-        Espiritu dominio = mapper.toDomain(jpa);
-        dominio.setCoordenada(espiritu.getCoordenada());
+        EspirituMongoDTO mongoDTO = mapper.toMongo(jpa, coordenada);
+        espirituDAOMongo.save(mongoDTO);
+        return mapper.toDomain(jpa);
+    }
 
-        EspirituMongoDTO mongoDto = mapper.toMongo(dominio);
-        mongoDto.setIdSQL(jpa.getId());
-        espirituDAOMongo.save(mongoDto);
+    @Override
+    public Espiritu actualizar(Espiritu espiritu) {
+        if (espiritu.getId() == null) {
+            throw new IllegalArgumentException("El espiritu debe estar persistido");
+        }
+        EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+        return mapper.toDomain(dto);
+    }
 
-        return dominio;
+    @Override
+    public Espiritu actualizar(Espiritu espiritu, Coordenada coordenada) {
+        if (espiritu.getId() == null) {
+            throw new IllegalArgumentException("El espiritu debe estar persistido");
+        }
+        EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+
+        // eliminar la coordenada anterior
+        espirituDAOMongo.deleteByIdSQL(espiritu.getId());
+
+        // crear nuevo document
+        EspirituMongoDTO mongoDTO = mapper.toMongo(dto, coordenada);
+        espirituDAOMongo.save(mongoDTO);
+        return mapper.toDomain(dto);
+    }
+
+    private EspirituJPADTO actualizarEspirituJPA(Espiritu espiritu) {
+        espirituDAOSQL.findById(espiritu.getId())
+                .filter(u -> !u.isDeleted())
+                .orElseThrow(() -> new EspirituNoEncontradoException(espiritu.getId()));
+
+        EspirituJPADTO dto = mapper.toJpa(espiritu);
+        espirituDAOSQL.save(dto);
+        return dto;
+    }
+
+    @Override
+    public void eliminarFisicoEnMongoSiExiste(Long id) {
+        Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
+        mongoDTO.ifPresent(espirituDAOMongo::delete);
     }
 
     @Override
@@ -59,6 +88,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
         return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> mapper.toDomain(espirituJPADTO));
+    }
+
+    @Override
+    public Optional<Coordenada> recuperarCoordenada(Long espirituId) {
+        return espirituDAOMongo.findByIdSQL(espirituId).map(espirituMongoDTO -> mapper.toCoordenada(espirituMongoDTO));
     }
 
     @Override
@@ -99,5 +133,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();
+        this.espirituDAOMongo.deleteAll();
     }
 }

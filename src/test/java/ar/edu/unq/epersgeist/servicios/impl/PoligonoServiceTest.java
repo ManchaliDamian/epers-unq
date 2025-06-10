@@ -38,15 +38,12 @@ public class PoligonoServiceTest {
 
     @BeforeEach
     void setUp() {
-        // limpiar las bases de datos antes de cada test
-        dataService.eliminarTodo();
-
         // Crear un polígono cuadrado válido
         List<Coordenada> coordenadasCuadrado = Arrays.asList(
             new Coordenada(0.0, 0.0), // esquina inferior izquierda
             new Coordenada(0.0, 1.0), // esquina inferior derecha
-            new Coordenada(1.0, 0.0), // esquina superior izquierda
             new Coordenada(1.0, 1.0), // esquina superior derecha
+            new Coordenada(1.0, 0.0), // esquina superior izquierda
             new Coordenada(0.0, 0.0)  // cerrar el polígono
         );
         poligonoCuadrado = new Poligono(coordenadasCuadrado);
@@ -185,6 +182,5 @@ public class PoligonoServiceTest {
     void eliminar() {
         dataService.eliminarTodo();
     }
-
 
 }
