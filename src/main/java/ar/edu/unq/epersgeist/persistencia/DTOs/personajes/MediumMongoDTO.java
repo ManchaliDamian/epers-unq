@@ -3,8 +3,7 @@ package ar.edu.unq.epersgeist.persistencia.DTOs.personajes;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter @Setter

@@ -168,7 +168,6 @@ public class UbicacionMapperImp implements UbicacionMapper{
         if (ubicacion == null) {
             return null;
         }
-
         return new UbicacionNeoDTO(ubicacion.getId(), ubicacion.getTipo());
     }
 

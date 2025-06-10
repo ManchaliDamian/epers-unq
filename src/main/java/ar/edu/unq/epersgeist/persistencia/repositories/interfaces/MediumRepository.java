@@ -18,5 +18,5 @@ public interface MediumRepository {
     List<Medium> recuperarTodosLosEliminados();
     List<Espiritu> findEspiritusByMediumId(Long mediumId);
     void deleteAll();
-    Double laDistanciaA(Double longitud, Double latitud, Long idMediumSQL);
+    Optional<Double>  laDistanciaA(Double longitud, Double latitud, Long idMediumSQL);
 }

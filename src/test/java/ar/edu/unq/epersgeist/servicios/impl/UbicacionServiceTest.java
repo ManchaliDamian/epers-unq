@@ -607,7 +607,7 @@ public class UbicacionServiceTest {
         assertTrue((serviceU.degreeOf(List.of(333L, 444L)).isEmpty()));
     }
 
-//    @Test
+    //@Test
     void crearYConectarNNodos() {
         int cantidadDeNodos = 50;
         int cantidadDeConexionesPorNodo = 3;
@@ -639,7 +639,7 @@ public class UbicacionServiceTest {
 
 //    @Test
 //    void cleanup() { // esto esta solo para borrar rapidamente
-//           dataService.eliminarTodo();
+//        dataService.eliminarTodo();
 //    }
 
     //-------------------------------------------------------------------------------------

@@ -1,7 +1,9 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.modelo.exception;
 
-public class EspirituMuyLejanoException extends RuntimeException {
-    public EspirituMuyLejanoException(String message) {
-        super(message);
+import jakarta.persistence.EntityNotFoundException;
+
+public class EspirituMuyLejanoException extends EntityNotFoundException {
+    public EspirituMuyLejanoException(Long idEspiritu, Long idMedium) {
+        super("El medium: " + idMedium + "está muy lejano del espiritu: " + idEspiritu);
     }
 }

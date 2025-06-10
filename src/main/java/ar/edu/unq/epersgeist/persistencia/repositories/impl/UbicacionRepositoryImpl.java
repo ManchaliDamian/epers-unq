@@ -12,10 +12,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.SantuarioJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.CentralityMapperImpl;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.*;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.ClosenessResult;
@@ -30,22 +27,20 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionDAONeo ubiDaoNeo;
     private UbicacionDAOSQL ubiDaoSQL;
-    private PoligonoDAO poligonoDAO;
     private UbicacionMapper mapperU;
     private MediumMapper mapperM;
     private EspirituMapper mapperE;
-    private CentralityMapperImpl mapperC;
+    private CentralityMapper mapperC;
 
     public UbicacionRepositoryImpl(UbicacionDAONeo ubiDaoNeo, UbicacionDAOSQL ubiDaoSql,
                                    MediumMapper mapperM, EspirituMapper mapperE,
-                                   UbicacionMapper mapperU, CentralityMapperImpl mapperC, PoligonoDAO poligonoDAO){
+                                   UbicacionMapper mapperU, CentralityMapper mapperC){
         this.ubiDaoNeo = ubiDaoNeo;
         this.ubiDaoSQL = ubiDaoSql;
         this.mapperU = mapperU;
         this.mapperE = mapperE;
         this.mapperM = mapperM;
         this.mapperC = mapperC;
-        this.poligonoDAO = poligonoDAO; // ver si hay que usarlo
     }
 
     @Override
