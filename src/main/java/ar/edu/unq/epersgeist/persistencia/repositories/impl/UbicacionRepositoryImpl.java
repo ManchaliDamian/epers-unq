@@ -53,7 +53,9 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacion.setCreatedAt(ubiJPA.getCreatedAt());
 
         // Neo
-        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
+        Optional<UbicacionNeoDTO> existente = ubiDaoNeo.findByIdSQL(ubicacion.getId());
+        UbicacionNeoDTO neoDto = existente.orElseGet(() -> mapperU.toNeo(ubicacion));
+        ubiDaoNeo.save(neoDto);
 
         return ubicacion;
     }
@@ -82,7 +84,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         Optional<Ubicacion> resultado = Optional.empty();
         if(recuperadoSql.isPresent() && recuperadoNeo.isPresent()){
             Ubicacion ubicacion = mapperU.toDomain(recuperadoSql.get());
-            Set<Long> conexionesId = recuperadoNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getIdSQL).collect(Collectors.toSet());
+            Set<Long> conexionesId = recuperadoNeo.get().getConexiones()
+                    .stream().map(UbicacionNeoDTO::getIdSQL).collect(Collectors.toSet());
             List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
             List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
             ubicacion.setConexiones(new HashSet<>(conexionesUbicacion));
@@ -113,49 +116,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubiDaoNeo.deleteByIdSQL(id); //hard delete
         ubiDaoSQL.save(ubicacionSQLAEliminar); //soft delete
 
-    }
-
-    @Override
-    public List<Ubicacion> recuperarTodos(){
-        List<UbicacionJPADTO> ubicaciones = ubiDaoSQL.recuperarTodos();
-        return mapperU.toDomainList(ubicaciones);
-    }
-
-    @Override
-    public List<Cementerio> recuperarCementerios(){
-        List<CementerioJPADTO> ubicaciones = ubiDaoSQL.recuperarCementerios();
-        return mapperU.toDomainListCementerio(ubicaciones);
-    }
-
-    @Override
-    public List<Santuario> recuperarSantuarios(){
-        List<SantuarioJPADTO> ubicaciones = ubiDaoSQL.recuperarSantuarios();
-        return mapperU.toDomainListSantuarios(ubicaciones);
-    }
-
-    @Override
-    public Optional<Ubicacion> recuperarEliminado(Long id) {
-        return this.ubiDaoSQL.recuperarEliminado(id).map(mapperU::toDomain);
-    }
-
-    @Override
-    public List<Ubicacion> recuperarTodosEliminados() {
-        return mapperU.toDomainList(this.ubiDaoSQL.recuperarTodosEliminados());
-    }
-
-    @Override
-    public List<Espiritu> findEspiritusByUbicacionId(Long id){
-        return mapperE.toDomainList(this.ubiDaoSQL.findEspiritusByUbicacionId(id));
-    }
-
-    @Override
-    public List<Medium> findMediumsSinEspiritusByUbicacionId(Long id){
-        return mapperM.toDomainList(ubiDaoSQL.findMediumsSinEspiritusByUbicacionId(id));
-    }
-
-    @Override
-    public boolean estanConectadas(Long idOrigen,Long idDestino){
-        return ubiDaoNeo.estanConectadas(idOrigen,idDestino);
     }
 
     @Override
@@ -203,6 +163,49 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         }
 
         return resultado;
+    }
+
+    @Override
+    public List<Ubicacion> recuperarTodos(){
+        List<UbicacionJPADTO> ubicaciones = ubiDaoSQL.recuperarTodos();
+        return mapperU.toDomainList(ubicaciones);
+    }
+
+    @Override
+    public List<Cementerio> recuperarCementerios(){
+        List<CementerioJPADTO> ubicaciones = ubiDaoSQL.recuperarCementerios();
+        return mapperU.toDomainListCementerio(ubicaciones);
+    }
+
+    @Override
+    public List<Santuario> recuperarSantuarios(){
+        List<SantuarioJPADTO> ubicaciones = ubiDaoSQL.recuperarSantuarios();
+        return mapperU.toDomainListSantuarios(ubicaciones);
+    }
+
+    @Override
+    public Optional<Ubicacion> recuperarEliminado(Long id) {
+        return this.ubiDaoSQL.recuperarEliminado(id).map(mapperU::toDomain);
+    }
+
+    @Override
+    public List<Ubicacion> recuperarTodosEliminados() {
+        return mapperU.toDomainList(this.ubiDaoSQL.recuperarTodosEliminados());
+    }
+
+    @Override
+    public List<Espiritu> findEspiritusByUbicacionId(Long id){
+        return mapperE.toDomainList(this.ubiDaoSQL.findEspiritusByUbicacionId(id));
+    }
+
+    @Override
+    public List<Medium> findMediumsSinEspiritusByUbicacionId(Long id){
+        return mapperM.toDomainList(ubiDaoSQL.findMediumsSinEspiritusByUbicacionId(id));
+    }
+
+    @Override
+    public boolean estanConectadas(Long idOrigen,Long idDestino){
+        return ubiDaoNeo.estanConectadas(idOrigen,idDestino);
     }
 
     @Override
