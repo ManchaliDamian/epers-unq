@@ -146,13 +146,13 @@ public final class UbicacionControllerREST {
         return ResponseEntity.ok(dtocaminoMasCorto);
     }
 
-    @PostMapping("/closeness")
+    @GetMapping("/closeness")
     public ResponseEntity<List<ClosenessResultDTO>> closenessOf(@RequestBody IdsDTO idsDTO) {
         List<ClosenessResult> closeness = ubicacionService.closenessOf(idsDTO.ids());
         return ResponseEntity.ok(ClosenessResultDTO.desdeModelo(closeness));
     }
 
-    @PostMapping("/degree")
+    @GetMapping("/degree")
     public ResponseEntity<List<DegreeResultDTO>> getDegreeResult(@RequestBody IdsDTO idsDTO) {
         List<DegreeResult> degree = ubicacionService.degreeOf(idsDTO.ids());
         return ResponseEntity.ok(DegreeResultDTO.desdeModelo(degree));
