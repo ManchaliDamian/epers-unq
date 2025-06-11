@@ -26,5 +26,7 @@ public interface EspirituRepository {
     List<EspirituDemoniaco> recuperarDemoniosDe(Long mediumId);
     List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable);
     void deleteAll();
+    Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL);
+
 }
 

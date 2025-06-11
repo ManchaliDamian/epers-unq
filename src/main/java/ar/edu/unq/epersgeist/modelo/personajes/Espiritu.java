@@ -1,4 +1,5 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
+import ar.edu.unq.epersgeist.exception.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.exception.EspirituDominadoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
@@ -67,13 +68,23 @@ public abstract class Espiritu {
             this.getMediumConectado().desvincularseDe(this);
         }
     }
+
     public boolean estaDominado() {
         return this.getDominador() != null;
     }
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }
+    public Espiritu dominar(Espiritu espirituADominar) {
+        if (this.dominador.equals(espirituADominar)) {
+            throw new EspirituNoDominableException(espirituADominar.getId(), this.getId());
+        }
+        if (!espirituADominar.estaDominado() && espirituADominar.nivelDeConexion < 50) {
+            this.setDominador(espirituADominar);
+        }
 
+        return this;
+    }
     public void descansar(Ubicacion ubicacion) {
         this.recuperarConexionEn(ubicacion);
     }

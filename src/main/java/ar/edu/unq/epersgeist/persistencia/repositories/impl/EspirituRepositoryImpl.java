@@ -129,10 +129,16 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable) {
         return mapper.toDomainList(this.espirituDAOSQL.recuperarDemoniacosPaginados(pageable));
     }
-
+    @Override
+    public Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL) {
+        return espirituDAOMongo.distanciaA(longitud,latitud,idEspirituSQL);
+    }
     @Override
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();
         this.espirituDAOMongo.deleteAll();
     }
+
+
+
 }
