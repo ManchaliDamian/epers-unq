@@ -5,8 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Aggregation;
 import java.util.Optional;
 
-import java.util.Optional;
-
 public interface MediumDAOMongo extends MongoRepository<MediumMongoDTO, String> {
 
 

@@ -550,7 +550,7 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void closenessDeUbicacionesNoExistentesLanzaExcepcion(){
+    void closenessDeUbicacionesNoExistentesEsListaVacia(){
         assertTrue((serviceU.closenessOf(List.of(433L, 231L)).isEmpty()));
     }
 

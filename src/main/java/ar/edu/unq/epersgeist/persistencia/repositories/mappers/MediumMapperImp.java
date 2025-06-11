@@ -4,7 +4,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import org.springframework.context.annotation.Lazy;

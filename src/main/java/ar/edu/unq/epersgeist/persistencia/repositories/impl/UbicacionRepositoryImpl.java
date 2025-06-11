@@ -5,7 +5,6 @@ import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
-import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAONeo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.UbicacionDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.CementerioJPADTO;

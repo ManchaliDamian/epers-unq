@@ -123,7 +123,6 @@ public class EspirituServiceTest {
 
     @Test
     void testConectarEspirituNoDominadoAMediumSaleBien() {
-        belcebu.setDominador(null);
         medium = serviceM.guardar(medium, c1);
         Medium mediumConectado = serviceE.conectar(belcebu.getId(), medium.getId());
 
