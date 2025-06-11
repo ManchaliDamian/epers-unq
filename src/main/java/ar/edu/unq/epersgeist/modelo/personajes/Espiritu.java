@@ -75,12 +75,14 @@ public abstract class Espiritu {
     public boolean estaConectado() {
         return this.getMediumConectado() != null;
     }
+
     public Espiritu dominar(Espiritu espirituADominar) {
-        if (this.dominador.equals(espirituADominar)) {
-            throw new EspirituNoDominableException(espirituADominar.getId(), this.getId());
+
+        if (this.getDominador() != null && this.getDominador().equals(espirituADominar)) {
+            throw new EspirituNoDominableException(this.getId(), espirituADominar.getId());
         }
         if (!espirituADominar.estaDominado() && espirituADominar.nivelDeConexion < 50) {
-            this.setDominador(espirituADominar);
+            espirituADominar.setDominador(this);
         }
 
         return this;

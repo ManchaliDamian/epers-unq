@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.exception.EspirituDominadoException;
+import ar.edu.unq.epersgeist.exception.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -28,7 +29,26 @@ public class EspirituTest {
         angel = new EspirituAngelical("Angel",cementerio);
         demonio = new EspirituDemoniaco("Demonio", santuario);
     }
+    @Test
+    void dominar(){
+        demonio.setNivelDeConexion(40);
+        angel = angel.dominar(demonio);
+        assertEquals(angel, demonio.getDominador());
+    }
+    @Test
+    void intentarDominarAMas50DeEnergia(){
+        demonio.setNivelDeConexion(50);
+        angel = angel.dominar(demonio);
+        assertEquals(null, demonio.getDominador());
+    }
+    @Test
+    void dominarSiendoDominado(){
+        demonio.setNivelDeConexion(40);
+        angel.setNivelDeConexion(40);
+        angel = angel.dominar(demonio);
 
+        assertThrows(EspirituNoDominableException.class,() -> demonio.dominar(angel));
+    }
     @Test
     void aumentaNivelDeConexionDelEspiritu(){
         mediumConectado.conectarseAEspiritu(angel);
