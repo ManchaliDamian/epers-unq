@@ -53,7 +53,9 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacion.setCreatedAt(ubiJPA.getCreatedAt());
 
         // Neo
-        ubiDaoNeo.save(mapperU.toNeo(ubicacion));
+        Optional<UbicacionNeoDTO> existente = ubiDaoNeo.findByIdSQL(ubicacion.getId());
+        UbicacionNeoDTO neoDto = existente.orElseGet(() -> mapperU.toNeo(ubicacion));
+        ubiDaoNeo.save(neoDto);
 
         return ubicacion;
     }
@@ -78,10 +80,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Optional<Ubicacion> recuperar(Long ubicacionId){
         Optional<UbicacionJPADTO> recuperadoSql = this.recuperarSql(ubicacionId);
         Optional<UbicacionNeoDTO> recuperadoNeo = this.recuperarNeo(ubicacionId);
+
         Optional<Ubicacion> resultado = Optional.empty();
         if(recuperadoSql.isPresent() && recuperadoNeo.isPresent()){
             Ubicacion ubicacion = mapperU.toDomain(recuperadoSql.get());
-            Set<Long> conexionesId = recuperadoNeo.get().getConexiones().stream().map(UbicacionNeoDTO::getId).collect(Collectors.toSet());
+            Set<Long> conexionesId = recuperadoNeo.get().getConexiones()
+                    .stream().map(UbicacionNeoDTO::getIdSQL).collect(Collectors.toSet());
             List<UbicacionJPADTO> conexiones = ubiDaoSQL.findAllById(conexionesId);
             List<Ubicacion> conexionesUbicacion = mapperU.toDomainList(conexiones);
             ubicacion.setConexiones(new HashSet<>(conexionesUbicacion));
@@ -96,7 +100,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
 
     private Optional<UbicacionNeoDTO> recuperarNeo(Long ubicacionId){
-        return ubiDaoNeo.findById(ubicacionId);
+        return ubiDaoNeo.findByIdSQL(ubicacionId);
     }
 
     @Override
@@ -109,8 +113,49 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         UbicacionJPADTO ubicacionSQLAEliminar = this.recuperarSql(id).orElseThrow(() -> new UbicacionNoEncontradaException(id));
         ubicacionSQLAEliminar.setDeleted(true);
 
-        ubiDaoNeo.deleteById(id);
-        ubiDaoSQL.save(ubicacionSQLAEliminar);
+        ubiDaoNeo.deleteByIdSQL(id); //hard delete
+        ubiDaoSQL.save(ubicacionSQLAEliminar); //soft delete
+
+    }
+
+    @Override
+    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
+        List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
+
+        return nodosNeo.stream()
+                .map( neo -> ubiDaoSQL.findById(neo.getIdSQL())
+                        .orElseThrow(() -> new UbicacionNoEncontradaException(neo.getIdSQL()))
+                )
+                .map(mapperU::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll() {
+        this.ubiDaoNeo.deleteAll();
+        this.ubiDaoSQL.deleteAll();
+    }
+
+    @Override
+    public void conectar(Long idOrigen,Long idDestino){
+        ubiDaoNeo.conectar(idOrigen, idDestino);
+    }
+
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return mapperU.toDomainList(ubiDaoSQL.ubicacionesSobrecargadas(umbralDeEnergia));
+    }
+
+    @Override
+    public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
+        return ubiDaoNeo.recuperarConexiones(ubicacionId).stream()
+                .map(vecinoNeo -> {
+                    Long vecinoId = vecinoNeo.getIdSQL();
+                    UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
+                            .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
+                    return mapperU.toDomain(jpaDTO);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -154,50 +199,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public boolean estanConectadas(Long idOrigen,Long idDestino){
         return ubiDaoNeo.estanConectadas(idOrigen,idDestino);
-    }
-
-    @Override
-    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
-        List<UbicacionNeoDTO> nodosNeo = ubiDaoNeo.caminoMasCorto(idOrigen, idDestino);
-
-        return nodosNeo.stream()
-                .map(mapperU::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteAll() {
-        this.ubiDaoNeo.deleteAll();
-        this.ubiDaoSQL.deleteAll();
-    }
-
-    @Override
-    public void conectar(Long idOrigen,Long idDestino){
-        ubiDaoNeo.conectar(idOrigen, idDestino);
-    }
-
-    @Override
-    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
-        return mapperU.toDomainList(ubiDaoSQL.ubicacionesSobrecargadas(umbralDeEnergia));
-    }
-
-    @Override
-    public List<Ubicacion> recuperarConexiones(Long ubicacionId) {
-        List<UbicacionNeoDTO> vecinosNeo = ubiDaoNeo.recuperarConexiones(ubicacionId);
-
-        List<Ubicacion> resultado = new ArrayList<>();
-        for (UbicacionNeoDTO vecinoNeo : vecinosNeo) {
-            Long vecinoId = vecinoNeo.getId();
-
-            UbicacionJPADTO jpaDTO = ubiDaoSQL.findById(vecinoId)
-                    .orElseThrow(() -> new UbicacionNoEncontradaException(vecinoId));
-
-            Ubicacion dominio = mapperU.toDomain(jpaDTO);
-
-            resultado.add(dominio);
-        }
-
-        return resultado;
     }
 
     @Override
