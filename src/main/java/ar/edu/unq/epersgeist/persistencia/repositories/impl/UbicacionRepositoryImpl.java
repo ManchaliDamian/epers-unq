@@ -93,6 +93,15 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         return resultado;
     }
 
+    @Override
+    public Optional<Ubicacion> recuperarPorCoordenada(Double latitud, Double longitud){
+        Optional<PoligonoNeoDTO> recuperadoNeo = ubiDaoNeo.recuperarPorCoordenada(latitud, longitud);
+        if(recuperadoNeo.isPresent()){
+            return this.recuperar(recuperadoNeo.get().getIdSQL());
+        }
+        return Optional.empty();
+    }
+
     private Optional<UbicacionJPADTO> recuperarSql(Long ubicacionId){
         return ubiDaoSQL.findById(ubicacionId).filter(u -> !u.isDeleted());
     }

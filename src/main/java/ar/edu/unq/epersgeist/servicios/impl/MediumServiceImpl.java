@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -137,17 +138,30 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public void mover(Long mediumId, Long ubicacionId) {
+    public void mover(Long mediumId, Double latitud, Double longitud) {
         Medium medium = this.getMedium(mediumId);
-        Ubicacion destino = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+
         Ubicacion origen = medium.getUbicacion();
+
+        Ubicacion destino = ubicacionRepository.recuperarPorCoordenada(latitud, longitud)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
+
+        Double distancia = mediumRepository.laDistanciaA(latitud, longitud, origen.getId())
+                .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
+
+
         boolean conectadas = ubicacionRepository.estanConectadas(origen.getId(), destino.getId());
 
-        if (!conectadas) {
+        if ((!conectadas && origen != destino) || distancia > 30.0) {
             throw new UbicacionLejanaException(origen, destino);
         }
 
         medium.mover(destino);
         mediumRepository.actualizar(medium);
+        /*
+        espirituRepository.recuperarTodosDe(mediumId).forEach(espiritu -> {
+            espirituRepository.actualizar(espiritu);
+        });
+        */
     }
 }
