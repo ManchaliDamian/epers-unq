@@ -56,20 +56,28 @@ public class EspirituServiceTest {
     private Coordenada c3;
     private Coordenada c2;
     private Poligono poligono;
+    private Poligono poligono1;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(2.0,2.0);
+        c2 = new Coordenada(2.0,3.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
 
         quilmes = serviceU.guardar(quilmes, poligono);
-        berazategui = serviceU.guardar(berazategui, poligono);
+        berazategui = serviceU.guardar(berazategui, poligono1);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);

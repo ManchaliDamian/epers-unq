@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeAreaException;
 import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -7,11 +8,14 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,17 +27,26 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituDAOSQL espirituDAOSQL;
     private EspirituDAOMongo espirituDAOMongo;
     private EspirituMapper mapper;
+    private PoligonoDAO poligonoDAOMongo;
 
-    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapper){
+    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapper, PoligonoDAO poligonoDAOMongo){
         this.espirituDAOSQL = espirituDAOSQL;
         this.espirituDAOMongo = espirituDAOMongo;
         this.mapper = mapper;
+        this.poligonoDAOMongo = poligonoDAOMongo;
     }
 
     @Override
     public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
+
+        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersects(punto);
+        if (poligonoOpt.isEmpty()) {
+            throw new CoordenadaFueraDeAreaException("coordenada no valida");
+        }
         EspirituJPADTO jpa = mapper.toJpa(espiritu);
         jpa = espirituDAOSQL.save(jpa);
+
         EspirituMongoDTO mongoDTO = mapper.toMongo(jpa, coordenada);
         espirituDAOMongo.save(mongoDTO);
         return mapper.toDomain(jpa);
