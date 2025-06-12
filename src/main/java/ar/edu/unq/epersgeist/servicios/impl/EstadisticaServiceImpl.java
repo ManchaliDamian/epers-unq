@@ -34,7 +34,7 @@ public class EstadisticaServiceImpl implements EstadisticaService {
 
     public EstadisticaServiceImpl(
             UbicacionRepository ubicacionRepository,
-            EstadisticaRepository estadisticaRepository,
+            EstadisticaRepository estadisticaRepository
     ){
         this.ubicacionRepository = ubicacionRepository;
         this.estadisticaRepository = estadisticaRepository;
@@ -70,9 +70,6 @@ public class EstadisticaServiceImpl implements EstadisticaService {
     }
 
     public void cargarSnapshot(Date fecha){
-        SnapshotMongoDTO snapshot = estadisticaRepository.recuperarSnapshot(fecha);
-        if (snapshot == null) {
-            throw new SnapshotNoEncontradaException(fecha);
-        }
+        estadisticaRepository.recuperarSnapshot(fecha);
     }
 }

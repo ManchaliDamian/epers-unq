@@ -14,6 +14,6 @@ import java.util.Optional;
 
 public interface EstadisticaRepository {
     void guardarSnapshot();
-    SnapshotMongoDTO recuperarSnapshot(Date fecha);
+    void recuperarSnapshot(Date fecha);
 }
 
