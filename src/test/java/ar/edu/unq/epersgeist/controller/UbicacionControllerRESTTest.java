@@ -51,24 +51,32 @@ public class UbicacionControllerRESTTest {
     private EspirituDTO angelGuardado;
     private EspirituDTO demonGuardado;
 
-    private PoligonoDTO poligono;
     private CoordenadaDTO c1;
+    private CoordenadaDTO c4;
+    private CoordenadaDTO c3;
+    private CoordenadaDTO c2;
+    private PoligonoDTO poligono;
+    private PoligonoDTO poligono1;
 
     @BeforeEach
     void setUp() throws Throwable {
         dataService.eliminarTodo();
-        c1 = new CoordenadaDTO(0.0, 0.0);
-        List<CoordenadaDTO> coordenadasCuadrado = Arrays.asList(
-                c1, // esquina inferior izquierda
-                new CoordenadaDTO(0.0, 1.0), // esquina inferior derecha
-                new CoordenadaDTO(1.0, 1.0), // esquina superior derecha
-                new CoordenadaDTO(1.0, 0.0), // esquina superior izquierda
-                new CoordenadaDTO(0.0, 0.0)  // cerrar el polígono
-        );
-        poligono = new PoligonoDTO(coordenadasCuadrado);
+        c1 = new CoordenadaDTO(0.0,0.0);
+        c2 = new CoordenadaDTO(0.0,1.0);
+        c3 = new CoordenadaDTO(1.0,1.0);
+        c4 = new CoordenadaDTO(1.0,0.0);
+        List<CoordenadaDTO> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new PoligonoDTO(coordenadas);
+
+        c1 = new CoordenadaDTO(2.0,2.0);
+        c2 = new CoordenadaDTO(2.0,3.0);
+        c3 = new CoordenadaDTO(3.0,3.0);
+        c4 = new CoordenadaDTO(3.0,2.0);
+        List<CoordenadaDTO> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new PoligonoDTO(coordenadas1);
 
         quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
-        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono);
+        bernal = new CreateUbicacionDTO("Bernal",50, TipoUbicacion.SANTUARIO, poligono1);
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
