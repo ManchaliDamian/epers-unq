@@ -131,22 +131,27 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
 
-        Optional<Espiritu> espiritu = espirituRepository.recuperar(espirituId);
-        if (espiritu.isEmpty()) {
-            throw new EspirituNoEncontradoException(espirituId);
-        }
+        Espiritu espiritu = espirituRepository.recuperar(espirituId)
+                .orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+
         Medium medium = this.getMedium(mediumId);
 
         Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
-        mediumRepository.distanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
 
-        medium.invocarA(espiritu.get());
+        Double distancia = mediumRepository.distanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId())
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+
+        if (distancia > 50.0){
+            throw new EspirituMuyLejanoException(espirituId, mediumId);
+        }
+        medium.invocarA(espiritu);
 
         mediumRepository.actualizar(medium);
-        espirituRepository.actualizar(espiritu.get());
+        espirituRepository.actualizar(espiritu);
+        espirituRepository.actualizarUbicacionesPorMedium(mediumId, medium.getUbicacion());
 
-        return espiritu.get();
+        return espiritu;
     }
 
     @Override

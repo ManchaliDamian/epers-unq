@@ -7,7 +7,6 @@ import lombok.*;
 @EqualsAndHashCode
 public class Coordenada {
 
-    private String id;
     private Double longitud;
     private Double latitud;
 
