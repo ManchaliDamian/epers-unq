@@ -177,7 +177,7 @@ public class MediumServiceTest {
         medium2.conectarseAEspiritu(demonio);
         serviceM.actualizar(medium2);
 
-        serviceM.mover(medium2.getId(), c6.getLatitud(), c6.getLongitud());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud());
 
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium2.getId());
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
@@ -456,7 +456,7 @@ public class MediumServiceTest {
         serviceU.conectar(santuario.getId(), cementerio.getId());
         serviceU.conectar(cementerio.getId(), santuario.getId());
 
-        serviceM.mover(medium2.getId(), c6.getLatitud(), c7.getLongitud()); // mover a cementerio
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -490,7 +490,7 @@ public class MediumServiceTest {
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
 
-        serviceM.mover(medium2.getId(), c6.getLatitud(), c7.getLongitud()); // mover a cementerio
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -527,7 +527,7 @@ public class MediumServiceTest {
         serviceE.conectar(angel.getId(), medium1.getId());
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
-        serviceM.mover(medium2.getId(), c7.getLatitud(), c8.getLongitud()); // mover a cementerio
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
         assertDoesNotThrow(() -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
         });
@@ -557,7 +557,7 @@ public class MediumServiceTest {
         Optional<Espiritu> demonioRecuperado = serviceE.recuperar(demonio.getId());
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
-        serviceM.mover(medium2.getId(), c7.getLatitud(), c8.getLongitud()); // mover a cementerio
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         assertEquals(30, angelRecuperado.get().getNivelDeConexion());//20+10=30
         assertEquals(20, demonioRecuperado.get().getNivelDeConexion());//10+10=20
