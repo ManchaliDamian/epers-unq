@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 public interface EstadisticaRepository {
-    Date guardarSnapshot();
-    void cargarSnapshot(Date fecha);
+    void guardarSnapshot();
+    SnapshotMongoDTO recuperarSnapshot(Date fecha);
 }
 

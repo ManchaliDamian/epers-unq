@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
 
 
     @Override
-    public Date guardarSnapshot() {
+    public void guardarSnapshot() {
         Map<String, Object> datosSql = this.crearSnapshotSQL();
         Map<String, Object> datosMongo = this.crearSnapshotMongo();
         Map<String, Object> datosNeo = this.crearSnapshotNeo();
@@ -53,7 +52,7 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
         
         // GUARDAR EN MONGO
 
-        return fechaDeCreacion;
+
     }
 
     private Map<String, Object> crearSnapshotSQL(){
@@ -77,7 +76,7 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
     }
 
     @Override
-    public void cargarSnapshot(Date fecha) {
-
+    public SnapshotMongoDTO recuperarSnapshot(Date fecha) {
+        return new SnapshotMongoDTO(); // Para que no chille
     }
 }

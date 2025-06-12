@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.SnapshotNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -63,20 +65,14 @@ public class EstadisticaServiceImpl implements EstadisticaService {
                                                    ,mediumMayorCantDemoniacos);
     }
 
-    public Date guardarSnapshot() {
-        return estadisticaRepository.guardarSnapshot();
+    public void guardarSnapshot() {
+        estadisticaRepository.guardarSnapshot();
     }
 
     public void cargarSnapshot(Date fecha){
-        // Devolver 404 o un objeto vacio
         SnapshotMongoDTO snapshot = estadisticaRepository.recuperarSnapshot(fecha);
-
-        // vaciar sql {}
-        snapshot.getSql().forEach(entity -> {
-            entity
-        });
-        // vaciar mongo
-        // vaciar neo
-
+        if (snapshot == null) {
+            throw new SnapshotNoEncontradaException(fecha);
+        }
     }
 }
