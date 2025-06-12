@@ -7,10 +7,14 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +30,19 @@ public class MediumServiceImpl implements MediumService {
     private final MediumRepository mediumRepository;
     private final EspirituRepository espirituRepository;
     private final UbicacionRepository ubicacionRepository;
+    private final PoligonoRepository poligonoRepository;
+    private final MediumDAOMongo mediumDAOMongo;
 
-    public MediumServiceImpl(MediumRepository mediumRepository, EspirituRepository espirituRepository, UbicacionRepository ubicacionRepository) {
+    public MediumServiceImpl(MediumRepository mediumRepository,
+                             EspirituRepository espirituRepository,
+                             UbicacionRepository ubicacionRepository,
+                             PoligonoRepository poligonoRepository,
+                             MediumDAOMongo mediumDAOMongo) {
         this.mediumRepository = mediumRepository;
         this.espirituRepository = espirituRepository;
         this.ubicacionRepository = ubicacionRepository;
+        this.poligonoRepository = poligonoRepository;
+        this.mediumDAOMongo = mediumDAOMongo;
     }
 
 
@@ -127,7 +139,7 @@ public class MediumServiceImpl implements MediumService {
 
         Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
-        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
+        mediumRepository.distanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
 
         medium.invocarA(espiritu.get());
 
@@ -143,25 +155,42 @@ public class MediumServiceImpl implements MediumService {
 
         Ubicacion origen = medium.getUbicacion();
 
-        Ubicacion destino = ubicacionRepository.recuperarPorCoordenada(latitud, longitud)
+        Long ubicacionId = poligonoRepository.ubicacionIdConCoordenadas(latitud, longitud)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
 
-        Double distancia = mediumRepository.laDistanciaA(latitud, longitud, origen.getId())
+        Ubicacion destino = ubicacionRepository.recuperar(ubicacionId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
-
 
         boolean conectadas = ubicacionRepository.estanConectadas(origen.getId(), destino.getId());
 
-        if ((!conectadas && origen != destino) || distancia > 30.0) {
+        if (!Objects.equals(origen.getId(), destino.getId()) && !conectadas) {
             throw new UbicacionLejanaException(origen, destino);
         }
 
+        Double distancia = mediumRepository.distanciaA(latitud, longitud, origen.getId())
+                .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
+
+        if (distancia > 30.0){
+            throw new UbicacionLejanaException(distancia);
+        }
+
+        MediumMongoDTO mediumMongo = mediumDAOMongo.findByIdSQL(medium.getId())
+                .orElseThrow(() -> new MediumNoEncontradoException(medium.getId()));
+
         medium.mover(destino);
+
+        // actualizar personajes
         mediumRepository.actualizar(medium);
-        /*
-        espirituRepository.recuperarTodosDe(mediumId).forEach(espiritu -> {
-            espirituRepository.actualizar(espiritu);
-        });
-        */
+        espirituRepository.actualizarUbicacionesPorMedium(mediumId, destino); // para no hacer un bucle for modificando la ubicación de cada espíritu
+
+        // crear un nuevo punto con la nueva coordenada
+        GeoJsonPoint punto = new GeoJsonPoint(longitud, latitud);
+
+        // actualizar la coordenada de medium
+        mediumMongo.setPunto(punto);
+        mediumDAOMongo.save(mediumMongo);
+
+        // actualizar la coordenada de todos los espíritus del médium
+        espirituRepository.actualizarCoordenadasPorMedium(mediumId, punto);
     }
 }

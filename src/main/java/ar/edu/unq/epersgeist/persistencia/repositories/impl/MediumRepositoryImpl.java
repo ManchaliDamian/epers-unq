@@ -32,8 +32,8 @@ public class MediumRepositoryImpl implements MediumRepository {
     }
 
     @Override
-    public Optional<Double> laDistanciaA(Double longitud, Double latitud, Long idMediumSQL){
-        return mediumDAOMongo.distanciaA(longitud, latitud, idMediumSQL);
+    public Optional<Double> distanciaA(Double latitud, Double longitud, Long idMediumSQL){
+        return mediumDAOMongo.distanciaA(latitud, longitud, idMediumSQL);
     }
 
     @Override

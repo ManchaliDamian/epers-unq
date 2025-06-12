@@ -13,7 +13,6 @@ public interface UbicacionRepository {
     Ubicacion guardar(Ubicacion ubicacion);
     Ubicacion actualizar(Ubicacion ubicacion);
     Optional<Ubicacion> recuperar(Long ubicacionId);
-    Optional<Ubicacion> recuperarPorCoordenada(Double latitud, Double longitud);
     void eliminar(Long id);
     List<Ubicacion> recuperarTodos();
     List<Cementerio> recuperarCementerios();
