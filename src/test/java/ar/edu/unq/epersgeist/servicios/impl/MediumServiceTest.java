@@ -99,10 +99,8 @@ public class MediumServiceTest {
 
     @Test
     void invocarFallaPorDistanciaTest(){
-        c2.setLongitud(100.2);
-        c2.setLatitud(100.5);
-        medium1 = serviceM.guardar(medium1,c2);
-
+        Coordenada c = new Coordenada(80.1, 150.3);
+        medium1 = serviceM.actualizar(medium1, c);
         assertThrows(EspirituMuyLejanoException.class,
                 () -> serviceM.invocar(medium1.getId(), demonCementerio.getId()));
     }
