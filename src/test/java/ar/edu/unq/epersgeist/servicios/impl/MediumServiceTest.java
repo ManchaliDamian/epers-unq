@@ -172,18 +172,18 @@ public class MediumServiceTest {
 
     @Test
     void moverMedium_conEspiritus_actualizaUbicacionesEnCascada() {
-        serviceU.conectar(cementerio.getId(), santuario.getId());
+        serviceU.conectar(santuario.getId(), cementerio.getId());
 
-        medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        medium2.conectarseAEspiritu(demonio);
+        serviceM.actualizar(medium2);
 
-        serviceM.mover(medium1.getId(), c6.getLatitud(), c6.getLongitud());
+        serviceM.mover(medium2.getId(), c6.getLatitud(), c6.getLongitud());
 
-        Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
-        Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
+        Optional<Medium> mediumActualizado = serviceM.recuperar(medium2.getId());
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
 
-        assertEquals(santuario.getId(), mediumActualizado.get().getUbicacion().getId());
-        assertEquals(santuario.getId(), angelActualizado.get().getUbicacion().getId());
+        assertEquals(cementerio.getId(), mediumActualizado.get().getUbicacion().getId());
+        assertEquals(cementerio.getId(), demonioActualizado.get().getUbicacion().getId());
     }
 
     @Test
