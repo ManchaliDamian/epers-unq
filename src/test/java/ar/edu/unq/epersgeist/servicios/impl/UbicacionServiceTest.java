@@ -151,6 +151,7 @@ public class UbicacionServiceTest {
         serviceE.eliminar(angel.getId());
         List<Espiritu> espiritusEn = serviceU.espiritusEn(santuario.getId());
         assertEquals(1, espiritusEn.size());
+        assertFalse(espiritusEn.contains(angel));
     }
 
     @Test
@@ -549,7 +550,7 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void closenessDeUbicacionesNoExistentesLanzaExcepcion(){
+    void closenessDeUbicacionesNoExistentesEsListaVacia(){
         assertTrue((serviceU.closenessOf(List.of(433L, 231L)).isEmpty()));
     }
 

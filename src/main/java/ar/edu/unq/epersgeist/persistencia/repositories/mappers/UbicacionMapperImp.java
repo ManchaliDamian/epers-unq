@@ -56,7 +56,7 @@ public class UbicacionMapperImp implements UbicacionMapper{
         } else {
             ubi = new Santuario();
         }
-        ubi.setId(ubicacion.getId());
+        ubi.setId(ubicacion.getIdSQL());
         ubi.setTipo(tipo);
         return ubi;
     }
