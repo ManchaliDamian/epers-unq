@@ -126,7 +126,8 @@ public class MediumServiceImpl implements MediumService {
 
         Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
-        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId());
+        mediumRepository.laDistanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId())
+                                                            .orElseThrow(() -> new EspirituMuyLejanoException(espiritu.get().getId(),medium.getId()));
 
         medium.invocarA(espiritu.get());
 
