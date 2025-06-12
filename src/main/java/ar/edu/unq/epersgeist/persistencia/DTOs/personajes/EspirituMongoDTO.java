@@ -16,6 +16,8 @@ public class EspirituMongoDTO {
 
     private Long idSQL;
 
+    private Long mediumConectadoIdSQL;
+
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint punto;
 

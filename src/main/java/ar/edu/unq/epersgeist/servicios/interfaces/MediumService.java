@@ -22,6 +22,6 @@ public interface MediumService {
     List<EspirituAngelical> angeles(Long mediumId);
     List<EspirituDemoniaco> demonios(Long mediumId);
     Espiritu invocar(Long mediumId, Long espirituId);
-    void mover(Long mediumId, Long ubicacionId);
+    void mover(Long mediumId, Double latitud, Double longitud);
 
 }

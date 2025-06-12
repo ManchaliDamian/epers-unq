@@ -8,4 +8,10 @@ public class UbicacionNoEncontradaException extends EntityNotFoundException {
                 "Ubicacion no encontrada con ID: " + id
         );
     }
+
+    public UbicacionNoEncontradaException(Double latitud, Double longitud) {
+        super(
+                "Ubicacion no encontrada que contenga la coordenada con latitud: " + latitud + " y longitud: " + longitud
+        );
+    }
 }

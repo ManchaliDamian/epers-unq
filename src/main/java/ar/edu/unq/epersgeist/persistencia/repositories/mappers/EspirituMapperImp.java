@@ -241,6 +241,7 @@ public class EspirituMapperImp implements EspirituMapper {
         GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
         EspirituMongoDTO dto = new EspirituMongoDTO(punto);
         dto.setIdSQL(jpa.getId());
+        dto.setMediumConectadoIdSQL(jpa.getMediumConectado() != null ? jpa.getMediumConectado().getId() : null);
         return dto;
     }
 

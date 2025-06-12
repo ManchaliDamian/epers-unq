@@ -52,6 +52,11 @@ public class PoligonoRepositoryImpl implements PoligonoRepository {
     }
 
     @Override
+    public Optional<Long> ubicacionIdConCoordenadas(Double latitud, Double longitud) {
+        return poligonoDAO.ubicacionIdConCoordenadas(latitud, longitud);
+    }
+
+    @Override
     public void eliminarPorUbicacionId(Long ubicacionId) {
         poligonoDAO.deleteByUbicacionId(ubicacionId);
     }
