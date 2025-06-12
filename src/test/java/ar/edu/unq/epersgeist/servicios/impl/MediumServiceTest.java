@@ -53,22 +53,30 @@ public class MediumServiceTest {
     private Coordenada c3;
     private Coordenada c2;
     private Poligono poligono;
+    private Poligono poligono1;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(2.0,1.0);
-        c4 = new Coordenada(-1.0,-1.0);
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(2.0,2.0);
+        c2 = new Coordenada(2.0,3.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         cementerio = new Cementerio("La Plata", 4);
         santuario = new Santuario("Quilmes",70);
         santuario = serviceU.guardar(santuario, poligono);
-        cementerio =serviceU.guardar(cementerio, poligono);
+        cementerio =serviceU.guardar(cementerio, poligono1);
 
         medium1 = new Medium("Pablo", 100, 50, cementerio);
         medium2 = new Medium("Fidol", 100, 50, santuario);

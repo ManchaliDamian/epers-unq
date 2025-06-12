@@ -50,10 +50,10 @@ public class PoligonoServiceTest {
 
         // Crear un polígono triangular válido
         List<Coordenada> coordenadasTriangulo = Arrays.asList(
-            new Coordenada(0.0, 0.0),
-            new Coordenada(1.0, 1.0),
-            new Coordenada(0.0, 1.0),
-            new Coordenada(0.0, 0.0)  // cerrar el polígono
+            new Coordenada(3.0, 3.0),
+            new Coordenada(4.0, 4.0),
+            new Coordenada(3.0, 4.0),
+            new Coordenada(3.0, 3.0)  // cerrar el polígono
         );
         poligonoTriangular = new Poligono(coordenadasTriangulo);
 

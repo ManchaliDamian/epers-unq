@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,8 @@ public interface PoligonoDAO extends MongoRepository<PoligonoMongoDTO, String> {
 
     @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
     Optional<PoligonoMongoDTO> findOneIntersectandoPuntoEnOtraUbicacion(GeoJsonPoint punto, Long ubicacionId);
+
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
+    Optional<PoligonoMongoDTO> findOneIntersectandoPoligonoConOtraUbicacion(GeoJsonPolygon poligono, Long ubicacionId);
 
 }

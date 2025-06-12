@@ -17,8 +17,14 @@ public interface UbicacionDAONeo extends Neo4jRepository<UbicacionNeoDTO, Long> 
     @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL DETACH DELETE u")
     void deleteByIdSQL(@Param("idSQL") Long idSQL);
 
-    @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL RETURN u")
+    @Query("MATCH (u:UbicacionNeoDTO) WHERE u.idSQL = $idSQL RETURN u LIMIT 1")
     Optional<UbicacionNeoDTO> findByIdSQL(@Param("idSQL") Long idSQL);
+    @Query("""
+        MERGE (u:UbicacionNeoDTO {idSQL: $idSQL})
+        SET u.nombre = $nombre
+        RETURN u
+        """)
+    Optional<UbicacionNeoDTO> mergeByIdSQL(@Param("idSQL") Long idSQL, @Param("nombre") String nombre);
 
     @Query(
             "MATCH (u:UbicacionNeoDTO {idSQL: $idSQL})-[:CONECTA]-()" +

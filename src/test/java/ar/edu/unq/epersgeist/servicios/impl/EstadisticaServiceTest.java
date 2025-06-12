@@ -45,15 +45,35 @@ public class EstadisticaServiceTest {
     private Espiritu demoniaco1;
     private EspirituDemoniaco demoniaco2;
     private EspirituDemoniaco demoniaco3;
-
+    private Coordenada c1;
+    private Coordenada c4;
+    private Coordenada c3;
+    private Coordenada c2;
+    private Poligono poligono;
+    private Poligono poligono1;
+    private Poligono poligono2;
     @BeforeEach
     void setUp() {
-        Coordenada c1 = new Coordenada(1.0, 1.0);
-        Coordenada c2 = new Coordenada(2.0, 2.0);
-        Coordenada c3 = new Coordenada(3.0, 3.0);
-        Coordenada c4 = new Coordenada(-1.0, -1.0);
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        Poligono poligono = new Poligono(coordenadas);
+        poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(2.0,2.0);
+        c2 = new Coordenada(2.0,3.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
+
+        c1 = new Coordenada(6.0,6.0);
+        c2 = new Coordenada(6.0,7.0);
+        c3 = new Coordenada(7.0,7.0);
+        c4 = new Coordenada(7.0,6.0);
+        List<Coordenada> coordenadas2 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono2 = new Poligono(coordenadas2);
 
         cementerio = new Cementerio("Quilmes",1);
 
@@ -68,8 +88,8 @@ public class EstadisticaServiceTest {
         medium1 = new Medium("medium 1",100,50,santuario1);
 
         ubicacionService.guardar(cementerio, poligono);
-        ubicacionService.guardar(santuario1, poligono);
-        ubicacionService.guardar(santuario2, poligono);
+        ubicacionService.guardar(santuario1, poligono1);
+        ubicacionService.guardar(santuario2, poligono2);
 
         medium1 = mediumService.guardar(medium1, c1);
 

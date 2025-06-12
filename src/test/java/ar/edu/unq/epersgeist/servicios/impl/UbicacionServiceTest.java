@@ -57,15 +57,24 @@ public class UbicacionServiceTest {
     private Coordenada c3;
     private Coordenada c2;
     private Poligono poligono;
+    private Poligono poligono1;
+    private Poligono poligono2;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(2.0,2.0);
+        c2 = new Coordenada(2.0,3.0);
+        c3 = new Coordenada(3.0,3.0);
+        c4 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
 
         santuario = new Santuario("Quilmes", 70);
         cementerio = new Cementerio("Bernal", 60);
@@ -78,7 +87,7 @@ public class UbicacionServiceTest {
         medium2 = new Medium("roberto", 200, 150, santuario);
         medium3 = new Medium("roberto", 200, 150, santuario);
         santuario = serviceU.guardar(santuario, poligono);
-        cementerio = serviceU.guardar(cementerio, poligono);
+        cementerio = serviceU.guardar(cementerio, poligono1);
     }
 
     @Test
@@ -106,7 +115,6 @@ public class UbicacionServiceTest {
 
     @Test
     void testCreateAtDeUbicacion() {
-        santuario = serviceU.guardar(santuario, poligono);
 
         Date fechaEsperada = new Date();
 
@@ -264,7 +272,7 @@ public class UbicacionServiceTest {
     void actualizarUnaUbicacion() {
         Optional<Ubicacion> q = serviceU.recuperar(santuario.getId());
         q.get().cambiarNombre("Avellaneda");
-        serviceU.guardar(q.get(), poligono);
+        serviceU.actualizar(q.get());
         Optional<Ubicacion> nombreNuevo = serviceU.recuperar(q.get().getId());
 
         assertEquals("Avellaneda", nombreNuevo.get().getNombre());
@@ -350,9 +358,29 @@ public class UbicacionServiceTest {
 
     @Test
     void caminoMasCorto_eligeRutaMasCorta() {
+        c1 = new Coordenada(10.0,10.0);
+        c2 = new Coordenada(10.0,11.0);
+        c3 = new Coordenada(11.0,11.0);
+        c4 = new Coordenada(11.0,10.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(22.0,22.0);
+        c2 = new Coordenada(22.0,33.0);
+        c3 = new Coordenada(33.0,33.0);
+        c4 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
+
+        c1 = new Coordenada(66.0,66.0);
+        c2 = new Coordenada(66.0,77.0);
+        c3 = new Coordenada(77.0,77.0);
+        c4 = new Coordenada(77.0,66.0);
+        List<Coordenada> coordenadas2 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono2 = new Poligono(coordenadas2);
         Ubicacion x = serviceU.guardar(new Santuario("X", 20), poligono);
-        Ubicacion y = serviceU.guardar(new Santuario("Y", 30), poligono);
-        Ubicacion z = serviceU.guardar(new Santuario("Z", 40), poligono);
+        Ubicacion y = serviceU.guardar(new Santuario("Y", 30), poligono1);
+        Ubicacion z = serviceU.guardar(new Santuario("Z", 40), poligono2);
 
         // Ruta larga: A->X->Y->Z
         serviceU.conectar(santuario.getId(), x.getId());
@@ -384,8 +412,22 @@ public class UbicacionServiceTest {
     }
     @Test
     void caminoMasCorto_variosSaltos_debeDevolverTodaLaCadena() {
+        c1 = new Coordenada(10.0,10.0);
+        c2 = new Coordenada(10.0,11.0);
+        c3 = new Coordenada(11.0,11.0);
+        c4 = new Coordenada(11.0,10.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(22.0,22.0);
+        c2 = new Coordenada(22.0,33.0);
+        c3 = new Coordenada(33.0,33.0);
+        c4 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
+
         Ubicacion b = serviceU.guardar(new Santuario("B", 20), poligono);
-        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono);
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono1);
 
         // A → B → C → cementerio
         serviceU.conectar(santuario.getId(), b.getId());
@@ -468,8 +510,21 @@ public class UbicacionServiceTest {
 
     @Test
     void recuperarConexiones_multiplesVecinos_debeDevolverTodosLosDestinos() {
+        c1 = new Coordenada(10.0,10.0);
+        c2 = new Coordenada(10.0,11.0);
+        c3 = new Coordenada(11.0,11.0);
+        c4 = new Coordenada(11.0,10.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(22.0,22.0);
+        c2 = new Coordenada(22.0,33.0);
+        c3 = new Coordenada(33.0,33.0);
+        c4 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
         Ubicacion b = serviceU.guardar(new Santuario("B", 20), poligono);
-        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono);
+        Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono1);
 
         serviceU.conectar(santuario.getId(), b.getId());
         serviceU.conectar(santuario.getId(), c.getId());
@@ -504,14 +559,41 @@ public class UbicacionServiceTest {
 
     @Test
     void closeness() {
+        c1 = new Coordenada(10.0,10.0);
+        c2 = new Coordenada(10.0,11.0);
+        c3 = new Coordenada(11.0,11.0);
+        c4 = new Coordenada(11.0,10.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+
+        c1 = new Coordenada(22.0,22.0);
+        c2 = new Coordenada(22.0,33.0);
+        c3 = new Coordenada(33.0,33.0);
+        c4 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono1 = new Poligono(coordenadas1);
+
+        c1 = new Coordenada(66.0,66.0);
+        c2 = new Coordenada(66.0,77.0);
+        c3 = new Coordenada(77.0,77.0);
+        c4 = new Coordenada(77.0,66.0);
+        List<Coordenada> coordenadas2 = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono2 = new Poligono(coordenadas2);
+
+        c1 = new Coordenada(79.0,79.0);
+        c2 = new Coordenada(79.0,80.0);
+        c3 = new Coordenada(80.0,80.0);
+        c4 = new Coordenada(80.0,79.0);
+        List<Coordenada> coordenadas3 = Arrays.asList(c1, c2, c3, c4, c1);
+        Poligono poligono3 = new Poligono(coordenadas3);
         ubicacion1 = new Cementerio("U1", 10);
         ubicacion2 = new Cementerio("U2", 10);
         ubicacion3 = new Cementerio("U3", 10);
         ubicacion4 = new Cementerio("U4", 10);
         ubicacion1 = serviceU.guardar(ubicacion1, poligono);
-        ubicacion2 = serviceU.guardar(ubicacion2, poligono);
-        ubicacion3 = serviceU.guardar(ubicacion3, poligono);
-        ubicacion4 = serviceU.guardar(ubicacion4, poligono);
+        ubicacion2 = serviceU.guardar(ubicacion2, poligono1);
+        ubicacion3 = serviceU.guardar(ubicacion3, poligono2);
+        ubicacion4 = serviceU.guardar(ubicacion4, poligono3);
         serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion1.getId());
         serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
