@@ -55,6 +55,10 @@ public class EspirituServiceTest {
     private Coordenada c4;
     private Coordenada c3;
     private Coordenada c2;
+    private Coordenada c5;
+    private Coordenada c6;
+    private Coordenada c7;
+    private Coordenada c8;
     private Poligono poligono;
     private Poligono poligono1;
 
@@ -67,11 +71,11 @@ public class EspirituServiceTest {
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
 
-        c1 = new Coordenada(2.0,2.0);
-        c2 = new Coordenada(2.0,3.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(3.0,2.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(2.0,2.0);
+        c6 = new Coordenada(2.0,3.0);
+        c7 = new Coordenada(3.0,3.0);
+        c8 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new Poligono(coordenadas1);
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);

@@ -16,8 +16,9 @@ public interface PoligonoDAO extends MongoRepository<PoligonoMongoDTO, String> {
     void deleteByUbicacionId(Long ubicacionId);
 
     // busca el polígono de una ubicación que *contenga* el punto
-    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } } }")
-    Optional<PoligonoMongoDTO> findByPoligonoGeoIntersects(GeoJsonPoint punto);
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': ?1 }")
+    Optional<PoligonoMongoDTO> findByPoligonoGeoIntersectsAndUbicacionId(GeoJsonPoint punto, Long ubicacionId);
+
 
 
     @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")

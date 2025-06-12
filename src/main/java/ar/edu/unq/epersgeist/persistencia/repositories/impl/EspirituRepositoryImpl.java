@@ -40,7 +40,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
         GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
 
-        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersects(punto);
+        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersectsAndUbicacionId(punto, espiritu.getUbicacion().getId());
         if (poligonoOpt.isEmpty()) {
             throw new CoordenadaFueraDeAreaException("coordenada no valida");
         }

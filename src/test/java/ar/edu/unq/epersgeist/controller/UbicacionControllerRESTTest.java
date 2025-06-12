@@ -10,6 +10,7 @@ import ar.edu.unq.epersgeist.controller.helper.MockMVCEspirituController;
 import ar.edu.unq.epersgeist.controller.helper.MockMVCUbicacionController;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.enums.TipoUbicacion;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
@@ -55,6 +56,10 @@ public class UbicacionControllerRESTTest {
     private CoordenadaDTO c4;
     private CoordenadaDTO c3;
     private CoordenadaDTO c2;
+    private CoordenadaDTO c5;
+    private CoordenadaDTO c6;
+    private CoordenadaDTO c7;
+    private CoordenadaDTO c8;
     private PoligonoDTO poligono;
     private PoligonoDTO poligono1;
 
@@ -68,11 +73,11 @@ public class UbicacionControllerRESTTest {
         List<CoordenadaDTO> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new PoligonoDTO(coordenadas);
 
-        c1 = new CoordenadaDTO(2.0,2.0);
-        c2 = new CoordenadaDTO(2.0,3.0);
-        c3 = new CoordenadaDTO(3.0,3.0);
-        c4 = new CoordenadaDTO(3.0,2.0);
-        List<CoordenadaDTO> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new CoordenadaDTO(2.0,2.0);
+        c6 = new CoordenadaDTO(2.0,3.0);
+        c7 = new CoordenadaDTO(3.0,3.0);
+        c8 = new CoordenadaDTO(3.0,2.0);
+        List<CoordenadaDTO> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new PoligonoDTO(coordenadas1);
 
         quilmes = new CreateUbicacionDTO("Quilmes",50, TipoUbicacion.CEMENTERIO, poligono);
@@ -80,7 +85,7 @@ public class UbicacionControllerRESTTest {
         bernalGuardado = mockMVCUbicacionController.guardarUbicacion(bernal, UbicacionDTO.class);
         quilmesGuardado = mockMVCUbicacionController.guardarUbicacion(quilmes, UbicacionDTO.class);
 
-        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL, c1);
+        angel = new CreateEspirituDTO("angel", bernalGuardado.id(), TipoEspiritu.ANGELICAL, c5);
         demon = new CreateEspirituDTO("demon", quilmesGuardado.id(), TipoEspiritu.DEMONIACO, c1);
 
         angelGuardado = mockMVCEspirituController.guardarEspiritu(angel, EspirituDTO.class);

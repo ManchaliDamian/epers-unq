@@ -52,6 +52,10 @@ public class MediumServiceTest {
     private Coordenada c4;
     private Coordenada c3;
     private Coordenada c2;
+    private Coordenada c5;
+    private Coordenada c6;
+    private Coordenada c7;
+    private Coordenada c8;
     private Poligono poligono;
     private Poligono poligono1;
 
@@ -64,11 +68,11 @@ public class MediumServiceTest {
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
 
-        c1 = new Coordenada(2.0,2.0);
-        c2 = new Coordenada(2.0,3.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(3.0,2.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(2.0,2.0);
+        c6 = new Coordenada(2.0,3.0);
+        c7 = new Coordenada(3.0,3.0);
+        c8 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new Poligono(coordenadas1);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
@@ -83,11 +87,11 @@ public class MediumServiceTest {
         demonio = new EspirituDemoniaco("Jose", santuario);
         demonCementerio = new EspirituDemoniaco("Juan", cementerio);
         angel = new EspirituAngelical( "kici", cementerio);
-        medium1 = serviceM.guardar(medium1, c1);
+        medium1 = serviceM.guardar(medium1, c5);
         medium2 = serviceM.guardar(medium2, c1);
         demonio = serviceE.guardar(demonio, c1);
-        demonCementerio = serviceE.guardar(demonCementerio, c1);
-        angel = serviceE.guardar(angel, c1);
+        demonCementerio = serviceE.guardar(demonCementerio, c5);
+        angel = serviceE.guardar(angel, c5);
 
     }
 
@@ -475,8 +479,8 @@ public class MediumServiceTest {
 
         demonio.setNivelDeConexion(25); // 35 al conectarse
         demonio = serviceE.actualizar(demonio);
-        angel1 = serviceE.guardar(angel1, c1);
-        angel2 = serviceE.guardar(angel2, c1);
+        angel1 = serviceE.guardar(angel1, c5);
+        angel2 = serviceE.guardar(angel2, c5);
 
         medium1 = serviceE.conectar(angel1. getId(), medium1.getId());
         medium1 = serviceE.conectar(angel2. getId(), medium1.getId());

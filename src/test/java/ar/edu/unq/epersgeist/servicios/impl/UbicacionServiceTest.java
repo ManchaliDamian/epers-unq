@@ -56,6 +56,14 @@ public class UbicacionServiceTest {
     private Coordenada c4;
     private Coordenada c3;
     private Coordenada c2;
+    private Coordenada c5;
+    private Coordenada c6;
+    private Coordenada c7;
+    private Coordenada c8;
+    private Coordenada c9;
+    private Coordenada c10;
+    private Coordenada c11;
+    private Coordenada c12;
     private Poligono poligono;
     private Poligono poligono1;
     private Poligono poligono2;
@@ -69,11 +77,11 @@ public class UbicacionServiceTest {
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
 
-        c1 = new Coordenada(2.0,2.0);
-        c2 = new Coordenada(2.0,3.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(3.0,2.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(2.0,2.0);
+        c6 = new Coordenada(2.0,3.0);
+        c7 = new Coordenada(3.0,3.0);
+        c8 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new Poligono(coordenadas1);
 
         santuario = new Santuario("Quilmes", 70);
