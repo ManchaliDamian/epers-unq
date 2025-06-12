@@ -84,6 +84,16 @@ public class MediumServiceTest {
     }
 
     @Test
+    void invocarFallaPorDistanciaTest(){
+        c2.setLongitud(100.2);
+        c2.setLatitud(100.5);
+        medium1 = serviceM.guardar(medium1,c2);
+
+        assertThrows(EspirituMuyLejanoException.class,
+                () -> serviceM.invocar(medium1.getId(), demonCementerio.getId()));
+    }
+
+    @Test
     void testUpdateATDeMedium(){
         String nuevoNombre = "Nuevo nombre Medium";
 
