@@ -167,7 +167,7 @@ public class MediumServiceImpl implements MediumService {
             throw new UbicacionLejanaException(origen, destino);
         }
 
-        Double distancia = mediumRepository.distanciaA(latitud, longitud, origen.getId())
+        Double distancia = mediumRepository.distanciaA(latitud, longitud, mediumId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
 
         if (distancia > 30.0){
