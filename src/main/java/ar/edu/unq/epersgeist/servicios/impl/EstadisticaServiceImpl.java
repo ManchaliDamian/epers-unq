@@ -3,18 +3,13 @@ import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
-
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import ar.edu.unq.epersgeist.exception.NoHaySantuarioCorruptoException;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
-
 
 @Service
 @Transactional

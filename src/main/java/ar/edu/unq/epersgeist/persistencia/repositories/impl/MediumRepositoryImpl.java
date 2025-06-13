@@ -72,10 +72,8 @@ public class MediumRepositoryImpl implements MediumRepository {
         }
         MediumJPADTO dto = actualizarMediumJPA(medium);
 
-        // eliminar la coordenada anterior
         mediumDAOMongo.deleteByIdSQL(medium.getId());
 
-        // crear nuevo document
         MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
         mediumDAOMongo.save(mongoDTO);
         return mediumMapper.toDomain(dto);

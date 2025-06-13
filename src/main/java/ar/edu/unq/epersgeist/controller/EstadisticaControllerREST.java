@@ -2,17 +2,11 @@ package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.ReporteSantuarioCorruptoDTO;
 import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
-import ar.edu.unq.epersgeist.exception.MediumNoEncontradoException;
-import ar.edu.unq.epersgeist.exception.SnapshotNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
-import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController

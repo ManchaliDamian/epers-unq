@@ -9,8 +9,6 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-
 
 public record CreateEspirituDTO(
         @NotBlank String nombre,
