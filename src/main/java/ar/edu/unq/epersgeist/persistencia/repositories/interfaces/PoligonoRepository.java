@@ -10,7 +10,7 @@ public interface PoligonoRepository {
     List<Poligono> recuperarTodos();
     Optional<Poligono> recuperar(String poligonoId);
     Optional<Poligono> recuperarPorUbicacionId(Long ubicacionId);
+    Optional<Long> ubicacionIdConCoordenadas(Double latitud, Double longitud);
     void eliminarPorUbicacionId(Long ubicacionId);
     void deleteAll();
-
 }

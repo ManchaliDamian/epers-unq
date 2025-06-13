@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.CreateMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.UpdateMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -102,10 +103,10 @@ public class MediumControllerREST {
         return ResponseEntity.ok(EspirituDTO.desdeModelo(espiritu));
     }
 
-    @PutMapping("/{id}/mover/{ubicacionId}")
-    public ResponseEntity<String> mover(@PathVariable Long id, @PathVariable Long ubicacionId) {
-        mediumService.mover(id, ubicacionId);
-        return ResponseEntity.ok("Espíritu movido con éxito");
+    @PutMapping("/{id}/mover")
+    public ResponseEntity<String> mover(@PathVariable Long id, @RequestBody CoordenadaDTO coordenada) {
+        mediumService.mover(id, coordenada.latitud(), coordenada.longitud());
+        return ResponseEntity.ok("Medium movido con éxito");
     }
 
 }

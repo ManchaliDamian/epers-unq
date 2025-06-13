@@ -49,50 +49,60 @@ public class MediumServiceTest {
     private Ubicacion cementerio;
 
     private Coordenada c1;
-    private Coordenada c4;
-    private Coordenada c3;
     private Coordenada c2;
+    private Coordenada c3;
+    private Coordenada c4;
     private Coordenada c5;
     private Coordenada c6;
     private Coordenada c7;
     private Coordenada c8;
-    private Poligono poligono;
-    private Poligono poligono1;
+    private Poligono poligonoSantuario;
+    private Poligono poligonoCementerio;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(0.0,0.0);
-        c2 = new Coordenada(0.0,1.0);
-        c3 = new Coordenada(1.0,1.0);
-        c4 = new Coordenada(1.0,0.0);
-        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
-        poligono = new Poligono(coordenadas);
+        c1 = new Coordenada(0.00, 0.00);       // Inferior izquierda
+        c2 = new Coordenada(0.00, 0.18);       // Inferior derecha
+        c3 = new Coordenada(0.18, 0.18);       // Superior derecha
+        c4 = new Coordenada(0.18, 0.00);       // Superior izquierda
 
-        c5 = new Coordenada(2.0,2.0);
-        c6 = new Coordenada(2.0,3.0);
-        c7 = new Coordenada(3.0,3.0);
-        c8 = new Coordenada(3.0,2.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
-        poligono1 = new Poligono(coordenadas1);
+        // mismo polígono pero corrido a la derecha
+        c5 = new Coordenada(0.00, 0.225);
+        c6 = new Coordenada(0.00, 0.405);
+        c7 = new Coordenada(0.18, 0.405);
+        c8 = new Coordenada(0.18, 0.225);
+        List<Coordenada> coordenadasSantuario = Arrays.asList(c1, c2, c3, c4, c1);
+        poligonoSantuario = new Poligono(coordenadasSantuario);
+
+        List<Coordenada> coordenadasCementerio = Arrays.asList(c5, c6, c7, c8, c5);
+        poligonoCementerio = new Poligono(coordenadasCementerio);
 
         Generador.setEstrategia(new GeneradorSecuencial(50));
 
         cementerio = new Cementerio("La Plata", 4);
-        santuario = new Santuario("Quilmes",70);
-        santuario = serviceU.guardar(santuario, poligono);
-        cementerio =serviceU.guardar(cementerio, poligono1);
+        santuario  = new Santuario("Quilmes",70);
+        santuario  = serviceU.guardar(santuario, poligonoSantuario);
+        cementerio = serviceU.guardar(cementerio, poligonoCementerio);
 
-        medium1 = new Medium("Pablo", 100, 50, cementerio);
-        medium2 = new Medium("Fidol", 100, 50, santuario);
-        demonio = new EspirituDemoniaco("Jose", santuario);
+        medium1         = new Medium("Pablo", 100, 50, cementerio);
+        medium2         = new Medium("Fidol", 100, 50, santuario);
+        demonio         = new EspirituDemoniaco("Jose", santuario);
         demonCementerio = new EspirituDemoniaco("Juan", cementerio);
-        angel = new EspirituAngelical( "kici", cementerio);
-        medium1 = serviceM.guardar(medium1, c5);
-        medium2 = serviceM.guardar(medium2, c1);
-        demonio = serviceE.guardar(demonio, c1);
+        angel           = new EspirituAngelical( "kici", cementerio);
+        medium1         = serviceM.guardar(medium1, c5);
+        medium2         = serviceM.guardar(medium2, c1);
+        demonio         = serviceE.guardar(demonio, c1);
         demonCementerio = serviceE.guardar(demonCementerio, c5);
-        angel = serviceE.guardar(angel, c5);
+        angel           = serviceE.guardar(angel, c5);
 
+    }
+
+    @Test
+    void invocarFallaPorDistanciaTest(){
+        Coordenada c = new Coordenada(80.1, 150.3);
+        medium1 = serviceM.actualizar(medium1, c);
+        assertThrows(EspirituMuyLejanoException.class,
+                () -> serviceM.invocar(medium1.getId(), demonCementerio.getId()));
     }
 
     @Test
@@ -165,23 +175,23 @@ public class MediumServiceTest {
     @Test
     void moverMedium_aUbicacionInexistente_lanzaExcepcion() {
         assertThrows(UbicacionNoEncontradaException.class,
-                () -> serviceM.mover(medium1.getId(), 999L));
+                () -> serviceM.mover(medium1.getId(), 70.0,50.0));
     }
 
     @Test
     void moverMedium_conEspiritus_actualizaUbicacionesEnCascada() {
-        serviceU.conectar(cementerio.getId(), santuario.getId());
+        serviceU.conectar(santuario.getId(), cementerio.getId());
 
-        medium1.conectarseAEspiritu(angel);
-        serviceM.actualizar(medium1);
+        medium2.conectarseAEspiritu(demonio);
+        serviceM.actualizar(medium2);
 
-        serviceM.mover(medium1.getId(), santuario.getId());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud());
 
-        Optional<Medium> mediumActualizado = serviceM.recuperar(medium1.getId());
-        Optional<Espiritu> angelActualizado = serviceE.recuperar(angel.getId());
+        Optional<Medium> mediumActualizado = serviceM.recuperar(medium2.getId());
+        Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
 
-        assertEquals(santuario.getId(), mediumActualizado.get().getUbicacion().getId());
-        assertEquals(santuario.getId(), angelActualizado.get().getUbicacion().getId());
+        assertEquals(cementerio.getId(), mediumActualizado.get().getUbicacion().getId());
+        assertEquals(cementerio.getId(), demonioActualizado.get().getUbicacion().getId());
     }
 
     @Test
@@ -454,7 +464,7 @@ public class MediumServiceTest {
         serviceU.conectar(santuario.getId(), cementerio.getId());
         serviceU.conectar(cementerio.getId(), santuario.getId());
 
-        serviceM.mover(medium2.getId(), cementerio.getId());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -479,8 +489,8 @@ public class MediumServiceTest {
 
         demonio.setNivelDeConexion(25); // 35 al conectarse
         demonio = serviceE.actualizar(demonio);
-        angel1 = serviceE.guardar(angel1, c5);
-        angel2 = serviceE.guardar(angel2, c5);
+        angel1 = serviceE.guardar(angel1, c1);
+        angel2 = serviceE.guardar(angel2, c1);
 
         medium1 = serviceE.conectar(angel1. getId(), medium1.getId());
         medium1 = serviceE.conectar(angel2. getId(), medium1.getId());
@@ -488,7 +498,7 @@ public class MediumServiceTest {
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
 
-        serviceM.mover(medium2.getId(), cementerio.getId());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         serviceM.exorcizar(medium1.getId(), medium2.getId());
 
@@ -510,7 +520,7 @@ public class MediumServiceTest {
 
         serviceE.conectar(demonio.getId(), medium2.getId());
         serviceU.conectar(cementerio.getId(), santuario.getId());
-        serviceM.mover(medium1.getId(), santuario.getId());
+        serviceM.mover(medium1.getId(), c1.getLatitud(), c2.getLongitud()); // mover a santuario
         assertThrows(ExorcistaSinAngelesException.class, () -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
         });
@@ -525,7 +535,7 @@ public class MediumServiceTest {
         serviceE.conectar(angel.getId(), medium1.getId());
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
-        serviceM.mover(medium2.getId(), cementerio.getId());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
         assertDoesNotThrow(() -> {
             serviceM.exorcizar(medium1.getId(), medium2.getId());
         });
@@ -555,7 +565,7 @@ public class MediumServiceTest {
         Optional<Espiritu> demonioRecuperado = serviceE.recuperar(demonio.getId());
 
         serviceU.conectar(santuario.getId(), cementerio.getId());
-        serviceM.mover(medium2.getId(), cementerio.getId());
+        serviceM.mover(medium2.getId(), c5.getLatitud(), c5.getLongitud()); // mover a cementerio
 
         assertEquals(30, angelRecuperado.get().getNivelDeConexion());//20+10=30
         assertEquals(20, demonioRecuperado.get().getNivelDeConexion());//10+10=20
