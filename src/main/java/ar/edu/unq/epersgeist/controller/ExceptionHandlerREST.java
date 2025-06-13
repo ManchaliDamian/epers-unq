@@ -3,10 +3,7 @@ package ar.edu.unq.epersgeist.controller;
 import ar.edu.unq.epersgeist.controller.dto.ErrorDTO;
 import ar.edu.unq.epersgeist.exception.BadRequest.BadRequestException;
 import ar.edu.unq.epersgeist.exception.Conflict.ConflictException;
-import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
-import ar.edu.unq.epersgeist.exception.Conflict.NombreDeUbicacionRepetidoException;
-import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.RecursoNoEliminableException;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
