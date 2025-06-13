@@ -217,6 +217,17 @@ public class EspirituServiceTest {
     }
 
     @Test
+    void testConectarEspirituAMediumFallaPorqueEspirituEstaDominado() {
+        azazel.setDominador(angel);
+        azazel = serviceE.actualizar(azazel);
+        medium = serviceM.guardar(medium, c1);
+
+        assertThrows(EspirituDominadoException.class, () -> {
+            serviceE.conectar(azazel.getId(), medium.getId());
+        });
+    }
+
+    @Test
     void testGuardarYRecuperarEspiritu() {
         Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
         nuevoEspiritu = serviceE.guardar(nuevoEspiritu, c1);
