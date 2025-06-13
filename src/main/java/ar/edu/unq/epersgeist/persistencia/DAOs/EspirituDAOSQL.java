@@ -52,12 +52,4 @@ public interface EspirituDAOSQL extends JpaRepository<EspirituJPADTO, Long> {
 
     @Query("FROM EspirituDemoniaco e where e.deleted = false")
     List<EspirituJPADTO> recuperarDemoniacosPaginados(Pageable pageable);
-
-    @Modifying
-    @Query("""
-       UPDATE Espiritu e
-         SET e.ubicacion = :destino
-       WHERE e.mediumConectado.id = :mediumId
-    """)
-    void actualizarUbicacionesPorMedium(Long mediumId, UbicacionJPADTO destino);
 }

@@ -9,6 +9,10 @@ import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -39,6 +43,8 @@ public class MediumServiceTest {
     @Autowired private EspirituRepository espirituRepository;
     @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private DataService dataService;
+    @Autowired private MediumDAOMongo mediumDAOMongo;
+    @Autowired private EspirituDAOMongo espirituDAOMongo;
 
     private Medium medium1;
     private Medium medium2;
@@ -208,14 +214,54 @@ public class MediumServiceTest {
         assertTrue(serviceM.recuperar(999L).isEmpty());
     }
 
+
+    //casos desfavorables mover
     @Test
-    void moverMedium_aUbicacionInexistente_lanzaExcepcion() {
-        assertThrows(UbicacionNoEncontradaException.class,
-                () -> serviceM.mover(medium1.getId(), 70.0,50.0));
+    void moverMedium_aCoordenadaInvalida_lanzaExcepcion(){
+        assertThrows(CoordenadaFueraDeRangoException.class,
+                () -> serviceM.mover(medium1.getId(), 200.0, 200.0));
+
+        assertThrows(CoordenadaFueraDeRangoException.class,
+                () -> serviceM.mover(medium1.getId(), -200.0, -200.0));
+
+        assertThrows(CoordenadaFueraDeRangoException.class,
+                () -> serviceM.mover(medium1.getId(), -130.0, 40.0));
+
+        assertThrows(CoordenadaFueraDeRangoException.class,
+                () -> serviceM.mover(medium1.getId(), 37.0, 182.0));
     }
 
     @Test
-    void moverMedium_conEspiritus_actualizaUbicacionesEnCascada() {
+    void moverMedium_aCoordenadaNoIncluidaEnNingunAreaDeUbicacion_lanzaExcepcion() {
+        assertThrows(UbicacionNoEncontradaException.class,
+                () -> serviceM.mover(medium1.getId(), 50.0, 40.0));
+    }
+
+    @Test
+    void moverMedium_aUbicacionNoConectadaConLaActual_lanzaExcepcion(){
+        assertThrows(UbicacionLejanaException.class,
+                () -> serviceM.mover(medium1.getId(), c2.getLatitud(), c2.getLongitud()));
+    }
+
+    @Test
+    void moverMedium_aUbicacionAMasDe30Km_lanzaExcepcion(){
+        serviceU.conectar(cementerio.getId(), santuario.getId());
+
+        assertThrows(UbicacionLejanaException.class,
+                () -> serviceM.mover(medium1.getId(), c4.getLatitud(), c4.getLongitud()));
+
+    }
+
+    @Test
+    void moverMedium_inexistente_lanzaExcepcion(){
+        assertThrows(MediumNoEncontradoException.class,
+                () -> serviceM.mover(999L, c2.getLatitud(), c2.getLongitud()));
+    }
+
+
+    //caso favorable mover
+    @Test
+    void moverMedium_conEspiritus_actualizaUbicacionesYCoordenadasEnCascada() {
         serviceU.conectar(santuario.getId(), cementerio.getId());
 
         medium2.conectarseAEspiritu(demonio);
@@ -225,6 +271,18 @@ public class MediumServiceTest {
 
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium2.getId());
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
+
+        // verify
+        assertTrue(mediumActualizado.isPresent());
+        assertTrue(demonioActualizado.isPresent());
+        MediumMongoDTO mediumDTO = mediumDAOMongo.findByIdSQL(mediumActualizado.get().getId()).get();
+        EspirituMongoDTO demonioDTO = espirituDAOMongo.findByIdSQL(demonioActualizado.get().getId()).get();
+
+        assertEquals(c5.getLatitud(), mediumDTO.getPunto().getY());
+        assertEquals(c5.getLongitud(), mediumDTO.getPunto().getX());
+
+        assertEquals(c5.getLatitud(), demonioDTO.getPunto().getY());
+        assertEquals(c5.getLongitud(), demonioDTO.getPunto().getX());
 
         assertEquals(cementerio.getId(), mediumActualizado.get().getUbicacion().getId());
         assertEquals(cementerio.getId(), demonioActualizado.get().getUbicacion().getId());
