@@ -1,16 +1,20 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeAreaException;
 import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,12 +27,14 @@ public class MediumRepositoryImpl implements MediumRepository {
     private MediumDAOMongo mediumDAOMongo;
     private MediumMapper mediumMapper;
     private EspirituMapper espirituMapper;
+    private PoligonoDAO poligonoDAOMongo;
 
-    public MediumRepositoryImpl(MediumDAOSQL mediumDAOSQL, MediumDAOMongo mediumDAOMongo, MediumMapper mediumMapper, EspirituMapper espirituMapper) {
+    public MediumRepositoryImpl(MediumDAOSQL mediumDAOSQL, MediumDAOMongo mediumDAOMongo, MediumMapper mediumMapper, EspirituMapper espirituMapper, PoligonoDAO poligonoDAOMongo) {
         this.mediumDAOSQL = mediumDAOSQL;
         this.mediumMapper = mediumMapper;
         this.espirituMapper = espirituMapper;
         this.mediumDAOMongo = mediumDAOMongo;
+        this.poligonoDAOMongo = poligonoDAOMongo;
     }
 
     @Override
@@ -38,6 +44,12 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Medium guardar(Medium medium, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
+
+        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersectsAndUbicacionId(punto, medium.getUbicacion().getId());
+        if (poligonoOpt.isEmpty()) {
+            throw new CoordenadaFueraDeAreaException("coordenada no valida");
+        }
         MediumJPADTO jpa = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
         MediumMongoDTO mongoDto = mediumMapper.toMongo(jpa, coordenada);
         mediumDAOMongo.save(mongoDto);
