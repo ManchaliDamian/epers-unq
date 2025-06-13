@@ -1,9 +1,12 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
+import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Snapshot;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.SnapshotMapper;
+import ar.edu.unq.epersgeist.persistencia.repositories.mappers.*;
 import org.springframework.stereotype.Repository;
 
 
@@ -22,6 +25,9 @@ public class EstadisticaRepositoryImpl implements EstadisticaRepository {
     private UbicacionDAONeo ubicacionDAONeo;
     private SnapshotDAOMongo snapshotDAOMongo;
     private SnapshotMapper snapshotMapper;
+    private MediumMapper mediumMapper;
+    private EspirituMapper espirituMapper;
+    private UbicacionMapper ubicacionMapper;
 
     public EstadisticaRepositoryImpl(
             MediumDAOSQL mediumDAOSQL,
@@ -32,7 +38,10 @@ public class EstadisticaRepositoryImpl implements EstadisticaRepository {
             PoligonoDAO poligonoDAO,
             UbicacionDAONeo ubicacionDAONeo,
             SnapshotDAOMongo snapshotDAOMongo,
-            SnapshotMapper snapshotMapper
+            SnapshotMapper snapshotMapper,
+            MediumMapper mediumMapper,
+            EspirituMapper espirituMapper,
+            UbicacionMapper ubicacionMapper
     ){
         this.mediumDAOSQL = mediumDAOSQL;
         this.mediumDAOMongo = mediumDAOMongo;
@@ -43,6 +52,9 @@ public class EstadisticaRepositoryImpl implements EstadisticaRepository {
         this.ubicacionDAONeo = ubicacionDAONeo;
         this.snapshotDAOMongo = snapshotDAOMongo;
         this.snapshotMapper = snapshotMapper;
+        this.mediumMapper = mediumMapper;
+        this.espirituMapper = espirituMapper;
+        this.ubicacionMapper = ubicacionMapper;
     }
 
 
@@ -68,9 +80,9 @@ public class EstadisticaRepositoryImpl implements EstadisticaRepository {
 
     private Map<String, Object> crearSnapshotSQL(){
         Map<String, Object> datos = new HashMap<>();
-        datos.put("mediums", this.mediumDAOSQL.findAll());
-        datos.put("espiritus", this.espirituDAOSQL.findAll());
-        datos.put("ubicaciones", this.ubicacionDAOSQL.findAll());
+        datos.put("mediums", this.mediumMapper.toDomainList(this.mediumDAOSQL.findAll()).stream().map(MediumDTO::desdeModelo).toList());
+        datos.put("espiritus", this.espirituMapper.toDomainList(this.espirituDAOSQL.findAll()).stream().map(EspirituDTO::desdeModelo).toList());
+        datos.put("ubicaciones", this.ubicacionMapper.toDomainList(this.ubicacionDAOSQL.findAll()).stream().map(UbicacionDTO::desdeModelo).toList());
         return datos;
     }
 

@@ -69,6 +69,7 @@ public class EstadisticaServiceTest {
     private Poligono poligono;
     private Poligono poligono1;
     private Poligono poligono2;
+
     @BeforeEach
     void setUp() {
         c1 = new Coordenada(0.0,0.0);
