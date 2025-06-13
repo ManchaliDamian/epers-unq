@@ -34,21 +34,13 @@ public class UbicacionServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumRepository mediumRepository;
-    @Autowired private EspirituRepository espirituRepository;
-    @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private DataService dataService;
-
 
     private Medium medium;
     private Medium medium2;
     private Medium medium3;
     private Ubicacion santuario;
     private Ubicacion cementerio;
-    private Ubicacion ubicacion1;
-    private Ubicacion ubicacion2;
-    private Ubicacion ubicacion3;
-    private Ubicacion ubicacion4;
     private Espiritu angel;
     private Espiritu demonio;
 
@@ -60,10 +52,7 @@ public class UbicacionServiceTest {
     private Coordenada c6;
     private Coordenada c7;
     private Coordenada c8;
-    private Coordenada c9;
-    private Coordenada c10;
-    private Coordenada c11;
-    private Coordenada c12;
+
     private Poligono poligono;
     private Poligono poligono1;
     private Poligono poligono2;
@@ -303,13 +292,11 @@ public class UbicacionServiceTest {
 
     @Test
     void eliminarUbicacionLanzaExceptionPorQueExisteUnMediumEnEsaUbicacion() {
-
         serviceM.guardar(medium, c1);
 
         assertThrows(UbicacionNoEliminableException.class, () -> serviceU.eliminar(santuario.getId()));
     }
 
-    //-----NEO---------------------------------------------------------------------------
     @Test
     void ubicacionesSobrecargadasCasoFavorable(){
         List<Ubicacion> ubicaciones = serviceU.ubicacionesSobrecargadas(50);
@@ -525,11 +512,11 @@ public class UbicacionServiceTest {
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
 
-        c1 = new Coordenada(22.0,22.0);
-        c2 = new Coordenada(22.0,33.0);
-        c3 = new Coordenada(33.0,33.0);
-        c4 = new Coordenada(33.0,22.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(22.0,22.0);
+        c6 = new Coordenada(22.0,33.0);
+        c7 = new Coordenada(33.0,33.0);
+        c8 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new Poligono(coordenadas1);
         Ubicacion b = serviceU.guardar(new Santuario("B", 20), poligono);
         Ubicacion c = serviceU.guardar(new Santuario("C", 30), poligono1);
@@ -574,11 +561,11 @@ public class UbicacionServiceTest {
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
 
-        c1 = new Coordenada(22.0,22.0);
-        c2 = new Coordenada(22.0,33.0);
-        c3 = new Coordenada(33.0,33.0);
-        c4 = new Coordenada(33.0,22.0);
-        List<Coordenada> coordenadas1 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(22.0,22.0);
+        c6 = new Coordenada(22.0,33.0);
+        c7 = new Coordenada(33.0,33.0);
+        c8 = new Coordenada(33.0,22.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
         poligono1 = new Poligono(coordenadas1);
 
         c1 = new Coordenada(66.0,66.0);
@@ -588,26 +575,27 @@ public class UbicacionServiceTest {
         List<Coordenada> coordenadas2 = Arrays.asList(c1, c2, c3, c4, c1);
         poligono2 = new Poligono(coordenadas2);
 
-        c1 = new Coordenada(79.0,79.0);
-        c2 = new Coordenada(79.0,80.0);
-        c3 = new Coordenada(80.0,80.0);
-        c4 = new Coordenada(80.0,79.0);
-        List<Coordenada> coordenadas3 = Arrays.asList(c1, c2, c3, c4, c1);
+        c5 = new Coordenada(79.0,79.0);
+        c6 = new Coordenada(79.0,80.0);
+        c7 = new Coordenada(80.0,80.0);
+        c8 = new Coordenada(80.0,79.0);
+        List<Coordenada> coordenadas3 = Arrays.asList(c5, c6, c7, c8, c5);
         Poligono poligono3 = new Poligono(coordenadas3);
-        ubicacion1 = new Cementerio("U1", 10);
-        ubicacion2 = new Cementerio("U2", 10);
-        ubicacion3 = new Cementerio("U3", 10);
-        ubicacion4 = new Cementerio("U4", 10);
+
+        Ubicacion ubicacion1 = new Cementerio("U1", 10);
+        Ubicacion ubicacion2 = new Cementerio("U2", 10);
+        Ubicacion ubicacion3 = new Cementerio("U3", 10);
+        Ubicacion ubicacion4 = new Cementerio("U4", 10);
+
         ubicacion1 = serviceU.guardar(ubicacion1, poligono);
         ubicacion2 = serviceU.guardar(ubicacion2, poligono1);
         ubicacion3 = serviceU.guardar(ubicacion3, poligono2);
         ubicacion4 = serviceU.guardar(ubicacion4, poligono3);
-        serviceU.conectar(ubicacion1.getId(),ubicacion2.getId());
-        serviceU.conectar(ubicacion2.getId(),ubicacion1.getId());
-        serviceU.conectar(ubicacion2.getId(),ubicacion3.getId());
-        serviceU.conectar(ubicacion3.getId(),ubicacion4.getId());
-        serviceU.conectar(ubicacion4.getId(),ubicacion2.getId());
-
+        serviceU.conectar(ubicacion1.getId(), ubicacion2.getId());
+        serviceU.conectar(ubicacion2.getId(), ubicacion1.getId());
+        serviceU.conectar(ubicacion2.getId(), ubicacion3.getId());
+        serviceU.conectar(ubicacion3.getId(), ubicacion4.getId());
+        serviceU.conectar(ubicacion4.getId(), ubicacion2.getId());
 
         /*        4     S    C
         *         | ↖
@@ -615,7 +603,7 @@ public class UbicacionServiceTest {
         *   1 ↔ 2 ↗
         */
 
-        List<Long> ids = List.of(ubicacion1.getId(),ubicacion2.getId(),ubicacion3.getId(),ubicacion4.getId(), santuario.getId(), cementerio.getId());
+        List<Long> ids = List.of(ubicacion1.getId(), ubicacion2.getId(), ubicacion3.getId(), ubicacion4.getId(), santuario.getId(), cementerio.getId());
         List<Double> closenessEsperados = List.of(
                 1.0 / 26,
                 1.0 / 24,
@@ -726,13 +714,6 @@ public class UbicacionServiceTest {
             }
         }
     }
-
-//    @Test
-//    void cleanup() { // esto esta solo para borrar rapidamente
-//        dataService.eliminarTodo();
-//    }
-
-    //-------------------------------------------------------------------------------------
 
     @AfterEach
     void cleanup() {

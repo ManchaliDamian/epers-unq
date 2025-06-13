@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -10,19 +9,13 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
-import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,11 +28,7 @@ public class EstadisticaServiceTest {
     @Autowired private MediumService mediumService;
     @Autowired private EspirituService espirituService;
 
-    @Autowired private UbicacionRepository ubicacionRepository;
-    @Autowired private EspirituRepository espirituRepository;
-    @Autowired private MediumRepository mediumRepository;
     @Autowired private DataService dataService;
-    @Autowired private PoligonoRepository poligonoRepository;
 
     private Medium medium1;
 

@@ -46,19 +46,22 @@ public class MediumTest {
 
     @Test
     void noSePuedeCrearMediumConManaNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, -4, santuario));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> new Medium("Maguin",300, -4, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMayorAManaMax(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",300, 301, santuario));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> new Medium("Maguin",300, 301, santuario));
         assertEquals("mana debe estar entre 0 y manaMax.", ex.getMessage());
     }
 
     @Test
     void noSePuedeCrearMediumConManaMaxNegativo(){
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Medium("Maguin",-3, 301, santuario));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> new Medium("Maguin",-3, 301, santuario));
         assertEquals("manaMax no puede ser negativo.", ex.getMessage());
     }
 
@@ -69,7 +72,8 @@ public class MediumTest {
 
     @Test
     void noSePuedeConectarAEspirituQueEstaEnDistintaUbicacion(){
-        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class, () -> mediumQuilmes.conectarseAEspiritu(espirituNoConectado));
+        assertThrows(EspirituNoEstaEnLaMismaUbicacionException.class,
+                () -> mediumQuilmes.conectarseAEspiritu(espirituNoConectado));
     }
 
     @Test

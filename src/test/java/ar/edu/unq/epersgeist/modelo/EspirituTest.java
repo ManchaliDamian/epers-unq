@@ -39,7 +39,7 @@ public class EspirituTest {
     void intentarDominarAMas50DeEnergia(){
         demonio.setNivelDeConexion(50);
         angel = angel.dominar(demonio);
-        assertEquals(null, demonio.getDominador());
+        assertNull(demonio.getDominador());
     }
     @Test
     void dominarSiendoDominado(){
@@ -119,9 +119,9 @@ public class EspirituTest {
     void conectarA_EspirituDominado_LanzaExcepcion() {
         Espiritu otroDominador = new EspirituAngelical("Dominador", cementerio);
         angel.setDominador(otroDominador);
-        assertThrows(EspirituDominadoException.class, () -> {
-            angel.conectarA(mediumConectado);
-        });
+        assertThrows(EspirituDominadoException.class, () ->
+            angel.conectarA(mediumConectado)
+        );
     }
 
     @Test
@@ -129,7 +129,6 @@ public class EspirituTest {
         angel.setNivelDeConexion(60);
         angel.conectarA(mediumConectado);
 
-        // el aumento debería ser el 20% de 90, o sea 18
         assertEquals(78, angel.getNivelDeConexion());
         assertEquals(angel.getMediumConectado().getId(), mediumConectado.getId());
     }
@@ -154,22 +153,22 @@ public class EspirituTest {
     @Test
     void perderNivelDeConexion_CantidadNegativa() {
         angel.setNivelDeConexion(50);
-        assertThrows(IllegalArgumentException.class, () -> {
-            angel.perderNivelDeConexion(-10);
-        });
+        assertThrows(IllegalArgumentException.class, () ->
+            angel.perderNivelDeConexion(-10)
+        );
     }
 
     @Test
     void conectarA_MediumNuloLanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> {
-            angel.conectarA(null);
-        });
+        assertThrows(NullPointerException.class, () ->
+            angel.conectarA(null)
+        );
     }
 
     @Test
     void descansar_UbicacionNulaLanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> {
-            angel.descansar(null);
-        });
+        assertThrows(NullPointerException.class, () ->
+            angel.descansar(null)
+        );
     }
 }
