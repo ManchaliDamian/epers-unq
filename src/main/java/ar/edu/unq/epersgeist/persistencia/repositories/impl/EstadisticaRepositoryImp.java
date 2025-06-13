@@ -1,4 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
+import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
+import ar.edu.unq.epersgeist.exception.SnapshotNoEncontradaException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
@@ -9,12 +11,13 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionNeoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+@Repository
 public class EstadisticaRepositoryImp implements EstadisticaRepository {
 
     private MediumDAOSQL mediumDAOSQL;
@@ -49,31 +52,30 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
 
     @Override
     public void guardarSnapshot() {
-        Date fechaDeCreacion = new Date();
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
-        String fechaFormateada = sdf.format(fechaDeCreacion);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date fechaFormateada = sdf.parse(sdf.format(new Date()));
 
-        SnapshotMongoDTO existente = this.snapshotDAOMongo.findAll().stream()
-            .filter(s -> sdf.format(s.getFecha()).equals(fechaFormateada))
-            .findFirst()
-            .orElse(null);
+            SnapshotMongoDTO existente = this.snapshotDAOMongo.findAll().stream()
+                    .filter(s -> sdf.format(s.getFecha()).equals(sdf.format(fechaFormateada)))
+                    .findFirst()
+                    .orElse(null);
 
-        Map<String, Object> datosSql = this.crearSnapshotSQL();
-        Map<String, Object> datosMongo = this.crearSnapshotMongo();
-        Map<String, Object> datosNeo = this.crearSnapshotNeo();
+            Map<String, Object> datosSql = this.crearSnapshotSQL();
+            Map<String, Object> datosMongo = this.crearSnapshotMongo();
+            Map<String, Object> datosNeo = this.crearSnapshotNeo();
 
-        SnapshotMongoDTO snapshot;
-        if (existente != null) {
-            snapshot = existente;
-        } else {
-            snapshot = new SnapshotMongoDTO();
-            snapshot.setFecha(fechaDeCreacion);
+            SnapshotMongoDTO snapshot = (existente != null) ? existente : new SnapshotMongoDTO();
+            snapshot.setFecha(fechaFormateada);
+            snapshot.setSql(datosSql);
+            snapshot.setMongo(datosMongo);
+            snapshot.setNeo4j(datosNeo);
+
+            this.snapshotDAOMongo.save(snapshot);
+
+        } catch (ParseException e) {
+            throw new RuntimeException("Error al guardar el snapshot", e);
         }
-        snapshot.setSql(datosSql);
-        snapshot.setMongo(datosMongo);
-        snapshot.setNeo4j(datosNeo);
-
-        this.snapshotDAOMongo.save(snapshot);
     }
 
     private Map<String, Object> crearSnapshotSQL(){
@@ -97,12 +99,14 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
     }
 
     @Override
-    public void recuperarSnapshot(Date fecha) {
-        SnapshotMongoDTO snapshot = this.snapshotDAOMongo.findByFecha(fecha).get();
+    public SnapshotDTO recuperarSnapshot(Date fecha) {
+        Optional<SnapshotMongoDTO> snapshotOptional = this.snapshotDAOMongo.findByFecha(fecha);
 
-        if (snapshot == null) {
-            throw new IllegalArgumentException("No existe un snapshot con la fecha: " + fecha);
+        if (snapshotOptional.isEmpty()) {
+            throw new SnapshotNoEncontradaException(fecha);
         }
+
+        SnapshotMongoDTO snapshot = snapshotOptional.get();
 
         this.mediumDAOSQL.deleteAll();
         this.mediumDAOMongo.deleteAll();
@@ -124,5 +128,9 @@ public class EstadisticaRepositoryImp implements EstadisticaRepository {
 
         Map<String, Object> neo4j = snapshot.getNeo4j();
         this.ubicacionDAONeo.saveAll((List<UbicacionNeoDTO>) neo4j.get("ubicaciones"));
+
+        return this.snapshotDAOMongo.findByFecha(fecha).get();
+
     }
+
 }

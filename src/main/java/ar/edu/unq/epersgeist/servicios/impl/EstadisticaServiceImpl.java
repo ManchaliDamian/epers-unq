@@ -1,28 +1,19 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-
-import ar.edu.unq.epersgeist.exception.SnapshotNoEncontradaException;
+import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
-import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
-import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOSQL;
-import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.MediumMapper;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import ar.edu.unq.epersgeist.exception.NoHaySantuarioCorruptoException;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Service
@@ -69,7 +60,7 @@ public class EstadisticaServiceImpl implements EstadisticaService {
         estadisticaRepository.guardarSnapshot();
     }
 
-    public void cargarSnapshot(Date fecha){
-        estadisticaRepository.recuperarSnapshot(fecha);
+    public SnapshotDTO cargarSnapshot(Date fecha){
+        return estadisticaRepository.recuperarSnapshot(fecha);
     }
 }

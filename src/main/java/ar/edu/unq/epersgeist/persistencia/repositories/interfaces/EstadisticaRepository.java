@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.interfaces;
 
+import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -14,6 +15,6 @@ import java.util.Optional;
 
 public interface EstadisticaRepository {
     void guardarSnapshot();
-    void recuperarSnapshot(Date fecha);
+    SnapshotDTO recuperarSnapshot(Date fecha);
 }
 
