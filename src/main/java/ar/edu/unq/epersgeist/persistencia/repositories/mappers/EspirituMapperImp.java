@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADT
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import org.hibernate.Hibernate;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
@@ -108,9 +109,12 @@ public class EspirituMapperImp implements EspirituMapper {
             return (Espiritu) context.get(jpa);
         }
 
-        return switch (jpa.getTipo()) {
-            case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) jpa, context);
-            case DEMONIACO  -> toDomainDemonio((EspirituDemoniacoJPADTO) jpa, context);
+        // Desproxificar antes del switch
+        EspirituJPADTO dto = (EspirituJPADTO) Hibernate.unproxy(jpa);
+
+        return switch (dto.getTipo()) {
+            case ANGELICAL -> toDomainAngel((EspirituAngelicalJPADTO) dto, context);
+            case DEMONIACO -> toDomainDemonio((EspirituDemoniacoJPADTO) dto, context);
         };
     }
 
@@ -241,6 +245,7 @@ public class EspirituMapperImp implements EspirituMapper {
         GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
         EspirituMongoDTO dto = new EspirituMongoDTO(punto);
         dto.setIdSQL(jpa.getId());
+        dto.setMediumConectadoIdSQL(jpa.getMediumConectado() != null ? jpa.getMediumConectado().getId() : null);
         return dto;
     }
 

@@ -52,7 +52,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacion.setCreatedAt(ubiJPA.getCreatedAt());
 
         // Neo
-        Optional<UbicacionNeoDTO> existente = ubiDaoNeo.findByIdSQL(ubicacion.getId());
+        Optional<UbicacionNeoDTO> existente = ubiDaoNeo.mergeByIdSQL(ubicacion.getId(), ubicacion.getNombre());
         UbicacionNeoDTO neoDto = existente.orElseGet(() -> mapperU.toNeo(ubicacion));
         ubiDaoNeo.save(neoDto);
 

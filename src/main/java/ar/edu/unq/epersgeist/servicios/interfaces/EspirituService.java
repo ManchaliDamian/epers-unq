@@ -21,4 +21,7 @@ public interface EspirituService {
     List<Espiritu> recuperarTodos();
     List<EspirituAngelical> recuperarAngeles();
     List<EspirituDemoniaco> recuperarDemonios();
+
+
+    void dominar(Long idEspiritu, Long idEspirituADominar);
 }

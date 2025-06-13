@@ -1,15 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.exception.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.exception.*;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
-import ar.edu.unq.epersgeist.exception.ConectarException;
-import ar.edu.unq.epersgeist.exception.EspirituNoEstaEnLaMismaUbicacionException;
-import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
@@ -55,21 +52,37 @@ public class EspirituServiceTest {
     private Coordenada c4;
     private Coordenada c3;
     private Coordenada c2;
+    private Coordenada c5;
+    private Coordenada c6;
+    private Coordenada c7;
+    private Coordenada c8;
+    private Coordenada distanciaMas2Km;
     private Poligono poligono;
+    private Poligono poligono1;
 
     @BeforeEach
     void setUp() {
-        c1 = new Coordenada(1.0,1.0);
-        c2 = new Coordenada(2.0,2.0);
-        c3 = new Coordenada(3.0,3.0);
-        c4 = new Coordenada(-1.0,-1.0);
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
         List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
         poligono = new Poligono(coordenadas);
+        distanciaMas2Km = new Coordenada(0.0, 0.0314);
+
+
+        c5 = new Coordenada(2.0,2.0);
+        c6 = new Coordenada(2.0,3.0);
+        c7 = new Coordenada(3.0,3.0);
+        c8 = new Coordenada(3.0,2.0);
+        List<Coordenada> coordenadas1 = Arrays.asList(c5, c6, c7, c8, c5);
+        poligono1 = new Poligono(coordenadas1);
+
         quilmes = new Santuario("Quilmes", 100);
         berazategui = new Cementerio("Berazategui",100);
 
         quilmes = serviceU.guardar(quilmes, poligono);
-        berazategui = serviceU.guardar(berazategui, poligono);
+        berazategui = serviceU.guardar(berazategui, poligono1);
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
@@ -77,9 +90,45 @@ public class EspirituServiceTest {
         medium = new Medium("nombre", 150, 30, quilmes);
 
         azazel = serviceE.guardar(azazel, c1);
-        belcebu = serviceE.guardar(belcebu, c1);
+        belcebu = serviceE.guardar(belcebu, distanciaMas2Km);
         angel = serviceE.guardar(angel, c1);
 
+    }
+
+    @Test
+    void dominarAUnEspirituDebil() {
+        belcebu.setNivelDeConexion(40);
+        serviceE.actualizar(belcebu);
+        serviceE.dominar(azazel.getId(), belcebu.getId());
+
+        Optional<Espiritu> dominador = serviceE.recuperar(belcebu.getId());
+                assertEquals(azazel, dominador.get().getDominador());
+    }
+    @Test
+    void dominarAUnEspirituFuerteNoLoPuedeDominar() {
+        belcebu.setNivelDeConexion(70);
+        serviceE.actualizar(belcebu);
+        serviceE.dominar(azazel.getId(), belcebu.getId());
+        Optional<Espiritu> actualizado = serviceE.recuperar(belcebu.getId());
+        assertEquals(null, actualizado.get().getDominador());
+    }
+    @Test
+    void espirituDominadoQuiereDominarASuDominadorLanzaException() {
+        belcebu.setNivelDeConexion(40);
+        serviceE.actualizar(belcebu);
+        serviceE.dominar(azazel.getId(), belcebu.getId());
+        Optional<Espiritu> actualizado = serviceE.recuperar(belcebu.getId());
+        Optional<Espiritu> azazel1 = serviceE.recuperar(azazel.getId());
+
+        assertThrows(EspirituNoDominableException.class, () -> serviceE.dominar(actualizado.get().getId(), azazel1.get().getId()) );
+    }
+    @Test
+    void dominarAAlguienFueraDeRangoLanzaExcepcion() {
+
+        angel.setNivelDeConexion(40);
+        serviceE.actualizar(angel);
+
+        assertThrows(DistanciaNoCercanaException.class, () -> serviceE.dominar(azazel.getId(), angel.getId()) );
     }
 
     @Test
@@ -163,6 +212,17 @@ public class EspirituServiceTest {
         serviceE.conectar(azazel.getId(), medium.getId());
 
         assertThrows(ConectarException.class, () -> {
+            serviceE.conectar(azazel.getId(), medium.getId());
+        });
+    }
+
+    @Test
+    void testConectarEspirituAMediumFallaPorqueEspirituEstaDominado() {
+        azazel.setDominador(angel);
+        azazel = serviceE.actualizar(azazel);
+        medium = serviceM.guardar(medium, c1);
+
+        assertThrows(EspirituDominadoException.class, () -> {
             serviceE.conectar(azazel.getId(), medium.getId());
         });
     }
