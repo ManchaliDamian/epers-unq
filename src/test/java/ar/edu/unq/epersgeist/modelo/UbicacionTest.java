@@ -35,13 +35,13 @@ class UbicacionTest {
 
     @Test
     void testConstructorFlujoDeEnergiaInvalido() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Cementerio("Cementerio", 150);
-        });
+        assertThrows(IllegalArgumentException.class, () ->
+            new Cementerio("Cementerio", 150)
+        );
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Santuario("Santuario", -10);
-        });
+        assertThrows(IllegalArgumentException.class, () ->
+            new Santuario("Santuario", -10)
+        );
     }
 
     @Test
@@ -55,9 +55,9 @@ class UbicacionTest {
 
     @Test
     void testCementerioInvocarAngelLanzaExcepcion() {
-        assertThrows(InvocacionNoPermitidaException.class, () -> {
-            cementerio.invocarAngel(espirituAngel);
-        });
+        assertThrows(InvocacionNoPermitidaException.class, () ->
+            cementerio.invocarAngel(espirituAngel)
+        );
     }
 
     @Test
@@ -101,9 +101,9 @@ class UbicacionTest {
 
     @Test
     void testSantuarioInvocarDemonioLanzaExcepcion() {
-        assertThrows(InvocacionNoPermitidaException.class, () -> {
-            santuario.invocarDemonio(espirituDemonio);
-        });
+        assertThrows(InvocacionNoPermitidaException.class, () ->
+            santuario.invocarDemonio(espirituDemonio)
+        );
     }
 
     @Test

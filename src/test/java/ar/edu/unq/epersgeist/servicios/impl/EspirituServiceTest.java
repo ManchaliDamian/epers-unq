@@ -14,9 +14,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
+
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -41,9 +39,6 @@ public class EspirituServiceTest {
     @Autowired private UbicacionService serviceU;
     @Autowired private MediumService serviceM;
 
-    @Autowired private EspirituRepository espirituRepository;
-    @Autowired private MediumRepository mediumRepository;
-    @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private DataService dataService;
 
     private Espiritu azazel;
@@ -127,7 +122,8 @@ public class EspirituServiceTest {
         Optional<Espiritu> actualizado = serviceE.recuperar(belcebu.getId());
         Optional<Espiritu> azazel1 = serviceE.recuperar(azazel.getId());
 
-        assertThrows(EspirituNoDominableException.class, () -> serviceE.dominar(actualizado.get().getId(), azazel1.get().getId()) );
+        assertThrows(EspirituNoDominableException.class, () ->
+                serviceE.dominar(actualizado.get().getId(), azazel1.get().getId()) );
     }
     @Test
     void dominarAAlguienFueraDeRangoLanzaExcepcion() {

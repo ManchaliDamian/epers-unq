@@ -19,9 +19,6 @@ import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
 import ar.edu.unq.epersgeist.persistencia.DAOs.MediumDAOMongo;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.MediumMongoDTO;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -45,9 +42,6 @@ public class MediumServiceTest {
     @Autowired private EspirituService serviceE;
     @Autowired private UbicacionService serviceU;
 
-    @Autowired private MediumRepository mediumRepository;
-    @Autowired private EspirituRepository espirituRepository;
-    @Autowired private UbicacionRepository ubicacionRepository;
     @Autowired private DataService dataService;
     @Autowired private MediumDAOMongo mediumDAOMongo;
     @Autowired private EspirituDAOMongo espirituDAOMongo;
@@ -270,8 +264,6 @@ public class MediumServiceTest {
                 () -> serviceM.mover(999L, c2.getLatitud(), c2.getLongitud()));
     }
 
-
-    //caso favorable mover
     @Test
     void moverMedium_conEspiritus_actualizaUbicacionesYCoordenadasEnCascada() {
         serviceU.conectar(santuario.getId(), cementerio.getId());
@@ -284,7 +276,6 @@ public class MediumServiceTest {
         Optional<Medium> mediumActualizado = serviceM.recuperar(medium2.getId());
         Optional<Espiritu> demonioActualizado = serviceE.recuperar(demonio.getId());
 
-        // verify
         assertTrue(mediumActualizado.isPresent());
         assertTrue(demonioActualizado.isPresent());
         MediumMongoDTO mediumDTO = mediumDAOMongo.findByIdSQL(mediumActualizado.get().getId()).get();
@@ -335,6 +326,7 @@ public class MediumServiceTest {
             serviceM.invocar(medium1.getId(), demonio.getId());
         });
     }
+
     @Test
     void testInvocarNoHaceNadaPorqueSeTieneSuficienteMana() {
         medium1.setMana(7);
@@ -345,6 +337,7 @@ public class MediumServiceTest {
         Espiritu espirituRecuperado = serviceM.invocar(medium1.getId(), demonio.getId());
         assertNotEquals(medium1.getUbicacion(), espirituRecuperado.getUbicacion());
     }
+
     @Test
     void testCrearYRecuperarMedium() {
         Optional<Medium> recuperado = serviceM.recuperar(medium1.getId());
@@ -422,7 +415,8 @@ public class MediumServiceTest {
         List<EspirituDemoniaco> demoniosDelMedium = serviceM.demonios(medium1.getId());
 
         assertEquals(1, demoniosDelMedium.size());
-        assertTrue(demoniosDelMedium.stream().anyMatch(e -> e.getId().equals(demonCementerio.getId())));
+        assertTrue(demoniosDelMedium.stream()
+                .anyMatch(e -> e.getId().equals(demonCementerio.getId())));
     }
 
     @Test
