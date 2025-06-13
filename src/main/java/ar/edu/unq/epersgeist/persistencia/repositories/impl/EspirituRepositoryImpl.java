@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
+import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeAreaException;
 import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -8,11 +9,14 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.UbicacionJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
+import org.hibernate.Hibernate;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -28,23 +32,28 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituDAOMongo espirituDAOMongo;
     private EspirituMapper mapperE;
     private UbicacionMapper mapperU;
+    private EspirituMapper mapper;
+    private PoligonoDAO poligonoDAOMongo;
 
-    public EspirituRepositoryImpl(
-            EspirituDAOSQL espirituDAOSQL,
-            EspirituDAOMongo espirituDAOMongo,
-            EspirituMapper mapperE,
-            UbicacionMapper mapperU
-        ){
+    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapperE, PoligonoDAO poligonoDAOMongo,UbicacionMapper mapperU){
         this.espirituDAOSQL = espirituDAOSQL;
         this.espirituDAOMongo = espirituDAOMongo;
+        this.poligonoDAOMongo = poligonoDAOMongo;
         this.mapperE = mapperE;
         this.mapperU = mapperU;
     }
 
     @Override
     public Espiritu guardar(Espiritu espiritu, Coordenada coordenada) {
+        GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
+
+        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersectsAndUbicacionId(punto, espiritu.getUbicacion().getId());
+        if (poligonoOpt.isEmpty()) {
+            throw new CoordenadaFueraDeAreaException("coordenada no valida");
+        }
         EspirituJPADTO jpa = mapperE.toJpa(espiritu);
         jpa = espirituDAOSQL.save(jpa);
+
         EspirituMongoDTO mongoDTO = mapperE.toMongo(jpa, coordenada);
         espirituDAOMongo.save(mongoDTO);
         return mapperE.toDomain(jpa);
@@ -109,7 +118,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> mapperE.toDomain(espirituJPADTO));
+        return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> {
+            EspirituJPADTO realJPA = (EspirituJPADTO) Hibernate.unproxy(espirituJPADTO);
+            return mapperE.toDomain(realJPA);
+        });
+
     }
 
     @Override
@@ -151,7 +164,10 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable) {
         return mapperE.toDomainList(this.espirituDAOSQL.recuperarDemoniacosPaginados(pageable));
     }
-
+    @Override
+    public Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL) {
+        return espirituDAOMongo.distanciaA(longitud,latitud,idEspirituSQL);
+    }
     @Override
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();

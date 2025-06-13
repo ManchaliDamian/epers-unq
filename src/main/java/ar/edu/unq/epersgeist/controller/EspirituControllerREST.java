@@ -90,4 +90,8 @@ public final  class EspirituControllerREST {
         Medium medium = espirituService.conectar(idEspiritu,idMedium);
         return ResponseEntity.ok(MediumDTO.desdeModelo(medium));
     }
+    @PutMapping("/{idEspiritu}/dominar/{idEspirituADominar}")
+    public void dominarEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idEspirituADominar){
+        espirituService.dominar(idEspiritu,idEspirituADominar);
+    }
 }

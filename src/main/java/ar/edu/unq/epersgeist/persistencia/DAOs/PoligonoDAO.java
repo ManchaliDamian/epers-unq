@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -16,6 +17,17 @@ public interface PoligonoDAO extends MongoRepository<PoligonoMongoDTO, String> {
     void deleteByUbicacionId(Long ubicacionId);
 
     // busca el polígono de una ubicación que *contenga* el punto
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': ?1 }")
+    Optional<PoligonoMongoDTO> findByPoligonoGeoIntersectsAndUbicacionId(GeoJsonPoint punto, Long ubicacionId);
+
+
+
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
+    Optional<PoligonoMongoDTO> findOneIntersectandoPuntoEnOtraUbicacion(GeoJsonPoint punto, Long ubicacionId);
+
+    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
+    Optional<PoligonoMongoDTO> findOneIntersectandoPoligonoConOtraUbicacion(GeoJsonPolygon poligono, Long ubicacionId);
+
     @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } } }")
     Optional<PoligonoMongoDTO> findByPoligonoGeoIntersects(GeoJsonPoint punto);
 

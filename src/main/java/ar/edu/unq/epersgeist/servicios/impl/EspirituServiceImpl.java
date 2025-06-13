@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.DistanciaNoCercanaException;
 import ar.edu.unq.epersgeist.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -9,6 +10,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.exception.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -83,6 +85,23 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public List<EspirituDemoniaco> recuperarDemonios() {
         return espirituRepository.recuperarDemonios();
+    }
+
+    @Override
+    public void dominar(Long idEspiritu, Long idEspirituADominar) {
+        Espiritu espiritu = getEspiritu(idEspiritu);
+        Espiritu espirituADominar = getEspiritu(idEspirituADominar);
+        Optional<Coordenada> coordenadaEspiritu = espirituRepository.recuperarCoordenada(idEspiritu);
+        if (coordenadaEspiritu.isEmpty()) {
+            throw new EspirituNoEncontradoException(idEspiritu);
+        }
+        Optional<Double> distancia = espirituRepository.distanciaA(coordenadaEspiritu.get().getLongitud(), coordenadaEspiritu.get().getLatitud(), idEspirituADominar);
+        if (distancia.isEmpty()) {
+            throw new DistanciaNoCercanaException("Distancia no disponible");
+        }
+        espiritu = espiritu.dominar(espirituADominar);
+        this.actualizar(espiritu);
+        this.actualizar(espirituADominar);
     }
 
     @Override
