@@ -197,9 +197,7 @@ public class MediumServiceImpl implements MediumService {
         mediumDAOMongo.save(mediumMongo);
 
         // actualizar la coordenada de todos los espíritus del médium
-        for (Espiritu espiritu : medium.getEspiritus()){
-            espirituRepository.actualizar(espiritu, coordenada);
-        }
+        medium.getEspiritus().forEach(esp -> espirituRepository.actualizar(esp, coordenada));
     }
 
     private void validarCoordenada(Double latitud, Double longitud){
