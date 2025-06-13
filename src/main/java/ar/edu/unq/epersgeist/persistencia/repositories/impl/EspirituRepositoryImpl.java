@@ -84,17 +84,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         return mapperE.toDomain(dto);
     }
 
-    @Override
-    public void actualizarUbicacionesPorMedium(Long mediumId, Ubicacion destino) {
-        UbicacionJPADTO ubicacionJPADTO = mapperU.toJpa(destino);
-        this.espirituDAOSQL.actualizarUbicacionesPorMedium(mediumId, ubicacionJPADTO);
-    }
-
-    @Override
-    public void actualizarCoordenadasPorMedium(Long mediumId, GeoJsonPoint coordenada) {
-        this.espirituDAOMongo.actualizarCoordenadasPorMedium(mediumId, coordenada);
-    }
-
     private EspirituJPADTO actualizarEspirituJPA(Espiritu espiritu) {
         espirituDAOSQL.findById(espiritu.getId())
                 .filter(u -> !u.isDeleted())

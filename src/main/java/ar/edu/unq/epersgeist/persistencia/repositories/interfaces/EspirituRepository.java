@@ -16,8 +16,6 @@ public interface EspirituRepository {
     Espiritu guardar(Espiritu espiritu, Coordenada coordenada);
     Espiritu actualizar(Espiritu espiritu);
     Espiritu actualizar(Espiritu espiritu, Coordenada coordenada);
-    void actualizarUbicacionesPorMedium(Long mediumId, Ubicacion destino);
-    void actualizarCoordenadasPorMedium(Long mediumId, GeoJsonPoint punto);
     void eliminarFisicoEnMongoSiExiste(Long id);
     List<Espiritu> recuperarTodos();
     Optional<Espiritu> recuperar(Long espirituId);

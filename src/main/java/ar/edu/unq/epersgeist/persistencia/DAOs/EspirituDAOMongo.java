@@ -31,9 +31,4 @@ public interface EspirituDAOMongo extends MongoRepository<EspirituMongoDTO, Stri
     Optional<EspirituMongoDTO> findByIdSQL(Long espirituId);
 
     void deleteByIdSQL(Long espirituId);
-
-    @Modifying
-    @Query("{ 'mediumConectadoIdSQL': ?0 }")
-    @Update("{ '$set': { 'punto': ?1 } }")
-    void actualizarCoordenadasPorMedium(Long mediumId, GeoJsonPoint nuevoPunto);
 }

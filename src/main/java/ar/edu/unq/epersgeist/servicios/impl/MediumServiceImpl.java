@@ -149,7 +149,6 @@ public class MediumServiceImpl implements MediumService {
 
         mediumRepository.actualizar(medium);
         espirituRepository.actualizar(espiritu);
-        espirituRepository.actualizarUbicacionesPorMedium(mediumId, medium.getUbicacion());
 
         return espiritu;
     }
@@ -157,7 +156,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void mover(Long mediumId, Double latitud, Double longitud) {
         Medium medium = this.getMedium(mediumId);
-
+        this.validarCoordenada(latitud,longitud);
         Ubicacion origen = medium.getUbicacion();
 
         Long ubicacionId = poligonoRepository.ubicacionIdConCoordenadas(latitud, longitud)
@@ -166,18 +165,20 @@ public class MediumServiceImpl implements MediumService {
         Ubicacion destino = ubicacionRepository.recuperar(ubicacionId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
 
+        // validar conexión entre ubicaciones
         boolean conectadas = ubicacionRepository.estanConectadas(origen.getId(), destino.getId());
-
         if (!Objects.equals(origen.getId(), destino.getId()) && !conectadas) {
             throw new UbicacionLejanaException(origen, destino);
         }
 
+        //validar distancia entre coordenadas
         Double distancia = mediumRepository.distanciaA(latitud, longitud, mediumId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(latitud, longitud));
 
         if (distancia > 30.0){
             throw new UbicacionLejanaException(distancia);
         }
+        //
 
         MediumMongoDTO mediumMongo = mediumDAOMongo.findByIdSQL(medium.getId())
                 .orElseThrow(() -> new MediumNoEncontradoException(medium.getId()));
@@ -186,16 +187,27 @@ public class MediumServiceImpl implements MediumService {
 
         // actualizar personajes
         mediumRepository.actualizar(medium);
-        espirituRepository.actualizarUbicacionesPorMedium(mediumId, destino); // para no hacer un bucle for modificando la ubicación de cada espíritu
 
-        // crear un nuevo punto con la nueva coordenada
+        // crear una nueva coordenada
+        Coordenada coordenada = new Coordenada(latitud, longitud);
         GeoJsonPoint punto = new GeoJsonPoint(longitud, latitud);
 
-        // actualizar la coordenada de medium
+        // actualizar el punto de medium en mongo
         mediumMongo.setPunto(punto);
         mediumDAOMongo.save(mediumMongo);
 
         // actualizar la coordenada de todos los espíritus del médium
-        espirituRepository.actualizarCoordenadasPorMedium(mediumId, punto);
+        for (Espiritu espiritu : medium.getEspiritus()){
+            espirituRepository.actualizar(espiritu, coordenada);
+        }
+    }
+
+    private void validarCoordenada(Double latitud, Double longitud){
+        if (latitud < -90 || latitud > 90 || longitud < -180 || longitud > 180) {
+            throw new CoordenadaFueraDeRangoException(
+                    "Coordenada inválida: latitud debe estar entre -90 y +90, "
+                            + "longitud entre -180 y +180"
+            );
+        }
     }
 }
