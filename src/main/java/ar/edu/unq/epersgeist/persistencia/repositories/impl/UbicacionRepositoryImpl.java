@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.exception.UbicacionNoEliminableException;
-import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.UbicacionNoEliminableException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;

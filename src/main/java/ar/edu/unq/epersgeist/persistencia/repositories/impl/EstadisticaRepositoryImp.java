@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
-import ar.edu.unq.epersgeist.exception.SnapshotNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.NotFound.SnapshotNoEncontradaException;
 import ar.edu.unq.epersgeist.persistencia.DAOs.*;
 import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;

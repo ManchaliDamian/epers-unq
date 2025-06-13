@@ -1,6 +1,13 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.exception.*;
+import ar.edu.unq.epersgeist.exception.BadRequest.ConectarException;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
+import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -236,6 +243,12 @@ public class EspirituServiceTest {
         assertNotNull(recuperado);
         assertEquals("Miguel", recuperado.get().getNombre());
         assertEquals(0, recuperado.get().getNivelDeConexion());
+    }
+    @Test
+    void testGuardarFallaPorCoordenadaNoValida() {
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+
+        assertThrows(CoordenadaFueraDeAreaException.class, () -> serviceE.guardar(nuevoEspiritu, c5) );
     }
 
     @Test

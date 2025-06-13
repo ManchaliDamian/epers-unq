@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.controller.dto.medium;
 
 import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.ubicacion.CoordenadaDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;

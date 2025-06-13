@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.exception.EspirituDominadoException;
-import ar.edu.unq.epersgeist.exception.EspirituNoDominableException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;

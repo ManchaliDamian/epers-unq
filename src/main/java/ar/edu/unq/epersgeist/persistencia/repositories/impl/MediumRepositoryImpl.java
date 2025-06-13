@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeAreaException;
-import ar.edu.unq.epersgeist.exception.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
+import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
@@ -72,10 +72,8 @@ public class MediumRepositoryImpl implements MediumRepository {
         }
         MediumJPADTO dto = actualizarMediumJPA(medium);
 
-        // eliminar la coordenada anterior
         mediumDAOMongo.deleteByIdSQL(medium.getId());
 
-        // crear nuevo document
         MediumMongoDTO mongoDTO = mediumMapper.toMongo(dto, coordenada);
         mediumDAOMongo.save(mongoDTO);
         return mediumMapper.toDomain(dto);
