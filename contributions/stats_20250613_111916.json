@@ -1,0 +1,264 @@
+{
+  "Contributions-per-user": [
+    {
+      "👤 Contributor": "Axel García",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+      ]
+    },
+    {
+      "👤 Contributor": "Damian Manchali",
+      "📊 Stats": {
+        "📨 commits": 27,
+        "✅ added": 817,
+        "⛔ deleted": 294
+      },
+      "💬 Messages": [
+        "test de medium solucionado",
+        "conflictos resueltos",
+        "controller espiritu agregando dominar y handler de exception",
+        "tests en service de Espiritu para Dominar",
+        "condicion de que coordenada esté contenida en poligono de una ubicacion",
+        "test corren con la verificacion de guardar de ubicacionPoligono no repetido ni pisando otro poligono",
+        "restringiendo ubicacion poligono para q no se superpongan con otro y verificando coordenada que sea valida",
+        "agregando verificacion de Coordenada pertenezca a UbicacionPoligono en mongo",
+        "conflictos",
+        "conflictos resueltos",
+        "modificando medium y probando poligonoServicesTest",
+        "eliminar repository medium con mongo",
+        "errores de implementacion de medium service",
+        "agregando guardar y actualizar en medium con mongo",
+        "modificando controllerUbicacion agregandole el poligono al guardar",
+        "modificando create espiritu y medium dto",
+        "dto poligono,coordenada, modificacion al resto de dto para la nueva implentacion",
+        "agregando modelo con poligono, coordenada y modificacion de test dominio",
+        "coordenadaDTO",
+        "dependencias y estructura basica",
+        "Merge remote-tracking branch 'origin/dev' into feature/tp5",
+        "configuracion mongoDB"
+      ]
+    },
+    {
+      "👤 Contributor": "Francisco Sebastian Raffin",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+      ]
+    },
+    {
+      "👤 Contributor": "FranciscoSRaffin",
+      "📊 Stats": {
+        "📨 commits": 8,
+        "✅ added": 413,
+        "⛔ deleted": 115
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into snapshot",
+        "Ayuda por favor",
+        "Sync",
+        "Merge branch 'dev' into snapshot",
+        "En teoria anda",
+        "Refactor de responsabilidades",
+        "WIP snapshot",
+        "Generaciond e nodos"
+      ]
+    },
+    {
+      "👤 Contributor": "Hernán Moreyra",
+      "📊 Stats": {
+        "📨 commits": 27,
+        "✅ added": 1418,
+        "⛔ deleted": 740
+      },
+      "💬 Messages": [
+        "foreach",
+        "tests mover (service) agregados",
+        "fix tests",
+        "Merge branch 'feature/moverMedium' of https://github.com/EPERS-UNQ/Codigo-Clandestino into feature/moverMedium",
+        "fix argumento",
+        "metodo mover sin verificacion de coordenada y sin tests",
+        "avances mover",
+        "borrando imports innecesarios",
+        "fix soft delete en ubiNeo",
+        "fix comentarios",
+        "fix metodos centrality en controler",
+        "fix error coordenadas",
+        "Merge branch 'feature/crud-medium-mongo' of https://github.com/EPERS-UNQ/Codigo-Clandestino into feature/crud-medium-mongo",
+        "agregado autoindex en application properties",
+        "arreglos crud",
+        "0 errores modelo",
+        "fix controller medium",
+        "eliminar espiritu de service",
+        "guardar medium fix",
+        "movida coordenada al service",
+        "coordenada en modelo y arreglos",
+        "mini fix poligonoService",
+        "cambio dataservice y test",
+        "empezando crud",
+        "arreglos",
+        "degreeOf fix 1",
+        "closeness of fix 1"
+      ]
+    },
+    {
+      "👤 Contributor": "Lourdes de la Cerda",
+      "📊 Stats": {
+        "📨 commits": 40,
+        "✅ added": 1376,
+        "⛔ deleted": 869
+      },
+      "💬 Messages": [
+        "test conectar espiritu a medium lanza exception porque el espiritu esta dominado",
+        "Merge branch 'dev' into feature/MediumInvocar",
+        "invocar service medium + test",
+        "Merge branch 'feature/moverMedium' into feature/MediumInvocar",
+        "fix moverMedium_conEspiritus_actualizaUbicacionesEnCascada",
+        "fix testConectarEspirituNoDominadoAMediumSaleBien",
+        "map en recuperar conexiones repository #161",
+        "agrego idSQL a UbicacionNeoDTO #158",
+        "Merge branch 'dev' into feature/ubicacion-neo",
+        "elimino deleted de UbicacionNeoDTO",
+        "hard delete ubicacion neo",
+        "agrego idSQL a UbicacionNeoDTO y la uso en las querys + fix repository y mapper",
+        "Merge branch 'feature/crud-medium-mongo' of https://github.com/EPERS-UNQ/Codigo-Clandestino into feature/crud-medium-mongo",
+        "fix ubicacion controller issue #160",
+        "reorganizo paquete exception",
+        "Merge branch 'feature/crud-mongo-h' into feature/espiritu-mongo",
+        "inyecto mongo y poligono dao a repository espiritu + save",
+        "elimino las capas de coordenada que no se usan",
+        "espiritu dao mongo + fix test y dtos + guardar repository",
+        "coordenada dto en espiritu y medium",
+        "EspirituMongoDTO y MediumMongoDTO",
+        "conectar lanza EspirituDominadoException si el espíritu al cual se intenta conectar está siendo dominado por otro",
+        "espiritu muy lejano exception + espiritu dominado exception",
+        "agrego dominador en espiritu dominio, jpa y en mapper",
+        "fix set up test poligono",
+        "coordenada service, repository y mapper + test + exception coordenada invalida",
+        "agrego anotaciones en coordenada y poligono dominio",
+        "agrego validaciones en poligono dominio + test",
+        "ordeno en paquetes los dtos",
+        "elimino desdeModelo de UpdateDTO, nunca se usa",
+        "elimino desdeModelo de todos los CreateDTO, nunca se usan",
+        "corren todos los test",
+        "corren los test de poligono service",
+        "agrego poligono guardarUbicacion de controller",
+        "elimino poligono de ubicacion dominio",
+        "coordenada dao",
+        "elimino coordenada innecesaria de dominio y dto, espiritu y medium",
+        "fix ubicacion dto",
+        "area y coordenada mongo dto",
+        "Merge branch 'dev' into fix/closenessOf"
+      ]
+    },
+    {
+      "👤 Contributor": "ManchaliDamian",
+      "📊 Stats": {
+        "📨 commits": 10,
+        "✅ added": 108,
+        "⛔ deleted": 6
+      },
+      "💬 Messages": [
+        "agregando verificacion a medium de que la coordenada dada pertenezca a la ubicacion",
+        "test dominar modelo espiritu",
+        "implementacion de dominar",
+        "solucionando conflictos",
+        "agregando segundo actualizar medium"
+      ]
+    },
+    {
+      "👤 Contributor": "Valentin Ferreyra",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 181,
+        "⛔ deleted": 1
+      },
+      "💬 Messages": [
+        "feat: TP 5 MongoDB"
+      ]
+    },
+    {
+      "👤 Contributor": "axlg98",
+      "📊 Stats": {
+        "📨 commits": 12,
+        "✅ added": 262,
+        "⛔ deleted": 70
+      },
+      "💬 Messages": [
+        "Agregando test en MediumService para fallar la invocacion por distancia",
+        "excepcion mediumService invocar",
+        "Arreglando conflictos",
+        "Modificando MediumServiceTest",
+        "Agregando excepción y modificando el distanciaA de MediumMongo",
+        "arreglando algunas cosas",
+        "Avanzando con Medium Modelo",
+        "Agregando MediumMongoDTO",
+        "aca se sube el tp5",
+        "avanzando con Coordenada en Espiritu y Medium",
+        "Avanzando con coordenadas. Hecho Coordenada y su DTO, avanzando con modificaciones en otras clases"
+      ]
+    },
+    {
+      "👤 Contributor": "lourdesdlc",
+      "📊 Stats": {
+        "📨 commits": 48,
+        "✅ added": 1376,
+        "⛔ deleted": 869
+      },
+      "💬 Messages": [
+        "test conectar espiritu a medium lanza exception porque el espiritu esta dominado",
+        "Merge branch 'dev' into feature/MediumInvocar",
+        "invocar service medium + test",
+        "Merge branch 'feature/moverMedium' into feature/MediumInvocar",
+        "fix moverMedium_conEspiritus_actualizaUbicacionesEnCascada",
+        "fix testConectarEspirituNoDominadoAMediumSaleBien",
+        "map en recuperar conexiones repository #161",
+        "agrego idSQL a UbicacionNeoDTO #158",
+        "Merge branch 'dev' into feature/ubicacion-neo",
+        "elimino deleted de UbicacionNeoDTO",
+        "hard delete ubicacion neo",
+        "agrego idSQL a UbicacionNeoDTO y la uso en las querys + fix repository y mapper",
+        "Merge branch 'feature/crud-medium-mongo' of https://github.com/EPERS-UNQ/Codigo-Clandestino into feature/crud-medium-mongo",
+        "fix ubicacion controller issue #160",
+        "reorganizo paquete exception",
+        "Merge branch 'feature/crud-mongo-h' into feature/espiritu-mongo",
+        "inyecto mongo y poligono dao a repository espiritu + save",
+        "elimino las capas de coordenada que no se usan",
+        "espiritu dao mongo + fix test y dtos + guardar repository",
+        "coordenada dto en espiritu y medium",
+        "EspirituMongoDTO y MediumMongoDTO",
+        "conectar lanza EspirituDominadoException si el espíritu al cual se intenta conectar está siendo dominado por otro",
+        "espiritu muy lejano exception + espiritu dominado exception",
+        "agrego dominador en espiritu dominio, jpa y en mapper",
+        "fix set up test poligono",
+        "coordenada service, repository y mapper + test + exception coordenada invalida",
+        "agrego anotaciones en coordenada y poligono dominio",
+        "agrego validaciones en poligono dominio + test",
+        "ordeno en paquetes los dtos",
+        "elimino desdeModelo de UpdateDTO, nunca se usa",
+        "elimino desdeModelo de todos los CreateDTO, nunca se usan",
+        "corren todos los test",
+        "corren los test de poligono service",
+        "agrego poligono guardarUbicacion de controller",
+        "elimino poligono de ubicacion dominio",
+        "coordenada dao",
+        "elimino coordenada innecesaria de dominio y dto, espiritu y medium",
+        "fix ubicacion dto",
+        "area y coordenada mongo dto",
+        "Merge branch 'dev' into fix/closenessOf"
+      ]
+    }
+  ],
+  "❌ Commits directos a dev": [
+    {
+      "commit": "borrando imports innecesarios",
+      "author": "Hernán Moreyra"
+    }
+  ]
+}
