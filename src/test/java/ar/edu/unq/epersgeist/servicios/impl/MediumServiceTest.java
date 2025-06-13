@@ -140,6 +140,12 @@ public class MediumServiceTest {
         assertEquals(40, angel2Actualizado.get().getNivelDeConexion());
     }
     @Test
+    void testGuardarFallaPorCoordenadaNoValida() {
+        Medium nuevoMedium = new Medium("Pablo", 100, 50, cementerio);
+
+        assertThrows(CoordenadaFueraDeAreaException.class, () -> serviceM.guardar(nuevoMedium, c1) );
+    }
+    @Test
     void invocarFallaPorDistanciaTest(){
         Coordenada c = new Coordenada(80.1, 150.3);
         medium1 = serviceM.actualizar(medium1, c);

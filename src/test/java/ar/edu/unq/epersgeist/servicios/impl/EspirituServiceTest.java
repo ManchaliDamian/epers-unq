@@ -237,6 +237,12 @@ public class EspirituServiceTest {
         assertEquals("Miguel", recuperado.get().getNombre());
         assertEquals(0, recuperado.get().getNivelDeConexion());
     }
+    @Test
+    void testGuardarFallaPorCoordenadaNoValida() {
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+
+        assertThrows(CoordenadaFueraDeAreaException.class, () -> serviceE.guardar(nuevoEspiritu, c5) );
+    }
 
     @Test
     void testRecuperarEspirituQuedaEmptyPorEliminadoLogico() {
