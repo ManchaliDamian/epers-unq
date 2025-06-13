@@ -449,7 +449,7 @@ public class EspirituServiceTest {
 
     }
 
-    @AfterEach
+//    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

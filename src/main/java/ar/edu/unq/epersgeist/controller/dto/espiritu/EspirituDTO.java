@@ -10,7 +10,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 
 public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId,
-                          UbicacionDTO ubicacion, TipoEspiritu tipo) {
+                          UbicacionDTO ubicacion, TipoEspiritu tipo, Long dominadorId) {
     public static EspirituDTO desdeModelo(Espiritu espiritu) {
         return new EspirituDTO(
                 espiritu.getId(),
@@ -18,7 +18,8 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
                 espiritu.getNivelDeConexion(),
                 espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
                 UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
-                espiritu.getTipo()
+                espiritu.getTipo(),
+                espiritu.getDominador() != null ? espiritu.getDominador().getId() : null
         );
     }
 
