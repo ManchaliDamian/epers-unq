@@ -50,7 +50,12 @@ public class MediumJPADTO {
     private boolean deleted = false;
 
     @OneToMany(mappedBy = "mediumConectado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<EspirituJPADTO> espiritus = new HashSet<>();
+    private Set<EspirituJPADTO> espiritus = new HashSet<>();
+
+    public void setEspiritus(Set<EspirituJPADTO> espiritus) {
+        this.espiritus.clear();
+        this.espiritus.addAll(espiritus);
+    }
 
     public MediumJPADTO(@NotBlank String nombre, @NotNull Integer manaMax, @NotNull Integer mana, @NotNull UbicacionJPADTO ubicacion) {
         if (manaMax < 0) {

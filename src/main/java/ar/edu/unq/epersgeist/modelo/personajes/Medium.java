@@ -25,7 +25,7 @@ public class Medium {
     private Ubicacion ubicacion;
     private Integer manaMax;
     private Integer mana;
-    private final Set<Espiritu> espiritus = new HashSet<>();
+    private Set<Espiritu> espiritus = new HashSet<>();
 
     //auditoria
     private Date createdAt;

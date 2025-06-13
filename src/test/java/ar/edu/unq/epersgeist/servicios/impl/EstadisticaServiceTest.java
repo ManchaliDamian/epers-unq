@@ -1,6 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.NotFound.SnapshotNoEncontradoException;
+import ar.edu.unq.epersgeist.modelo.Snapshot;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
@@ -9,13 +12,20 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 
+import ar.edu.unq.epersgeist.persistencia.DTOs.estadistica.SnapshotMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +38,11 @@ public class EstadisticaServiceTest {
     @Autowired private MediumService mediumService;
     @Autowired private EspirituService espirituService;
 
+    @Autowired private UbicacionRepository ubicacionRepository;
+    @Autowired private EspirituRepository espirituRepository;
+    @Autowired private MediumRepository mediumRepository;
     @Autowired private DataService dataService;
+    @Autowired private PoligonoRepository poligonoRepository;
 
     private Medium medium1;
 
@@ -55,6 +69,7 @@ public class EstadisticaServiceTest {
     private Poligono poligono;
     private Poligono poligono1;
     private Poligono poligono2;
+
     @BeforeEach
     void setUp() {
         c1 = new Coordenada(0.0,0.0);
@@ -120,6 +135,64 @@ public class EstadisticaServiceTest {
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
 
         assertNull(reporte.getMediumMayorDemoniacos());
+    }
+
+
+    // SNAPSHOT
+
+    @Test
+    void crearSnapshotYObtener(){
+        LocalDate fechaHoy = LocalDate.now();
+        estadisticaService.crearSnapshot();
+        Snapshot ssCreadaHoy = estadisticaService.obtenerSnapshot(fechaHoy);
+        assertEquals(fechaHoy, ssCreadaHoy.getFecha());
+    }
+
+    @Test
+    void crearSnapshotPisaElDeLaFechaActual(){
+        dataService.eliminarTodo();
+        LocalDate fechaHoy = LocalDate.now();
+
+        // se crea un snapshot sin nada persistido
+        estadisticaService.crearSnapshot();
+        Snapshot snapshotPrimero = estadisticaService.obtenerSnapshot(fechaHoy);
+
+        // se crea segundo snapshot con cosas persistidas
+        Poligono poligonoCABA = new Poligono(List.of(
+                new Coordenada(1.0, 1.0),
+                new Coordenada(1.0, 1.2),
+                new Coordenada(1.2, 1.2),
+                new Coordenada(1.2, 1.0),
+                new Coordenada(1.0, 1.0)
+        ));
+
+        Santuario argentina = new Santuario("Argentina",99);
+        ubicacionService.guardar(argentina, poligonoCABA);
+
+        Medium unMedium = new Medium("Pepe", 700, 50, argentina);
+        mediumService.guardar(unMedium, new Coordenada(1.1, 1.1));
+
+        estadisticaService.crearSnapshot();
+        Snapshot snapshotMasReciente = estadisticaService.obtenerSnapshot(fechaHoy);
+
+        //verify
+        assertNotEquals(snapshotPrimero.getId(), snapshotMasReciente.getId());
+        assertEquals(fechaHoy, snapshotMasReciente.getFecha());
+    }
+
+    @Test
+    void obtenerSnapshotVacio(){
+        dataService.eliminarTodo();
+        assertThrows(SnapshotNoEncontradoException.class, () -> estadisticaService.obtenerSnapshot(LocalDate.now()));
+    }
+
+    @Test
+    void eliminarExitoso(){
+        estadisticaService.crearSnapshot();
+        Snapshot snapshotRecuperada = estadisticaService.obtenerSnapshot(LocalDate.now());
+        estadisticaService.eliminar(snapshotRecuperada);
+
+        assertThrows(SnapshotNoEncontradoException.class, () -> estadisticaService.obtenerSnapshot(LocalDate.now()));
     }
 
     @AfterEach

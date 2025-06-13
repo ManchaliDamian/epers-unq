@@ -4,10 +4,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
-import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.*;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +19,19 @@ public class DataServiceImpl implements DataService {
     private final MediumRepository mediumRepository;
     private final EspirituRepository espirituRepository;
     private final PoligonoRepository poligonoRepository;
+    private final EstadisticaRepository estadisticaRepository;
 
-    public DataServiceImpl(UbicacionRepository ubicacionRepository, MediumRepository mediumRepository, EspirituRepository espirituRepository, PoligonoRepository poligonoRepository) {
+    public DataServiceImpl(UbicacionRepository ubicacionRepository,
+                           MediumRepository mediumRepository,
+                           EspirituRepository espirituRepository,
+                            PoligonoRepository poligonoRepository,
+                            EstadisticaRepository estadisticaRepository
+    ) {
         this.ubicacionRepository = ubicacionRepository;
         this.mediumRepository = mediumRepository;
         this.espirituRepository = espirituRepository;
         this.poligonoRepository = poligonoRepository;
+        this.estadisticaRepository = estadisticaRepository;
     }
 
     public void eliminarTodo() {
@@ -35,6 +39,7 @@ public class DataServiceImpl implements DataService {
         mediumRepository.deleteAll();
         ubicacionRepository.deleteAll();
         poligonoRepository.deleteAll();
+        estadisticaRepository.deleteAll();
     }
 
     public Optional<Medium> recuperarEliminadoMedium(Long mediumId) {

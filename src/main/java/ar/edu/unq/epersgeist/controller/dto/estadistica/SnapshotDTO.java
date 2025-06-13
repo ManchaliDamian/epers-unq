@@ -1,19 +1,23 @@
 package ar.edu.unq.epersgeist.controller.dto.estadistica;
 
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import ar.edu.unq.epersgeist.modelo.Snapshot;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Map;
 
-@Getter @Setter
-public class SnapshotDTO {
-    @Id
-    private String id;
-    private Date fecha;
-
-    private Map<String, Object> sql;
-    private Map<String, Object> mongo;
-    private Map<String, Object> neo4j;
+public record SnapshotDTO(
+        Map<String, Object> sql,
+        Map<String, Object> mongo,
+        Map<String, Object> neo4j,
+        @JsonFormat(pattern = "yyyy/MM/dd") LocalDate fecha
+) {
+    public static SnapshotDTO desdeModelo(Snapshot snapshot){
+        return new SnapshotDTO(
+                snapshot.getSql(),
+                snapshot.getMongo(),
+                snapshot.getNeo4j(),
+                snapshot.getFecha()
+        );
+    }
 }

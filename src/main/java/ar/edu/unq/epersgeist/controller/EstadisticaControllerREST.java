@@ -2,13 +2,15 @@ package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.estadistica.ReporteSantuarioCorruptoDTO;
 import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.net.URI;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/estadistica")
@@ -20,7 +22,7 @@ public final class EstadisticaControllerREST {
         this.estadisticaService = estadisticaService;
     }
 
-    @GetMapping
+    @GetMapping("/santuarioMasCorrupto")
     public ResponseEntity<ReporteSantuarioCorruptoDTO> obtenerSantuarioMasCorrupto() {
         ReporteSantuarioMasCorrupto reporte = estadisticaService.santuarioCorrupto();
 
@@ -28,15 +30,15 @@ public final class EstadisticaControllerREST {
         return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("/snapshot/create")
+    @PostMapping("/snapshot")
     public ResponseEntity<String> crearSnapshot(){
-        estadisticaService.guardarSnapshot();
-        return ResponseEntity.ok("Snapshot tomada con éxito");
+        estadisticaService.crearSnapshot();
+        return ResponseEntity.ok("Snapshot creada con éxito");
     }
 
-    @PostMapping("/snapshot/load/{fechaDeCreacion}")
-    public ResponseEntity<SnapshotDTO> cargarSnapshot(@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date fechaDeCreacion){
-        SnapshotDTO snapshot = estadisticaService.cargarSnapshot(fechaDeCreacion);
+    @GetMapping("/snapshot/{fechaDeCreacion}")
+    public ResponseEntity<SnapshotDTO> obtenerSnapshot(@PathVariable @DateTimeFormat(pattern = "yyyy/MM/dd") LocalDate fechaDeCreacion){
+        SnapshotDTO snapshot = SnapshotDTO.desdeModelo(estadisticaService.obtenerSnapshot(fechaDeCreacion));
         return ResponseEntity.ok(snapshot);
     }
 }
