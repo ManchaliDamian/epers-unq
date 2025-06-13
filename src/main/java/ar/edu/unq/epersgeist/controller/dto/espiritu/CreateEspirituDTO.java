@@ -14,7 +14,7 @@ public record CreateEspirituDTO(
         @NotBlank String nombre,
         @NotNull  Long ubicacionId,
         @NotNull  TipoEspiritu tipo,
-        CoordenadaDTO coordenadaDTO
+        @NotNull  CoordenadaDTO coordenada
 ) {
 
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu, Coordenada coordenada) {
@@ -34,6 +34,6 @@ public record CreateEspirituDTO(
     }
 
     public Coordenada aModeloCoordenada(){
-        return coordenadaDTO.aModelo();
+        return coordenada.aModelo();
     }
 }

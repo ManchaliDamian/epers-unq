@@ -1,6 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.exception.*;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeRangoException;
+import ar.edu.unq.epersgeist.exception.Conflict.*;
+import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.MediumNoEliminableException;
+import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.NotFound.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -316,7 +322,7 @@ public class MediumServiceTest {
     void testInvocarFallaPorqueEspirituYaEstaConectado() {
         demonio.setMediumConectado(medium1);
         serviceE.actualizar(demonio);
-        assertThrows(EspirituOcupadoException.class, () -> {
+        assertThrows(DistanciaNoCercanaException.EspirituOcupadoException.class, () -> {
             serviceM.invocar(medium1.getId(), demonio.getId());
         });
     }

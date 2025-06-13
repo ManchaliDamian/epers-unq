@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable;
 
 public class EspirituNoEliminableException extends RecursoNoEliminableException {
     public EspirituNoEliminableException(Long idEspiritu ) {

@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.ubicacion;
 
-import ar.edu.unq.epersgeist.exception.CoordenadaFueraDeRangoException;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeRangoException;
 import lombok.*;
 
 @Getter @Setter @ToString

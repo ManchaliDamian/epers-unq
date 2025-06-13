@@ -6,7 +6,7 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EstadisticaRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
-import ar.edu.unq.epersgeist.exception.NoHaySantuarioCorruptoException;
+import ar.edu.unq.epersgeist.exception.NotFound.NoHaySantuarioCorruptoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;

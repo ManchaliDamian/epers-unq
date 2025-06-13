@@ -1,9 +1,9 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.Conflict;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
-public class EspirituNoEstaEnLaMismaUbicacionException extends IllegalArgumentException {
+public class EspirituNoEstaEnLaMismaUbicacionException extends ConflictException {
 
   public EspirituNoEstaEnLaMismaUbicacionException(Espiritu espiritu, Medium medium) {
       super( "El espiritu {" + espiritu.getNombre()

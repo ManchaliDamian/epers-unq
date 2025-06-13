@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable;
 
 public class MediumNoEliminableException extends RecursoNoEliminableException {
     public MediumNoEliminableException(Long idMedium) {

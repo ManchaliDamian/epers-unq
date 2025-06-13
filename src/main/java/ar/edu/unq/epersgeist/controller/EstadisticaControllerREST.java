@@ -1,12 +1,13 @@
 package ar.edu.unq.epersgeist.controller;
 
-import ar.edu.unq.epersgeist.controller.dto.ReporteSantuarioCorruptoDTO;
+import ar.edu.unq.epersgeist.controller.dto.estadistica.ReporteSantuarioCorruptoDTO;
 import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.servicios.interfaces.EstadisticaService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 
 @RestController

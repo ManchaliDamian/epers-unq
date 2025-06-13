@@ -1,8 +1,6 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.Conflict;
 
-import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-
-public class EspirituNoDominableException extends RuntimeException {
+public class EspirituNoDominableException extends ConflictException {
     public EspirituNoDominableException(Long espirituADominar, Long espiritu) {
         super(" El espiritu con id: " + espirituADominar + "no puede dominar al Espiritu con id: " + espiritu);
     }
