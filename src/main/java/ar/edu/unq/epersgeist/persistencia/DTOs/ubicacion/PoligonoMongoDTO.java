@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion;
 
-import ar.edu.unq.epersgeist.exception.PoligonoIncompletoException;
+import ar.edu.unq.epersgeist.exception.BadRequest.PoligonoIncompletoException;
 import lombok.*;
 
 import org.springframework.data.geo.Point;

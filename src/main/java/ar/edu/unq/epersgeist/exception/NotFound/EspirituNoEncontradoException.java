@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.NotFound;
 
 import jakarta.persistence.EntityNotFoundException;
 

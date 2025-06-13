@@ -1,6 +1,10 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
 
-import ar.edu.unq.epersgeist.exception.*;
+import ar.edu.unq.epersgeist.exception.BadRequest.ConectarException;
+import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.Conflict.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.exception.Conflict.ExorcizarNoPermitidoNoEsMismaUbicacion;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 import lombok.*;
@@ -112,7 +116,7 @@ public class Medium {
     }
 
     public void validarInvocar(Espiritu espiritu){
-        if (espiritu.estaConectado()) throw new EspirituOcupadoException(espiritu);
+        if (espiritu.estaConectado()) throw new DistanciaNoCercanaException.EspirituOcupadoException(espiritu.getNombre());
     }
 
     public void mover(Ubicacion ubicacion) {

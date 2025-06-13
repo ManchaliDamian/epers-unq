@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.exception.MismaUbicacionException;
-import ar.edu.unq.epersgeist.exception.NombreDeUbicacionRepetidoException;
-import ar.edu.unq.epersgeist.exception.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.exception.UbicacionesNoConectadasException;
+import ar.edu.unq.epersgeist.exception.Conflict.MismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.Conflict.NombreDeUbicacionRepetidoException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.exception.Conflict.UbicacionesNoConectadasException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;

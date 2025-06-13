@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable;
 
 public class UbicacionNoEliminableException extends RecursoNoEliminableException {
     public UbicacionNoEliminableException(Long id) {

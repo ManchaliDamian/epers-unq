@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.exception;
+package ar.edu.unq.epersgeist.exception.BadRequest;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;

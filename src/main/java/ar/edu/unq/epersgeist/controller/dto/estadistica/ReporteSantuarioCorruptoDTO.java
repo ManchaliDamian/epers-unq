@@ -1,4 +1,4 @@
-package ar.edu.unq.epersgeist.controller.dto;
+package ar.edu.unq.epersgeist.controller.dto.estadistica;
 
 import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
 import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;

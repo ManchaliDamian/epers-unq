@@ -1,7 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
-import ar.edu.unq.epersgeist.exception.SuperposicionDePoligonosException;
-import ar.edu.unq.epersgeist.exception.UbicacionYaTienePoligonoException;
+import ar.edu.unq.epersgeist.exception.Conflict.SuperposicionDePoligonosException;
+import ar.edu.unq.epersgeist.exception.Conflict.UbicacionYaTienePoligonoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
