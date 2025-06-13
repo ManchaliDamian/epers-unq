@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.DistanciaNoCercanaException;
 import ar.edu.unq.epersgeist.exception.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -96,10 +97,11 @@ public class EspirituServiceImpl implements EspirituService {
         }
         Optional<Double> distancia = espirituRepository.distanciaA(coordenadaEspiritu.get().getLongitud(), coordenadaEspiritu.get().getLatitud(), idEspirituADominar);
         if (distancia.isEmpty()) {
-            throw new RuntimeException("Distancia no disponible");
+            throw new DistanciaNoCercanaException("Distancia no disponible");
         }
         espiritu = espiritu.dominar(espirituADominar);
         this.actualizar(espiritu);
+        this.actualizar(espirituADominar);
     }
 
     @Override

@@ -11,18 +11,17 @@ import java.util.Optional;
 @Repository
 public interface EspirituDAOMongo extends MongoRepository<EspirituMongoDTO, String> {
 
-    @Aggregation(pipeline ={
-            "{'$geoNear': { " +
-                    "'near':{'type': 'Point', 'coordinates': [?0, ?1]}, " +
+    @Aggregation(pipeline = {
+            "{ '$geoNear': { " +
+                    "'near': { 'type': 'Point', 'coordinates': [?0, ?1] }, " +
                     "'distanceField': 'distancia', " +
                     "'spherical': true, " +
                     "'query': { 'idSQL': ?2 }, " +
-                    "'maxDistance': 5000",
-            "}}",
-            "{ $match: { 'distancia': { $gte: 2000, $lte: 5000 } } }",
-            "{ $project: { 'distancia': 1, '_id': 0 }} "
-    }
-    )
+                    "'maxDistance': 5000 " +
+                    "} }",
+            "{ '$match': { 'distancia': { '$gte': 2000, '$lte': 5000 } } }",
+            "{ '$project': { 'distancia': 1, '_id': 0 } }"
+    })
     Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL);
 
     @Query("{ 'idSQL' : ?0 }")

@@ -14,6 +14,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
@@ -100,7 +101,10 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> mapper.toDomain(espirituJPADTO));
+        return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> {
+            EspirituJPADTO realJPA = (EspirituJPADTO) Hibernate.unproxy(espirituJPADTO);
+            return mapper.toDomain(realJPA);
+        });
     }
 
     @Override
