@@ -13,7 +13,7 @@ public record CreateMediumDTO(
         @NotNull Long ubicacionId,
         @NotNull @Min(0) Integer manaMax,
         @NotNull @Min(0) Integer mana,
-        @NotNull CoordenadaDTO coordenadaDTO
+        @NotNull CoordenadaDTO coordenada
 ) {
     public static CreateMediumDTO desdeModelo(Medium medium, Coordenada coordenada) {
         return new CreateMediumDTO(
@@ -31,6 +31,6 @@ public record CreateMediumDTO(
     }
 
     public Coordenada aModeloCoordenada() {
-        return coordenadaDTO.aModelo();
+        return coordenada.aModelo();
     }
 }
