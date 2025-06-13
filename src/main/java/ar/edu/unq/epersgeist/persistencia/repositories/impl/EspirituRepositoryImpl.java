@@ -73,10 +73,8 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
 
-        // eliminar la coordenada anterior
         espirituDAOMongo.deleteByIdSQL(espiritu.getId());
 
-        // crear nuevo document
         EspirituMongoDTO mongoDTO = mapperE.toMongo(dto, coordenada);
         espirituDAOMongo.save(mongoDTO);
         return mapperE.toDomain(dto);

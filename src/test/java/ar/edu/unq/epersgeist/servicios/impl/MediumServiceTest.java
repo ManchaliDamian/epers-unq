@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
 import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeRangoException;
 import ar.edu.unq.epersgeist.exception.Conflict.*;
 import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.MediumNoEliminableException;
@@ -143,6 +144,12 @@ public class MediumServiceTest {
         assertTrue(espiritusMedium2.isEmpty());
         assertEquals(30, angel1Actualizado.get().getNivelDeConexion());
         assertEquals(40, angel2Actualizado.get().getNivelDeConexion());
+    }
+    @Test
+    void testGuardarFallaPorCoordenadaNoValida() {
+        Medium nuevoMedium = new Medium("Pablo", 100, 50, cementerio);
+
+        assertThrows(CoordenadaFueraDeAreaException.class, () -> serviceM.guardar(nuevoMedium, c1) );
     }
     @Test
     void invocarFallaPorDistanciaTest(){

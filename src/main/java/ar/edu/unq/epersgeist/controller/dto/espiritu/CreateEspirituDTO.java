@@ -10,7 +10,6 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-
 public record CreateEspirituDTO(
         @NotBlank String nombre,
         @NotNull  Long ubicacionId,

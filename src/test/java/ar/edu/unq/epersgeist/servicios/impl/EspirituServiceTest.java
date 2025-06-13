@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.exception.BadRequest.ConectarException;
+import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
 import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
@@ -242,6 +243,12 @@ public class EspirituServiceTest {
         assertNotNull(recuperado);
         assertEquals("Miguel", recuperado.get().getNombre());
         assertEquals(0, recuperado.get().getNivelDeConexion());
+    }
+    @Test
+    void testGuardarFallaPorCoordenadaNoValida() {
+        Espiritu nuevoEspiritu = new EspirituAngelical("Miguel", quilmes);
+
+        assertThrows(CoordenadaFueraDeAreaException.class, () -> serviceE.guardar(nuevoEspiritu, c5) );
     }
 
     @Test
