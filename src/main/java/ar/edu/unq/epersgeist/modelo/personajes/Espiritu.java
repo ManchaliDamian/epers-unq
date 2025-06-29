@@ -29,6 +29,9 @@ public abstract class Espiritu {
     private Espiritu dominador;
 
     private int vida;
+    private int batallasGanadas;
+    private int batallasPerdidas;
+    private int batallasJugadas;
 
     //auditoria
     private Date createdAt;
@@ -37,6 +40,9 @@ public abstract class Espiritu {
 
     public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
         this.nivelDeConexion = 0;
+        this.batallasGanadas = 0;
+        this.batallasPerdidas = 0;
+        this.batallasJugadas = 0;
         this.vida = 100;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -108,13 +114,30 @@ public abstract class Espiritu {
         int ataque = Generador.entre(1, 100);
         int defensa = Generador.entre(1, 100);
 
+        this.participarEnBatalla(); espirituACombatir.participarEnBatalla();
         this.perderVida(2);
 
         if (ataque > defensa){
+            this.registrarVictoria();
             espirituACombatir.perderVida(Math.min(ataque, 100));
+            espirituACombatir.registrarDerrota();
         }else{
             this.perderVida(Math.min(defensa, 100));
+            this.registrarDerrota();
+            espirituACombatir.registrarVictoria();
         }
+    }
+
+    public void participarEnBatalla() {
+        this.batallasJugadas++;
+    }
+
+    public void registrarVictoria() {
+        this.batallasGanadas++;
+    }
+
+    public void registrarDerrota() {
+        this.batallasPerdidas++;
     }
 
     public void atacar(Espiritu objetivo){};

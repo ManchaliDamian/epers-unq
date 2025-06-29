@@ -38,6 +38,14 @@ public class EspirituTest {
         angel.combatir(demonio);
         assertEquals(70, demonio.getVida());
         assertEquals(98, angel.getVida()); //pierde vida por haber iniciado combate
+
+        assertEquals(1, angel.getBatallasJugadas());
+        assertEquals(1, angel.getBatallasGanadas());
+        assertEquals(0, angel.getBatallasPerdidas());
+
+        assertEquals(1, demonio.getBatallasJugadas());
+        assertEquals(0, demonio.getBatallasGanadas());
+        assertEquals(1, demonio.getBatallasPerdidas());
     }
 
     @Test
@@ -46,6 +54,14 @@ public class EspirituTest {
         angel.combatir(demonio);
         assertEquals(58, angel.getVida());
         assertEquals(100, demonio.getVida());//gano, no pierde vida
+
+        assertEquals(1, angel.getBatallasJugadas());
+        assertEquals(0, angel.getBatallasGanadas());
+        assertEquals(1, angel.getBatallasPerdidas());
+
+        assertEquals(1, demonio.getBatallasJugadas());
+        assertEquals(1, demonio.getBatallasGanadas());
+        assertEquals(0, demonio.getBatallasPerdidas());
     }
 
     @Test
