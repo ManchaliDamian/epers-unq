@@ -18,25 +18,28 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EspirituTest {
     private Espiritu angel;
     private Espiritu demonio;
+    private Espiritu angel1;
+    private Espiritu demonio1;
     private Ubicacion santuario;
     private Ubicacion cementerio;
     private Medium mediumConectado;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         santuario = new Santuario("santuario", 40);
         cementerio = new Cementerio("cementerio", 60);
 
-        mediumConectado = new Medium("Medium",100,90, cementerio);
+        mediumConectado = new Medium("Medium", 100, 90, cementerio);
+
+        Generador.setEstrategia(new GeneradorSecuencial(30, 10, 5, 10));
         angel = new EspirituAngelical("Angel",cementerio);
         demonio = new EspirituDemoniaco("Demonio", santuario);
     }
 
     @Test
     void combatirMayorAtaque(){
-        Generador.setEstrategia(new GeneradorSecuencial(30, 5));
         angel.combatir(demonio);
-        assertEquals(70, demonio.getVida());
+        assertEquals(85, demonio.getVida());
         assertEquals(98, angel.getVida()); //pierde vida por haber iniciado combate
 
         assertEquals(1, angel.getBatallasJugadas());
@@ -50,18 +53,22 @@ public class EspirituTest {
 
     @Test
     void combatirMayorDefensa(){
-        Generador.setEstrategia(new GeneradorSecuencial(5, 40));
-        angel.combatir(demonio);
-        assertEquals(58, angel.getVida());
-        assertEquals(100, demonio.getVida());//gano, no pierde vida
+        //ataque y defensa de angel1 | ataque y defensa de demonio1
+        Generador.setEstrategia(new GeneradorSecuencial(5, 20, 40, 60));
+        angel1 = new EspirituAngelical("Angel",cementerio);
+        demonio1 = new EspirituDemoniaco("Demonio", santuario);
 
-        assertEquals(1, angel.getBatallasJugadas());
-        assertEquals(0, angel.getBatallasGanadas());
-        assertEquals(1, angel.getBatallasPerdidas());
+        angel1.combatir(demonio1);
+        assertEquals(68, angel1.getVida());
+        assertEquals(100, demonio1.getVida());//gano, no pierde vida
 
-        assertEquals(1, demonio.getBatallasJugadas());
-        assertEquals(1, demonio.getBatallasGanadas());
-        assertEquals(0, demonio.getBatallasPerdidas());
+        assertEquals(1, angel1.getBatallasJugadas());
+        assertEquals(0, angel1.getBatallasGanadas());
+        assertEquals(1, angel1.getBatallasPerdidas());
+
+        assertEquals(1, demonio1.getBatallasJugadas());
+        assertEquals(1, demonio1.getBatallasGanadas());
+        assertEquals(0, demonio1.getBatallasPerdidas());
     }
 
     @Test
