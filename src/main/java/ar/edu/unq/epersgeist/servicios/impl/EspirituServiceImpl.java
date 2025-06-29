@@ -104,6 +104,11 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
+    public void combatir(Long idEspiritu, Long idEspirituACombatir) {
+
+    }
+
+    @Override
     public void eliminar(Long id) {
         Espiritu espiritu = espirituRepository.recuperar(id)
                 .orElseThrow(() -> new EspirituNoEncontradoException(id));
