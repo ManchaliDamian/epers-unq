@@ -105,7 +105,10 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void combatir(Long idEspiritu, Long idEspirituACombatir) {
+        Espiritu espiritu = this.getEspiritu(idEspiritu);
+        Espiritu espirituACombatir = this.getEspiritu(idEspirituACombatir);
 
+        espiritu.combatir(espirituACombatir);
     }
 
     @Override
