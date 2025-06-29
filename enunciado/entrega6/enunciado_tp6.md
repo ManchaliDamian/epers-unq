@@ -54,7 +54,7 @@ Se deberán modificar los siguientes servicios:
 ### EspirituService
 - `void desplazarse(Ubicacion ubicacion)` - Deberá mover al espíritu a la ubicación indicada, en una coordenada cualquiera. Si el espíritu está conectado a un medium, deberá arrojarse la excepción `EspirituConectadoException`.
 - `void combatir(Espiritu espiritu)` - Deberá atacar al espíritu indicado según las indicaciones dadas previamente.
-- 
+
 ### EstadisticaService
 - `List<Ubicacion> ubicacionesMasPopuladas` - Retorna una lista ordenada de mayor a menor con las ubicaciones que tienen más espíritus 
 
