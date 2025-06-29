@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
+import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -29,6 +31,23 @@ public class EspirituTest {
         angel = new EspirituAngelical("Angel",cementerio);
         demonio = new EspirituDemoniaco("Demonio", santuario);
     }
+
+    @Test
+    void combatirMayorAtaque(){
+        Generador.setEstrategia(new GeneradorSecuencial(30, 5));
+        angel.combatir(demonio);
+        assertEquals(70, demonio.getVida());
+        assertEquals(98, angel.getVida()); //pierde vida por haber iniciado combate
+    }
+
+    @Test
+    void combatirMayorDefensa(){
+        Generador.setEstrategia(new GeneradorSecuencial(5, 40));
+        angel.combatir(demonio);
+        assertEquals(58, angel.getVida());
+        assertEquals(100, demonio.getVida());//gano, no pierde vida
+    }
+
     @Test
     void dominar(){
         demonio.setNivelDeConexion(40);

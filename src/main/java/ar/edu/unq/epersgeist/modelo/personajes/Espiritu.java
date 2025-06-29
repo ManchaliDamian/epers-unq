@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo.personajes;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -27,6 +28,8 @@ public abstract class Espiritu {
 
     private Espiritu dominador;
 
+    private int vida;
+
     //auditoria
     private Date createdAt;
     private Date updatedAt;
@@ -34,6 +37,7 @@ public abstract class Espiritu {
 
     public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
         this.nivelDeConexion = 0;
+        this.vida = 100;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
@@ -93,6 +97,24 @@ public abstract class Espiritu {
 
     public void aumentarNivelDeConexion(int aumento){
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
+    }
+
+    public void perderVida(int cantidad){
+        int nuevaVida = this.getVida() - cantidad;
+        this.setVida(Math.max(nuevaVida, 0));
+    }
+
+    public void combatir(Espiritu espirituACombatir){
+        int ataque = Generador.entre(1, 100);
+        int defensa = Generador.entre(1, 100);
+
+        this.perderVida(2);
+
+        if (ataque > defensa){
+            espirituACombatir.perderVida(Math.min(ataque, 100));
+        }else{
+            this.perderVida(Math.min(defensa, 100));
+        }
     }
 
     public void atacar(Espiritu objetivo){};
