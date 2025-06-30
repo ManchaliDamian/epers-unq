@@ -109,6 +109,8 @@ public class EspirituServiceImpl implements EspirituService {
         Espiritu espirituACombatir = this.getEspiritu(idEspirituACombatir);
 
         espiritu.combatir(espirituACombatir);
+        espirituRepository.actualizarFirebase(espiritu);
+        espirituRepository.actualizarFirebase(espirituACombatir);
     }
 
     @Override
@@ -127,6 +129,7 @@ public class EspirituServiceImpl implements EspirituService {
         espiritu.setDeleted(true);
         espirituRepository.actualizar(espiritu);
         espirituRepository.eliminarFisicoEnMongoSiExiste(id);
+        espirituRepository.eliminarFirebase(id);
     }
 
     @Override

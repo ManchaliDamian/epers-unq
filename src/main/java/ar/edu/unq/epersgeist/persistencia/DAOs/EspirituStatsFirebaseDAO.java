@@ -6,4 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface EspirituStatsFirebaseDAO {
     void save(Espiritu espiritu) throws InterruptedException, ExecutionException;
+    Espiritu actualizar(Espiritu e);
+    void eliminar(Long id);
+    void deleteAll();
 }

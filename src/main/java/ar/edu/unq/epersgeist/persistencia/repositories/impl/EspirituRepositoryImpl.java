@@ -19,6 +19,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 
 import com.google.cloud.firestore.WriteResult;
+import com.google.firebase.cloud.FirestoreClient;
 import org.hibernate.Hibernate;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import java.util.concurrent.ExecutionException;
@@ -71,11 +72,8 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             espirituFirebaseDAO.save(mapperE.toDomain(jpa));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("La operación de guardado en Firebase fue interrumpida para el espíritu ID: " + espiritu.getId());
-            // Decide el manejo de errores: loggear, lanzar una excepción, etc.
         } catch (ExecutionException e) {
-            System.err.println("Error al guardar en Firebase para el espíritu ID: " + espiritu.getId() + ": " + e.getCause().getMessage());
-            // Decide el manejo de errores
+            throw new RuntimeException("Error al guardar estadísticas en Firebase", e);
         }
 
         return mapperE.toDomain(jpa);
@@ -104,6 +102,12 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         return mapperE.toDomain(dto);
     }
 
+    @Override
+    public Espiritu actualizarFirebase(Espiritu espiritu) {
+        return espirituFirebaseDAO.actualizar(espiritu);
+
+    }
+
     private EspirituJPADTO actualizarEspirituJPA(Espiritu espiritu) {
         espirituDAOSQL.findById(espiritu.getId())
                 .filter(u -> !u.isDeleted())
@@ -118,6 +122,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public void eliminarFisicoEnMongoSiExiste(Long id) {
         Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(espirituDAOMongo::delete);
+    }
+
+    @Override
+    public void eliminarFirebase(Long id) {
+        espirituFirebaseDAO.eliminar(id);
     }
 
     @Override
@@ -181,5 +190,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();
         this.espirituDAOMongo.deleteAll();
+        this.espirituFirebaseDAO.deleteAll();
     }
 }
