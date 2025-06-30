@@ -8,7 +8,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituFirebaseDAO;
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituStatsFirebaseDAO;
 import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
@@ -42,7 +42,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituMapper mapper;
     private PoligonoDAO poligonoDAOMongo;
     @Autowired
-    private EspirituFirebaseDAO espirituFirebaseDAO;
+    private EspirituStatsFirebaseDAO espirituFirebaseDAO;
 
     public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapperE, PoligonoDAO poligonoDAOMongo,UbicacionMapper mapperU){
         this.espirituDAOSQL = espirituDAOSQL;

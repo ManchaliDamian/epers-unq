@@ -4,6 +4,6 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 
 import java.util.concurrent.ExecutionException;
 
-public interface EspirituFirebaseDAO {
+public interface EspirituStatsFirebaseDAO {
     void save(Espiritu espiritu) throws InterruptedException, ExecutionException;
 }
