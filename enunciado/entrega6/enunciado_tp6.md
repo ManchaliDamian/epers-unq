@@ -43,20 +43,19 @@ Eso... aún estaba por verse.
 A partir de ahora:
 - Tendrán un número del 1 al 100 que represente la energía que tienen. Si se intenta realizar una acción sin energía, deberá arrojarse la excepción `EspirituSinEnergiaException`.
 - Podrán moverse entre ubicaciones sin depender de un medium para ello.
-- Podrán atacar a otro espíritu. (dar reglas)
+- Podrán combatir con otro espíritu. Para esto tener en cuenta que un espíritu debe tener un número que represente el nivel de ataque y otro de defensa, los cuales al sumarlos el resultado no debe ser mayor a 50. 
 - Tendrán un número de victorias y de derrotes por combate.
-- Tendrán un número que represente el poder de ataque, y otro que represente el poder de defensa. Solamente aplican para el nuevo esquema de duelo.
-
 
 ## Servicios
 Se deberán modificar los siguientes servicios:
 
 ### EspirituService
-- `void desplazarse(Ubicacion ubicacion)` - Deberá mover al espíritu a la ubicación indicada, en una coordenada cualquiera. Si el espíritu está conectado a un medium, deberá arrojarse la excepción `EspirituConectadoException`.
-- `void combatir(Espiritu espiritu)` - Deberá atacar al espíritu indicado según las indicaciones dadas previamente.
+- `void desplazarse(Long espirituId, Long ubicacionId)` - Deberá mover al espíritu a la ubicación indicada, en una coordenada cualquiera. Si el espíritu está conectado a un medium, deberá arrojarse la excepción `EspirituConectadoException`.
+- `void combatir(Long atacanteId, Long defensorId)` - Los espíritus dados deberán entrar en combate según las indicaciones dadas previamente.
 
 ### EstadisticaService
 - `List<Ubicacion> ubicacionesMasPopuladas` - Retorna una lista ordenada de mayor a menor con las ubicaciones que tienen más espíritus 
-
-### Bonus
 - `List<Espiritu> espiritusMasVictoriosos` - Retorna una lista ordenada de mayor a menor con los espíritus que tienen más victorias
+
+## Se pide:
+* 
