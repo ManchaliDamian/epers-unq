@@ -39,8 +39,8 @@ public class EspirituTest {
     @Test
     void combatirMayorAtaque(){
         angel.combatir(demonio);
-        assertEquals(85, demonio.getVida());
-        assertEquals(98, angel.getVida()); //pierde vida por haber iniciado combate
+        assertEquals(80, demonio.getVida());
+        assertEquals(100, angel.getVida());
 
         assertEquals(1, angel.getBatallasJugadas());
         assertEquals(1, angel.getBatallasGanadas());
@@ -59,8 +59,8 @@ public class EspirituTest {
         demonio1 = new EspirituDemoniaco("Demonio", santuario);
 
         angel1.combatir(demonio1);
-        assertEquals(68, angel1.getVida());
-        assertEquals(100, demonio1.getVida());//gano, no pierde vida
+        assertEquals(90, angel1.getVida()); // pierde 60/2 - 20
+        assertEquals(100, demonio1.getVida());// gano, no pierde vida
 
         assertEquals(1, angel1.getBatallasJugadas());
         assertEquals(0, angel1.getBatallasGanadas());

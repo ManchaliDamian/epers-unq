@@ -118,20 +118,29 @@ public abstract class Espiritu {
     public void combatir(Espiritu espirituACombatir){
         this.participarEnBatalla();
         espirituACombatir.participarEnBatalla();
-        this.perderVida(2);
 
         if (this.getAtaque() > espirituACombatir.getDefensa()){
             this.registrarVictoria();
-            espirituACombatir.perderVida(Math.min(this.getAtaque(), 100) / 2);
+            espirituACombatir.recibirImpacto(this.getAtaque());
             espirituACombatir.registrarDerrota();
         }else{
-            this.perderVida(Math.min(espirituACombatir.getDefensa(), 100) / 2);
+            this.recibirImpacto(espirituACombatir.getDefensa() / 2);
             this.registrarDerrota();
             espirituACombatir.registrarVictoria();
         }
     }
 
-    public void participarEnBatalla() {
+    private void recibirImpacto(Integer ataqueEntrante) {
+        int dmg = calcularDanio(ataqueEntrante);
+        this.perderVida(dmg);
+    }
+
+    private int calcularDanio(int ataque) {
+        int dmg = ataque - this.getDefensa();
+        return Math.min(Math.max(dmg, 0), 100); //  0 <= daño <= 100
+    }
+
+    private void participarEnBatalla() {
         this.batallasJugadas++;
     }
 
