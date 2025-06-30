@@ -46,20 +46,31 @@ public class EspirituStatsFirebaseDAOImpl  implements EspirituStatsFirebaseDAO {
                 .collection(COLL)
                 .document(e.getId().toString());
 
-        Map<String, Object> updates = Map.of(
-                "ganadas", e.getBatallasGanadas(),
-                "perdidas", e.getBatallasPerdidas(),
-                "jugadas", e.getBatallasJugadas(),
-                "vida", e.getVida()
-        );
-
         try {
+            DocumentSnapshot snapshot = doc.get().get();
+
+            // Valores actuales
+            Long ganadas = snapshot.contains("ganadas") ? snapshot.getLong("ganadas") : 0L;
+            Long perdidas = snapshot.contains("perdidas") ? snapshot.getLong("perdidas") : 0L;
+            Long jugadas = snapshot.contains("jugadas") ? snapshot.getLong("jugadas") : 0L;
+
+
+            // Sumar nuevos valores
+            Map<String, Object> updates = Map.of(
+                    "ganadas", ganadas + e.getBatallasGanadas(),
+                    "perdidas", perdidas + e.getBatallasPerdidas(),
+                    "jugadas", jugadas + e.getBatallasJugadas(),
+                    "vida", e.getVida()
+            );
+
             doc.update(updates).get();
             return e;
+
         } catch (InterruptedException | ExecutionException ex) {
             throw new RuntimeException("Error al actualizar estadísticas en Firebase", ex);
         }
     }
+
     public void eliminar(Long id) {
         try {
             firestore.collection(COLL).document(id.toString()).delete().get();

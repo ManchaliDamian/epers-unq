@@ -98,6 +98,16 @@ public class EspirituServiceTest {
     }
 
     @Test
+    void combatirEspirituConOtro() {
+        serviceE.combatir(azazel.getId(), belcebu.getId());
+        serviceE.combatir(belcebu.getId(), azazel.getId());
+
+    }
+//    @AfterEach
+    void cleanup() {
+        dataService.eliminarTodo();
+    }
+    @Test
     void dominarAUnEspirituDebil() {
         belcebu.setNivelDeConexion(40);
         serviceE.actualizar(belcebu);
@@ -469,8 +479,5 @@ public class EspirituServiceTest {
 
     }
 
-    @AfterEach
-    void cleanup() {
-        dataService.eliminarTodo();
-    }
+
 }

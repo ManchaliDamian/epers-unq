@@ -116,7 +116,8 @@ public abstract class Espiritu {
     }
 
     public void combatir(Espiritu espirituACombatir){
-        this.participarEnBatalla(); espirituACombatir.participarEnBatalla();
+        this.participarEnBatalla();
+        espirituACombatir.participarEnBatalla();
         this.perderVida(2);
 
         if (this.getAtaque() > espirituACombatir.getDefensa()){
