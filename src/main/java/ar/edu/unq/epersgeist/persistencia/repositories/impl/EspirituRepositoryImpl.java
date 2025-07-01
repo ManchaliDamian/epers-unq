@@ -198,5 +198,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public void deleteAll(){
         espirituDAOSQL.deleteAll();
         espirituDAOMongo.deleteAll();
+        espirituDAOFirestore.deleteAll();
     }
 }
