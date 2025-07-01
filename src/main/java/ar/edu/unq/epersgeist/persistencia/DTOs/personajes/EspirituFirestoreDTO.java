@@ -7,10 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EspirituFirebaseDTO {
-    private Long id;
+public class EspirituFirestoreDTO {
     private Long idSQL;
     private String nombre;
+    private int vida;
+    private int ataque;
+    private int defensa;
     private int batallasGanadas;
     private int batallasPerdidas;
     private int batallasJugadas;

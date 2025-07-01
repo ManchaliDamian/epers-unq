@@ -8,18 +8,14 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOSQL;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
-import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituStatsFirebaseDAO;
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOFirestore;
 import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
 
-import com.google.cloud.firestore.WriteResult;
-import com.google.firebase.cloud.FirestoreClient;
 import org.hibernate.Hibernate;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
 import java.util.concurrent.ExecutionException;
@@ -28,9 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -43,7 +37,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituMapper mapper;
     private PoligonoDAO poligonoDAOMongo;
     @Autowired
-    private EspirituStatsFirebaseDAO espirituFirebaseDAO;
+    private EspirituDAOFirestore espirituDAOFirestore;
 
     public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapperE, PoligonoDAO poligonoDAOMongo,UbicacionMapper mapperU){
         this.espirituDAOSQL = espirituDAOSQL;
@@ -67,13 +61,13 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         EspirituMongoDTO mongoDTO = mapperE.toMongo(jpa, coordenada);
         espirituDAOMongo.save(mongoDTO);
 
-        //FIREBASE
+        //FIRESTORE
         try {
-            espirituFirebaseDAO.save(mapperE.toDomain(jpa));
+            espirituDAOFirestore.save(mapperE.toFirestore(jpa, espiritu));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
-            throw new RuntimeException("Error al guardar estadísticas en Firebase", e);
+            throw new RuntimeException("Error al guardar estadísticas en Firestore", e);
         }
 
         return mapperE.toDomain(jpa);
@@ -85,6 +79,9 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             throw new IllegalArgumentException("El espiritu debe estar persistido");
         }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+
+        // Actualizar en FIrestore
+        espirituDAOFirestore.actualizar(mapperE.toFirestore(dto, espiritu));
         return mapperE.toDomain(dto);
     }
 
@@ -97,15 +94,14 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
         espirituDAOMongo.deleteByIdSQL(espiritu.getId());
 
+        // Actualizar en MongoDB
         EspirituMongoDTO mongoDTO = mapperE.toMongo(dto, coordenada);
         espirituDAOMongo.save(mongoDTO);
+
+        // Actualizar en Firestore
+        espirituDAOFirestore.actualizar(mapperE.toFirestore(dto, espiritu));
+
         return mapperE.toDomain(dto);
-    }
-
-    @Override
-    public Espiritu actualizarFirebase(Espiritu espiritu) {
-        return espirituFirebaseDAO.actualizar(espiritu);
-
     }
 
     private EspirituJPADTO actualizarEspirituJPA(Espiritu espiritu) {
@@ -119,15 +115,15 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     }
 
     @Override
-    public void eliminarFisicoEnMongoSiExiste(Long id) {
+    public void eliminar(Long id) {
+        // eliminar de mongo
         Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(espirituDAOMongo::delete);
+
+        // eliminar de firestore
+        espirituDAOFirestore.eliminar(id);
     }
 
-    @Override
-    public void eliminarFirebase(Long id) {
-        espirituFirebaseDAO.eliminar(id);
-    }
 
     @Override
     public List<Espiritu> recuperarTodos() {
@@ -142,7 +138,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
                     return mapperE.toDomain(realJPA);
                 });
 
-        optionalEspiritu.ifPresent(espirituFirebaseDAO::enriquecer);
+        optionalEspiritu.ifPresent(espirituDAOFirestore::enriquecer);
 
         return optionalEspiritu;
     }
@@ -194,6 +190,5 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public void deleteAll(){
         this.espirituDAOSQL.deleteAll();
         this.espirituDAOMongo.deleteAll();
-        this.espirituFirebaseDAO.deleteAll();
     }
 }

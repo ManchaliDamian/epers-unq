@@ -1,32 +1,31 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituStatsFirebaseDAO;
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOFirestore;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituFirestoreDTO;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 @Component
-public class EspirituStatsFirebaseDAOImpl  implements EspirituStatsFirebaseDAO {
+public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
 
     private static final String COLL = "estadisticas_espiritus";
 
     private final Firestore firestore;
 
-    @Autowired
-    public EspirituStatsFirebaseDAOImpl(Firestore firestore) {
+    public EspirituDAOFirestoreImpl(Firestore firestore) {
         this.firestore = firestore;
     }
 
-    public void save(Espiritu e) throws InterruptedException, ExecutionException {
+    public void save(EspirituFirestoreDTO e) throws InterruptedException, ExecutionException {
         DocumentReference doc = firestore
                 .collection(COLL)
-                .document(e.getId().toString());
+                .document(e.getIdSQL().toString());
 
         Map<String, Object> init = Map.of(
                 "nombre", e.getNombre(),
@@ -41,10 +40,10 @@ public class EspirituStatsFirebaseDAOImpl  implements EspirituStatsFirebaseDAO {
         doc.set(init).get();
     }
     @Override
-    public Espiritu actualizar(Espiritu e) {
+    public EspirituFirestoreDTO actualizar(EspirituFirestoreDTO e) {
         DocumentReference doc = firestore
                 .collection(COLL)
-                .document(e.getId().toString());
+                .document(e.getIdSQL().toString());
 
         try {
             DocumentSnapshot snapshot = doc.get().get();
