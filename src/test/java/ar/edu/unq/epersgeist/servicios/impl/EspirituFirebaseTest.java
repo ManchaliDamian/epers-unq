@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+
 @SpringBootTest
 public class EspirituFirebaseTest {
 
@@ -106,7 +107,9 @@ public class EspirituFirebaseTest {
                             do {
                                 oponente = espiritusACombatir.get(random.nextInt(espiritusACombatir.size()));
                             } while (oponente.getId().equals(atacante.getId()));
-                            // el unico problema que le veo es que dentro de la ronda lo pueden atacar muchas veces a uno y puede quedar en 0. podemos dejarlo asi o restringirlo para q si tiene menos vida o si fue atacado...
+                            // el unico problema que le veo es que dentro de la ronda lo pueden atacar muchas
+                            // veces a uno y puede quedar en 0. podemos dejarlo asi o restringirlo para q si
+                            // tiene menos vida o si fue atacado...
 
                             // Ejecutar combate y pausa
                             serviceE.combatir(atacante.getId(), oponente.getId());
@@ -118,8 +121,10 @@ public class EspirituFirebaseTest {
             Thread.sleep(2000);
         }
 
-        List<Espiritu> espiritusFinales = dataService.recuperarTodosMayorVida(0); // Recupera todos los que tengan vida > 0
-        assertFalse(espiritusFinales.isEmpty(), "Debería haber al menos un espíritu con vida al final de la simulación.");
+        List<Espiritu> espiritusFinales = dataService.recuperarTodosMayorVida(0); // Recupera todos
+        // los que tengan vida > 0
+        assertFalse(espiritusFinales.isEmpty(), "Debería haber al menos un espíritu " +
+                "con vida al final de la simulación.");
     }
 
     @AfterEach

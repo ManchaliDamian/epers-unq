@@ -36,7 +36,7 @@ public class PoligonoRepositoryImpl implements PoligonoRepository {
             throw new SuperposicionDePoligonosException(poligono.getId());
         }
 
-        this.poligonoDAO.save(poligonoMongo);
+        poligonoDAO.save(poligonoMongo);
     }
 
     @Override

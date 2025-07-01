@@ -218,7 +218,6 @@ public class MediumServiceTest {
         assertTrue(serviceM.recuperar(999L).isEmpty());
     }
 
-
     //casos desfavorables mover
     @Test
     void moverMedium_aCoordenadaInvalida_lanzaExcepcion(){

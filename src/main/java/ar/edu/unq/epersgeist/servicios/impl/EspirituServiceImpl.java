@@ -48,9 +48,9 @@ public class EspirituServiceImpl implements EspirituService {
         return espirituRepository.actualizar(espiritu, coordenada);
     }
 
-
     private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        Espiritu espiritu = espirituRepository.recuperar(espirituId)
+                .orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
@@ -59,7 +59,8 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Medium medium = mediumRepository.recuperar(mediumId)
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
         if(medium.isDeleted()) {
             throw new EspirituNoEncontradoException(mediumId);
         }

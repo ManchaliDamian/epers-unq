@@ -1,5 +1,4 @@
 package ar.edu.unq.epersgeist.servicios.impl;
-import ar.edu.unq.epersgeist.controller.dto.estadistica.SnapshotDTO;
 import ar.edu.unq.epersgeist.exception.NotFound.SnapshotNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.Snapshot;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
@@ -13,8 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional

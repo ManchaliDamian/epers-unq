@@ -17,7 +17,7 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.repositories.mappers.EspirituMapper;
 
 import org.hibernate.Hibernate;
-import ar.edu.unq.epersgeist.persistencia.repositories.mappers.UbicacionMapper;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Repository;
@@ -79,7 +79,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         }
 
         // Actualizar en SQL
-        EspirituJPADTO dto = this.actualizarEspirituJPA(espiritu);
+        EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
         Espiritu actualizado = mapperE.toDomain(dto);
 
         // Actualizar en Firestore

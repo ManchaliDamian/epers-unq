@@ -1,4 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.repositories.impl;
+
 import ar.edu.unq.epersgeist.controller.dto.espiritu.EspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.MediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.UbicacionDTO;
