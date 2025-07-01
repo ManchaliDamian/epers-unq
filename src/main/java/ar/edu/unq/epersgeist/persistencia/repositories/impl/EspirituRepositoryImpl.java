@@ -67,7 +67,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espirituDAOMongo.save(mongoDTO);
 
         //FIRESTORE
-        espirituDAOFirestore.save(mapperE.toDomain(jpa));
+        espirituDAOFirestore.crear(mapperE.toDomain(jpa));
 
         return mapperE.toDomain(jpa);
     }

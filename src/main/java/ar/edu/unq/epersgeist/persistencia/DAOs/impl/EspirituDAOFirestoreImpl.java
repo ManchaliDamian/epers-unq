@@ -23,7 +23,8 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         this.firestore = firestore;
     }
 
-    public void save(Espiritu e) {
+    @Override
+    public void crear(Espiritu e) {
         try {
             DocumentReference doc = firestore
                     .collection(COLL)
@@ -51,6 +52,7 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
             throw new RuntimeException("Error al guardar en Firestore", ex);
         }
     }
+
     @Override
     public Espiritu actualizar(Espiritu e) {
         DocumentReference doc = firestore
@@ -87,7 +89,7 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         return val != null ? val : 0L;
     }
 
-
+    @Override
     public void eliminar(Long id) {
         try {
             firestore.collection(COLL).document(id.toString()).delete().get();
@@ -128,7 +130,7 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         }
     }
 
-
+    @Override
     public void deleteAll() {
         CollectionReference collection = firestore.collection(COLL);
 

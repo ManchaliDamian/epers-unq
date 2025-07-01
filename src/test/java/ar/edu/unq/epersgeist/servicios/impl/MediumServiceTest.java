@@ -83,8 +83,6 @@ public class MediumServiceTest {
         List<Coordenada> coordenadasCementerio = Arrays.asList(c5, c6, c7, c8, c5);
         poligonoCementerio = new Poligono(coordenadasCementerio);
 
-        Generador.setEstrategia(new GeneradorSecuencial(0, 0, 0, 0)); // setear atk y def de espiritus creados en 0
-
         cementerio = new Cementerio("La Plata", 4);
         santuario  = new Santuario("Quilmes",70);
         santuario  = serviceU.guardar(santuario, poligonoSantuario);
