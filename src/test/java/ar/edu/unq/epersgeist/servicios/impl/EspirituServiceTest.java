@@ -115,6 +115,12 @@ public class EspirituServiceTest {
         belcebu = serviceE.recuperar(belcebu.getId()).get();
         assertEquals(100, azazel.getVida());
         assertEquals(80, belcebu.getVida());
+        assertEquals(1, azazel.getBatallasGanadas());
+        assertEquals(0, azazel.getBatallasPerdidas());
+        assertEquals(1, azazel.getBatallasJugadas());
+        assertEquals(0, belcebu.getBatallasGanadas());
+        assertEquals(1, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
     }
 
     @Test
@@ -135,6 +141,12 @@ public class EspirituServiceTest {
         belcebu = serviceE.recuperar(belcebu.getId()).get();
         assertEquals(95, azazel.getVida());
         assertEquals(100, belcebu.getVida());
+        assertEquals(0, azazel.getBatallasGanadas());
+        assertEquals(1, azazel.getBatallasPerdidas());
+        assertEquals(1, azazel.getBatallasJugadas());
+        assertEquals(1, belcebu.getBatallasGanadas());
+        assertEquals(0, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
     }
 
     @Test
