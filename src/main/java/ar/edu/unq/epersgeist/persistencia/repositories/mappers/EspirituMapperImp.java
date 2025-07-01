@@ -251,15 +251,4 @@ public class EspirituMapperImp implements EspirituMapper {
         GeoJsonPoint p = mongo.getPunto();
         return new Coordenada(p.getY(), p.getX());
     }
-
-    @Override
-    public EspirituFirestoreDTO toFirestore(EspirituJPADTO jpa, Espiritu espiritu) {
-        EspirituFirestoreDTO dto = new EspirituFirestoreDTO();
-        dto.setIdSQL(jpa.getId());
-        dto.setNombre(jpa.getNombre());
-        dto.setBatallasJugadas(espiritu.getBatallasJugadas());
-        dto.setBatallasGanadas(espiritu.getBatallasGanadas());
-        dto.setBatallasPerdidas(espiritu.getBatallasPerdidas());
-        return dto;
-    }
 }

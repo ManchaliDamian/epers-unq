@@ -63,7 +63,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
         //FIRESTORE
         try {
-            espirituDAOFirestore.save(mapperE.toFirestore(jpa, espiritu));
+            espirituDAOFirestore.save(mapperE.toDomain(jpa));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
@@ -80,8 +80,8 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
 
-        // Actualizar en FIrestore
-        espirituDAOFirestore.actualizar(mapperE.toFirestore(dto, espiritu));
+        // Actualizar en Firestore
+        espirituDAOFirestore.actualizar(mapperE.toDomain(dto));
         return mapperE.toDomain(dto);
     }
 
@@ -99,7 +99,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espirituDAOMongo.save(mongoDTO);
 
         // Actualizar en Firestore
-        espirituDAOFirestore.actualizar(mapperE.toFirestore(dto, espiritu));
+        espirituDAOFirestore.actualizar(mapperE.toDomain(dto));
 
         return mapperE.toDomain(dto);
     }

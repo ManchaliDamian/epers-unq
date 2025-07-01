@@ -2,7 +2,6 @@ package ar.edu.unq.epersgeist.persistencia.DAOs.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOFirestore;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituFirestoreDTO;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import java.util.List;
@@ -22,10 +21,10 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         this.firestore = firestore;
     }
 
-    public void save(EspirituFirestoreDTO e) throws InterruptedException, ExecutionException {
+    public void save(Espiritu e) throws InterruptedException, ExecutionException {
         DocumentReference doc = firestore
                 .collection(COLL)
-                .document(e.getIdSQL().toString());
+                .document(e.getId().toString());
 
         Map<String, Object> init = Map.of(
                 "nombre", e.getNombre(),
@@ -40,10 +39,10 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         doc.set(init).get();
     }
     @Override
-    public EspirituFirestoreDTO actualizar(EspirituFirestoreDTO e) {
+    public Espiritu actualizar(Espiritu e) {
         DocumentReference doc = firestore
                 .collection(COLL)
-                .document(e.getIdSQL().toString());
+                .document(e.getId().toString());
 
         try {
             DocumentSnapshot snapshot = doc.get().get();
