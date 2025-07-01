@@ -98,15 +98,45 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void combatirEspirituConOtro() {
-        serviceE.combatir(azazel.getId(), belcebu.getId());
+    void combatirEspiritu_GanaAtaque() {
+        // Setup
+        azazel.setAtaque(50);
+        azazel.setDefensa(20);
+        belcebu.setAtaque(30);
+        belcebu.setDefensa(30);
+        serviceE.actualizar(azazel);
+        serviceE.actualizar(belcebu);
+
+        // Exercise
         serviceE.combatir(azazel.getId(), belcebu.getId());
 
+        // Verify
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(100, azazel.getVida());
+        assertEquals(80, belcebu.getVida());
     }
-    @AfterEach
-    void cleanup() {
-        dataService.eliminarTodo();
+
+    @Test
+    void combatirEspiritu_GanaDefensa() {
+        // Setup
+        azazel.setAtaque(10);
+        azazel.setDefensa(20);
+        belcebu.setAtaque(30);
+        belcebu.setDefensa(50);
+        serviceE.actualizar(azazel);
+        serviceE.actualizar(belcebu);
+
+        // Exercise
+        serviceE.combatir(azazel.getId(), belcebu.getId());
+
+        // Verify
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(95, azazel.getVida());
+        assertEquals(100, belcebu.getVida());
     }
+
     @Test
     void dominarAUnEspirituDebil() {
         belcebu.setNivelDeConexion(40);
@@ -479,5 +509,8 @@ public class EspirituServiceTest {
 
     }
 
-
+    @AfterEach
+    void cleanup() {
+        dataService.eliminarTodo();
+    }
 }

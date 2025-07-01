@@ -31,8 +31,6 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private EspirituDAOSQL espirituDAOSQL;
     private EspirituDAOMongo espirituDAOMongo;
     private EspirituMapper mapperE;
-    private UbicacionMapper mapperU;
-    private EspirituMapper mapper;
     private PoligonoDAO poligonoDAOMongo;
     private EspirituDAOFirestore espirituDAOFirestore;
 
@@ -41,15 +39,13 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             EspirituDAOMongo espirituDAOMongo,
             EspirituDAOFirestore espirituDAOFirestore,
             PoligonoDAO poligonoDAOMongo,
-            EspirituMapper mapperE,
-            UbicacionMapper mapperU
+            EspirituMapper mapperE
     ){
         this.espirituDAOSQL = espirituDAOSQL;
         this.espirituDAOMongo = espirituDAOMongo;
         this.espirituDAOFirestore = espirituDAOFirestore;
         this.poligonoDAOMongo = poligonoDAOMongo;
         this.mapperE = mapperE;
-        this.mapperU = mapperU;
     }
 
     @Override
@@ -60,13 +56,16 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         if (poligonoOpt.isEmpty()) {
             throw new CoordenadaFueraDeAreaException("coordenada no valida");
         }
+
+        // Crear en SQL
         EspirituJPADTO jpa = mapperE.toJpa(espiritu);
         jpa = espirituDAOSQL.save(jpa);
 
+        // Crear en MongoDB
         EspirituMongoDTO mongoDTO = mapperE.toMongo(jpa, coordenada);
         espirituDAOMongo.save(mongoDTO);
 
-        //FIRESTORE
+        // Crear en Firestore
         espirituDAOFirestore.crear(mapperE.toDomain(jpa));
 
         return mapperE.toDomain(jpa);
@@ -78,12 +77,14 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             throw new IllegalArgumentException("El espiritu debe estar persistido");
         }
 
+        // Actualizar en SQL
         EspirituJPADTO dto = this.actualizarEspirituJPA(espiritu);
         Espiritu actualizado = mapperE.toDomain(dto);
 
         // Actualizar en Firestore
         espirituDAOFirestore.actualizar(espiritu);
         espirituDAOFirestore.enriquecer(actualizado);
+
         return actualizado;
     }
 
@@ -106,6 +107,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         // Actualizar en Firestore
         espirituDAOFirestore.actualizar(espiritu);
         espirituDAOFirestore.enriquecer(actualizado);
+
         return actualizado;
     }
 
@@ -120,28 +122,27 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     }
 
     @Override
-    public void eliminar(Long id) {
-        // eliminar de mongo
+    public void eliminar(Long id) { // este es para hard delete, no incluye sql
+        // Eliminar de MongoDB
         Optional<EspirituMongoDTO> mongoDTO = espirituDAOMongo.findByIdSQL(id);
         mongoDTO.ifPresent(espirituDAOMongo::delete);
 
-        // eliminar de firestore
+        // Eliminar de Firestore
         espirituDAOFirestore.eliminar(id);
     }
 
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        return mapperE.toDomainList(this.espirituDAOSQL.recuperarTodos());
+        return mapperE.toDomainList(espirituDAOSQL.recuperarTodos());
     }
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        Optional<Espiritu> optionalEspiritu = this.espirituDAOSQL.findById(espirituId)
-                .map(espirituJPADTO -> {
-                    EspirituJPADTO realJPA = (EspirituJPADTO) Hibernate.unproxy(espirituJPADTO);
-                    return mapperE.toDomain(realJPA);
-                });
+
+        Optional<Espiritu> optionalEspiritu = espirituDAOSQL.findById(espirituId)
+                .map(dto -> (EspirituJPADTO) Hibernate.unproxy(dto))
+                .map(mapperE::toDomain);
 
         optionalEspiritu.ifPresent(espirituDAOFirestore::enriquecer);
 
@@ -150,50 +151,52 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Optional<Coordenada> recuperarCoordenada(Long espirituId) {
-        return espirituDAOMongo.findByIdSQL(espirituId).map(espirituMongoDTO -> mapperE.toCoordenada(espirituMongoDTO));
+        return espirituDAOMongo.findByIdSQL(espirituId).map(mapperE::toCoordenada);
     }
 
     @Override
     public List<EspirituDemoniaco> recuperarDemonios() {
-        return mapperE.toDomainListDemoniaco(this.espirituDAOSQL.recuperarDemonios());
+        return mapperE.toDomainListDemoniaco(espirituDAOSQL.recuperarDemonios());
     }
 
     @Override
     public List<EspirituAngelical> recuperarAngeles() {
-        return mapperE.toDomainListAngelical(this.espirituDAOSQL.recuperarAngeles());
+        return mapperE.toDomainListAngelical(espirituDAOSQL.recuperarAngeles());
     }
 
     @Override
     public Optional<Espiritu> recuperarEliminado(Long id) {
-        return this.espirituDAOSQL.recuperarEliminado(id).map(espirituJPADTO -> mapperE.toDomain(espirituJPADTO));
+        return espirituDAOSQL.recuperarEliminado(id).map(mapperE::toDomain);
     }
 
     @Override
     public List<Espiritu> recuperarTodosLosEliminados() {
-        return mapperE.toDomainList(this.espirituDAOSQL.recuperarTodosLosEliminados());
+        return mapperE.toDomainList(espirituDAOSQL.recuperarTodosLosEliminados());
     }
 
     @Override
     public List<EspirituAngelical> recuperarAngelesDe(Long mediumId) {
-        return mapperE.toDomainListAngelical(this.espirituDAOSQL.recuperarAngelesDe(mediumId));
+        return mapperE.toDomainListAngelical(espirituDAOSQL.recuperarAngelesDe(mediumId));
     }
 
     @Override
     public List<EspirituDemoniaco> recuperarDemoniosDe(Long mediumId) {
-        return mapperE.toDomainListDemoniaco(this.espirituDAOSQL.recuperarDemoniosDe(mediumId));
+        return mapperE.toDomainListDemoniaco(espirituDAOSQL.recuperarDemoniosDe(mediumId));
     }
 
     @Override
     public List<Espiritu> recuperarDemoniacosPaginados(Pageable pageable) {
-        return mapperE.toDomainList(this.espirituDAOSQL.recuperarDemoniacosPaginados(pageable));
+        return mapperE.toDomainList(espirituDAOSQL.recuperarDemoniacosPaginados(pageable));
     }
+
     @Override
     public Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL) {
         return espirituDAOMongo.distanciaA(longitud,latitud,idEspirituSQL);
     }
+
     @Override
     public void deleteAll(){
-        this.espirituDAOSQL.deleteAll();
-        this.espirituDAOMongo.deleteAll();
+        espirituDAOSQL.deleteAll();
+        espirituDAOMongo.deleteAll();
     }
 }

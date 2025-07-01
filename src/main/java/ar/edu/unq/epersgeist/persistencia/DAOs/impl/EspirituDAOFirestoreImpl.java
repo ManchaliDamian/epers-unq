@@ -4,11 +4,14 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOFirestore;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -24,78 +27,31 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
     }
 
     @Override
-    public void crear(Espiritu e) {
-        try {
-            DocumentReference doc = firestore
-                    .collection(COLL)
-                    .document(e.getId().toString());
-
-            Map<String, Object> init = Map.of(
-                    "nombre", e.getNombre(),
-                    "ganadas", 0,
-                    "perdidas", 0,
-                    "jugadas", 0,
-                    "vida", e.getVida(),
-                    "ataque", e.getAtaque(),
-                    "defensa", e.getDefensa()
-            );
-            // set() sin merge para asegurar que partimos de un estado limpio(sobrescribe o crea)
-            doc.set(init).get();
-        }
-
-        catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Error al guardar en Firestore (interrumpido)", ex);
-        }
-
-        catch (ExecutionException ex) {
-            throw new RuntimeException("Error al guardar en Firestore", ex);
-        }
+    public void crear(Espiritu espiritu) {
+        Map<String,Object> data = this.buildEspirituData(espiritu);
+        this.runBlocking(() -> firestore.collection(COLL)
+                .document(espiritu.getId().toString())
+                .set(data)); // set() sin merge para partir de cero
     }
 
     @Override
-    public Espiritu actualizar(Espiritu e) {
-        DocumentReference doc = firestore
-                .collection(COLL)
-                .document(e.getId().toString());
+    public Espiritu actualizar(Espiritu espiritu) {
+        Map<String, Object> data = this.buildEspirituData(espiritu);
 
-        try {
-            DocumentSnapshot snapshot = doc.get().get();
+        this.runBlocking(() ->
+            firestore.collection(COLL)
+                    .document(espiritu.getId().toString())
+                    .set(data)
+        );
 
-            // Valores actuales
-            Long ganadas  = this.getLongOrDefault(snapshot, "ganadas");
-            Long perdidas = this.getLongOrDefault(snapshot, "perdidas");
-            Long jugadas  = this.getLongOrDefault(snapshot, "jugadas");
-
-
-            // Sumar nuevos valores
-            Map<String, Object> updates = Map.of(
-                    "ganadas", ganadas + e.getBatallasGanadas(),
-                    "perdidas", perdidas + e.getBatallasPerdidas(),
-                    "jugadas", jugadas + e.getBatallasJugadas(),
-                    "vida", e.getVida()
-            );
-
-            doc.update(updates).get();
-            return e;
-
-        } catch (InterruptedException | ExecutionException ex) {
-            throw new RuntimeException("Error al actualizar estadísticas en Firebase", ex);
-        }
-    }
-
-    private Long getLongOrDefault(DocumentSnapshot snapshot, String key) {
-        Long val = snapshot.getLong(key);
-        return val != null ? val : 0L;
+        return espiritu;
     }
 
     @Override
     public void eliminar(Long id) {
-        try {
-            firestore.collection(COLL).document(id.toString()).delete().get();
-        } catch (InterruptedException | ExecutionException ex) {
-            throw new RuntimeException("Error al eliminar estadísticas de Firebase", ex);
-        }
+        this.runBlocking(() ->
+                firestore.collection(COLL).document(id.toString()).delete()
+        );
     }
 
     @Override
@@ -104,48 +60,58 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
                 .collection(COLL)
                 .document(espiritu.getId().toString());
 
-        try {
-            DocumentSnapshot snapshot = doc.get().get();
+        DocumentSnapshot snapshot = runBlocking(doc::get);
+        if (!snapshot.exists()) return;
 
-            if (!snapshot.exists()) return;
+        Map<String, Consumer<Integer>> setters = Map.of(
+        "vida",     espiritu::setVida,
+        "ganadas",  espiritu::setBatallasGanadas,
+        "perdidas", espiritu::setBatallasPerdidas,
+        "jugadas",  espiritu::setBatallasJugadas,
+        "ataque",   espiritu::setAtaque,
+        "defensa",  espiritu::setDefensa
+        );
 
-            Map<String, Consumer<Integer>> setters = Map.of(
-                    "vida",     espiritu::setVida,
-                    "ganadas",  espiritu::setBatallasGanadas,
-                    "perdidas", espiritu::setBatallasPerdidas,
-                    "jugadas",  espiritu::setBatallasJugadas,
-                    "ataque",   espiritu::setAtaque,
-                    "defensa",  espiritu::setDefensa
-            );
-
-            for (var entry : setters.entrySet()) {
-                if (snapshot.contains(entry.getKey())) {
-                    Long val = snapshot.getLong(entry.getKey());
-                    if (val != null) entry.getValue().accept(val.intValue());
-                }
+        for (var entry : setters.entrySet()) {
+            if (snapshot.contains(entry.getKey())) {
+                Long val = snapshot.getLong(entry.getKey());
+                if (val != null) entry.getValue().accept(val.intValue());
             }
-
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Error al enriquecer desde Firebase", e);
         }
+
     }
 
     @Override
     public void deleteAll() {
         CollectionReference collection = firestore.collection(COLL);
-
-        try {
-            // Obtener todos los documentos de la colección
-            ApiFuture<QuerySnapshot> future = collection.get();
-            List<QueryDocumentSnapshot> documentos = future.get().getDocuments();
-
-            for (QueryDocumentSnapshot doc : documentos) {
-                doc.getReference().delete();
-            }
-
-        } catch (InterruptedException | ExecutionException ex) {
-            throw new RuntimeException("Error al eliminar todos los documentos de Firebase", ex);
-        }
+        List<QueryDocumentSnapshot> docs = runBlocking(collection::get).getDocuments();
+        WriteBatch batch = firestore.batch();
+        docs.forEach(d -> batch.delete(d.getReference()));
+        runBlocking(batch::commit);
     }
 
+    // -- HELPERS --
+
+    private Map<String, Object> buildEspirituData(Espiritu espiritu) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("nombre",   espiritu.getNombre());
+        data.put("ganadas",  espiritu.getBatallasGanadas());
+        data.put("perdidas", espiritu.getBatallasPerdidas());
+        data.put("jugadas",  espiritu.getBatallasJugadas());
+        data.put("vida",     espiritu.getVida());
+        data.put("ataque",   espiritu.getAtaque());
+        data.put("defensa",  espiritu.getDefensa());
+        return data;
+    }
+
+    private <T> T runBlocking(Callable<ApiFuture<T>> action) {
+        try {
+            return action.call().get(); // bloquea y espera resultado
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupción al acceder a Firestore", ie);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al acceder a Firestore", e);
+        }
+    }
 }

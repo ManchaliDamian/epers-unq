@@ -17,7 +17,6 @@ public class AppConfiguration {
 
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
-        //SIN ESTO ME DABA ERROR :c
         // Si ya existe una instancia de FirebaseApp, retornarla en lugar de inicializar otra
         if (!FirebaseApp.getApps().isEmpty()) {
             return FirebaseApp.getInstance();
