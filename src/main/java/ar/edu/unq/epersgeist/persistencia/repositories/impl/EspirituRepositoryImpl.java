@@ -66,7 +66,8 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espirituDAOMongo.save(mongoDTO);
 
         // Crear en Firestore
-        espirituDAOFirestore.crear(mapperE.toDomain(jpa));
+        espiritu.setId(jpa.getId());
+        espirituDAOFirestore.crear(espiritu);
 
         return mapperE.toDomain(jpa);
     }
@@ -192,6 +193,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL) {
         return espirituDAOMongo.distanciaA(longitud,latitud,idEspirituSQL);
+    }
+
+    @Override
+    public List<Espiritu> recuperarTodosMasyorVida(int vida) {
+        return espirituDAOFirestore.recuperarTodosMayorVida(vida);
     }
 
     @Override

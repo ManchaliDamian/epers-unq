@@ -1,10 +1,15 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs.impl;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Santuario;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOFirestore;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,6 +95,41 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         runBlocking(batch::commit);
     }
 
+    @Override
+    public List<Espiritu> recuperarTodosMayorVida(int vida) {
+        // Construye la consulta: colección, ordenar por vida, filtrar por vida > vidaMinima
+        Query query = firestore.collection(COLL)
+                .whereGreaterThan("vida", vida)
+                .orderBy("vida", Query.Direction.DESCENDING);
+
+        QuerySnapshot querySnapshot = runBlocking(() -> query.get());
+        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+
+
+        List<Espiritu> espiritusEncontrados = new ArrayList<>();
+        for (DocumentSnapshot document : documents) {
+            // ... (resto de la lógica para reconstruir el objeto Espiritu) ...
+            String tipoEspirituStr = document.getString("tipo");
+            String nombre = document.getString("nombre");
+            Long id = Long.valueOf(document.getId());
+
+            Espiritu espiritu = null;
+            if ("ANGELICAL".equals(tipoEspirituStr)) {
+                espiritu = new EspirituAngelical(nombre, new Santuario("Dummy", 10) {
+                });
+            } else if ("DEMONIACO".equals(tipoEspirituStr)) {
+                espiritu = new EspirituDemoniaco(nombre, new Santuario("Dummy", 10));
+            }
+
+            if (espiritu != null) {
+                espiritu.setId(id);
+                this.enriquecer(espiritu);
+                espiritusEncontrados.add(espiritu);
+            }
+        }
+        return espiritusEncontrados;
+    }
+
     // -- HELPERS --
 
     private Map<String, Object> buildEspirituData(Espiritu espiritu) {
@@ -101,6 +141,7 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         data.put("vida",     espiritu.getVida());
         data.put("ataque",   espiritu.getAtaque());
         data.put("defensa",  espiritu.getDefensa());
+        data.put("tipo", espiritu.getTipo());
         return data;
     }
 

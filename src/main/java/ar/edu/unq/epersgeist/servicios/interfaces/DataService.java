@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.interfaces;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 
 
@@ -17,4 +18,7 @@ public interface DataService {
     List<Medium> recuperarTodosMediumsEliminados();
     Optional<Espiritu> recuperarEliminadoEspiritu(Long id);
     List<Espiritu> recuperarTodosLosEspiritusEliminados();
+    List<Espiritu> crearYGuardarEspiritusAngelicales(int cantidad, Ubicacion ubi, Coordenada cc);
+    List<Espiritu> recuperarTodosMayorVida(int vida);
+    List<Espiritu> crearYGuardarEspiritusDemoniacos(int cantidad, Ubicacion ubi, Coordenada cc);
 }
