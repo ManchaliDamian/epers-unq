@@ -100,10 +100,10 @@ public class EspirituServiceTest {
     @Test
     void combatirEspirituConOtro() {
         serviceE.combatir(azazel.getId(), belcebu.getId());
-        serviceE.combatir(belcebu.getId(), azazel.getId());
+        serviceE.combatir(azazel.getId(), belcebu.getId());
 
     }
-//    @AfterEach
+    @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
     }

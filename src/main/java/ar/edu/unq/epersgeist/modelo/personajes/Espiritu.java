@@ -122,10 +122,10 @@ public abstract class Espiritu {
 
         if (this.getAtaque() > espirituACombatir.getDefensa()){
             this.registrarVictoria();
-            espirituACombatir.perderVida(Math.min(this.getAtaque(), 100) / 2);
+            espirituACombatir.perderVida(Math.abs(Math.min(this.getAtaque(), 100) - espirituACombatir.getDefensa()));
             espirituACombatir.registrarDerrota();
         }else{
-            this.perderVida(Math.min(espirituACombatir.getDefensa(), 100) / 2);
+            this.perderVida(10);
             this.registrarDerrota();
             espirituACombatir.registrarVictoria();
         }

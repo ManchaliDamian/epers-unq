@@ -79,6 +79,42 @@ public class EspirituStatsFirebaseDAOImpl  implements EspirituStatsFirebaseDAO {
         }
     }
 
+    @Override
+    public void enriquecer(Espiritu espiritu) {
+        DocumentReference doc = firestore
+                .collection(COLL)
+                .document(espiritu.getId().toString());
+
+        try {
+            DocumentSnapshot snapshot = doc.get().get();
+
+            if (!snapshot.exists()) return;
+
+            if (snapshot.contains("vida")) {
+                espiritu.setVida(snapshot.getLong("vida").intValue());
+            }
+            if (snapshot.contains("ganadas")) {
+                espiritu.setBatallasGanadas(snapshot.getLong("ganadas").intValue());
+            }
+            if (snapshot.contains("perdidas")) {
+                espiritu.setBatallasPerdidas(snapshot.getLong("perdidas").intValue());
+            }
+            if (snapshot.contains("jugadas")) {
+                espiritu.setBatallasJugadas(snapshot.getLong("jugadas").intValue());
+            }
+            if (snapshot.contains("ataque")) {
+                espiritu.setAtaque(snapshot.getLong("ataque").intValue());
+            }
+            if (snapshot.contains("defensa")) {
+                espiritu.setDefensa(snapshot.getLong("defensa").intValue());
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Error al enriquecer desde Firebase", e);
+        }
+    }
+
+
     public void deleteAll() {
         CollectionReference collection = firestore.collection(COLL);
 

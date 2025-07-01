@@ -136,11 +136,15 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
-        return this.espirituDAOSQL.findById(espirituId).map(espirituJPADTO -> {
-            EspirituJPADTO realJPA = (EspirituJPADTO) Hibernate.unproxy(espirituJPADTO);
-            return mapperE.toDomain(realJPA);
-        });
+        Optional<Espiritu> optionalEspiritu = this.espirituDAOSQL.findById(espirituId)
+                .map(espirituJPADTO -> {
+                    EspirituJPADTO realJPA = (EspirituJPADTO) Hibernate.unproxy(espirituJPADTO);
+                    return mapperE.toDomain(realJPA);
+                });
 
+        optionalEspiritu.ifPresent(espirituFirebaseDAO::enriquecer);
+
+        return optionalEspiritu;
     }
 
     @Override

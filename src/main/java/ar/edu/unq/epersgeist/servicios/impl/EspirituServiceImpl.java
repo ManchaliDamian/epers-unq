@@ -54,6 +54,7 @@ public class EspirituServiceImpl implements EspirituService {
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
+
         return espiritu;
     }
 
