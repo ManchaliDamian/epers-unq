@@ -17,6 +17,10 @@ public class EspirituAngelical extends Espiritu{
         super( nombre, ubicacion, TipoEspiritu.ANGELICAL);
     }
 
+    public EspirituAngelical(String nombre, Ubicacion ubicacion, Integer ataque, Integer defensa) {
+        super( nombre, ubicacion, TipoEspiritu.ANGELICAL, ataque, defensa);
+    }
+
     @Override
     public void atacar(Espiritu objetivo) {
         int probAtaqueExitoso = this.probabilidadDeAtaqueExitoso();

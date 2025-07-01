@@ -88,7 +88,7 @@ public class EspirituServiceTest {
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
-        angel = new EspirituAngelical( "Gabriel", quilmes);
+        angel = new EspirituAngelical( "Gabriel", quilmes, 14, 1);
         medium = new Medium("nombre", 150, 30, quilmes);
 
         azazel = serviceE.guardar(azazel, c1);

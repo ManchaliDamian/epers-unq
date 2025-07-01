@@ -20,7 +20,7 @@ public abstract class Espiritu {
     @EqualsAndHashCode.Include
     private Long id;
     private Ubicacion ubicacion;
-    protected Integer nivelDeConexion;
+    protected Integer nivelDeConexion = 0;
     @EqualsAndHashCode.Include
     private String nombre;
     private Medium mediumConectado;
@@ -28,12 +28,12 @@ public abstract class Espiritu {
 
     private Espiritu dominador;
 
-    private int vida;
-    private int defensa;
-    private int ataque;
-    private int batallasGanadas;
-    private int batallasPerdidas;
-    private int batallasJugadas;
+    private Integer vida = 100;
+    private Integer defensa = 5;
+    private Integer ataque = 5;
+    private Integer batallasGanadas = 0;
+    private Integer batallasPerdidas = 0;
+    private Integer batallasJugadas = 0;
 
     //auditoria
     private Date createdAt;
@@ -41,22 +41,30 @@ public abstract class Espiritu {
     private boolean deleted = false;
 
     public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
-        this.nivelDeConexion = 0;
-        this.batallasGanadas = 0;
-        this.batallasPerdidas = 0;
-        this.batallasJugadas = 0;
-        this.vida = 100;
-        this.ataque = Generador.entre(1, 100);
-        this.defensa = Generador.entre(1, 100);
-
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
     }
 
+    public Espiritu(
+            @NotBlank String nombre,
+            @NonNull Ubicacion ubicacion,
+            @NonNull TipoEspiritu tipo,
+            @NonNull Integer ataque,
+            @NonNull Integer defensa
+    ) {
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        this.tipo = tipo;
+        this.ataque = ataque;
+        this.defensa = defensa;
+    }
+
     protected Espiritu(@NonNull TipoEspiritu tipo) {
         this.tipo = tipo;
     }
+
+
 
     public void conectarA(Medium medium){
         if(estaDominado()){

@@ -31,14 +31,16 @@ public class EspirituTest {
 
         mediumConectado = new Medium("Medium", 100, 90, cementerio);
 
-        Generador.setEstrategia(new GeneradorSecuencial(30, 10, 5, 10));
-        angel = new EspirituAngelical("Angel",cementerio);
-        demonio = new EspirituDemoniaco("Demonio", santuario);
+        angel = new EspirituAngelical("Angel",cementerio, 30, 10);
+        demonio = new EspirituDemoniaco("Demonio", santuario, 5, 10);
     }
 
     @Test
     void combatirMayorAtaque(){
+        // Exercise
         angel.combatir(demonio);
+
+        // Verify
         assertEquals(80, demonio.getVida());
         assertEquals(100, angel.getVida());
 
@@ -53,10 +55,8 @@ public class EspirituTest {
 
     @Test
     void combatirMayorDefensa(){
-        //ataque y defensa de angel1 | ataque y defensa de demonio1
-        Generador.setEstrategia(new GeneradorSecuencial(5, 20, 40, 60));
-        angel1 = new EspirituAngelical("Angel",cementerio);
-        demonio1 = new EspirituDemoniaco("Demonio", santuario);
+        angel1 = new EspirituAngelical("Angel",cementerio, 5, 20);
+        demonio1 = new EspirituDemoniaco("Demonio", santuario, 40, 60);
 
         angel1.combatir(demonio1);
         assertEquals(90, angel1.getVida()); // pierde 60/2 - 20

@@ -17,6 +17,10 @@ public class EspirituDemoniaco extends Espiritu{
         super(nombre, ubicacion, TipoEspiritu.DEMONIACO);
     }
 
+    public EspirituDemoniaco(String nombre, Ubicacion ubicacion, Integer ataque, Integer defensa) {
+        super(nombre, ubicacion, TipoEspiritu.DEMONIACO, ataque, defensa);
+    }
+
     @Override
     public void serInvocadoEn(Ubicacion ubicacion) {
         ubicacion.invocarDemonio(this);
