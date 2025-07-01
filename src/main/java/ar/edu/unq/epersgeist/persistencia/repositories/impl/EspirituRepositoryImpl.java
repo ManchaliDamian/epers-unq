@@ -36,12 +36,19 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     private UbicacionMapper mapperU;
     private EspirituMapper mapper;
     private PoligonoDAO poligonoDAOMongo;
-    @Autowired
     private EspirituDAOFirestore espirituDAOFirestore;
 
-    public EspirituRepositoryImpl(EspirituDAOSQL espirituDAOSQL, EspirituDAOMongo espirituDAOMongo, EspirituMapper mapperE, PoligonoDAO poligonoDAOMongo,UbicacionMapper mapperU){
+    public EspirituRepositoryImpl(
+            EspirituDAOSQL espirituDAOSQL,
+            EspirituDAOMongo espirituDAOMongo,
+            EspirituDAOFirestore espirituDAOFirestore,
+            PoligonoDAO poligonoDAOMongo,
+            EspirituMapper mapperE,
+            UbicacionMapper mapperU
+    ){
         this.espirituDAOSQL = espirituDAOSQL;
         this.espirituDAOMongo = espirituDAOMongo;
+        this.espirituDAOFirestore = espirituDAOFirestore;
         this.poligonoDAOMongo = poligonoDAOMongo;
         this.mapperE = mapperE;
         this.mapperU = mapperU;
@@ -78,11 +85,14 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         if (espiritu.getId() == null) {
             throw new IllegalArgumentException("El espiritu debe estar persistido");
         }
-        EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+
+        EspirituJPADTO dto = this.actualizarEspirituJPA(espiritu);
+        Espiritu actualizado = mapperE.toDomain(dto);
 
         // Actualizar en Firestore
-        espirituDAOFirestore.actualizar(mapperE.toDomain(dto));
-        return mapperE.toDomain(dto);
+        espirituDAOFirestore.actualizar(espiritu);
+        espirituDAOFirestore.enriquecer(actualizado);
+        return actualizado;
     }
 
     @Override
@@ -91,17 +101,20 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             throw new IllegalArgumentException("El espiritu debe estar persistido");
         }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
+        Espiritu actualizado = mapperE.toDomain(dto);
 
-        espirituDAOMongo.deleteByIdSQL(espiritu.getId());
+        EspirituMongoDTO mongoDTOPersistido = espirituDAOMongo.findByIdSQL(espiritu.getId())
+                .orElseThrow(() -> new EspirituNoEncontradoException(espiritu.getId()));
 
         // Actualizar en MongoDB
         EspirituMongoDTO mongoDTO = mapperE.toMongo(dto, coordenada);
+        mongoDTO.setId(mongoDTOPersistido.getId());
         espirituDAOMongo.save(mongoDTO);
 
         // Actualizar en Firestore
-        espirituDAOFirestore.actualizar(mapperE.toDomain(dto));
-
-        return mapperE.toDomain(dto);
+        espirituDAOFirestore.actualizar(espiritu);
+        espirituDAOFirestore.enriquecer(actualizado);
+        return actualizado;
     }
 
     private EspirituJPADTO actualizarEspirituJPA(Espiritu espiritu) {
