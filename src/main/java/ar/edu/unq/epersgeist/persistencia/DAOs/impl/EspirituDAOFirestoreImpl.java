@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+
 @Component
 public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
 
@@ -21,22 +23,33 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
         this.firestore = firestore;
     }
 
-    public void save(Espiritu e) throws InterruptedException, ExecutionException {
-        DocumentReference doc = firestore
-                .collection(COLL)
-                .document(e.getId().toString());
+    public void save(Espiritu e) {
+        try {
+            DocumentReference doc = firestore
+                    .collection(COLL)
+                    .document(e.getId().toString());
 
-        Map<String, Object> init = Map.of(
-                "nombre", e.getNombre(),
-                "ganadas", 0,
-                "perdidas", 0,
-                "jugadas", 0,
-                "vida", e.getVida(),
-                "ataque", e.getAtaque(),
-                "defensa", e.getDefensa()
-        );
-        // set() sin merge para asegurar que partimos de un estado limpio(sobrescribe o crea)
-        doc.set(init).get();
+            Map<String, Object> init = Map.of(
+                    "nombre", e.getNombre(),
+                    "ganadas", 0,
+                    "perdidas", 0,
+                    "jugadas", 0,
+                    "vida", e.getVida(),
+                    "ataque", e.getAtaque(),
+                    "defensa", e.getDefensa()
+            );
+            // set() sin merge para asegurar que partimos de un estado limpio(sobrescribe o crea)
+            doc.set(init).get();
+        }
+
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Error al guardar en Firestore (interrumpido)", ex);
+        }
+
+        catch (ExecutionException ex) {
+            throw new RuntimeException("Error al guardar en Firestore", ex);
+        }
     }
     @Override
     public Espiritu actualizar(Espiritu e) {
@@ -48,9 +61,9 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
             DocumentSnapshot snapshot = doc.get().get();
 
             // Valores actuales
-            Long ganadas = snapshot.contains("ganadas") ? snapshot.getLong("ganadas") : 0L;
-            Long perdidas = snapshot.contains("perdidas") ? snapshot.getLong("perdidas") : 0L;
-            Long jugadas = snapshot.contains("jugadas") ? snapshot.getLong("jugadas") : 0L;
+            Long ganadas  = this.getLongOrDefault(snapshot, "ganadas");
+            Long perdidas = this.getLongOrDefault(snapshot, "perdidas");
+            Long jugadas  = this.getLongOrDefault(snapshot, "jugadas");
 
 
             // Sumar nuevos valores
@@ -68,6 +81,12 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
             throw new RuntimeException("Error al actualizar estadísticas en Firebase", ex);
         }
     }
+
+    private Long getLongOrDefault(DocumentSnapshot snapshot, String key) {
+        Long val = snapshot.getLong(key);
+        return val != null ? val : 0L;
+    }
+
 
     public void eliminar(Long id) {
         try {
@@ -88,23 +107,20 @@ public class EspirituDAOFirestoreImpl implements EspirituDAOFirestore {
 
             if (!snapshot.exists()) return;
 
-            if (snapshot.contains("vida")) {
-                espiritu.setVida(snapshot.getLong("vida").intValue());
-            }
-            if (snapshot.contains("ganadas")) {
-                espiritu.setBatallasGanadas(snapshot.getLong("ganadas").intValue());
-            }
-            if (snapshot.contains("perdidas")) {
-                espiritu.setBatallasPerdidas(snapshot.getLong("perdidas").intValue());
-            }
-            if (snapshot.contains("jugadas")) {
-                espiritu.setBatallasJugadas(snapshot.getLong("jugadas").intValue());
-            }
-            if (snapshot.contains("ataque")) {
-                espiritu.setAtaque(snapshot.getLong("ataque").intValue());
-            }
-            if (snapshot.contains("defensa")) {
-                espiritu.setDefensa(snapshot.getLong("defensa").intValue());
+            Map<String, Consumer<Integer>> setters = Map.of(
+                    "vida",     espiritu::setVida,
+                    "ganadas",  espiritu::setBatallasGanadas,
+                    "perdidas", espiritu::setBatallasPerdidas,
+                    "jugadas",  espiritu::setBatallasJugadas,
+                    "ataque",   espiritu::setAtaque,
+                    "defensa",  espiritu::setDefensa
+            );
+
+            for (var entry : setters.entrySet()) {
+                if (snapshot.contains(entry.getKey())) {
+                    Long val = snapshot.getLong(entry.getKey());
+                    if (val != null) entry.getValue().accept(val.intValue());
+                }
             }
 
         } catch (InterruptedException | ExecutionException e) {

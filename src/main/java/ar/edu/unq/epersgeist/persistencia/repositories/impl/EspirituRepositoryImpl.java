@@ -69,13 +69,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espirituDAOMongo.save(mongoDTO);
 
         //FIRESTORE
-        try {
-            espirituDAOFirestore.save(mapperE.toDomain(jpa));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Error al guardar estadísticas en Firestore", e);
-        }
+        espirituDAOFirestore.save(mapperE.toDomain(jpa));
 
         return mapperE.toDomain(jpa);
     }

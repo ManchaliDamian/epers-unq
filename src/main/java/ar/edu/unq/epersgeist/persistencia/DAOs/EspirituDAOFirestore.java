@@ -4,7 +4,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import java.util.concurrent.ExecutionException;
 
 public interface EspirituDAOFirestore {
-    void save(Espiritu espiritu) throws InterruptedException, ExecutionException;
+    void save(Espiritu espiritu);
     Espiritu actualizar(Espiritu e);
     void eliminar(Long id);
     void enriquecer(Espiritu espiritu);
