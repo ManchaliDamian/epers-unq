@@ -96,7 +96,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public List<Espiritu> recuperarTodosMayorVida(int vida) {
-        return espirituRepository.recuperarTodosMasyorVida(vida);
+        return espirituRepository.recuperarTodosMayorVida(vida);
     }
 
     public List<Espiritu> crearYGuardarEspiritusDemoniacos(int cantidad, Ubicacion ubi, Coordenada cc) {

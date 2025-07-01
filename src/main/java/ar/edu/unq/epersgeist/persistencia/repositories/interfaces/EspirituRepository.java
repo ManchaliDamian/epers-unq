@@ -28,6 +28,6 @@ public interface EspirituRepository {
     Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL);
 
 
-    List<Espiritu> recuperarTodosMasyorVida(int vida);
+    List<Espiritu> recuperarTodosMayorVida(int vida);
 }
 

@@ -196,7 +196,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     }
 
     @Override
-    public List<Espiritu> recuperarTodosMasyorVida(int vida) {
+    public List<Espiritu> recuperarTodosMayorVida(int vida) {
         return espirituDAOFirestore.recuperarTodosMayorVida(vida);
     }
 
