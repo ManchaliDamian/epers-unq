@@ -7,7 +7,6 @@ import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 
 public interface EspirituRepository {

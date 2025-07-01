@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.DAOs;
 
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
-import java.util.concurrent.ExecutionException;
 
 public interface EspirituDAOFirestore {
     void save(Espiritu espiritu);
