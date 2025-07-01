@@ -94,4 +94,10 @@ public final  class EspirituControllerREST {
     public void dominarEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idEspirituADominar){
         espirituService.dominar(idEspiritu,idEspirituADominar);
     }
+
+    @PutMapping("/{idEspiritu}/combatir/{idEspirituACombatir}")
+    public void combatirEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idEspirituACombatir){
+        espirituService.combatir(idEspiritu, idEspirituACombatir);
+    }
+
 }
