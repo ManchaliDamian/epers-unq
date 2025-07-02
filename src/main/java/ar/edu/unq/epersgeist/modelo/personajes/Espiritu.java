@@ -1,4 +1,6 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituConectadoException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituMuertoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
@@ -118,12 +120,28 @@ public abstract class Espiritu {
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
     }
 
-    public void perderVida(int cantidad){
-        int nuevaVida = this.getVida() - cantidad;
-        this.setVida(Math.max(nuevaVida, 0));
+
+    public void desplazar(Ubicacion nuevaUbicacion){
+        this.validarNoConexion();
+        this.validarVida();
+        this.ubicacion = nuevaUbicacion;
+        this.perderVida(1);
+    }
+
+    private void validarNoConexion() {
+        if(this.estaConectado()){
+            throw new EspirituConectadoException(this.getId());
+        }
+    }
+
+    private void validarVida() {
+        if(this.getVida() == 0){
+            throw new EspirituMuertoException(this.getId());
+        }
     }
 
     public void combatir(Espiritu espirituACombatir){
+        this.validarVida();
         this.participarEnBatalla();
         espirituACombatir.participarEnBatalla();
 
@@ -136,6 +154,11 @@ public abstract class Espiritu {
             this.registrarDerrota();
             espirituACombatir.registrarVictoria();
         }
+    }
+
+    private void perderVida(int cantidad){
+        int nuevaVida = this.getVida() - cantidad;
+        this.setVida(Math.max(nuevaVida, 0));
     }
 
     private void recibirImpacto(Integer ataqueEntrante) {

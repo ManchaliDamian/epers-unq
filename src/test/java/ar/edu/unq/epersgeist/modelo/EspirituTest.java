@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituConectadoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituMuertoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
@@ -67,6 +69,34 @@ public class EspirituTest {
         assertEquals(1, demonio1.getBatallasJugadas());
         assertEquals(1, demonio1.getBatallasGanadas());
         assertEquals(0, demonio1.getBatallasPerdidas());
+    }
+
+    @Test
+    void combatirNoSePuedeSiEstaMuerto(){
+        angel1 = new EspirituAngelical("Angel",cementerio);
+        demonio1 = new EspirituDemoniaco("Demonio", santuario);
+        angel1.setVida(0);
+
+        assertThrows(EspirituMuertoException.class, () -> angel1.combatir(demonio1));
+    }
+
+    @Test
+    void desplazarCambiaUbicacionYPierdeVida(){
+        angel.desplazar(santuario);
+        assertEquals(santuario, angel.getUbicacion());
+        assertEquals(99, angel.getVida());
+    }
+
+    @Test
+    void desplazarSinVidaLanzaExcepcion(){
+        angel.setVida(0);
+        assertThrows(EspirituMuertoException.class, () -> angel.desplazar(santuario));
+    }
+
+    @Test
+    void desplazarConectadoAUnMediumLanzaExcepcion(){
+        mediumConectado.conectarseAEspiritu(angel);
+        assertThrows(EspirituConectadoException.class, () -> angel.desplazar(santuario));
     }
 
     @Test

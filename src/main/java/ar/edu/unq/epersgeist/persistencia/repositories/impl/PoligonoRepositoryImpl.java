@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.repositories.impl;
 
 import ar.edu.unq.epersgeist.exception.Conflict.SuperposicionDePoligonosException;
 import ar.edu.unq.epersgeist.exception.Conflict.UbicacionYaTienePoligonoException;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Poligono;
 import ar.edu.unq.epersgeist.persistencia.DAOs.PoligonoDAO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.ubicacion.PoligonoMongoDTO;
@@ -40,11 +41,6 @@ public class PoligonoRepositoryImpl implements PoligonoRepository {
     }
 
     @Override
-    public void actualizar(Poligono poligono) {
-        //hacer
-    }
-
-    @Override
     public List<Poligono> recuperarTodos() {
         return poligonoDAO.findAll().stream()
                 .map(poligonoMapper::toDomain)
@@ -76,5 +72,10 @@ public class PoligonoRepositoryImpl implements PoligonoRepository {
     @Override
     public void deleteAll() {
         poligonoDAO.deleteAll();
+    }
+
+    @Override
+    public Optional<Coordenada> recuperarCoordenadaAleatoria(Long ubicacionId) {
+        return poligonoDAO.recuperarCoordenadaAleatoria(ubicacionId);
     }
 }

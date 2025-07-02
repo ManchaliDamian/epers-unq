@@ -25,11 +25,6 @@ public class PoligonoServiceImpl implements PoligonoService {
     }
 
     @Override
-    public void actualizar(Poligono poligono) {
-        poligonoRepository.actualizar(poligono);
-    }
-
-    @Override
     public Optional<Poligono> recuperar(String poligonoId) {
         return poligonoRepository.recuperar(poligonoId);
     }

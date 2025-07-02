@@ -26,4 +26,5 @@ public interface EspirituService {
     void dominar(Long idEspiritu, Long idEspirituADominar);
 
     void combatir(Long idEspiritu, Long idEspirituACombatir);
+    void desplazar(Long espirituId, Long ubicacionId);
 }

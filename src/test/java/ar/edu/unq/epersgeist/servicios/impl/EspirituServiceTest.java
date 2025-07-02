@@ -2,12 +2,10 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.exception.BadRequest.ConectarException;
 import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
-import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.Conflict.*;
 import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -15,6 +13,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -37,6 +37,7 @@ public class EspirituServiceTest {
     @Autowired private MediumService serviceM;
 
     @Autowired private DataService dataService;
+    @Autowired private EspirituDAOMongo espirituDAOMongo;
 
     private Espiritu azazel;
     private Espiritu belcebu;
@@ -94,10 +95,45 @@ public class EspirituServiceTest {
 
     }
 
-
     @AfterEach
     void cleanup() {
         dataService.eliminarTodo();
+    }
+
+    @Test
+    void desplazarEspirituSaleBien() {
+        // Exercise
+        serviceE.desplazar(azazel.getId(), berazategui.getId());
+
+        // Verify
+        EspirituMongoDTO azazelDTO = espirituDAOMongo.findByIdSQL(azazel.getId()).get();
+        assertNotEquals(c1.getLatitud(), azazelDTO.getPunto().getY());
+        assertNotEquals(c1.getLongitud(), azazelDTO.getPunto().getX());
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        assertEquals(berazategui.getId(), azazel.getUbicacion().getId());
+        assertEquals(99, azazel.getVida());
+    }
+
+    @Test
+    void desplazarEspirituConectadoLanzaExcepcion() {
+        // Setup
+        medium = serviceM.guardar(medium, c1);
+        serviceE.conectar(belcebu.getId(), medium.getId());
+
+        // Exercise & Verify
+        assertThrows(EspirituConectadoException.class, () -> serviceE.desplazar(belcebu.getId(), berazategui.getId()));
+    }
+
+    @Test
+    void desplazarEspirituSinVidaLanzaExcepcion() {
+        azazel.setVida(0);
+        serviceE.actualizar(azazel);
+        assertThrows(EspirituMuertoException.class, () -> serviceE.desplazar(azazel.getId(), berazategui.getId()));
+    }
+
+    @Test
+    void desplazarEspirituAUbicacionInexistenteLanzaExcepcion() {
+        assertThrows(UbicacionNoEncontradaException.class, () -> serviceE.desplazar(azazel.getId(), 999L));
     }
 
     @Test

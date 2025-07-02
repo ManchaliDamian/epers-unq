@@ -101,4 +101,9 @@ public final  class EspirituControllerREST {
         espirituService.combatir(idEspiritu, idEspirituACombatir);
     }
 
+    @PutMapping("/{idEspiritu}/desplazar/{idUbicacion}")
+    public void desplazarEspiritu(@PathVariable Long idEspiritu, @PathVariable Long idUbicacion){
+        espirituService.desplazar(idEspiritu, idUbicacion);
+    }
+
 }
