@@ -14,11 +14,11 @@ public class EspirituAngelical extends Espiritu{
     }
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion) {
-        super( nombre, ubicacion, TipoEspiritu.ANGELICAL);
+        super( nombre, ubicacion, TipoEspiritu.ANGELICAL, 5, 10);
     }
 
     public EspirituAngelical(String nombre, Ubicacion ubicacion, Integer ataque, Integer defensa) {
-        super( nombre, ubicacion, TipoEspiritu.ANGELICAL, ataque, defensa);
+        super( nombre, ubicacion, TipoEspiritu.ANGELICAL, ataque + 5 , defensa + 10);
     }
 
     @Override
