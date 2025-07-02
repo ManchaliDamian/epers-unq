@@ -2,8 +2,6 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
-import ar.edu.unq.epersgeist.modelo.generador.Generador;
-import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
