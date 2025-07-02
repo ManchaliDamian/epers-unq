@@ -15,8 +15,8 @@ public record CreateEspirituDTO(
         @NotNull  Long ubicacionId,
         @NotNull  TipoEspiritu tipo,
         @NotNull  CoordenadaDTO coordenada,
-        @NotNull int ataque,
-        @NotNull int defensa
+        int ataque,
+        int defensa
 ) {
 
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu, Coordenada coordenada) {
