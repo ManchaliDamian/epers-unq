@@ -2,8 +2,6 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
-import ar.edu.unq.epersgeist.modelo.generador.Generador;
-import ar.edu.unq.epersgeist.modelo.generador.GeneradorSecuencial;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -55,11 +53,11 @@ public class EspirituTest {
 
     @Test
     void combatirMayorDefensa(){
-        angel1 = new EspirituAngelical("Angel",cementerio, 5, 20);
-        demonio1 = new EspirituDemoniaco("Demonio", santuario, 40, 60);
+        angel1 = new EspirituAngelical("Angel",cementerio, 5, 20); // real atk y def : 10, 30
+        demonio1 = new EspirituDemoniaco("Demonio", santuario, 40, 60); // ""          50, 65
 
         angel1.combatir(demonio1);
-        assertEquals(90, angel1.getVida()); // pierde 60/2 - 20
+        assertEquals(98, angel1.getVida()); // pierde 65/2 - 30 => 32 - 30 => 2
         assertEquals(100, demonio1.getVida());// gano, no pierde vida
 
         assertEquals(1, angel1.getBatallasJugadas());

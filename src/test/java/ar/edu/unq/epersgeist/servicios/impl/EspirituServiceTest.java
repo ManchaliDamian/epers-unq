@@ -99,6 +99,7 @@ public class EspirituServiceTest {
     void cleanup() {
         dataService.eliminarTodo();
     }
+
     @Test
     void combatirEspiritu_GanaAtaque() {
         // Setup
@@ -148,6 +149,26 @@ public class EspirituServiceTest {
         assertEquals(1, azazel.getBatallasJugadas());
         assertEquals(1, belcebu.getBatallasGanadas());
         assertEquals(0, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
+    }
+
+    @Test
+    void combatirDemonioConAtkYDefPorDefecto(){
+        //angel tiene 19 atk y 11 def, belcebú 10 atk y 5 def, 14 daño
+
+        // Exercise
+        serviceE.combatir(angel.getId(), belcebu.getId());
+
+        // Verify
+        angel = serviceE.recuperar(angel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(100, angel.getVida());
+        assertEquals(86, belcebu.getVida());
+        assertEquals(1, angel.getBatallasGanadas());
+        assertEquals(0, angel.getBatallasPerdidas());
+        assertEquals(1, angel.getBatallasJugadas());
+        assertEquals(0, belcebu.getBatallasGanadas());
+        assertEquals(1, belcebu.getBatallasPerdidas());
         assertEquals(1, belcebu.getBatallasJugadas());
     }
 
