@@ -8,7 +8,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId,
-                          UbicacionDTO ubicacion, TipoEspiritu tipo, Long dominadorId) {
+                          UbicacionDTO ubicacion, TipoEspiritu tipo, Long dominadorId,
+                          int ataque, int defensa) {
     public static EspirituDTO desdeModelo(Espiritu espiritu) {
         return new EspirituDTO(
                 espiritu.getId(),
@@ -17,7 +18,9 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
                 espiritu.getMediumConectado() != null ? espiritu.getMediumConectado().getId() : null,
                 UbicacionDTO.desdeModelo(espiritu.getUbicacion()),
                 espiritu.getTipo(),
-                espiritu.getDominador() != null ? espiritu.getDominador().getId() : null
+                espiritu.getDominador() != null ? espiritu.getDominador().getId() : null,
+                espiritu.getAtaque(),
+                espiritu.getDefensa()
         );
     }
 

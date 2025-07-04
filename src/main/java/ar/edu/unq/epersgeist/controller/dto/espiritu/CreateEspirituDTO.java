@@ -32,8 +32,8 @@ public record CreateEspirituDTO(
 
     public Espiritu aModeloEspiritu(Ubicacion ubicacion){
         return switch (this.tipo()) {
-            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion);
-            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion);
+            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion, ataque, defensa);
+            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion, ataque, defensa);
         };
     }
 

@@ -1,9 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.ubicacion.Cementerio;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
@@ -43,10 +41,10 @@ public class DataServiceImpl implements DataService {
     }
 
     public void eliminarTodo() {
+        poligonoRepository.deleteAll();
         espirituRepository.deleteAll();
         mediumRepository.deleteAll();
         ubicacionRepository.deleteAll();
-        poligonoRepository.deleteAll();
         estadisticaRepository.deleteAll();
     }
 

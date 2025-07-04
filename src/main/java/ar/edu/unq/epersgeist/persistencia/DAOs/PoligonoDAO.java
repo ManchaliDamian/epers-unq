@@ -21,16 +21,8 @@ public interface PoligonoDAO extends MongoRepository<PoligonoMongoDTO, String> {
     @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': ?1 }")
     Optional<PoligonoMongoDTO> findByPoligonoGeoIntersectsAndUbicacionId(GeoJsonPoint punto, Long ubicacionId);
 
-
-
-    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
-    Optional<PoligonoMongoDTO> findOneIntersectandoPuntoEnOtraUbicacion(GeoJsonPoint punto, Long ubicacionId);
-
     @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } }, 'ubicacionId': { $ne: ?1 } }")
     Optional<PoligonoMongoDTO> findOneIntersectandoPoligonoConOtraUbicacion(GeoJsonPolygon poligono, Long ubicacionId);
-
-    @Query("{ 'poligono': { $geoIntersects: { $geometry: ?0 } } }")
-    Optional<PoligonoMongoDTO> findByPoligonoGeoIntersects(GeoJsonPoint punto);
 
     @Aggregation(pipeline = {
             "{ $match: { 'poligono': { $geoIntersects: { $geometry: { type: 'Point', coordinates: [?1, ?0] } } } } }",

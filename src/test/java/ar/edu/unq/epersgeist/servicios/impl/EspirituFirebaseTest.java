@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.exception.Conflict.NombreDeEspirituRepetidoException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
+import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
@@ -9,6 +11,7 @@ import ar.edu.unq.epersgeist.servicios.interfaces.UbicacionService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +21,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class EspirituFirebaseTest {
@@ -74,7 +78,16 @@ public class EspirituFirebaseTest {
 
     }
 
+    @Test
+    void crearDosEspiritusConMismoNombre_debeFallarElSegundo() {
+        Espiritu primero = new EspirituAngelical("Franco", quilmes);
+        serviceE.guardar(primero, c1);
 
+        Espiritu duplicado = new EspirituAngelical("Franco", quilmes);
+        assertThrows(NombreDeEspirituRepetidoException.class, () -> {
+            serviceE.guardar(duplicado, c1);
+        }, "Se esperaba fallo al guardar un espíritu con nombre duplicado");
+    }
 
     //@Test
     void combateMuchosEspiritus() throws InterruptedException {
