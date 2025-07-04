@@ -30,10 +30,15 @@ Lo que descubrieron los dejó sin aliento.
 
 Desde una altura imposible, contemplaban todo aquello que alguna vez recorrieron. Las marcas lejanas que veían parecían ahora señaladas por símbolos nuevos, extraños... y sin embargo, los comprendían. Como si un nuevo poder se hubiera despertado en su interior, los cinco programadores se habían convertido en observadores omnipotentes, capaces de verlo todo desde las alturas.
 
+Frente a ellos, líneas de código flotaban como corrientes vivas de energía. Y entre esas líneas, un flujo en tiempo real les mostraba cada evento, cada decisión, cada acción ocurrida en su mundo anterior. Veían combates, alianzas, traiciones... todo actualizado segundo a segundo, como si la realidad misma estuviera siendo retransmitida para su juicio.
+
+Y entonces lo notaron: una tabla flotante, repleta de nombres, puntuaciones y victorias. Un ranking.
+
+Ellos ya no eran simples programadores. Eran parte de algo más grande. Y esa tabla... esa tabla dictaba su posición en un nuevo orden.
+
 Pero entonces surgió una nueva pregunta, inevitable:
 
-¿Podrían controlar este nuevo poder?
-¿Serían capaces de moldear la realidad a su voluntad?
+¿Podrían controlar este nuevo poder? ¿Serían capaces de moldear la realidad a su voluntad?
 
 Eso... aún estaba por verse.
 
