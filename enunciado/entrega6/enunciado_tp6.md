@@ -42,20 +42,19 @@ Eso... aún estaba por verse.
 ### Dominio de espíritus
 A partir de ahora:
 - Tendrán un número del 1 al 100 que represente la energía que tienen. Si se intenta realizar una acción sin energía, deberá arrojarse la excepción `EspirituSinEnergiaException`.
-- Podrán moverse entre ubicaciones sin depender de un medium para ello.
-- Podrán combatir con otro espíritu. Para esto tener en cuenta que un espíritu debe tener un número que represente el nivel de ataque y otro de defensa, los cuales al sumarlos el resultado no debe ser mayor a 50. 
+- Podrán moverse entre ubicaciones sin depender de un medium para ello. Si un espíritu se intenta mover a una ubicación estando conectado a un medium, deberá arrojarse la excepción `EspirituConectadoException`. 
+- Podrán combatir con otro espíritu. Para esto tener en cuenta que un espíritu debe tener un número que represente el nivel de ataque y otro de defensa, los cuales al sumarlos el resultado no debe ser mayor a 100. En caso contario, lanzar una excepción. 
+- Los angeles deberán un ataque base de 5 y una defensa base de 10, mientras que demonios deberán tener un ataque base de 10 y una defensa base de 5.
 - Tendrán un número de victorias y de derrotes por combate.
 
 ## Servicios
 Se deberán modificar los siguientes servicios:
 
 ### EspirituService
-- `void desplazarse(Long espirituId, Long ubicacionId)` - Deberá mover al espíritu a la ubicación indicada, en una coordenada cualquiera. Si el espíritu está conectado a un medium, deberá arrojarse la excepción `EspirituConectadoException`.
+- `void desplazar(Long espirituId, Long ubicacionId)` - Deberá mover al espíritu a la ubicación indicada, a una coordenada cualquiera que pertenezca a dicha ubicación.
 - `void combatir(Long atacanteId, Long defensorId)` - Los espíritus dados deberán entrar en combate según las indicaciones dadas previamente.
 
-### EstadisticaService
-- `List<Ubicacion> ubicacionesMasPopuladas` - Retorna una lista ordenada de mayor a menor con las ubicaciones que tienen más espíritus 
-- `List<Espiritu> espiritusMasVictoriosos` - Retorna una lista ordenada de mayor a menor con los espíritus que tienen más victorias
-
 ## Se pide:
-* 
+* Hacer un front que permita el combate individual entre un espíritu y otro, y que además muestre distintos rankings. Uno de los rankings debe ser de los espíritus con más victorias, otro de los espíritus con más derrotas, y otro con los espíritus con más combates realizados. Este front debe aprovechar las ventajas realtime de Firebase Firestore para mostrar los datos necesarios en tiempo real.
+* Persistir los nuevos datos que requieran sincronización inmediata en Firebase Firestore.
+* Modificar el CRUD de Espíritu para que cumpla los nuevos requisitos de persistencia.
