@@ -251,4 +251,15 @@ public class EspirituMapperImp implements EspirituMapper {
         GeoJsonPoint p = mongo.getPunto();
         return new Coordenada(p.getY(), p.getX());
     }
+
+    @Override
+    public Espiritu addFirestoreData(Espiritu sinFirestoreData, Espiritu conFirestoreData) {
+        sinFirestoreData.setAtaque(conFirestoreData.getAtaque());
+        sinFirestoreData.setDefensa(conFirestoreData.getDefensa());
+        sinFirestoreData.setVida(conFirestoreData.getVida());
+        sinFirestoreData.setBatallasGanadas(conFirestoreData.getBatallasGanadas());
+        sinFirestoreData.setBatallasPerdidas(conFirestoreData.getBatallasPerdidas());
+        sinFirestoreData.setBatallasJugadas(conFirestoreData.getBatallasJugadas());
+        return sinFirestoreData;
+    }
 }

@@ -55,6 +55,7 @@ public abstract class Espiritu {
             @NonNull Integer ataque,
             @NonNull Integer defensa
     ) {
+        this.validarStats(ataque, defensa);
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
@@ -67,6 +68,14 @@ public abstract class Espiritu {
     }
 
 
+    private void validarStats(Integer ataque, Integer defensa) {
+        if (ataque < 0 || defensa < 0) {
+            throw new IllegalArgumentException("Los puntos de ataque o defensa no pueden ser negativos");
+        }
+        if (ataque + defensa > 100) {
+            throw new IllegalArgumentException("La suma de ataque y defensa no puede ser mayor a 100");
+        }
+    }
 
     public void conectarA(Medium medium){
         if(estaDominado()){

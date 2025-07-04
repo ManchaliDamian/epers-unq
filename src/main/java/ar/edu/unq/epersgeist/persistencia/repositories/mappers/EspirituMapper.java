@@ -83,4 +83,6 @@ public interface EspirituMapper {
     //toMongo
     EspirituMongoDTO toMongo(EspirituJPADTO jpa, Coordenada coordenada);
     Coordenada toCoordenada(EspirituMongoDTO mongo);
+
+    Espiritu addFirestoreData(Espiritu sinFirestoreData, Espiritu conFirestoreData);
 }

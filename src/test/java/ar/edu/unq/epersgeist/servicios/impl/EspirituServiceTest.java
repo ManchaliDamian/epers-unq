@@ -223,7 +223,7 @@ public class EspirituServiceTest {
         serviceE.actualizar(belcebu);
         serviceE.dominar(azazel.getId(), belcebu.getId());
         Optional<Espiritu> actualizado = serviceE.recuperar(belcebu.getId());
-        assertEquals(null, actualizado.get().getDominador());
+        assertNull(actualizado.get().getDominador());
     }
     @Test
     void espirituDominadoQuiereDominarASuDominadorLanzaException() {

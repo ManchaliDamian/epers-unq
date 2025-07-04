@@ -36,6 +36,19 @@ public class EspirituTest {
     }
 
     @Test
+    void noSePuedeCrearUnEspirituConAtaqueYDefensaMayorA100(){
+        assertThrows(IllegalArgumentException.class, () -> new EspirituAngelical("Angel",cementerio, 50, 40));
+        assertThrows(IllegalArgumentException.class, () -> new EspirituDemoniaco("Demonio", santuario, 40, 50));
+    }
+
+    @Test
+    void noSePuedeCrearUnEspirituConAtaqueODefensaNegativa(){
+        assertThrows(IllegalArgumentException.class, () -> new EspirituAngelical("Angel",cementerio, -6, 0));
+        assertThrows(IllegalArgumentException.class, () -> new EspirituAngelical("Angel",cementerio, 2, -12));
+        assertThrows(IllegalArgumentException.class, () -> new EspirituDemoniaco("Demonio", santuario, -32, -33));
+    }
+
+    @Test
     void combatirMayorAtaque(){
         // Exercise
         angel.combatir(demonio);
@@ -56,7 +69,7 @@ public class EspirituTest {
     @Test
     void combatirMayorDefensa(){
         angel1 = new EspirituAngelical("Angel",cementerio, 5, 20); // real atk y def : 10, 30
-        demonio1 = new EspirituDemoniaco("Demonio", santuario, 40, 60); // ""          50, 65
+        demonio1 = new EspirituDemoniaco("Demonio", santuario, 10, 60); // ""          50, 65
 
         angel1.combatir(demonio1);
         assertEquals(98, angel1.getVida()); // pierde 65/2 - 30 => 32 - 30 => 2

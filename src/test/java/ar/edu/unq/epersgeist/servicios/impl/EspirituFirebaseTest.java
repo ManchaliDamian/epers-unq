@@ -77,6 +77,20 @@ public class EspirituFirebaseTest {
 
 
     }
+/*
+    @Test
+    void generarUbicacionParaCombate(){
+        c1 = new Coordenada(0.0,0.0);
+        c2 = new Coordenada(0.0,1.0);
+        c3 = new Coordenada(1.0,1.0);
+        c4 = new Coordenada(1.0,0.0);
+        List<Coordenada> coordenadas = Arrays.asList(c1, c2, c3, c4, c1);
+        poligono = new Poligono(coordenadas);
+
+        quilmes = new Santuario("Quilmes", 100);
+        quilmes = serviceU.guardar(quilmes, poligono);
+    }
+    */
 
     @Test
     void crearDosEspiritusConMismoNombre_debeFallarElSegundo() {

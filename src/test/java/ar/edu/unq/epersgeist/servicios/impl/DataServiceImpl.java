@@ -77,7 +77,7 @@ public class DataServiceImpl implements DataService {
 
         IntStream.range(0, cantidad).forEach(i -> {
             String nombre = "Espiritu_" + i;
-            // Ataque y Defensa aleatorios entre 1 y 20
+            // Ataque y Defensa aleatorios cuya suma da siempre <= 80 (sin contar atk y def base)
             int ataque = ThreadLocalRandom.current().nextInt(1, 51);
             int defensa = ThreadLocalRandom.current().nextInt(1, 31);
 
@@ -102,7 +102,7 @@ public class DataServiceImpl implements DataService {
 
         IntStream.range(0, cantidad).forEach(i -> {
             String nombre = "Espiritu_" + i;
-            // Ataque y Defensa aleatorios entre 1 y 20
+            // Ataque y Defensa aleatorios cuya suma da siempre <= 60 (sin contar atk y def base)
             int ataque = ThreadLocalRandom.current().nextInt(1, 31);
             int defensa = ThreadLocalRandom.current().nextInt(1, 31);
 

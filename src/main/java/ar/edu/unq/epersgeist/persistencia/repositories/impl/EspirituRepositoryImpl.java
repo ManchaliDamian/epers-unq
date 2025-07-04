@@ -69,7 +69,9 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espiritu.setId(jpa.getId());
         espirituDAOFirestore.crear(espiritu);
 
-        return mapperE.toDomain(jpa);
+        Espiritu actualizado = mapperE.toDomain(jpa);
+        actualizado = mapperE.addFirestoreData(actualizado, espiritu);
+        return actualizado;
     }
 
     @Override
@@ -81,10 +83,10 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         // Actualizar en SQL
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
         Espiritu actualizado = mapperE.toDomain(dto);
+        actualizado = mapperE.addFirestoreData(actualizado, espiritu);
 
         // Actualizar en Firestore
-        espirituDAOFirestore.actualizar(espiritu);
-        espirituDAOFirestore.enriquecer(actualizado);
+        espirituDAOFirestore.actualizar(actualizado);
 
         return actualizado;
     }
@@ -96,6 +98,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         }
         EspirituJPADTO dto = actualizarEspirituJPA(espiritu);
         Espiritu actualizado = mapperE.toDomain(dto);
+        actualizado = mapperE.addFirestoreData(actualizado, espiritu);
 
         EspirituMongoDTO mongoDTOPersistido = espirituDAOMongo.findByIdSQL(espiritu.getId())
                 .orElseThrow(() -> new EspirituNoEncontradoException(espiritu.getId()));
@@ -106,8 +109,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         espirituDAOMongo.save(mongoDTO);
 
         // Actualizar en Firestore
-        espirituDAOFirestore.actualizar(espiritu);
-        espirituDAOFirestore.enriquecer(actualizado);
+        espirituDAOFirestore.actualizar(actualizado);
 
         return actualizado;
     }

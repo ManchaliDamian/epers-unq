@@ -9,7 +9,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 
 public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long mediumConectadoId,
                           UbicacionDTO ubicacion, TipoEspiritu tipo, Long dominadorId,
-                          int ataque, int defensa) {
+                          int ataque, int defensa, int vida) {
     public static EspirituDTO desdeModelo(Espiritu espiritu) {
         return new EspirituDTO(
                 espiritu.getId(),
@@ -20,7 +20,8 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
                 espiritu.getTipo(),
                 espiritu.getDominador() != null ? espiritu.getDominador().getId() : null,
                 espiritu.getAtaque(),
-                espiritu.getDefensa()
+                espiritu.getDefensa(),
+                espiritu.getVida()
         );
     }
 
@@ -32,6 +33,7 @@ public record EspirituDTO(Long id, String nombre, Integer nivelDeConexion, Long 
 
         e.setId(id);
         e.setNivelDeConexion(nivelDeConexion);
+        e.setVida(vida);
 
         if (mediumConectadoId != null) {
             Medium m = new Medium();
