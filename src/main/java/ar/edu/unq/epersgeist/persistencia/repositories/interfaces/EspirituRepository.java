@@ -13,7 +13,7 @@ public interface EspirituRepository {
     Espiritu guardar(Espiritu espiritu, Coordenada coordenada);
     Espiritu actualizar(Espiritu espiritu);
     Espiritu actualizar(Espiritu espiritu, Coordenada coordenada);
-    void eliminarFisicoEnMongoSiExiste(Long id);
+    void eliminar(Long id);
     List<Espiritu> recuperarTodos();
     Optional<Espiritu> recuperar(Long espirituId);
     Optional<Coordenada> recuperarCoordenada(Long espirituId);
@@ -27,5 +27,7 @@ public interface EspirituRepository {
     void deleteAll();
     Optional<Double> distanciaA(Double longitud, Double latitud, Long idEspirituSQL);
 
+
+    List<Espiritu> recuperarTodosMayorVida(int vida);
 }
 

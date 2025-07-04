@@ -6,9 +6,6 @@ import java.util.Optional;
 public interface PoligonoService {
     // CRUD
     void guardar(Long ubicacionId, Poligono poligono);
-
-    void actualizar(Poligono poligono);
-
     Optional<Poligono> recuperar(String poligonoId);
     Optional<Poligono> recuperarPorUbicacionId(Long ubicacionId);
     List<Poligono> recuperarTodos();

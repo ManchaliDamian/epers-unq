@@ -56,20 +56,24 @@ public class MediumServiceImpl implements MediumService {
     public Medium guardar(Medium unMedium, Coordenada coordenada) {
         return mediumRepository.guardar(unMedium, coordenada);
     }
+
     @Override
     public Medium actualizar(Medium medium, Coordenada coordenada) {
         return mediumRepository.actualizar(medium, coordenada);
     }
+
     @Override
     public Medium actualizar(Medium unMedium) {
         return mediumRepository.actualizar(unMedium);
     }
 
     private Medium getMedium(Long mediumId) {
-        return mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        return mediumRepository.recuperar(mediumId)
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
     }
     private Ubicacion getUbicacion(Long ubicacionId) {
-        return ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+        return ubicacionRepository.recuperar(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
     }
 
     @Override
@@ -142,7 +146,8 @@ public class MediumServiceImpl implements MediumService {
 
         Medium medium = this.getMedium(mediumId);
 
-        Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        Coordenada coordenada = espirituRepository.recuperarCoordenada(espirituId)
+                .orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
 
 
         Double distancia = mediumRepository.distanciaA(coordenada.getLatitud(),coordenada.getLongitud(),medium.getId())

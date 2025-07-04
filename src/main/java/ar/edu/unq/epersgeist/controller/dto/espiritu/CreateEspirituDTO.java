@@ -14,7 +14,9 @@ public record CreateEspirituDTO(
         @NotBlank String nombre,
         @NotNull  Long ubicacionId,
         @NotNull  TipoEspiritu tipo,
-        @NotNull  CoordenadaDTO coordenada
+        @NotNull  CoordenadaDTO coordenada,
+        int ataque,
+        int defensa
 ) {
 
     public static CreateEspirituDTO desdeModelo(Espiritu espiritu, Coordenada coordenada) {
@@ -22,14 +24,16 @@ public record CreateEspirituDTO(
                 espiritu.getNombre(),
                 espiritu.getUbicacion() != null ? espiritu.getUbicacion().getId() : null,
                 espiritu.getTipo(),
-                CoordenadaDTO.desdeModelo(coordenada)
+                CoordenadaDTO.desdeModelo(coordenada),
+                espiritu.getAtaque(),
+                espiritu.getDefensa()
         );
     }
 
     public Espiritu aModeloEspiritu(Ubicacion ubicacion){
         return switch (this.tipo()) {
-            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion);
-            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion);
+            case ANGELICAL -> new EspirituAngelical(nombre, ubicacion, ataque, defensa);
+            case DEMONIACO  -> new EspirituDemoniaco(nombre, ubicacion, ataque, defensa);
         };
     }
 

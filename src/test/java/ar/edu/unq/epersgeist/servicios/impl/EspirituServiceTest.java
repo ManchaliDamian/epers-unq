@@ -2,12 +2,10 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.exception.BadRequest.ConectarException;
 import ar.edu.unq.epersgeist.exception.BadRequest.CoordenadaFueraDeAreaException;
-import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
-import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoEstaEnLaMismaUbicacionException;
+import ar.edu.unq.epersgeist.exception.Conflict.*;
 import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.EspirituNoEliminableException;
 import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
@@ -15,6 +13,8 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.modelo.ubicacion.*;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
 
+import ar.edu.unq.epersgeist.persistencia.DAOs.EspirituDAOMongo;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
 import ar.edu.unq.epersgeist.servicios.interfaces.DataService;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import ar.edu.unq.epersgeist.servicios.interfaces.MediumService;
@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,6 +37,7 @@ public class EspirituServiceTest {
     @Autowired private MediumService serviceM;
 
     @Autowired private DataService dataService;
+    @Autowired private EspirituDAOMongo espirituDAOMongo;
 
     private Espiritu azazel;
     private Espiritu belcebu;
@@ -88,13 +86,126 @@ public class EspirituServiceTest {
 
         azazel = new EspirituDemoniaco( "Azazel", quilmes);
         belcebu = new EspirituDemoniaco(  "Belcebu", quilmes);
-        angel = new EspirituAngelical( "Gabriel", quilmes);
+        angel = new EspirituAngelical( "Gabriel", quilmes, 14, 1);
         medium = new Medium("nombre", 150, 30, quilmes);
 
         azazel = serviceE.guardar(azazel, c1);
         belcebu = serviceE.guardar(belcebu, distanciaMas2Km);
         angel = serviceE.guardar(angel, c1);
 
+    }
+
+    @AfterEach
+    void cleanup() {
+        dataService.eliminarTodo();
+    }
+
+    @Test
+    void desplazarEspirituSaleBien() {
+        // Exercise
+        serviceE.desplazar(azazel.getId(), berazategui.getId());
+
+        // Verify
+        EspirituMongoDTO azazelDTO = espirituDAOMongo.findByIdSQL(azazel.getId()).get();
+        assertNotEquals(c1.getLatitud(), azazelDTO.getPunto().getY());
+        assertNotEquals(c1.getLongitud(), azazelDTO.getPunto().getX());
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        assertEquals(berazategui.getId(), azazel.getUbicacion().getId());
+        assertEquals(99, azazel.getVida());
+    }
+
+    @Test
+    void desplazarEspirituConectadoLanzaExcepcion() {
+        // Setup
+        medium = serviceM.guardar(medium, c1);
+        serviceE.conectar(belcebu.getId(), medium.getId());
+
+        // Exercise & Verify
+        assertThrows(EspirituConectadoException.class, () -> serviceE.desplazar(belcebu.getId(), berazategui.getId()));
+    }
+
+    @Test
+    void desplazarEspirituSinVidaLanzaExcepcion() {
+        azazel.setVida(0);
+        serviceE.actualizar(azazel);
+        assertThrows(EspirituMuertoException.class, () -> serviceE.desplazar(azazel.getId(), berazategui.getId()));
+    }
+
+    @Test
+    void desplazarEspirituAUbicacionInexistenteLanzaExcepcion() {
+        assertThrows(UbicacionNoEncontradaException.class, () -> serviceE.desplazar(azazel.getId(), 999L));
+    }
+
+    @Test
+    void combatirEspiritu_GanaAtaque() {
+        // Setup
+        azazel.setAtaque(50);
+        azazel.setDefensa(20);
+        belcebu.setAtaque(30);
+        belcebu.setDefensa(30);
+        serviceE.actualizar(azazel);
+        serviceE.actualizar(belcebu);
+
+        // Exercise
+        serviceE.combatir(azazel.getId(), belcebu.getId());
+
+        // Verify
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(100, azazel.getVida());
+        assertEquals(80, belcebu.getVida());
+        assertEquals(1, azazel.getBatallasGanadas());
+        assertEquals(0, azazel.getBatallasPerdidas());
+        assertEquals(1, azazel.getBatallasJugadas());
+        assertEquals(0, belcebu.getBatallasGanadas());
+        assertEquals(1, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
+    }
+
+    @Test
+    void combatirEspiritu_GanaDefensa() {
+        // Setup
+        azazel.setAtaque(10);
+        azazel.setDefensa(20);
+        belcebu.setAtaque(30);
+        belcebu.setDefensa(50);
+        serviceE.actualizar(azazel);
+        serviceE.actualizar(belcebu);
+
+        // Exercise
+        serviceE.combatir(azazel.getId(), belcebu.getId());
+
+        // Verify
+        azazel = serviceE.recuperar(azazel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(95, azazel.getVida());
+        assertEquals(100, belcebu.getVida());
+        assertEquals(0, azazel.getBatallasGanadas());
+        assertEquals(1, azazel.getBatallasPerdidas());
+        assertEquals(1, azazel.getBatallasJugadas());
+        assertEquals(1, belcebu.getBatallasGanadas());
+        assertEquals(0, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
+    }
+
+    @Test
+    void combatirDemonioConAtkYDefPorDefecto(){
+        //angel tiene 19 atk y 11 def, belcebú 10 atk y 5 def, 14 daño
+
+        // Exercise
+        serviceE.combatir(angel.getId(), belcebu.getId());
+
+        // Verify
+        angel = serviceE.recuperar(angel.getId()).get();
+        belcebu = serviceE.recuperar(belcebu.getId()).get();
+        assertEquals(100, angel.getVida());
+        assertEquals(86, belcebu.getVida());
+        assertEquals(1, angel.getBatallasGanadas());
+        assertEquals(0, angel.getBatallasPerdidas());
+        assertEquals(1, angel.getBatallasJugadas());
+        assertEquals(0, belcebu.getBatallasGanadas());
+        assertEquals(1, belcebu.getBatallasPerdidas());
+        assertEquals(1, belcebu.getBatallasJugadas());
     }
 
     @Test
@@ -112,7 +223,7 @@ public class EspirituServiceTest {
         serviceE.actualizar(belcebu);
         serviceE.dominar(azazel.getId(), belcebu.getId());
         Optional<Espiritu> actualizado = serviceE.recuperar(belcebu.getId());
-        assertEquals(null, actualizado.get().getDominador());
+        assertNull(actualizado.get().getDominador());
     }
     @Test
     void espirituDominadoQuiereDominarASuDominadorLanzaException() {
@@ -469,8 +580,4 @@ public class EspirituServiceTest {
 
     }
 
-    @AfterEach
-    void cleanup() {
-        dataService.eliminarTodo();
-    }
 }

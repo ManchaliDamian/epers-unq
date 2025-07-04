@@ -8,7 +8,6 @@ import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADT
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
 import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -84,4 +83,6 @@ public interface EspirituMapper {
     //toMongo
     EspirituMongoDTO toMongo(EspirituJPADTO jpa, Coordenada coordenada);
     Coordenada toCoordenada(EspirituMongoDTO mongo);
+
+    Espiritu addFirestoreData(Espiritu sinFirestoreData, Espiritu conFirestoreData);
 }

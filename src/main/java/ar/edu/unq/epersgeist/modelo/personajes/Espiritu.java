@@ -1,7 +1,10 @@
 package ar.edu.unq.epersgeist.modelo.personajes;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituConectadoException;
+import ar.edu.unq.epersgeist.exception.Conflict.EspirituMuertoException;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituNoDominableException;
 import ar.edu.unq.epersgeist.modelo.enums.TipoEspiritu;
 import ar.edu.unq.epersgeist.exception.Conflict.EspirituDominadoException;
+import ar.edu.unq.epersgeist.modelo.generador.Generador;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -19,7 +22,7 @@ public abstract class Espiritu {
     @EqualsAndHashCode.Include
     private Long id;
     private Ubicacion ubicacion;
-    protected Integer nivelDeConexion;
+    protected Integer nivelDeConexion = 0;
     @EqualsAndHashCode.Include
     private String nombre;
     private Medium mediumConectado;
@@ -27,20 +30,51 @@ public abstract class Espiritu {
 
     private Espiritu dominador;
 
+    private Integer vida = 100;
+    private Integer defensa = 5;
+    private Integer ataque = 5;
+    private Integer batallasGanadas = 0;
+    private Integer batallasPerdidas = 0;
+    private Integer batallasJugadas = 0;
+
     //auditoria
     private Date createdAt;
     private Date updatedAt;
     private boolean deleted = false;
 
     public Espiritu (@NotBlank String nombre, @NonNull Ubicacion ubicacion, @NonNull TipoEspiritu tipo) {
-        this.nivelDeConexion = 0;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.tipo = tipo;
     }
 
+    public Espiritu(
+            @NotBlank String nombre,
+            @NonNull Ubicacion ubicacion,
+            @NonNull TipoEspiritu tipo,
+            @NonNull Integer ataque,
+            @NonNull Integer defensa
+    ) {
+        this.validarStats(ataque, defensa);
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        this.tipo = tipo;
+        this.ataque = ataque;
+        this.defensa = defensa;
+    }
+
     protected Espiritu(@NonNull TipoEspiritu tipo) {
         this.tipo = tipo;
+    }
+
+
+    private void validarStats(Integer ataque, Integer defensa) {
+        if (ataque < 0 || defensa < 0) {
+            throw new IllegalArgumentException("Los puntos de ataque o defensa no pueden ser negativos");
+        }
+        if (ataque + defensa > 100) {
+            throw new IllegalArgumentException("La suma de ataque y defensa no puede ser mayor a 100");
+        }
     }
 
     public void conectarA(Medium medium){
@@ -93,6 +127,69 @@ public abstract class Espiritu {
 
     public void aumentarNivelDeConexion(int aumento){
         this.nivelDeConexion = Math.min(this.getNivelDeConexion() + aumento, 100);
+    }
+
+
+    public void desplazar(Ubicacion nuevaUbicacion){
+        this.validarNoConexion();
+        this.validarVida();
+        this.ubicacion = nuevaUbicacion;
+        this.perderVida(1);
+    }
+
+    private void validarNoConexion() {
+        if(this.estaConectado()){
+            throw new EspirituConectadoException(this.getId());
+        }
+    }
+
+    private void validarVida() {
+        if(this.getVida() == 0){
+            throw new EspirituMuertoException(this.getId());
+        }
+    }
+
+    public void combatir(Espiritu espirituACombatir){
+        this.validarVida();
+        this.participarEnBatalla();
+        espirituACombatir.participarEnBatalla();
+
+        if (this.getAtaque() > espirituACombatir.getDefensa()){
+            this.registrarVictoria();
+            espirituACombatir.recibirImpacto(this.getAtaque());
+            espirituACombatir.registrarDerrota();
+        }else{
+            this.recibirImpacto(espirituACombatir.getDefensa() / 2);
+            this.registrarDerrota();
+            espirituACombatir.registrarVictoria();
+        }
+    }
+
+    private void perderVida(int cantidad){
+        int nuevaVida = this.getVida() - cantidad;
+        this.setVida(Math.max(nuevaVida, 0));
+    }
+
+    private void recibirImpacto(Integer ataqueEntrante) {
+        int dmg = calcularDanio(ataqueEntrante);
+        this.perderVida(dmg);
+    }
+
+    private int calcularDanio(int ataque) {
+        int dmg = ataque - this.getDefensa();
+        return Math.min(Math.max(dmg, 0), 100); //  0 <= daño <= 100
+    }
+
+    private void participarEnBatalla() {
+        this.batallasJugadas++;
+    }
+
+    public void registrarVictoria() {
+        this.batallasGanadas++;
+    }
+
+    public void registrarDerrota() {
+        this.batallasPerdidas++;
     }
 
     public void atacar(Espiritu objetivo){};

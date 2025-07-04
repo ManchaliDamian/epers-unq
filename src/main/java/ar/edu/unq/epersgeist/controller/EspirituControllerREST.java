@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/espiritu")
 public final  class EspirituControllerREST {
@@ -94,4 +95,15 @@ public final  class EspirituControllerREST {
     public void dominarEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idEspirituADominar){
         espirituService.dominar(idEspiritu,idEspirituADominar);
     }
+
+    @PutMapping("/{idEspiritu}/combatir/{idEspirituACombatir}")
+    public void combatirEspiritu(@PathVariable Long idEspiritu,@PathVariable Long idEspirituACombatir){
+        espirituService.combatir(idEspiritu, idEspirituACombatir);
+    }
+
+    @PutMapping("/{idEspiritu}/desplazar/{idUbicacion}")
+    public void desplazarEspiritu(@PathVariable Long idEspiritu, @PathVariable Long idUbicacion){
+        espirituService.desplazar(idEspiritu, idUbicacion);
+    }
+
 }

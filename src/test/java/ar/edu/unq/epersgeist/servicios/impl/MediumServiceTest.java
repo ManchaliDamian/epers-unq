@@ -83,8 +83,6 @@ public class MediumServiceTest {
         List<Coordenada> coordenadasCementerio = Arrays.asList(c5, c6, c7, c8, c5);
         poligonoCementerio = new Poligono(coordenadasCementerio);
 
-        Generador.setEstrategia(new GeneradorSecuencial(50));
-
         cementerio = new Cementerio("La Plata", 4);
         santuario  = new Santuario("Quilmes",70);
         santuario  = serviceU.guardar(santuario, poligonoSantuario);
@@ -219,7 +217,6 @@ public class MediumServiceTest {
     void recuperarMedium_inexistente_devuelveOptionalVacio() {
         assertTrue(serviceM.recuperar(999L).isEmpty());
     }
-
 
     //casos desfavorables mover
     @Test

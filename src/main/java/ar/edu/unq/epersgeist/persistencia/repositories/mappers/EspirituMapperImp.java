@@ -4,10 +4,7 @@ import ar.edu.unq.epersgeist.modelo.personajes.Espiritu;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituAngelicalJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituDemoniacoJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituJPADTO;
-import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.EspirituMongoDTO;
+import ar.edu.unq.epersgeist.persistencia.DTOs.personajes.*;
 import org.hibernate.Hibernate;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -253,5 +250,16 @@ public class EspirituMapperImp implements EspirituMapper {
     public Coordenada toCoordenada(EspirituMongoDTO mongo) {
         GeoJsonPoint p = mongo.getPunto();
         return new Coordenada(p.getY(), p.getX());
+    }
+
+    @Override
+    public Espiritu addFirestoreData(Espiritu sinFirestoreData, Espiritu conFirestoreData) {
+        sinFirestoreData.setAtaque(conFirestoreData.getAtaque());
+        sinFirestoreData.setDefensa(conFirestoreData.getDefensa());
+        sinFirestoreData.setVida(conFirestoreData.getVida());
+        sinFirestoreData.setBatallasGanadas(conFirestoreData.getBatallasGanadas());
+        sinFirestoreData.setBatallasPerdidas(conFirestoreData.getBatallasPerdidas());
+        sinFirestoreData.setBatallasJugadas(conFirestoreData.getBatallasJugadas());
+        return sinFirestoreData;
     }
 }

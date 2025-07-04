@@ -82,7 +82,6 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public void eliminar(Long id) {
         ubicacionRepository.eliminar(id);
-
     }
 
     @Override

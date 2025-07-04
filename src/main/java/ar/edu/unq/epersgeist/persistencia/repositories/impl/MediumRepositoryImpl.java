@@ -29,7 +29,8 @@ public class MediumRepositoryImpl implements MediumRepository {
     private EspirituMapper espirituMapper;
     private PoligonoDAO poligonoDAOMongo;
 
-    public MediumRepositoryImpl(MediumDAOSQL mediumDAOSQL, MediumDAOMongo mediumDAOMongo, MediumMapper mediumMapper, EspirituMapper espirituMapper, PoligonoDAO poligonoDAOMongo) {
+    public MediumRepositoryImpl(MediumDAOSQL mediumDAOSQL, MediumDAOMongo mediumDAOMongo, MediumMapper mediumMapper,
+                                EspirituMapper espirituMapper, PoligonoDAO poligonoDAOMongo) {
         this.mediumDAOSQL = mediumDAOSQL;
         this.mediumMapper = mediumMapper;
         this.espirituMapper = espirituMapper;
@@ -46,11 +47,12 @@ public class MediumRepositoryImpl implements MediumRepository {
     public Medium guardar(Medium medium, Coordenada coordenada) {
         GeoJsonPoint punto = new GeoJsonPoint(coordenada.getLongitud(), coordenada.getLatitud());
 
-        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.findByPoligonoGeoIntersectsAndUbicacionId(punto, medium.getUbicacion().getId());
+        Optional<PoligonoMongoDTO> poligonoOpt = poligonoDAOMongo.
+                findByPoligonoGeoIntersectsAndUbicacionId(punto, medium.getUbicacion().getId());
         if (poligonoOpt.isEmpty()) {
             throw new CoordenadaFueraDeAreaException("coordenada no valida");
         }
-        MediumJPADTO jpa = this.mediumDAOSQL.save(mediumMapper.toJpa(medium));
+        MediumJPADTO jpa = mediumDAOSQL.save(mediumMapper.toJpa(medium));
         MediumMongoDTO mongoDto = mediumMapper.toMongo(jpa, coordenada);
         mediumDAOMongo.save(mongoDto);
         return mediumMapper.toDomain(jpa);
@@ -97,32 +99,32 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return this.mediumDAOSQL.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
+        return mediumDAOSQL.findById(mediumId).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
     }
 
     @Override
     public List<Medium> recuperarTodos() {
-        return mediumMapper.toDomainList(this.mediumDAOSQL.recuperarTodos());
+        return mediumMapper.toDomainList(mediumDAOSQL.recuperarTodos());
     }
 
     @Override
     public Optional<Medium> recuperarEliminado(Long id) {
-        return this.mediumDAOSQL.recuperarEliminado(id).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
+        return mediumDAOSQL.recuperarEliminado(id).map(mediumJPADTO -> mediumMapper.toDomain(mediumJPADTO));
     }
 
     @Override
     public List<Medium> recuperarTodosLosEliminados() {
-        return mediumMapper.toDomainList(this.mediumDAOSQL.recuperarTodosLosEliminados());
+        return mediumMapper.toDomainList(mediumDAOSQL.recuperarTodosLosEliminados());
     }
 
     @Override
     public List<Espiritu> findEspiritusByMediumId(Long mediumId) {
-        return espirituMapper.toDomainList(this.mediumDAOSQL.findEspiritusByMediumId(mediumId));
+        return espirituMapper.toDomainList(mediumDAOSQL.findEspiritusByMediumId(mediumId));
     }
 
     @Override
     public void deleteAll(){
-        this.mediumDAOSQL.deleteAll();
-        this.mediumDAOMongo.deleteAll();
+        mediumDAOSQL.deleteAll();
+        mediumDAOMongo.deleteAll();
     }
 }

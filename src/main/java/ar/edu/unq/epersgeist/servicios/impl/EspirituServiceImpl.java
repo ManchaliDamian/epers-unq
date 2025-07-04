@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.exception.Conflict.DistanciaNoCercanaException;
 import ar.edu.unq.epersgeist.exception.Conflict.RecursoNoEliminable.EspirituNoEliminableException;
+import ar.edu.unq.epersgeist.exception.NotFound.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.personajes.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.enums.Direccion;
@@ -10,8 +11,11 @@ import ar.edu.unq.epersgeist.modelo.personajes.Medium;
 import ar.edu.unq.epersgeist.exception.NotFound.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.exception.NotFound.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.ubicacion.Coordenada;
+import ar.edu.unq.epersgeist.modelo.ubicacion.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.PoligonoRepository;
+import ar.edu.unq.epersgeist.persistencia.repositories.interfaces.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.interfaces.EspirituService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +32,19 @@ public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituRepository espirituRepository;
     private final MediumRepository mediumRepository;
+    private final UbicacionRepository ubicacionRepository;
+    private final PoligonoRepository poligonoRepository;
 
-    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumRepository mediumRepository) {
+    public EspirituServiceImpl(
+            EspirituRepository espirituRepository,
+            MediumRepository mediumRepository,
+            UbicacionRepository ubicacionRepository,
+            PoligonoRepository poligonoRepository
+    ) {
         this.espirituRepository = espirituRepository;
         this.mediumRepository = mediumRepository;
+        this.ubicacionRepository = ubicacionRepository;
+        this.poligonoRepository = poligonoRepository;
     }
 
     @Override
@@ -48,21 +61,33 @@ public class EspirituServiceImpl implements EspirituService {
         return espirituRepository.actualizar(espiritu, coordenada);
     }
 
-
     private Espiritu getEspiritu(Long espirituId) {
-        Espiritu espiritu = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
+        Espiritu espiritu = espirituRepository.recuperar(espirituId)
+                .orElseThrow(() -> new EspirituNoEncontradoException(espirituId));
         if(espiritu.isDeleted()) {
             throw new EspirituNoEncontradoException(espirituId);
         }
+
         return espiritu;
     }
 
     private Medium getMedium(Long mediumId) {
-        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(mediumId));
+        Medium medium = mediumRepository.recuperar(mediumId)
+                .orElseThrow(() -> new MediumNoEncontradoException(mediumId));
         if(medium.isDeleted()) {
             throw new EspirituNoEncontradoException(mediumId);
         }
         return medium;
+    }
+
+    private Ubicacion getUbicacion(Long ubicacionId) {
+        Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+        if(ubicacion.isDeleted()) {
+            throw new UbicacionNoEncontradaException(ubicacionId);
+        }
+
+        return ubicacion;
     }
 
     @Override
@@ -104,6 +129,29 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
+    public void combatir(Long idEspiritu, Long idEspirituACombatir) {
+        Espiritu espiritu = this.getEspiritu(idEspiritu);
+        Espiritu espirituACombatir = this.getEspiritu(idEspirituACombatir);
+
+        espiritu.combatir(espirituACombatir);
+
+        espirituRepository.actualizar(espiritu);
+        espirituRepository.actualizar(espirituACombatir);
+    }
+
+    @Override
+    public void desplazar(Long espirituId, Long ubicacionId) {
+        Espiritu espiritu = this.getEspiritu(espirituId);
+        Ubicacion ubicacion = this.getUbicacion(ubicacionId);
+        Coordenada coordenada = poligonoRepository.recuperarCoordenadaAleatoria(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(ubicacionId));
+
+        espiritu.desplazar(ubicacion);
+
+        espirituRepository.actualizar(espiritu, coordenada);
+    }
+
+    @Override
     public void eliminar(Long id) {
         Espiritu espiritu = espirituRepository.recuperar(id)
                 .orElseThrow(() -> new EspirituNoEncontradoException(id));
@@ -118,7 +166,7 @@ public class EspirituServiceImpl implements EspirituService {
 
         espiritu.setDeleted(true);
         espirituRepository.actualizar(espiritu);
-        espirituRepository.eliminarFisicoEnMongoSiExiste(id);
+        espirituRepository.eliminar(id);
     }
 
     @Override
